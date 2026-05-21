@@ -1,26 +1,169 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ============================================================
+   Horus-Lab — Design tokens (couleurs issues du logo)
+   ============================================================ */
+@theme {
+  /* Bleus de la marque, du plus clair au navy du slogan */
+  --color-brand-50: #eef5ff;
+  --color-brand-100: #d9e8ff;
+  --color-brand-200: #b6d2fb;
+  --color-brand-300: #84b6f4;
+  --color-brand-400: #4f9be8;
+  --color-brand-500: #2196f3; /* bleu vif — l'œil / les accents */
+  --color-brand-600: #1b6fd0;
+  --color-brand-700: #1b4f9c; /* bleu royal — "horus" / primaire */
+  --color-brand-800: #163f7d;
+  --color-brand-900: #0f2a5e; /* navy — le slogan */
+
+  --color-sky: #5bb8e8; /* "-lab" */
+  --color-ink: #0d1b34;
+  --color-muted: #5b6b86;
+  --color-surface: #f5f9ff;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+
+  /* Animations exposées en utilitaires animate-* */
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-slow: float 11s ease-in-out infinite;
+  --animate-drift: drift 16s ease-in-out infinite;
+  --animate-gradient: gradient 9s ease infinite;
+  --animate-pulse-ring: pulseRing 3.2s ease-out infinite;
+  --animate-spin-slow: spin 26s linear infinite;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-18px); }
+}
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(24px, -22px) scale(1.06); }
+  66% { transform: translate(-18px, 16px) scale(0.96); }
+}
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes pulseRing {
+  0% { transform: scale(0.85); opacity: 0.7; }
+  70% { transform: scale(1.6); opacity: 0; }
+  100% { opacity: 0; }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ============================================================
+   Base
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================================
+   Reveal on scroll (piloté par <Reveal/>)
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================
+   Helpers
+   ============================================================ */
+.text-gradient {
+  background: linear-gradient(
+    90deg,
+    var(--color-brand-700),
+    var(--color-brand-500),
+    var(--color-sky)
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Trame de circuit / points en fond */
+.bg-grid {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgba(27, 79, 156, 0.12) 1px,
+    transparent 0
+  );
+  background-size: 32px 32px;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ============================================================
+   Contenu d'article (markdown -> HTML)
+   ============================================================ */
+.article {
+  color: #2b3a52;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+.article > * + * { margin-top: 1.25rem; }
+.article h2 {
+  margin-top: 2.5rem;
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--color-brand-900);
+}
+.article h3 {
+  margin-top: 2rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-brand-900);
+}
+.article a {
+  color: var(--color-brand-600);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.article ul, .article ol { padding-left: 1.4rem; }
+.article ul { list-style: disc; }
+.article ol { list-style: decimal; }
+.article li + li { margin-top: 0.5rem; }
+.article li::marker { color: var(--color-brand-500); }
+.article strong { color: var(--color-brand-900); font-weight: 700; }
+.article blockquote {
+  border-left: 3px solid var(--color-brand-400);
+  background: var(--color-brand-50);
+  padding: 1rem 1.25rem;
+  border-radius: 0 0.75rem 0.75rem 0;
+  font-style: italic;
+  color: var(--color-brand-800);
+}
+.article code {
+  background: var(--color-brand-50);
+  padding: 0.15em 0.4em;
+  border-radius: 0.35rem;
+  font-size: 0.9em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  *, *::before, *::after { animation: none !important; }
 }

@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# website-horus-lab
 
-## Getting Started
+Site vitrine de **Horus-Lab** — startup technologique africaine : développement web & mobile, ERP, logiciels sur-mesure et solutions d'intelligence artificielle.
 
-First, run the development server:
+> _Solutions technologiques intelligentes • Impact durable_
+
+## ✨ Fonctionnalités
+
+- **Landing page** animée (Hero, services, méthode, secteurs, témoignages, contact).
+- **Bilingue FR / EN** via routing par locale (`/fr`, `/en`) — pages statiques séparées, `hreflang`, canonical.
+- **Blog** basé sur des fichiers Markdown (`content/blog/<slug>.<fr|en>.md`), pages générées statiquement (SSG).
+- **Newsletter & formulaire de contact** avec validation côté serveur (Route Handlers).
+- **SEO** : sitemap, robots, données structurées JSON-LD (Organization + BlogPosting).
+- **Animations sans dépendance** : keyframes CSS + révélation au scroll, respect de `prefers-reduced-motion`.
+
+## 🧱 Stack
+
+- [Next.js 16](https://nextjs.org) (App Router, Turbopack) · React 19
+- [Tailwind CSS 4](https://tailwindcss.com)
+- TypeScript · [gray-matter](https://github.com/jonschlinkert/gray-matter) + [marked](https://marked.js.org) pour le blog
+- Gestionnaire de paquets : **pnpm**
+
+## 🚀 Démarrage
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ouvrir [http://localhost:3000](http://localhost:3000) (redirige vers `/fr`).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Commande | Description |
+|----------|-------------|
+| `pnpm dev` | Serveur de développement |
+| `pnpm build` | Build de production |
+| `pnpm start` | Serveur de production |
+| `pnpm lint` | Analyse ESLint |
 
-## Learn More
+## 📁 Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├─ app/
+│  ├─ [lang]/            # Pages localisées (accueil + blog)
+│  ├─ api/               # Route Handlers (newsletter, contact)
+│  ├─ layout.tsx         # Layout racine (<html>, polices)
+│  ├─ page.tsx           # Redirige / → /fr
+│  ├─ sitemap.ts · robots.ts
+│  └─ globals.css        # Tokens de couleurs + animations
+├─ components/           # Header, Footer, sections, blog
+├─ i18n/                 # Dictionnaires FR/EN + LanguageProvider
+└─ lib/                  # blog.ts (markdown), leads.ts (stockage)
+content/blog/            # Articles Markdown bilingues
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ✍️ Ajouter un article de blog
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Créer deux fichiers dans `content/blog/` :
 
-## Deploy on Vercel
+```
+mon-sujet.fr.md
+mon-sujet.en.md
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Avec en-tête (frontmatter) :
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```md
+---
+title: "Titre de l'article"
+date: "2026-05-21"
+excerpt: "Résumé court."
+author: "Équipe Horus-Lab"
+tags: ["Tag1", "Tag2"]
+category: "Catégorie"
+---
+
+Contenu en Markdown…
+```
+
+> Si la traduction `.en.md` manque, la version `.fr.md` sert de repli.
+
+## 📬 Newsletter & contact
+
+Les soumissions sont validées puis stockées dans `.data/*.jsonl` (ignoré par git).
+Pour la production, brancher un fournisseur d'e-mails (Resend, Mailchimp, Brevo…) au point `// TODO provider` dans `src/lib/leads.ts`.
+
+## ⚙️ Configuration
+
+Le domaine de production (`https://horus-lab.com`) est référencé dans les métadonnées SEO, le sitemap et le JSON-LD. À adapter si le domaine final diffère.
+
+---
+
+© Horus-Lab — Made in Africa 🌍
