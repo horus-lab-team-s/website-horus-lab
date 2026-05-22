@@ -44,7 +44,7 @@ export default async function BlogPage({
   return (
     <>
       <Header />
-      <main>
+      <main id="main" tabIndex={-1}>
         <BlogIndex posts={posts} />
       </main>
       <Footer />

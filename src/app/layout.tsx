@@ -27,7 +27,12 @@ export default function RootLayout({
   // L'attribut lang est ajusté par langue côté client (LanguageProvider).
   return (
     <html lang="fr" className={`${geistSans.variable} h-full`}>
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        <a href="#main" className="skip-link">
+          Aller au contenu / Skip to content
+        </a>
+        {children}
+      </body>
     </html>
   );
 }

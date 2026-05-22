@@ -77,7 +77,7 @@ export default async function BlogPostPage({
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
       />
       <Header />
-      <main>
+      <main id="main" tabIndex={-1}>
         <BlogPostHeader post={post} />
         <article className="bg-surface pb-20">
           <div
