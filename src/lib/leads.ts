@@ -74,7 +74,7 @@ async function brevoSendContactEmail(p: ContactPayload): Promise<boolean> {
   const key = process.env.BREVO_API_KEY;
   if (!key) return false;
   const to = process.env.BREVO_CONTACT_TO || "contact@horus-lab.com";
-  const senderEmail = process.env.BREVO_SENDER_EMAIL || "no-reply@horus-lab.com";
+  const senderEmail = process.env.BREVO_SENDER_EMAIL || "noreply@horus-lab.com";
   const senderName = process.env.BREVO_SENDER_NAME || "Horus-Lab";
 
   try {

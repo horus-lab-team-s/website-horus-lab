@@ -1,8 +1,7 @@
 import type { MetadataRoute } from "next";
 import { locales } from "@/i18n/dictionaries";
 import { getPostSlugs } from "@/lib/blog";
-
-const BASE = "https://horus-lab.com";
+import { SITE_URL as BASE } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const slugs = getPostSlugs();
