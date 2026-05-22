@@ -32,12 +32,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalid_fields" }, { status: 422 });
   }
 
-  await saveLead("contact", {
+  const { ok } = await saveLead("contact", {
     name,
     email: email.trim().toLowerCase(),
     subject: subject ?? "",
     message,
   });
-
+  if (!ok) {
+    return NextResponse.json({ error: "store_failed" }, { status: 502 });
+  }
   return NextResponse.json({ ok: true });
 }

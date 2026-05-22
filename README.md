@@ -81,10 +81,28 @@ Contenu en Markdown…
 
 > Si la traduction `.en.md` manque, la version `.fr.md` sert de repli.
 
-## 📬 Newsletter & contact
+## 📬 Newsletter & contact (Brevo)
 
-Les soumissions sont validées puis stockées dans `.data/*.jsonl` (ignoré par git).
-Pour la production, brancher un fournisseur d'e-mails (Resend, Mailchimp, Brevo…) au point `// TODO provider` dans `src/lib/leads.ts`.
+Les soumissions sont validées (+ honeypot anti-spam) puis :
+
+1. journalisées dans `.data/*.jsonl` (audit / repli en dev, ignoré par git) ;
+2. envoyées à **[Brevo](https://app.brevo.com)** dès que `BREVO_API_KEY` est défini :
+   - **Newsletter** → le contact est ajouté à une liste (Contacts API) ;
+   - **Contact** → un e-mail transactionnel est envoyé à l'équipe (avec `reply-to` du visiteur).
+
+### Configuration
+
+Copier `.env.example` en `.env.local` et renseigner :
+
+| Variable | Rôle |
+|----------|------|
+| `BREVO_API_KEY` | Clé API (Brevo > SMTP & API > API Keys) — **requise** pour activer l'envoi |
+| `BREVO_NEWSLETTER_LIST_ID` | ID de la liste recevant les inscriptions newsletter |
+| `BREVO_CONTACT_TO` | Adresse recevant les messages du formulaire |
+| `BREVO_SENDER_EMAIL` / `BREVO_SENDER_NAME` | Expéditeur (domaine **validé** dans Brevo) |
+
+> Sans clé, le site fonctionne et stocke les soumissions localement. En production
+> (FS en lecture seule), `BREVO_API_KEY` est nécessaire, sinon la soumission renvoie une erreur.
 
 ## ⚙️ Configuration
 

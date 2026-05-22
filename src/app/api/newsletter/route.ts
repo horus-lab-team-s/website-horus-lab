@@ -21,9 +21,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalid_email" }, { status: 422 });
   }
 
-  await saveLead("newsletter", { email: email.trim().toLowerCase() });
-
-  // On renvoie toujours un succès côté UX (l'inscription est enregistrée
-  // localement ou déléguée à un provider).
+  const { ok } = await saveLead("newsletter", {
+    email: email.trim().toLowerCase(),
+  });
+  if (!ok) {
+    return NextResponse.json({ error: "store_failed" }, { status: 502 });
+  }
   return NextResponse.json({ ok: true });
 }
