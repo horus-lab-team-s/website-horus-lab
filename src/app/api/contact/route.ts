@@ -17,6 +17,12 @@ export async function POST(request: Request) {
   }
 
   const b = body as Record<string, unknown>;
+
+  // Honeypot : un bot remplit le champ caché "website" -> on accepte sans stocker.
+  if (typeof b.website === "string" && b.website.trim() !== "") {
+    return NextResponse.json({ ok: true });
+  }
+
   const name = str(b.name, 120);
   const subject = str(b.subject, 160);
   const message = str(b.message, 5000);
@@ -26,12 +32,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalid_fields" }, { status: 422 });
   }
 
-  await saveLead("contact", {
+  const { ok } = await saveLead("contact", {
     name,
     email: email.trim().toLowerCase(),
     subject: subject ?? "",
     message,
   });
-
+  if (!ok) {
+    return NextResponse.json({ error: "store_failed" }, { status: 502 });
+  }
   return NextResponse.json({ ok: true });
 }

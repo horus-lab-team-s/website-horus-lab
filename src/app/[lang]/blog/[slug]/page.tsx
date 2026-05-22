@@ -6,6 +6,7 @@ import { BlogPostHeader } from "@/components/blog/BlogPostHeader";
 import { Newsletter } from "@/components/sections/Newsletter";
 import { getAllPostParams, getPost } from "@/lib/blog";
 import { isLocale } from "@/i18n/dictionaries";
+import { SITE_URL } from "@/lib/site";
 
 type Params = { lang: string; slug: string };
 
@@ -63,7 +64,7 @@ export default async function BlogPostPage({
       name: "Horus-Lab",
       logo: {
         "@type": "ImageObject",
-        url: "https://horus-lab.com/Logo-HORUS-LAB.jpeg",
+        url: `${SITE_URL}/Logo-HORUS-LAB.jpeg`,
       },
     },
     inLanguage: lang,

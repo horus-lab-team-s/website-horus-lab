@@ -13,6 +13,7 @@ import { Contact } from "@/components/sections/Contact";
 import { Newsletter } from "@/components/sections/Newsletter";
 import { getAllPosts } from "@/lib/blog";
 import { isLocale } from "@/i18n/dictionaries";
+import { SITE_URL } from "@/lib/site";
 
 type Params = { lang: string };
 
@@ -20,8 +21,8 @@ const organizationLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "Horus-Lab",
-  url: "https://horus-lab.com",
-  logo: "https://horus-lab.com/Logo-HORUS-LAB.jpeg",
+  url: SITE_URL,
+  logo: `${SITE_URL}/Logo-HORUS-LAB.jpeg`,
   description:
     "Startup technologique africaine : développement web & mobile, ERP, logiciels sur-mesure et solutions d'intelligence artificielle.",
   email: "contact@horus-lab.com",
