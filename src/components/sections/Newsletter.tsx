@@ -16,7 +16,9 @@ export function Newsletter() {
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
-    const email = String(new FormData(form).get("email") ?? "");
+    const fd = new FormData(form);
+    const email = String(fd.get("email") ?? "");
+    const website = String(fd.get("website") ?? "");
 
     if (!emailRe.test(email)) {
       setStatus("invalid");
@@ -27,7 +29,7 @@ export function Newsletter() {
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, website }),
       });
       if (!res.ok) throw new Error("failed");
       setStatus("success");
@@ -54,6 +56,13 @@ export function Newsletter() {
             </div>
 
             <form onSubmit={handleSubmit} noValidate>
+              {/* Honeypot anti-spam */}
+              <div aria-hidden className="absolute left-[-9999px] h-0 w-0 overflow-hidden" hidden>
+                <label>
+                  Website
+                  <input name="website" type="text" tabIndex={-1} autoComplete="off" />
+                </label>
+              </div>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <input
                   name="email"

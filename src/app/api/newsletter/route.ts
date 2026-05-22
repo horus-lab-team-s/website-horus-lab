@@ -9,6 +9,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "invalid_body" }, { status: 400 });
   }
 
+  // Honeypot : un bot remplit le champ caché "website" -> on accepte sans stocker.
+  const honeypot = (body as { website?: unknown })?.website;
+  if (typeof honeypot === "string" && honeypot.trim() !== "") {
+    return NextResponse.json({ ok: true });
+  }
+
   const email = (body as { email?: unknown })?.email;
 
   if (!isValidEmail(email)) {

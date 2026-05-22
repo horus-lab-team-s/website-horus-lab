@@ -92,6 +92,14 @@ export function Contact() {
             noValidate
             className="rounded-3xl border border-brand-100 bg-white p-6 shadow-xl shadow-brand-900/5 sm:p-8"
           >
+            {/* Honeypot anti-spam : invisible pour les humains, ignoré par les lecteurs d'écran. */}
+            <div aria-hidden className="absolute left-[-9999px] h-0 w-0 overflow-hidden" hidden>
+              <label>
+                Website
+                <input name="website" type="text" tabIndex={-1} autoComplete="off" />
+              </label>
+            </div>
+
             <div className="grid gap-5 sm:grid-cols-2">
               <Field label={c.name}>
                 <input

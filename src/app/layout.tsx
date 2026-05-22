@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 
@@ -14,6 +14,10 @@ export const metadata: Metadata = {
     template: "%s — Horus-Lab",
   },
   icons: { icon: "/Logo-HORUS-LAB.jpeg" },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#1b4f9c",
 };
 
 export default function RootLayout({
