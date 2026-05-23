@@ -7,7 +7,7 @@ import { useLang } from "@/i18n/LanguageProvider";
 import { IconClose, IconGlobe, IconMenu } from "./icons";
 import { ThemeToggle } from "./ThemeToggle";
 
-export function Header() {
+export function Header({ onDark = false }: { onDark?: boolean }) {
   const { dict, otherLang, switchHref, localePath } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -27,6 +27,15 @@ export function Header() {
     { href: localePath("/blog"), label: dict.nav.blog },
   ];
 
+  // Navbar transparente au-dessus d'un hero sombre -> contrôles en blanc.
+  const overHero = onDark && !scrolled;
+  const navLinkCls = overHero
+    ? "text-white/90 hover:bg-white/10 hover:text-white"
+    : "text-ink/75 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200";
+  const ctrlCls = overHero
+    ? "border-white/40 text-white hover:bg-white/10"
+    : "border-brand-200 text-brand-700 hover:bg-brand-50 dark:border-white/15 dark:text-brand-200 dark:hover:bg-white/5";
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
@@ -45,7 +54,11 @@ export function Header() {
             priority
             className="rounded-full ring-1 ring-brand-100"
           />
-          <span className="text-lg font-bold tracking-tight text-brand-900 dark:text-white">
+          <span
+            className={`text-lg font-bold tracking-tight ${
+              overHero ? "text-white" : "text-brand-900 dark:text-white"
+            }`}
+          >
             horus<span className="text-brand-500">-lab</span>
           </span>
         </Link>
@@ -56,7 +69,7 @@ export function Header() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="rounded-full px-4 py-2 text-sm font-medium text-ink/75 transition-colors hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
+                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${navLinkCls}`}
               >
                 {link.label}
               </Link>
@@ -65,13 +78,13 @@ export function Header() {
         </ul>
 
         <div className="flex items-center gap-2">
-          <ThemeToggle />
+          <ThemeToggle onDark={overHero} />
 
           <Link
             href={switchHref}
             hrefLang={otherLang}
             aria-label="Changer de langue / Switch language"
-            className="flex items-center gap-1.5 rounded-full border border-brand-200 px-3 py-2 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:text-brand-200 dark:hover:bg-white/5"
+            className={`flex items-center gap-1.5 rounded-full border px-3 py-2 text-sm font-semibold transition-colors ${ctrlCls}`}
           >
             <IconGlobe className="size-4" />
             {otherLang.toUpperCase()}
@@ -89,7 +102,7 @@ export function Header() {
             onClick={() => setOpen((v) => !v)}
             aria-label="Menu"
             aria-expanded={open}
-            className="flex size-10 items-center justify-center rounded-full border border-brand-200 text-brand-700 dark:border-white/15 dark:text-brand-200 lg:hidden"
+            className={`flex size-10 items-center justify-center rounded-full border transition-colors lg:hidden ${ctrlCls}`}
           >
             {open ? <IconClose className="size-5" /> : <IconMenu className="size-5" />}
           </button>

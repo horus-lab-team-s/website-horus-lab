@@ -46,7 +46,7 @@ export default async function Home({ params }: { params: Promise<Params> }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
       />
-      <Header />
+      <Header onDark />
       <main id="main" tabIndex={-1}>
         <Hero />
         <Services />
