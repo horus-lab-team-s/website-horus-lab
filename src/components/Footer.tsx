@@ -4,18 +4,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLang } from "@/i18n/LanguageProvider";
 import {
-  IconGitHub,
+  IconFacebook,
   IconLinkedIn,
   IconMail,
   IconPhone,
   IconPin,
+  IconWhatsApp,
   IconX,
 } from "./icons";
 
 const SOCIAL = [
-  { Icon: IconLinkedIn, label: "LinkedIn", href: "https://www.linkedin.com/company/horus-lab" },
-  { Icon: IconX, label: "X", href: "https://twitter.com/horuslab" },
-  { Icon: IconGitHub, label: "GitHub", href: "https://github.com/horus-lab" },
+  { Icon: IconLinkedIn, label: "LinkedIn", href: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259" },
+  { Icon: IconX, label: "X", href: "https://x.com/horuslabafrik" },
+  { Icon: IconFacebook, label: "Facebook", href: "https://www.facebook.com/HorusLab" },
+  { Icon: IconWhatsApp, label: "WhatsApp", href: "https://wa.me/237699173771" },
 ];
 
 export function Footer() {

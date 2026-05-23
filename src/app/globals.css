@@ -33,6 +33,12 @@
   --animate-gradient: gradient 9s ease infinite;
   --animate-pulse-ring: pulseRing 3.2s ease-out infinite;
   --animate-spin-slow: spin 26s linear infinite;
+  --animate-bob: bob 2.4s ease-in-out infinite;
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
 }
 
 @keyframes float {

@@ -2,9 +2,52 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
-import { IconClose, IconEye, IconSend } from "./icons";
+import {
+  IconClose,
+  IconEye,
+  IconHeadset,
+  IconSend,
+  IconTelegram,
+  IconWhatsApp,
+} from "./icons";
 
 type Msg = { role: "user" | "assistant"; content: string };
+
+const WHATSAPP = "https://wa.me/237699173771";
+const TELEGRAM = "https://t.me/+237699173771";
+const SUPPORT = "mailto:contact@horus-lab.com";
+
+function ChannelLink({
+  href,
+  label,
+  className,
+  pulse,
+  children,
+}: {
+  href: string;
+  label: string;
+  className: string;
+  pulse?: boolean;
+  children: React.ReactNode;
+}) {
+  const external = href.startsWith("http");
+  return (
+    <a
+      href={href}
+      aria-label={label}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      className={`group relative grid size-12 place-items-center rounded-full text-white shadow-lg shadow-brand-900/25 transition-transform hover:scale-110 ${className}`}
+    >
+      {pulse && (
+        <span className="absolute inset-0 rounded-full bg-current opacity-60 animate-pulse-ring" />
+      )}
+      <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-lg bg-brand-900 px-2.5 py-1 text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
+        {label}
+      </span>
+      <span className="relative">{children}</span>
+    </a>
+  );
+}
 
 export function HorusAI() {
   const { dict, lang } = useLang();
@@ -19,7 +62,6 @@ export function HorusAI() {
   const [offline, setOffline] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Réinitialise le message d'accueil quand la langue change (avant 1re question).
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- resync sur changement de langue
     setMessages((prev) =>
@@ -27,7 +69,6 @@ export function HorusAI() {
     );
   }, [ai.greeting]);
 
-  // Auto-scroll vers le bas.
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading, open]);
@@ -50,7 +91,6 @@ export function HorusAI() {
         ...next,
         { role: "assistant", content: res.ok && data.reply ? data.reply : ai.error },
       ]);
-      // Indicateur : provider injoignable/erreur -> mode hors-ligne (FAQ).
       setOffline(data?.reason === "provider_error");
     } catch {
       setMessages([...next, { role: "assistant", content: ai.error }]);
@@ -60,34 +100,59 @@ export function HorusAI() {
     }
   }
 
+  const supportLabel = lang === "fr" ? "Support (e-mail)" : "Support (email)";
+
   return (
     <>
-      {/* Bouton flottant */}
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-label={ai.open}
-        aria-expanded={open}
-        className="fixed bottom-6 left-6 z-50 grid size-14 place-items-center rounded-full bg-gradient-to-br from-brand-700 to-brand-500 text-white shadow-xl shadow-brand-900/30 transition-transform hover:scale-105"
-      >
-        {!open && (
-          <span className="absolute inset-0 rounded-full bg-brand-500/60 animate-pulse-ring" />
-        )}
-        {open ? <IconClose className="size-6" /> : <IconEye className="size-7" />}
-      </button>
+      {/* Hub flottant bas-droite */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3">
+        {/* Canaux de contact — visibles quand le chat est fermé */}
+        <div
+          className={`flex flex-col items-center gap-3 transition-all duration-300 ${
+            open ? "pointer-events-none translate-y-2 opacity-0" : "opacity-100"
+          }`}
+        >
+          <ChannelLink href={SUPPORT} label={supportLabel} className="bg-brand-600">
+            <IconHeadset className="size-6" />
+          </ChannelLink>
+          <ChannelLink href={TELEGRAM} label="Telegram" className="bg-[#229ED9]">
+            <IconTelegram className="size-6" />
+          </ChannelLink>
+          <ChannelLink href={WHATSAPP} label="WhatsApp" className="bg-[#25D366]" pulse>
+            <IconWhatsApp className="size-6" />
+          </ChannelLink>
+        </div>
 
-      {/* Panneau */}
+        {/* Bouton Horus AI (danse quand fermé) */}
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-label={ai.open}
+          aria-expanded={open}
+          className={`relative grid size-14 place-items-center rounded-full bg-gradient-to-br from-brand-700 to-brand-500 text-white shadow-xl shadow-brand-900/30 transition-transform hover:scale-105 ${
+            open ? "" : "animate-bob"
+          }`}
+        >
+          {!open && (
+            <span className="absolute inset-0 rounded-full bg-brand-500/60 animate-pulse-ring" />
+          )}
+          <span className="relative">
+            {open ? <IconClose className="size-6" /> : <IconEye className="size-7" />}
+          </span>
+        </button>
+      </div>
+
+      {/* Panneau de chat */}
       <div
         role="dialog"
         aria-label={ai.title}
-        className={`fixed bottom-24 left-6 z-50 flex w-[min(380px,calc(100vw-3rem))] origin-bottom-left flex-col overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-2xl shadow-brand-900/25 transition-all duration-300 dark:border-white/10 dark:bg-slate-900 ${
+        className={`fixed bottom-24 right-6 z-50 flex w-[min(380px,calc(100vw-3rem))] origin-bottom-right flex-col overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-2xl shadow-brand-900/25 transition-all duration-300 dark:border-white/10 dark:bg-slate-900 ${
           open
             ? "pointer-events-auto scale-100 opacity-100"
             : "pointer-events-none translate-y-3 scale-95 opacity-0"
         }`}
         style={{ height: "min(560px, calc(100vh - 9rem))" }}
       >
-        {/* En-tête */}
         <div className="flex items-center gap-3 bg-gradient-to-r from-brand-800 to-brand-600 px-5 py-4 text-white">
           <span className="grid size-10 place-items-center rounded-full bg-white/15">
             <IconEye className="size-6" />
@@ -111,13 +176,9 @@ export function HorusAI() {
           </button>
         </div>
 
-        {/* Messages */}
         <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto bg-surface/40 px-4 py-4">
           {messages.map((m, i) => (
-            <div
-              key={i}
-              className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
-            >
+            <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
               <div
                 className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                   m.role === "user"
@@ -144,7 +205,6 @@ export function HorusAI() {
             </div>
           )}
 
-          {/* Suggestions (seulement avant la 1re question) */}
           {messages.length === 1 && !loading && (
             <div className="flex flex-wrap gap-2 pt-1">
               {ai.suggestions.map((s) => (
@@ -161,7 +221,6 @@ export function HorusAI() {
           )}
         </div>
 
-        {/* Saisie */}
         <form
           onSubmit={(e) => {
             e.preventDefault();
