@@ -1,13 +1,19 @@
 "use client";
 
-import Image from "next/image";
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
+import { HeroCarousel } from "./HeroCarousel";
 import { IconArrowRight, IconEye } from "@/components/icons";
 
 export function Hero() {
-  const { dict } = useLang();
+  const { dict, lang } = useLang();
   const h = dict.hero;
+  const slides = [
+    { src: "/hero/hero-web.svg", alt: lang === "fr" ? "Développement web et mobile" : "Web & mobile development" },
+    { src: "/hero/hero-erp.svg", alt: lang === "fr" ? "ERP et systèmes de gestion" : "ERP & management systems" },
+    { src: "/hero/hero-ai.svg", alt: lang === "fr" ? "Intelligence artificielle" : "Artificial intelligence" },
+    { src: "/hero/hero-impact.svg", alt: lang === "fr" ? "Impact durable en Afrique" : "Lasting impact in Africa" },
+  ];
 
   return (
     <section
@@ -81,36 +87,9 @@ export function Hero() {
           </Reveal>
         </div>
 
-        {/* Colonne visuelle : logo en orbite */}
-        <Reveal delay={200} className="hidden lg:block">
-          <div className="relative mx-auto aspect-square w-full max-w-md">
-            <div className="absolute inset-8 rounded-full bg-gradient-to-br from-brand-100 to-sky/30 blur-2xl" />
-
-            {/* Anneaux pulsés */}
-            <div className="absolute inset-0 rounded-full border border-brand-200/70 animate-pulse-ring" />
-            <div className="absolute inset-6 rounded-full border border-brand-200/50" />
-
-            {/* Anneau en rotation lente avec nœuds de circuit */}
-            <div className="absolute inset-4 animate-spin-slow">
-              <span className="absolute left-1/2 top-0 size-3 -translate-x-1/2 rounded-full bg-brand-500 shadow-lg shadow-brand-500/50" />
-              <span className="absolute bottom-2 right-6 size-2.5 rounded-full bg-sky" />
-              <span className="absolute bottom-8 left-2 size-2 rounded-full bg-brand-400" />
-            </div>
-
-            {/* Logo central */}
-            <div className="absolute inset-0 grid place-items-center">
-              <div className="animate-float rounded-full bg-white p-3 shadow-2xl shadow-brand-900/15 ring-1 ring-brand-100">
-                <Image
-                  src="/Logo-HORUS-LAB.jpeg"
-                  alt="Horus-Lab"
-                  width={300}
-                  height={300}
-                  priority
-                  className="size-60 rounded-full object-cover"
-                />
-              </div>
-            </div>
-          </div>
+        {/* Colonne visuelle : carrousel d'illustrations de nos domaines */}
+        <Reveal delay={200}>
+          <HeroCarousel slides={slides} />
         </Reveal>
       </div>
 

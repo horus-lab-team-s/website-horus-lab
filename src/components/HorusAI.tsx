@@ -14,7 +14,7 @@ import {
 type Msg = { role: "user" | "assistant"; content: string };
 
 const WHATSAPP = "https://wa.me/237699173771";
-const TELEGRAM = "https://t.me/+237699173771";
+const TELEGRAM = "https://t.me/LoicTONBA";
 const SUPPORT = "mailto:contact@horus-lab.com";
 
 function ChannelLink({
@@ -104,41 +104,41 @@ export function HorusAI() {
 
   return (
     <>
-      {/* Hub flottant bas-droite */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3">
-        {/* Canaux de contact — visibles quand le chat est fermé */}
-        <div
-          className={`flex flex-col items-center gap-3 transition-all duration-300 ${
-            open ? "pointer-events-none translate-y-2 opacity-0" : "opacity-100"
-          }`}
-        >
-          <ChannelLink href={SUPPORT} label={supportLabel} className="bg-brand-600">
-            <IconHeadset className="size-6" />
-          </ChannelLink>
-          <ChannelLink href={TELEGRAM} label="Telegram" className="bg-[#229ED9]">
-            <IconTelegram className="size-6" />
-          </ChannelLink>
-          <ChannelLink href={WHATSAPP} label="WhatsApp" className="bg-[#25D366]" pulse>
-            <IconWhatsApp className="size-6" />
-          </ChannelLink>
-        </div>
+      {/* Réseaux de contact — bas droite (cluster distinct) */}
+      <div
+        className={`fixed bottom-6 right-6 z-40 flex flex-col items-center gap-3 transition-all duration-300 ${
+          open ? "pointer-events-none translate-y-2 opacity-0" : "opacity-100"
+        }`}
+      >
+        <ChannelLink href={SUPPORT} label={supportLabel} className="bg-brand-600">
+          <IconHeadset className="size-6" />
+        </ChannelLink>
+        <ChannelLink href={TELEGRAM} label="Telegram" className="bg-[#229ED9]">
+          <IconTelegram className="size-6" />
+        </ChannelLink>
+        <ChannelLink href={WHATSAPP} label="WhatsApp" className="bg-[#25D366]" pulse>
+          <IconWhatsApp className="size-6" />
+        </ChannelLink>
+      </div>
 
-        {/* Bouton Horus AI (danse quand fermé) */}
+      {/* Horus AI — milieu droite, séparé des réseaux pour éviter toute confusion */}
+      <div
+        className={`fixed right-4 top-1/2 z-50 -translate-y-1/2 transition-opacity duration-300 ${
+          open ? "pointer-events-none opacity-0" : "opacity-100"
+        }`}
+      >
         <button
           type="button"
-          onClick={() => setOpen((v) => !v)}
+          onClick={() => setOpen(true)}
           aria-label={ai.open}
           aria-expanded={open}
-          className={`relative grid size-14 place-items-center rounded-full bg-gradient-to-br from-brand-700 to-brand-500 text-white shadow-xl shadow-brand-900/30 transition-transform hover:scale-105 ${
-            open ? "" : "animate-bob"
-          }`}
+          className="group relative grid size-16 place-items-center rounded-full bg-gradient-to-br from-brand-700 to-brand-500 text-white shadow-xl shadow-brand-900/30 transition-transform hover:scale-105 animate-bob"
         >
-          {!open && (
-            <span className="absolute inset-0 rounded-full bg-brand-500/60 animate-pulse-ring" />
-          )}
-          <span className="relative">
-            {open ? <IconClose className="size-6" /> : <IconEye className="size-7" />}
+          <span className="absolute inset-0 rounded-full bg-brand-500/60 animate-pulse-ring" />
+          <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-lg bg-brand-900 px-2.5 py-1 text-xs font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100">
+            {ai.title}
           </span>
+          <IconEye className="relative size-8" />
         </button>
       </div>
 
@@ -146,12 +146,12 @@ export function HorusAI() {
       <div
         role="dialog"
         aria-label={ai.title}
-        className={`fixed bottom-24 right-6 z-50 flex w-[min(380px,calc(100vw-3rem))] origin-bottom-right flex-col overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-2xl shadow-brand-900/25 transition-all duration-300 dark:border-white/10 dark:bg-slate-900 ${
+        className={`fixed right-4 top-1/2 z-50 flex w-[min(380px,calc(100vw-2rem))] -translate-y-1/2 origin-right flex-col overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-2xl shadow-brand-900/25 transition-[transform,opacity] duration-300 dark:border-white/10 dark:bg-slate-900 ${
           open
             ? "pointer-events-auto scale-100 opacity-100"
-            : "pointer-events-none translate-y-3 scale-95 opacity-0"
+            : "pointer-events-none scale-95 opacity-0"
         }`}
-        style={{ height: "min(560px, calc(100vh - 9rem))" }}
+        style={{ height: "min(560px, calc(100vh - 5rem))" }}
       >
         <div className="flex items-center gap-3 bg-gradient-to-r from-brand-800 to-brand-600 px-5 py-4 text-white">
           <span className="grid size-10 place-items-center rounded-full bg-white/15">
