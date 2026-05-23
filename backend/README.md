@@ -50,3 +50,39 @@ publics sont en lecture seule (sauf newsletter/contact qui acceptent un POST).
 ## CORS
 `CORS_ALLOWED_ORIGINS` (dans `.env`) doit lister l'URL du frontend
 (ex. `http://localhost:3000`, et plus tard votre domaine de prod).
+
+## Base de données PostgreSQL (en ligne)
+
+Le code lit `DATABASE_URL`. Sans elle → SQLite (dev). Avec elle → PostgreSQL.
+
+1. Créez une base Postgres managée (gratuit pour démarrer) :
+   - **Neon** (recommandé) : https://neon.tech → New Project → copiez la
+     *connection string* (format `postgresql://user:pass@host/db?sslmode=require`).
+   - Alternatives : Supabase, Railway, Render.
+2. Mettez-la dans `backend/.env` :
+   ```
+   DATABASE_URL=postgresql://user:pass@host/db?sslmode=require
+   ```
+3. Construisez tout le schéma (tables + relations, automatique) :
+   ```bash
+   python manage.py migrate
+   python manage.py createsuperuser
+   ```
+   → la base en ligne contient maintenant toutes les tables. Le CRUD se fait
+   dans l'admin Django.
+
+## Déploiement (sur votre serveur)
+
+```bash
+pip install -r requirements.txt
+python manage.py collectstatic --noinput     # statiques admin (whitenoise)
+python manage.py migrate
+gunicorn config.wsgi:application --bind 0.0.0.0:8000
+```
+
+Variables d'env de prod : `DJANGO_DEBUG=0`, `DJANGO_SECRET_KEY=...` (longue,
+aléatoire), `DJANGO_ALLOWED_HOSTS=api.horus-lab.com`, `DATABASE_URL=...`,
+`CSRF_TRUSTED_ORIGINS=https://api.horus-lab.com`,
+`CORS_ALLOWED_ORIGINS=https://horus-lab.com`.
+
+Placez Nginx devant Gunicorn (reverse proxy + HTTPS via Let's Encrypt).
