@@ -11,7 +11,8 @@ WORKDIR /app
 
 # psycopg[binary] et Pillow embarquent leurs libs -> pas de paquet système requis.
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+# --retries/--timeout : robustesse face à un réseau instable pendant le build.
+RUN pip install --retries 10 --timeout 120 -r requirements.txt
 
 COPY . .
 
