@@ -14,7 +14,7 @@ import {
 type Msg = { role: "user" | "assistant"; content: string };
 
 const WHATSAPP = "https://wa.me/237699173771";
-const TELEGRAM = "https://t.me/LoicTONBA";
+const TELEGRAM = "https://t.me/tonbacm";
 const SUPPORT = "mailto:contact@horus-lab.com";
 
 function ChannelLink({

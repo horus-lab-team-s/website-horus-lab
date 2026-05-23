@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useLang } from "@/i18n/LanguageProvider";
 import {
   IconFacebook,
+  IconGitHub,
   IconLinkedIn,
   IconMail,
   IconPhone,
@@ -18,6 +19,7 @@ const SOCIAL = [
   { Icon: IconX, label: "X", href: "https://x.com/horuslabafrik" },
   { Icon: IconFacebook, label: "Facebook", href: "https://www.facebook.com/HorusLab" },
   { Icon: IconWhatsApp, label: "WhatsApp", href: "https://wa.me/237699173771" },
+  { Icon: IconGitHub, label: "GitHub", href: "https://github.com/horus-lab-team-s" },
 ];
 
 export function Footer() {
