@@ -5,6 +5,7 @@ excerpt: "Site web, application mobile, PWA… Le choix de la plateforme conditi
 author: "Équipe Horus-Lab"
 tags: ["Web", "Mobile", "Stratégie produit"]
 category: "Développement"
+cover: "/blog/cover-dev.svg"
 ---
 
 C'est l'une des premières questions que l'on nous pose : « Faut-il commencer par un site web ou une application mobile ? » La bonne réponse dépend de vos utilisateurs et de vos objectifs.

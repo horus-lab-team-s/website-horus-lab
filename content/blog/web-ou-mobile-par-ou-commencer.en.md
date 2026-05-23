@@ -5,6 +5,7 @@ excerpt: "Website, mobile app, PWA… Your platform choice drives your budget, r
 author: "Horus-Lab Team"
 tags: ["Web", "Mobile", "Product strategy"]
 category: "Development"
+cover: "/blog/cover-dev.svg"
 ---
 
 It's one of the first questions we get asked: "Should we start with a website or a mobile app?" The right answer depends on your users and your goals.

@@ -1,0 +1,28 @@
+<svg width="800" height="450" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Développement web et mobile">
+  <defs>
+    <linearGradient id="bgD" x1="0" y1="0" x2="800" y2="450" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1b4f9c"/>
+      <stop offset="0.5" stop-color="#2196f3"/>
+      <stop offset="1" stop-color="#5bb8e8"/>
+    </linearGradient>
+    <radialGradient id="glowD" cx="0.5" cy="0.5" r="0.5">
+      <stop stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bgD)"/>
+  <g opacity="0.12" stroke="#ffffff" stroke-width="2">
+    <path d="M90 360h140M230 360v-70M230 290h80"/>
+    <path d="M710 90h-130M580 90v70M580 160h-70"/>
+    <circle cx="90" cy="360" r="5" fill="#ffffff"/>
+    <circle cx="710" cy="90" r="5" fill="#ffffff"/>
+  </g>
+  <circle cx="400" cy="205" r="170" fill="url(#glowD)"/>
+  <g transform="translate(400 205)" stroke="#ffffff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M-58 -42 L-104 0 L-58 42"/>
+    <path d="M58 -42 L104 0 L58 42"/>
+    <path d="M22 -58 L-22 58"/>
+  </g>
+  <text x="400" y="392" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#ffffff" opacity="0.95">Développement Web &amp; Mobile</text>
+  <text x="752" y="424" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700" fill="#ffffff" opacity="0.7">horus-lab</text>
+</svg>

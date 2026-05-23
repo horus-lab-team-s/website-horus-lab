@@ -1,0 +1,32 @@
+<svg width="800" height="450" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Intelligence artificielle">
+  <defs>
+    <linearGradient id="bgA" x1="0" y1="0" x2="800" y2="450" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0f2a5e"/>
+      <stop offset="0.55" stop-color="#1b4f9c"/>
+      <stop offset="1" stop-color="#2196f3"/>
+    </linearGradient>
+    <radialGradient id="glowA" cx="0.5" cy="0.5" r="0.5">
+      <stop stop-color="#5bb8e8" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#5bb8e8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bgA)"/>
+  <circle cx="400" cy="205" r="180" fill="url(#glowA)"/>
+  <g opacity="0.5" stroke="#bfe0ff" stroke-width="2">
+    <path d="M400 205 L300 120 M400 205 L520 110 M400 205 L250 250 M400 205 L560 280 M400 205 L400 90 M400 205 L470 320"/>
+  </g>
+  <g fill="#ffffff">
+    <circle cx="300" cy="120" r="9"/>
+    <circle cx="520" cy="110" r="11"/>
+    <circle cx="250" cy="250" r="8"/>
+    <circle cx="560" cy="280" r="10"/>
+    <circle cx="400" cy="90" r="7"/>
+    <circle cx="470" cy="320" r="8"/>
+  </g>
+  <g transform="translate(400 205)">
+    <circle r="34" fill="#ffffff"/>
+    <path d="M0 -16 C6 -5 13 2 24 4 C13 6 6 13 0 24 C-6 13 -13 6 -24 4 C-13 2 -6 -5 0 -16 Z" fill="#1b4f9c"/>
+  </g>
+  <text x="400" y="392" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#ffffff" opacity="0.95">Intelligence Artificielle</text>
+  <text x="752" y="424" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700" fill="#ffffff" opacity="0.7">horus-lab</text>
+</svg>

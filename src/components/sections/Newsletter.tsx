@@ -42,14 +42,14 @@ export function Newsletter() {
   return (
     <section className="bg-surface px-5 pb-20 sm:px-8 sm:pb-28">
       <Reveal className="mx-auto max-w-5xl">
-        <div className="relative overflow-hidden rounded-[2rem] border border-brand-100 bg-gradient-to-br from-brand-50 to-white p-8 sm:p-12">
+        <div className="relative overflow-hidden rounded-[2rem] border border-brand-100 bg-gradient-to-br from-brand-50 to-white p-8 dark:border-white/10 dark:from-slate-900 dark:to-slate-900 sm:p-12">
           <div
             aria-hidden
             className="pointer-events-none absolute -right-10 -top-10 size-48 rounded-full bg-sky/20 blur-3xl"
           />
           <div className="relative grid items-center gap-8 lg:grid-cols-[1fr_1fr]">
             <div>
-              <h2 className="text-2xl font-extrabold tracking-tight text-brand-900 sm:text-3xl">
+              <h2 className="text-2xl font-extrabold tracking-tight text-brand-900 dark:text-white sm:text-3xl">
                 {n.title}
               </h2>
               <p className="mt-3 text-muted">{n.subtitle}</p>
@@ -70,7 +70,7 @@ export function Newsletter() {
                   required
                   aria-label="Email"
                   placeholder={n.placeholder}
-                  className="w-full rounded-full border border-brand-100 bg-white px-5 py-3.5 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10"
+                  className="w-full rounded-full border border-brand-100 bg-white px-5 py-3.5 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 dark:border-white/10 dark:bg-white/5 dark:text-white"
                 />
                 <button
                   type="submit"

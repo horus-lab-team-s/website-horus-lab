@@ -26,6 +26,8 @@ Dans **Project → Settings → Environment Variables**, ajouter (scope *Product
 | `BREVO_SENDER_EMAIL` | `noreply@horus-lab.com` | recommandé |
 | `BREVO_SENDER_NAME` | `Horus-Lab` | optionnel |
 | `NEXT_PUBLIC_SITE_URL` | `https://horus-lab.com` | recommandé (SEO) |
+| `GROQ_API_KEY` | _clé Groq gratuite_ | optionnel (assistant Horus AI ; sans clé → FAQ intégrée) |
+| `GROQ_MODEL` | `llama-3.3-70b-versatile` | optionnel |
 
 Après ajout/modification des variables : **redéployer** pour qu'elles soient prises en compte.
 

@@ -9,7 +9,7 @@ export function CTA() {
   const c = dict.cta;
 
   return (
-    <section className="bg-white px-5 py-20 sm:px-8 sm:py-28">
+    <section className="bg-white px-5 py-20 dark:bg-[#070e1c] sm:px-8 sm:py-28">
       <Reveal className="mx-auto max-w-5xl">
         <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-800 via-brand-700 to-brand-900 px-7 py-14 text-center shadow-2xl shadow-brand-900/30 sm:px-16 sm:py-20">
           {/* Décor */}

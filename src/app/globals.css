@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Mode sombre piloté par la classe `.dark` sur <html> (et non par l'OS). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ============================================================
    Horus-Lab — Design tokens (couleurs issues du logo)
    ============================================================ */
@@ -202,6 +205,17 @@ body {
 }
 
 /* ============================================================
+   Horus AI — indicateur de saisie
+   ============================================================ */
+@keyframes typingDot {
+  0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+  30% { opacity: 1; transform: translateY(-3px); }
+}
+.typing-dot {
+  animation: typingDot 1.2s infinite ease-in-out;
+}
+
+/* ============================================================
    Accessibilité
    ============================================================ */
 .skip-link {
@@ -226,6 +240,43 @@ body {
   outline: 2px solid var(--color-brand-500);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* ============================================================
+   Mode sombre
+   ============================================================ */
+.dark {
+  --color-surface: #070e1c;
+  --color-ink: #e7eefb;
+  --color-muted: #93a4c0;
+}
+.dark .bg-grid {
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    rgba(123, 170, 255, 0.1) 1px,
+    transparent 0
+  );
+}
+.dark .glass {
+  background: rgba(10, 18, 34, 0.72);
+}
+.dark .article {
+  color: #c7d3e6;
+}
+.dark .article h2,
+.dark .article h3,
+.dark .article strong {
+  color: #ffffff;
+}
+.dark .article a {
+  color: var(--color-brand-300);
+}
+.dark .article blockquote {
+  background: rgba(123, 170, 255, 0.08);
+  color: #cfdcf0;
+}
+.dark .article code {
+  background: rgba(123, 170, 255, 0.12);
 }
 
 @media (prefers-reduced-motion: reduce) {

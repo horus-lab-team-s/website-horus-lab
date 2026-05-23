@@ -5,6 +5,7 @@ excerpt: "L'intelligence artificielle n'est pas réservée aux géants de la tec
 author: "Équipe Horus-Lab"
 tags: ["IA", "Automatisation", "Data"]
 category: "Intelligence Artificielle"
+cover: "/blog/cover-ia.svg"
 ---
 
 L'IA fait beaucoup parler, mais derrière le buzz se cachent des usages très concrets, déjà accessibles. Voici cinq exemples que nous déployons pour nos clients.

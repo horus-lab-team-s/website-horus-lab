@@ -13,7 +13,7 @@ const fr = {
     cta: "Démarrer un projet",
   },
   hero: {
-    eyebrow: "Startup technologique africaine",
+    eyebrow: "Entreprise technologique africaine",
     titleLead: "Nous transformons vos idées en",
     titleHighlight: "solutions numériques durables",
     subtitle:
@@ -193,10 +193,28 @@ const fr = {
     latfrom: "À lire aussi",
     empty: "Aucun article pour le moment.",
   },
+  ai: {
+    title: "Horus AI",
+    subtitle: "Assistant virtuel",
+    greeting:
+      "Bonjour 👋 Je suis Horus AI, l'assistant de Horus-Lab. Posez-moi vos questions sur nos services, notre méthode ou comment démarrer un projet.",
+    placeholder: "Écrivez votre message…",
+    send: "Envoyer",
+    open: "Discuter avec Horus AI",
+    close: "Fermer",
+    error:
+      "Désolé, une erreur est survenue. Réessayez ou écrivez-nous à contact@horus-lab.com.",
+    disclaimer: "Horus AI peut faire des erreurs. Vérifiez les infos importantes.",
+    suggestions: [
+      "Quels services proposez-vous ?",
+      "Comment démarrer un projet ?",
+      "Où êtes-vous situés ?",
+    ],
+  },
   footer: {
     tagline: "Solutions technologiques intelligentes • Impact durable",
     about:
-      "Horus-Lab est une startup technologique africaine qui conçoit des produits numériques durables.",
+      "Horus-Lab est une entreprise technologique africaine qui conçoit des produits numériques durables.",
     columns: [
       {
         title: "Services",
@@ -229,7 +247,7 @@ const en: Dict = {
     cta: "Start a project",
   },
   hero: {
-    eyebrow: "African technology startup",
+    eyebrow: "African technology company",
     titleLead: "We turn your ideas into",
     titleHighlight: "lasting digital solutions",
     subtitle:
@@ -409,10 +427,28 @@ const en: Dict = {
     latfrom: "Read next",
     empty: "No articles yet.",
   },
+  ai: {
+    title: "Horus AI",
+    subtitle: "Virtual assistant",
+    greeting:
+      "Hi 👋 I'm Horus AI, Horus-Lab's assistant. Ask me about our services, our method, or how to start a project.",
+    placeholder: "Type your message…",
+    send: "Send",
+    open: "Chat with Horus AI",
+    close: "Close",
+    error:
+      "Sorry, something went wrong. Try again or email us at contact@horus-lab.com.",
+    disclaimer: "Horus AI can make mistakes. Verify important information.",
+    suggestions: [
+      "What services do you offer?",
+      "How do I start a project?",
+      "Where are you located?",
+    ],
+  },
   footer: {
     tagline: "Intelligent technology solutions • Lasting impact",
     about:
-      "Horus-Lab is an African technology startup building lasting digital products.",
+      "Horus-Lab is an African technology company building lasting digital products.",
     columns: [
       {
         title: "Services",

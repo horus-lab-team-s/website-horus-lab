@@ -48,7 +48,7 @@ export function Contact() {
           <span className="text-sm font-bold uppercase tracking-[0.18em] text-brand-500">
             {c.eyebrow}
           </span>
-          <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-brand-900 sm:text-4xl">
+          <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-brand-900 dark:text-white sm:text-4xl">
             {c.title}
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-muted">{c.subtitle}</p>
@@ -57,7 +57,7 @@ export function Contact() {
             <li>
               <a
                 href={`mailto:${f.email}`}
-                className="flex items-center gap-3 font-medium text-brand-900 transition-colors hover:text-brand-600"
+                className="flex items-center gap-3 font-medium text-brand-900 dark:text-white transition-colors hover:text-brand-600"
               >
                 <span className="grid size-10 place-items-center rounded-xl bg-brand-500/10 text-brand-600">
                   <IconMail className="size-5" />
@@ -65,7 +65,7 @@ export function Contact() {
                 {f.email}
               </a>
             </li>
-            <li className="flex items-center gap-3 font-medium text-brand-900">
+            <li className="flex items-center gap-3 font-medium text-brand-900 dark:text-white">
               <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-500/10 text-brand-600">
                 <IconPhone className="size-5" />
               </span>
@@ -81,7 +81,7 @@ export function Contact() {
                 ))}
               </span>
             </li>
-            <li className="flex items-center gap-3 font-medium text-brand-900">
+            <li className="flex items-center gap-3 font-medium text-brand-900 dark:text-white">
               <span className="grid size-10 place-items-center rounded-xl bg-brand-500/10 text-brand-600">
                 <IconPin className="size-5" />
               </span>
@@ -95,7 +95,7 @@ export function Contact() {
           <form
             onSubmit={handleSubmit}
             noValidate
-            className="rounded-3xl border border-brand-100 bg-white p-6 shadow-xl shadow-brand-900/5 sm:p-8"
+            className="rounded-3xl border border-brand-100 bg-white p-6 shadow-xl shadow-brand-900/5 dark:border-white/10 dark:bg-slate-900 sm:p-8"
           >
             {/* Honeypot anti-spam : invisible pour les humains, ignoré par les lecteurs d'écran. */}
             <div aria-hidden className="absolute left-[-9999px] h-0 w-0 overflow-hidden" hidden>
@@ -181,12 +181,12 @@ export function Contact() {
 }
 
 const inputCls =
-  "w-full rounded-xl border border-brand-100 bg-surface/60 px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-500/10";
+  "w-full rounded-xl border border-brand-100 bg-surface/60 px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:bg-white focus:ring-4 focus:ring-brand-500/10 dark:border-white/10 dark:bg-white/5 dark:text-white dark:focus:bg-white/10";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-sm font-semibold text-brand-900">
+      <span className="mb-1.5 block text-sm font-semibold text-brand-900 dark:text-white">
         {label}
       </span>
       {children}

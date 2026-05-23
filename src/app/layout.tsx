@@ -26,7 +26,15 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   // L'attribut lang est ajusté par langue côté client (LanguageProvider).
   return (
-    <html lang="fr" className={`${geistSans.variable} h-full`}>
+    <html lang="fr" className={`${geistSans.variable} h-full`} suppressHydrationWarning>
+      <head>
+        {/* Applique le thème avant le 1er paint → pas de flash. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',d);}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full">
         <a href="#main" className="skip-link">
           Aller au contenu / Skip to content

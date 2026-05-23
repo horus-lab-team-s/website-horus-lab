@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { LanguageProvider } from "@/i18n/LanguageProvider";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { BackToTop } from "@/components/BackToTop";
+import { HorusAI } from "@/components/HorusAI";
 import {
   getDictionary,
   isLocale,
@@ -66,6 +67,7 @@ export default async function LangLayout({
       <ScrollProgress />
       {children}
       <BackToTop />
+      <HorusAI />
     </LanguageProvider>
   );
 }
