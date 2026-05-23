@@ -207,6 +207,7 @@ const fr = {
     error:
       "Désolé, une erreur est survenue. Réessayez ou écrivez-nous à contact@horus-lab.com.",
     disclaimer: "Horus AI peut faire des erreurs. Vérifiez les infos importantes.",
+    offline: "Mode hors-ligne (réponses limitées)",
     suggestions: [
       "Quels services proposez-vous ?",
       "Comment démarrer un projet ?",
@@ -444,6 +445,7 @@ const en: Dict = {
     error:
       "Sorry, something went wrong. Try again or email us at contact@horus-lab.com.",
     disclaimer: "Horus AI can make mistakes. Verify important information.",
+    offline: "Offline mode (limited answers)",
     suggestions: [
       "What services do you offer?",
       "How do I start a project?",

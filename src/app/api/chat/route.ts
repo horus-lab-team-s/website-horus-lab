@@ -74,6 +74,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       reply: faqFallback(lastUser.content, lang),
       fallback: true,
+      reason: "unconfigured",
     });
   }
 
@@ -100,7 +101,11 @@ export async function POST(request: Request) {
 
     if (!res.ok) {
       console.warn("[chat] provider error", res.status, await res.text());
-      return NextResponse.json({ reply: faqFallback(lastUser.content, lang), fallback: true });
+      return NextResponse.json({
+        reply: faqFallback(lastUser.content, lang),
+        fallback: true,
+        reason: "provider_error",
+      });
     }
 
     const data = await res.json();
@@ -109,6 +114,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ reply });
   } catch (err) {
     console.warn("[chat] error", err);
-    return NextResponse.json({ reply: faqFallback(lastUser.content, lang), fallback: true });
+    return NextResponse.json({
+      reply: faqFallback(lastUser.content, lang),
+      fallback: true,
+      reason: "provider_error",
+    });
   }
 }

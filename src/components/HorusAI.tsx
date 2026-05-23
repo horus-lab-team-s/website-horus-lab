@@ -16,6 +16,7 @@ export function HorusAI() {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [offline, setOffline] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Réinitialise le message d'accueil quand la langue change (avant 1re question).
@@ -49,8 +50,11 @@ export function HorusAI() {
         ...next,
         { role: "assistant", content: res.ok && data.reply ? data.reply : ai.error },
       ]);
+      // Indicateur : provider injoignable/erreur -> mode hors-ligne (FAQ).
+      setOffline(data?.reason === "provider_error");
     } catch {
       setMessages([...next, { role: "assistant", content: ai.error }]);
+      setOffline(true);
     } finally {
       setLoading(false);
     }
@@ -91,8 +95,10 @@ export function HorusAI() {
           <div className="flex-1">
             <p className="font-bold leading-tight">{ai.title}</p>
             <p className="flex items-center gap-1.5 text-xs text-brand-100">
-              <span className="size-2 rounded-full bg-green-400" />
-              {ai.subtitle}
+              <span
+                className={`size-2 rounded-full ${offline ? "bg-amber-400" : "bg-green-400"}`}
+              />
+              {offline ? ai.offline : ai.subtitle}
             </p>
           </div>
           <button
