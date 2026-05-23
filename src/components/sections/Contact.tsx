@@ -65,16 +65,21 @@ export function Contact() {
                 {f.email}
               </a>
             </li>
-            <li>
-              <a
-                href={`tel:${f.phone.replace(/\s/g, "")}`}
-                className="flex items-center gap-3 font-medium text-brand-900 transition-colors hover:text-brand-600"
-              >
-                <span className="grid size-10 place-items-center rounded-xl bg-brand-500/10 text-brand-600">
-                  <IconPhone className="size-5" />
-                </span>
-                {f.phone}
-              </a>
+            <li className="flex items-center gap-3 font-medium text-brand-900">
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-500/10 text-brand-600">
+                <IconPhone className="size-5" />
+              </span>
+              <span className="flex flex-col">
+                {f.phones.map((phone) => (
+                  <a
+                    key={phone}
+                    href={`tel:${phone.replace(/\s/g, "")}`}
+                    className="transition-colors hover:text-brand-600"
+                  >
+                    {phone}
+                  </a>
+                ))}
+              </span>
             </li>
             <li className="flex items-center gap-3 font-medium text-brand-900">
               <span className="grid size-10 place-items-center rounded-xl bg-brand-500/10 text-brand-600">

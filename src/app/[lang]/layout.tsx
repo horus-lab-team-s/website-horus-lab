@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LanguageProvider } from "@/i18n/LanguageProvider";
+import { ScrollProgress } from "@/components/ScrollProgress";
+import { BackToTop } from "@/components/BackToTop";
 import {
   getDictionary,
   isLocale,
@@ -59,5 +61,11 @@ export default async function LangLayout({
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
 
-  return <LanguageProvider lang={lang}>{children}</LanguageProvider>;
+  return (
+    <LanguageProvider lang={lang}>
+      <ScrollProgress />
+      {children}
+      <BackToTop />
+    </LanguageProvider>
+  );
 }

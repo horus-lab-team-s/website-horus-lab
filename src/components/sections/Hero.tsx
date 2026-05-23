@@ -14,8 +14,9 @@ export function Hero() {
       id="top"
       className="relative overflow-hidden bg-gradient-to-b from-brand-50 via-white to-surface pt-32 pb-20 sm:pt-40 sm:pb-28"
     >
-      {/* Décor : blobs animés + trame + vagues */}
+      {/* Décor : aurora + blobs animés + trame + vagues */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
+        <div className="absolute left-1/2 top-1/4 size-[42rem] -translate-x-1/2 rounded-full aurora opacity-20" />
         <div className="absolute inset-0 bg-grid opacity-60" />
         <div className="absolute -left-24 -top-24 size-96 rounded-full bg-brand-300/30 blur-3xl animate-drift" />
         <div className="absolute -right-20 top-20 size-[28rem] rounded-full bg-sky/20 blur-3xl animate-float-slow" />
