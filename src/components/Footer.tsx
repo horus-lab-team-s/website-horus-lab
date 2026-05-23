@@ -145,7 +145,15 @@ export function Footer() {
           <p>
             © {year} Horus-Lab. {f.rights}
           </p>
-          <p>Made in Africa 🌍</p>
+          <div className="flex items-center gap-4">
+            <Link
+              href={localePath("/legal")}
+              className="transition-colors hover:text-white"
+            >
+              {f.legal}
+            </Link>
+            <span aria-hidden>Made in Africa 🌍</span>
+          </div>
         </div>
       </div>
     </footer>

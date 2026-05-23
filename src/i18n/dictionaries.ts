@@ -230,6 +230,7 @@ const fr = {
     phones: ["+237 673 39 80 46", "+237 699 17 37 71"],
     location: "Douala, Cameroun · Afrique",
     rights: "Tous droits réservés.",
+    legal: "Mentions légales",
   },
 };
 
@@ -464,6 +465,7 @@ const en: Dict = {
     phones: ["+237 673 39 80 46", "+237 699 17 37 71"],
     location: "Douala, Cameroon · Africa",
     rights: "All rights reserved.",
+    legal: "Legal notice",
   },
 };
 
