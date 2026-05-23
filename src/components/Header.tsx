@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
 import { IconClose, IconGlobe, IconMenu } from "./icons";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function Header() {
   const { dict, otherLang, switchHref, localePath } = useLang();
@@ -31,7 +32,7 @@ export function Header() {
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "glass border-b border-brand-100/70 shadow-[0_8px_30px_-12px_rgba(15,42,94,0.18)]"
+          ? "glass border-b border-brand-100/70 shadow-[0_8px_30px_-12px_rgba(15,42,94,0.18)] dark:border-white/10"
           : "bg-transparent"
       }`}
     >
@@ -45,7 +46,7 @@ export function Header() {
             priority
             className="rounded-full ring-1 ring-brand-100"
           />
-          <span className="text-lg font-bold tracking-tight text-brand-900">
+          <span className="text-lg font-bold tracking-tight text-brand-900 dark:text-white">
             horus<span className="text-brand-500">-lab</span>
           </span>
         </Link>
@@ -56,7 +57,7 @@ export function Header() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="rounded-full px-4 py-2 text-sm font-medium text-ink/75 transition-colors hover:bg-brand-50 hover:text-brand-700"
+                className="rounded-full px-4 py-2 text-sm font-medium text-ink/75 transition-colors hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
               >
                 {link.label}
               </Link>
@@ -65,11 +66,13 @@ export function Header() {
         </ul>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
+
           <Link
             href={switchHref}
             hrefLang={otherLang}
             aria-label="Changer de langue / Switch language"
-            className="flex items-center gap-1.5 rounded-full border border-brand-200 px-3 py-2 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50"
+            className="flex items-center gap-1.5 rounded-full border border-brand-200 px-3 py-2 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:text-brand-200 dark:hover:bg-white/5"
           >
             <IconGlobe className="size-4" />
             {otherLang.toUpperCase()}
@@ -87,7 +90,7 @@ export function Header() {
             onClick={() => setOpen((v) => !v)}
             aria-label="Menu"
             aria-expanded={open}
-            className="flex size-10 items-center justify-center rounded-full border border-brand-200 text-brand-700 lg:hidden"
+            className="flex size-10 items-center justify-center rounded-full border border-brand-200 text-brand-700 dark:border-white/15 dark:text-brand-200 lg:hidden"
           >
             {open ? <IconClose className="size-5" /> : <IconMenu className="size-5" />}
           </button>
@@ -96,7 +99,7 @@ export function Header() {
 
       {/* Menu mobile */}
       <div
-        className={`overflow-hidden border-t border-brand-100 bg-white/95 backdrop-blur transition-[max-height] duration-300 lg:hidden ${
+        className={`overflow-hidden border-t border-brand-100 bg-white/95 backdrop-blur transition-[max-height] duration-300 dark:border-white/10 dark:bg-slate-900/95 lg:hidden ${
           open ? "max-h-96" : "max-h-0"
         }`}
       >
@@ -106,7 +109,7 @@ export function Header() {
               <Link
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className="block rounded-xl px-4 py-3 text-base font-medium text-ink/80 transition-colors hover:bg-brand-50 hover:text-brand-700"
+                className="block rounded-xl px-4 py-3 text-base font-medium text-ink/80 transition-colors hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
               >
                 {link.label}
               </Link>

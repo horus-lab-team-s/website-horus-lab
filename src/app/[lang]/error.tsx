@@ -33,10 +33,10 @@ export default function Error({
   }, [error]);
 
   return (
-    <main className="grid min-h-screen place-items-center bg-gradient-to-b from-brand-50 via-white to-surface px-5">
+    <main className="grid min-h-screen place-items-center bg-gradient-to-b from-brand-50 via-white to-surface px-5 dark:from-slate-950 dark:via-[#0a1326] dark:to-[#070e1c]">
       <div className="w-full max-w-md text-center">
         <p className="text-6xl font-extrabold tracking-tight text-gradient">!</p>
-        <h1 className="mt-4 text-2xl font-bold text-brand-900">{t.title}</h1>
+        <h1 className="mt-4 text-2xl font-bold text-brand-900 dark:text-white">{t.title}</h1>
         <p className="mt-3 text-muted">{t.body}</p>
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <button
@@ -48,7 +48,7 @@ export default function Error({
           </button>
           <a
             href={`/${lang}`}
-            className="rounded-full border border-brand-200 bg-white px-7 py-3 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50"
+            className="rounded-full border border-brand-200 bg-white px-7 py-3 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:bg-slate-900 dark:text-brand-200 dark:hover:bg-white/5"
           >
             {t.home}
           </a>

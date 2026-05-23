@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Horus-Lab — Solutions technologiques intelligentes",
     short_name: "Horus-Lab",
     description:
-      "Startup technologique africaine : développement web & mobile, ERP, logiciels sur-mesure et solutions d'intelligence artificielle.",
+      "Entreprise technologique africaine : développement web & mobile, ERP, logiciels sur-mesure et solutions d'intelligence artificielle.",
     start_url: "/fr",
     display: "standalone",
     background_color: "#f5f9ff",

@@ -23,10 +23,10 @@ export function Process() {
             {p.steps.map((step, i) => (
               <Reveal key={step.title} delay={i * 110}>
                 <li className="relative">
-                  <div className="relative z-10 grid size-14 place-items-center rounded-2xl bg-white text-xl font-extrabold text-brand-700 shadow-lg shadow-brand-900/10 ring-1 ring-brand-100">
+                  <div className="relative z-10 grid size-14 place-items-center rounded-2xl bg-white text-xl font-extrabold text-brand-700 shadow-lg shadow-brand-900/10 ring-1 ring-brand-100 dark:bg-slate-900 dark:text-brand-200 dark:ring-white/10">
                     {String(i + 1).padStart(2, "0")}
                   </div>
-                  <h3 className="mt-5 text-lg font-bold text-brand-900">
+                  <h3 className="mt-5 text-lg font-bold text-brand-900 dark:text-white">
                     {step.title}
                   </h3>
                   <p className="mt-2 text-sm leading-relaxed text-muted">

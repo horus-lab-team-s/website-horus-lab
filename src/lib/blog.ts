@@ -15,6 +15,7 @@ export type PostMeta = {
   author: string;
   tags: string[];
   category: string;
+  cover: string;
   readingMinutes: number;
 };
 
@@ -52,6 +53,7 @@ function toMeta(
     author: String(data.author ?? "Horus-Lab"),
     tags: Array.isArray(data.tags) ? (data.tags as string[]) : [],
     category: String(data.category ?? ""),
+    cover: String(data.cover ?? ""),
     readingMinutes: Math.max(1, Math.round(words / 200)),
   };
 }

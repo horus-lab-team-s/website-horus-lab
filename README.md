@@ -1,6 +1,6 @@
 # website-horus-lab
 
-Site vitrine de **Horus-Lab** — startup technologique africaine : développement web & mobile, ERP, logiciels sur-mesure et solutions d'intelligence artificielle.
+Site vitrine de **Horus-Lab** — entreprise technologique africaine : développement web & mobile, ERP, logiciels sur-mesure et solutions d'intelligence artificielle.
 
 > _Solutions technologiques intelligentes • Impact durable_
 

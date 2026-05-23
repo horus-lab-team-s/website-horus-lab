@@ -4,7 +4,7 @@ import Link from "next/link";
 // Rendu hors du provider de langue (route non localisée) -> texte bilingue figé.
 export default function NotFound() {
   return (
-    <main className="grid min-h-screen place-items-center bg-gradient-to-b from-brand-50 via-white to-surface px-5">
+    <main className="grid min-h-screen place-items-center bg-gradient-to-b from-brand-50 via-white to-surface px-5 dark:from-slate-950 dark:via-[#0a1326] dark:to-[#070e1c]">
       <div className="relative w-full max-w-lg text-center">
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-grid opacity-50" />
 
@@ -18,7 +18,7 @@ export default function NotFound() {
         />
 
         <p className="mt-8 text-7xl font-extrabold tracking-tight text-gradient">404</p>
-        <h1 className="mt-4 text-2xl font-bold text-brand-900">
+        <h1 className="mt-4 text-2xl font-bold text-brand-900 dark:text-white">
           Page introuvable
         </h1>
         <p className="mt-2 text-sm text-muted">Page not found</p>
@@ -39,7 +39,7 @@ export default function NotFound() {
           </Link>
           <Link
             href="/en"
-            className="rounded-full border border-brand-200 bg-white px-7 py-3 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50"
+            className="rounded-full border border-brand-200 bg-white px-7 py-3 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:bg-slate-900 dark:text-brand-200 dark:hover:bg-white/5"
           >
             Home
           </Link>

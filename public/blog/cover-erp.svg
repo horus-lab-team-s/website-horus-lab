@@ -1,0 +1,28 @@
+<svg width="800" height="450" viewBox="0 0 800 450" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ERP & gestion">
+  <defs>
+    <linearGradient id="bgE" x1="0" y1="0" x2="800" y2="450" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#163f7d"/>
+      <stop offset="0.55" stop-color="#1b6fd0"/>
+      <stop offset="1" stop-color="#5bb8e8"/>
+    </linearGradient>
+    <radialGradient id="glowE" cx="0.5" cy="0.5" r="0.5">
+      <stop stop-color="#ffffff" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bgE)"/>
+  <g opacity="0.12" stroke="#ffffff" stroke-width="2">
+    <path d="M120 70h120M240 70v60M240 130h90"/>
+    <path d="M680 360h-110M570 360v-70M570 290h-80"/>
+    <circle cx="120" cy="70" r="5" fill="#ffffff"/>
+    <circle cx="680" cy="360" r="5" fill="#ffffff"/>
+  </g>
+  <circle cx="400" cy="210" r="170" fill="url(#glowE)"/>
+  <g transform="translate(400 215)" stroke="#ffffff" stroke-width="9" stroke-linejoin="round" stroke-linecap="round" fill="none">
+    <path d="M0 -78 L96 -30 L0 18 L-96 -30 Z" fill="#ffffff" fill-opacity="0.14"/>
+    <path d="M-96 12 L0 60 L96 12"/>
+    <path d="M-96 48 L0 96 L96 48" opacity="0.6"/>
+  </g>
+  <text x="400" y="392" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="26" font-weight="700" fill="#ffffff" opacity="0.95">ERP &amp; Gestion</text>
+  <text x="752" y="424" text-anchor="end" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="700" fill="#ffffff" opacity="0.7">horus-lab</text>
+</svg>

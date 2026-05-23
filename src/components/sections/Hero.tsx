@@ -12,7 +12,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="relative overflow-hidden bg-gradient-to-b from-brand-50 via-white to-surface pt-32 pb-20 sm:pt-40 sm:pb-28"
+      className="relative overflow-hidden bg-gradient-to-b from-brand-50 via-white to-surface pt-32 pb-20 dark:from-slate-950 dark:via-[#0a1326] dark:to-[#070e1c] sm:pt-40 sm:pb-28"
     >
       {/* Décor : aurora + blobs animés + trame + vagues */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
@@ -27,14 +27,14 @@ export function Hero() {
         {/* Colonne texte */}
         <div>
           <Reveal>
-            <span className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/70 px-4 py-1.5 text-sm font-semibold text-brand-700 shadow-sm">
+            <span className="inline-flex items-center gap-2 rounded-full border border-brand-200 bg-white/70 px-4 py-1.5 text-sm font-semibold text-brand-700 shadow-sm dark:border-white/15 dark:bg-white/5 dark:text-brand-200">
               <IconEye className="size-4 text-brand-500" />
               {h.eyebrow}
             </span>
           </Reveal>
 
           <Reveal delay={80}>
-            <h1 className="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight text-brand-900 sm:text-5xl lg:text-6xl">
+            <h1 className="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight text-brand-900 dark:text-white sm:text-5xl lg:text-6xl">
               {h.titleLead}{" "}
               <span className="text-gradient animate-gradient">
                 {h.titleHighlight}
@@ -68,10 +68,10 @@ export function Hero() {
 
           {/* Stats */}
           <Reveal delay={320}>
-            <dl className="mt-12 grid grid-cols-2 gap-6 border-t border-brand-100 pt-8 sm:grid-cols-4">
+            <dl className="mt-12 grid grid-cols-2 gap-6 border-t border-brand-100 pt-8 dark:border-white/10 sm:grid-cols-4">
               {h.stats.map((stat) => (
                 <div key={stat.label}>
-                  <dt className="text-3xl font-extrabold text-brand-700">
+                  <dt className="text-3xl font-extrabold text-brand-700 dark:text-brand-300">
                     {stat.value}
                   </dt>
                   <dd className="mt-1 text-sm text-muted">{stat.label}</dd>
@@ -115,10 +115,13 @@ export function Hero() {
       </div>
 
       {/* Vague de transition vers la section suivante */}
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 bottom-0 text-white dark:text-[#070e1c]"
+      >
         <svg viewBox="0 0 1440 120" className="w-full" preserveAspectRatio="none">
           <path
-            fill="#ffffff"
+            fill="currentColor"
             d="M0 64L60 58.7C120 53 240 43 360 48C480 53 600 75 720 80C840 85 960 75 1080 64C1200 53 1320 43 1380 37.3L1440 32V120H0Z"
           />
         </svg>

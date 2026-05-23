@@ -24,7 +24,7 @@ const organizationLd = {
   url: SITE_URL,
   logo: `${SITE_URL}/Logo-HORUS-LAB.jpeg`,
   description:
-    "Startup technologique africaine : développement web & mobile, ERP, logiciels sur-mesure et solutions d'intelligence artificielle.",
+    "Entreprise technologique africaine : développement web & mobile, ERP, logiciels sur-mesure et solutions d'intelligence artificielle.",
   email: "contact@horus-lab.com",
   areaServed: "Africa",
   sameAs: [
