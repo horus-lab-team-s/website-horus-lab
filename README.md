@@ -11,13 +11,34 @@ website-horus-lab/
 └── backend/    # API Django REST (CMS de tout le contenu du site)
 ```
 
-## Démarrage rapide
+## 🚀 Lancement en une commande (Docker)
+
+Tout (PostgreSQL + API Django + frontend Next.js) démarre ensemble :
+
+```bash
+cp .env.example .env        # renseignez mots de passe / clés
+docker compose up --build -d
+```
+
+Au premier démarrage, le backend **migre la base, charge les données par
+défaut (seed) et crée le compte admin** automatiquement.
+
+| Service | URL |
+|---|---|
+| Frontend | http://localhost:3000 |
+| API | http://localhost:8000/api/ |
+| Admin (CRUD) | http://localhost:8000/admin/ |
+
+```bash
+docker compose logs -f          # suivre les logs
+docker compose down             # arrêter (volumes pgdata/media conservés)
+```
+
+## Développement sans Docker
 
 **Frontend** (port 3000) :
 ```bash
-cd frontend
-pnpm install
-pnpm dev
+cd frontend && pnpm install && pnpm dev
 ```
 
 **Backend** (port 8000) :
@@ -27,6 +48,7 @@ python -m venv .venv && . .venv/Scripts/activate   # ou source .venv/bin/activat
 pip install -r requirements.txt
 cp .env.example .env
 python manage.py migrate
+python manage.py seed            # données par défaut
 python manage.py createsuperuser
 python manage.py runserver
 ```

@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Sortie autonome : Next génère un serveur Node minimal, idéal pour Docker.
+  output: "standalone",
   images: {
     // Autorise next/image à servir nos illustrations SVG locales (de confiance),
     // en les isolant via une CSP sandbox.

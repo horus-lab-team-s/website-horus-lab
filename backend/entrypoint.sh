@@ -1,12 +1,22 @@
 #!/bin/sh
 # Démarrage du conteneur backend :
-# 1) applique les migrations (crée/maj le schéma dans Postgres)
-# 2) collecte les fichiers statiques (admin) servis par whitenoise
-# 3) lance Gunicorn (serveur de production)
+# 1) migrations (crée/maj le schéma dans Postgres)
+# 2) données par défaut (seed, idempotent)
+# 3) compte admin auto si DJANGO_SUPERUSER_* fournis
+# 4) fichiers statiques (admin) servis par whitenoise
+# 5) Gunicorn (serveur de production)
 set -e
 
 echo "→ Migrations..."
 python manage.py migrate --noinput
+
+echo "→ Données par défaut (seed)..."
+python manage.py seed
+
+if [ -n "$DJANGO_SUPERUSER_USERNAME" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ]; then
+  echo "→ Compte admin (créé s'il n'existe pas)..."
+  python manage.py createsuperuser --noinput || true
+fi
 
 echo "→ Fichiers statiques..."
 python manage.py collectstatic --noinput
