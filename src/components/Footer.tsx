@@ -34,6 +34,7 @@ export function Footer() {
     {
       title: f.columns[1].title,
       links: [
+        { label: dict.nav.about, href: localePath("/about") },
         { label: dict.nav.why, href: localePath("#why") },
         { label: dict.nav.process, href: localePath("#process") },
         { label: dict.nav.sectors, href: localePath("#sectors") },

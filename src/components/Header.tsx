@@ -25,6 +25,7 @@ export function Header() {
     { href: localePath("#process"), label: dict.nav.process },
     { href: localePath("#why"), label: dict.nav.why },
     { href: localePath("#sectors"), label: dict.nav.sectors },
+    { href: localePath("/about"), label: dict.nav.about },
     { href: localePath("/blog"), label: dict.nav.blog },
   ];
 
