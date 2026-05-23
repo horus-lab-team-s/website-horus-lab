@@ -38,7 +38,7 @@ export function Hero() {
         </Reveal>
 
         <Reveal delay={80}>
-          <h1 className="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
+          <h1 className="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.45)] sm:text-5xl lg:text-6xl">
             {h.titleLead}{" "}
             <span className="bg-gradient-to-r from-sky via-brand-200 to-white bg-clip-text text-transparent">
               {h.titleHighlight}
@@ -47,7 +47,7 @@ export function Hero() {
         </Reveal>
 
         <Reveal delay={160}>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-brand-100">
+          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-brand-50 [text-shadow:0_1px_12px_rgba(0,0,0,0.4)]">
             {h.subtitle}
           </p>
         </Reveal>
