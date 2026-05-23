@@ -1,0 +1,43 @@
+# Stack backend : PostgreSQL + API Django.
+# Démarrage :  docker compose up --build -d
+# Admin       :  docker compose exec backend python manage.py createsuperuser
+# Variables   :  copiez .env.example en .env et adaptez (surtout les mots de passe).
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-horuslab}
+      POSTGRES_USER: ${POSTGRES_USER:-horus}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-horus} -d ${POSTGRES_DB:-horuslab}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy   # attend que Postgres soit prêt
+    environment:
+      # Connexion à la BD du service "db" (réseau interne docker)
+      DATABASE_URL: postgresql://${POSTGRES_USER:-horus}:${POSTGRES_PASSWORD:-changeme}@db:5432/${POSTGRES_DB:-horuslab}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-dev-secret-change-me}
+      DJANGO_DEBUG: ${DJANGO_DEBUG:-0}
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost:3001}
+      CSRF_TRUSTED_ORIGINS: ${CSRF_TRUSTED_ORIGINS:-}
+    volumes:
+      - media:/app/media          # persiste les images uploadées
+    ports:
+      - "8000:8000"
+
+volumes:
+  pgdata:
+  media:
