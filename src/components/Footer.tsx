@@ -104,14 +104,19 @@ export function Footer() {
                   {f.email}
                 </a>
               </li>
-              <li>
-                <a
-                  href={`tel:${f.phone.replace(/\s/g, "")}`}
-                  className="flex items-center gap-3 text-brand-200 transition-colors hover:text-white"
-                >
-                  <IconPhone className="size-5 text-sky" />
-                  {f.phone}
-                </a>
+              <li className="flex items-start gap-3 text-brand-200">
+                <IconPhone className="mt-0.5 size-5 shrink-0 text-sky" />
+                <span className="flex flex-col gap-1">
+                  {f.phones.map((phone) => (
+                    <a
+                      key={phone}
+                      href={`tel:${phone.replace(/\s/g, "")}`}
+                      className="transition-colors hover:text-white"
+                    >
+                      {phone}
+                    </a>
+                  ))}
+                </span>
               </li>
               <li className="flex items-center gap-3 text-brand-200">
                 <IconPin className="size-5 text-sky" />

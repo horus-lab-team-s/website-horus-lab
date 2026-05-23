@@ -163,6 +163,45 @@ body {
 }
 
 /* ============================================================
+   Barre de progression de défilement
+   ============================================================ */
+.scroll-progress {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  height: 3px;
+  z-index: 60;
+  transform-origin: 0 50%;
+  background: linear-gradient(
+    90deg,
+    var(--color-brand-700),
+    var(--color-brand-500),
+    var(--color-sky)
+  );
+  box-shadow: 0 1px 8px rgba(33, 150, 243, 0.5);
+}
+
+/* ============================================================
+   Aurora — halo dégradé animé (profondeur du hero)
+   ============================================================ */
+@keyframes aurora {
+  0%, 100% { transform: translate(-12%, -8%) rotate(0deg) scale(1); }
+  50% { transform: translate(12%, 8%) rotate(180deg) scale(1.15); }
+}
+.aurora {
+  background: conic-gradient(
+    from 0deg,
+    var(--color-brand-300),
+    var(--color-sky),
+    var(--color-brand-100),
+    var(--color-brand-400),
+    var(--color-brand-300)
+  );
+  filter: blur(90px);
+  animation: aurora 28s ease-in-out infinite;
+}
+
+/* ============================================================
    Accessibilité
    ============================================================ */
 .skip-link {
