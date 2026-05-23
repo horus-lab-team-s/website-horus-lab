@@ -22,9 +22,7 @@ export function Header() {
   // Ancres préfixées par la locale : ramènent à l'accueil /<lang> puis scrollent.
   const links = [
     { href: localePath("#services"), label: dict.nav.services },
-    { href: localePath("#process"), label: dict.nav.process },
-    { href: localePath("#why"), label: dict.nav.why },
-    { href: localePath("#sectors"), label: dict.nav.sectors },
+    { href: localePath("/portfolio"), label: dict.nav.portfolio },
     { href: localePath("/about"), label: dict.nav.about },
     { href: localePath("/blog"), label: dict.nav.blog },
   ];
