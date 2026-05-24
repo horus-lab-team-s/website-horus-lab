@@ -31,14 +31,14 @@ export function Hero() {
 
       <div className="relative mx-auto max-w-4xl px-5 text-center sm:px-8">
         <Reveal>
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-sm font-semibold text-white shadow-sm backdrop-blur">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur">
             <IconEye className="size-4 text-sky" />
             {h.eyebrow}
           </span>
         </Reveal>
 
         <Reveal delay={80}>
-          <h1 className="mt-6 text-4xl font-extrabold leading-[1.08] tracking-tight text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.45)] sm:text-5xl lg:text-6xl">
+          <h1 className="mt-7 text-4xl font-extrabold leading-[1.05] tracking-tight text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.45)] sm:text-5xl lg:text-6xl xl:text-7xl">
             {h.titleLead}{" "}
             <span className="bg-gradient-to-r from-sky via-brand-200 to-white bg-clip-text text-transparent">
               {h.titleHighlight}
@@ -63,7 +63,7 @@ export function Hero() {
             </a>
             <a
               href="#services"
-              className="inline-flex items-center justify-center rounded-full border border-white/40 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10"
+              className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/5 px-7 py-3.5 text-base font-semibold text-white backdrop-blur transition-colors hover:bg-white/15"
             >
               {h.ctaSecondary}
             </a>
@@ -81,6 +81,17 @@ export function Hero() {
           </dl>
         </Reveal>
       </div>
+
+      {/* Indice de défilement (discret, desktop) */}
+      <a
+        href="#services"
+        aria-label={h.ctaSecondary}
+        className="absolute bottom-28 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1 text-white/70 transition-colors hover:text-white md:flex"
+      >
+        <span className="animate-bob">
+          <IconArrowRight className="size-5 rotate-90" />
+        </span>
+      </a>
 
       {/* Vague animée de transition vers la section suivante */}
       <div

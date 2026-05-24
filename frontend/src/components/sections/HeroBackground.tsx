@@ -39,7 +39,6 @@ export function HeroBackground({ images }: { images: string[] }) {
       <div className="absolute inset-0 bg-gradient-to-br from-brand-900/65 via-brand-900/40 to-brand-800/55" />
       {/* Léger renforcement bas pour les CTA/stats */}
       <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-brand-900/45 to-transparent" />
-      <div className="absolute inset-0 bg-grid opacity-10" />
     </div>
   );
 }
