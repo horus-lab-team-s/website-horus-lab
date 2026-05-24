@@ -15,8 +15,8 @@ export function Testimonials() {
 
         <div className="mt-14 grid gap-6 lg:grid-cols-3">
           {t.items.map((item, i) => (
-            <Reveal key={item.name} delay={i * 100}>
-              <figure className="flex h-full flex-col rounded-3xl border border-brand-100 bg-gradient-to-b from-brand-50/50 to-white p-7 shadow-sm dark:border-white/10 dark:from-slate-900 dark:to-slate-900">
+            <Reveal key={item.name} delay={i * 70}>
+              <figure className="card flex h-full flex-col p-7">
                 <span aria-hidden className="text-5xl leading-none text-brand-300">
                   &ldquo;
                 </span>

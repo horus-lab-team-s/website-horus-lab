@@ -45,7 +45,8 @@ export function Contact() {
       <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[0.9fr_1.1fr]">
         {/* Messaging */}
         <Reveal>
-          <span className="text-sm font-bold uppercase tracking-[0.18em] text-brand-500">
+          <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-500">
+            <span className="h-px w-6 bg-brand-400/60" />
             {c.eyebrow}
           </span>
           <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-brand-900 dark:text-white sm:text-4xl">

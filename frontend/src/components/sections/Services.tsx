@@ -25,10 +25,9 @@ export function Services() {
           {s.items.map((item, i) => {
             const Icon = icons[i] ?? IconCode;
             return (
-              <Reveal key={item.title} delay={i * 90}>
-                <article className="group relative h-full overflow-hidden rounded-3xl border border-brand-100 bg-gradient-to-b from-white to-brand-50/40 p-7 transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-200 hover:shadow-2xl hover:shadow-brand-900/10 dark:border-white/10 dark:from-slate-900 dark:to-slate-900 dark:hover:border-white/20">
-                  <span className="absolute -right-8 -top-8 size-24 rounded-full bg-brand-100/60 transition-transform duration-500 group-hover:scale-150" />
-                  <div className="relative">
+              <Reveal key={item.title} delay={i * 70}>
+                <article className="card group h-full p-7">
+                  <div>
                     <div className="grid size-14 place-items-center rounded-2xl bg-brand-700 text-white shadow-lg shadow-brand-700/25 transition-colors group-hover:bg-brand-500">
                       <Icon className="size-7" />
                     </div>

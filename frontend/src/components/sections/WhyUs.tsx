@@ -16,8 +16,8 @@ export function WhyUs() {
 
         <div className="mt-14 grid gap-6 sm:grid-cols-2">
           {w.items.map((item, i) => (
-            <Reveal key={item.title} delay={i * 90}>
-              <article className="flex h-full gap-5 rounded-3xl border border-brand-100 bg-gradient-to-br from-brand-50/60 to-white p-7 transition-all duration-300 hover:border-brand-200 hover:shadow-xl hover:shadow-brand-900/5 dark:border-white/10 dark:from-slate-900 dark:to-slate-900 dark:hover:border-white/20">
+            <Reveal key={item.title} delay={i * 70}>
+              <article className="card flex h-full gap-5 p-7">
                 <div className="grid size-11 shrink-0 place-items-center rounded-xl bg-brand-500/10 text-brand-600">
                   <IconCheck className="size-6" />
                 </div>

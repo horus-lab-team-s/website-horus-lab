@@ -133,6 +133,33 @@ body {
   -webkit-backdrop-filter: blur(12px);
 }
 
+/* Carte épurée réutilisable : surface nette, bordure fine, ombre douce,
+   léger soulèvement au survol. Centralise le style pour toute cohérence. */
+.card {
+  border-radius: 1.5rem;
+  background: #ffffff;
+  border: 1px solid rgba(217, 232, 248, 0.8); /* brand-100 */
+  box-shadow: 0 1px 2px rgba(15, 42, 94, 0.04);
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.45s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(182, 210, 251, 0.9); /* brand-200 */
+  box-shadow: 0 26px 50px -24px rgba(15, 42, 94, 0.25);
+}
+.dark .card {
+  background: #0f172a; /* slate-900 */
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+.dark .card:hover {
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 26px 50px -24px rgba(0, 0, 0, 0.6);
+}
+
 /* ============================================================
    Contenu d'article (markdown -> HTML)
    ============================================================ */
