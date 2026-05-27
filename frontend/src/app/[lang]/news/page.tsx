@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
 import { IconArrowRight } from "@/components/icons";
 import { isLocale, locales, type Lang, getDictionary } from "@/i18n/dictionaries";
-import { getNews } from "@/lib/news";
+import { getCmsNews } from "@/lib/cms";
 
 type Params = { lang: string };
 
@@ -51,7 +51,7 @@ export default async function NewsPage({
   if (!isLocale(lang)) notFound();
   const d = getDictionary(lang);
   const n = d.news;
-  const items = getNews(lang);
+  const items = await getCmsNews(lang);
 
   return (
     <>

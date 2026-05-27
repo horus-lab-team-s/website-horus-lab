@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "content",
     "blog",
     "portfolio",
+    "news",
     "newsletter",
     "contact",
 ]

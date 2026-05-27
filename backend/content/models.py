@@ -182,11 +182,95 @@ class Testimonial(models.Model):
     name = models.CharField(max_length=120)
     role_fr = models.CharField(max_length=120, blank=True)
     role_en = models.CharField(max_length=120, blank=True)
+    avatar = models.ImageField(upload_to="testimonials/", blank=True, null=True)
+    is_featured = models.BooleanField(
+        default=False,
+        help_text="Affiche en grand sur la home (1 seul attendu).",
+    )
     order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
 
     class Meta:
         ordering = ["order"]
+
+    def __str__(self):
+        return self.name
+
+
+class Partner(models.Model):
+    """Partenaire ou client de référence (logos / noms défilants)."""
+
+    name = models.CharField(max_length=120)
+    logo = models.ImageField(upload_to="partners/", blank=True, null=True)
+    url = models.URLField(blank=True)
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["order"]
+        verbose_name = "Partenaire"
+        verbose_name_plural = "Partenaires"
+
+    def __str__(self):
+        return self.name
+
+
+class Achievement(models.Model):
+    """Chiffre clé affiché sur la page Réalisations (-30%, +25%, 11, 3)."""
+
+    value = models.CharField(max_length=20, help_text="Ex. −30%, 11, +25%")
+    label_fr = models.CharField(max_length=120)
+    label_en = models.CharField(max_length=120)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order"]
+        verbose_name = "Chiffre clé"
+        verbose_name_plural = "Chiffres clés"
+
+    def __str__(self):
+        return f"{self.value} {self.label_fr}"
+
+
+class TechStackItem(models.Model):
+    """Élément du bandeau « stack maîtrisée » (marquee)."""
+
+    name = models.CharField(max_length=60)
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["order"]
+        verbose_name = "Stack — élément"
+        verbose_name_plural = "Stack — éléments"
+
+    def __str__(self):
+        return self.name
+
+
+class TeamMember(models.Model):
+    """Membre de l'équipe (profil affichable sur la page Équipe / À propos)."""
+
+    name = models.CharField(max_length=120)
+    role_fr = models.CharField(max_length=160)
+    role_en = models.CharField(max_length=160)
+    bio_fr = models.TextField(blank=True)
+    bio_en = models.TextField(blank=True)
+    photo = models.ImageField(upload_to="team/", blank=True, null=True)
+    linkedin_url = models.URLField(blank=True)
+    github_url = models.URLField(blank=True)
+    email = models.EmailField(blank=True)
+    is_lead = models.BooleanField(
+        default=False,
+        help_text="Mettez en avant ce profil (PDG, fondateur, lead).",
+    )
+    order = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["order", "id"]
+        verbose_name = "Membre de l'équipe"
+        verbose_name_plural = "Équipe"
 
     def __str__(self):
         return self.name

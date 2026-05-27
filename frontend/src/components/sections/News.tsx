@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
 import { IconArrowRight } from "@/components/icons";
-import { getNews } from "@/lib/news";
+import type { NewsItem } from "@/lib/news";
 
 function formatDate(date: string, lang: string) {
   return new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-US", {
@@ -14,10 +14,10 @@ function formatDate(date: string, lang: string) {
   }).format(new Date(date));
 }
 
-export function News() {
+export function News({ items: rawItems }: { items: NewsItem[] }) {
   const { dict, lang, localePath } = useLang();
   const n = dict.news;
-  const items = getNews(lang).slice(0, 4);
+  const items = rawItems.slice(0, 4);
   if (items.length === 0) return null;
 
   return (

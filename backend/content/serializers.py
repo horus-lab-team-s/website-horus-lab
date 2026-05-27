@@ -1,13 +1,17 @@
 from rest_framework import serializers
 
 from .models import (
+    Achievement,
     HeroContent,
     HeroSlide,
     HeroStat,
+    Partner,
     ProcessStep,
     Sector,
     Service,
     SiteSettings,
+    TeamMember,
+    TechStackItem,
     Testimonial,
     Value,
 )
@@ -67,4 +71,35 @@ class SectorSerializer(serializers.ModelSerializer):
 class TestimonialSerializer(serializers.ModelSerializer):
     class Meta:
         model = Testimonial
-        fields = ["id", "quote_fr", "quote_en", "name", "role_fr", "role_en", "order"]
+        fields = [
+            "id", "quote_fr", "quote_en", "name", "role_fr", "role_en",
+            "avatar", "is_featured", "order",
+        ]
+
+
+class PartnerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Partner
+        fields = ["id", "name", "logo", "url", "order"]
+
+
+class AchievementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Achievement
+        fields = ["id", "value", "label_fr", "label_en", "order"]
+
+
+class TechStackItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TechStackItem
+        fields = ["id", "name", "order"]
+
+
+class TeamMemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TeamMember
+        fields = [
+            "id", "name", "role_fr", "role_en", "bio_fr", "bio_en",
+            "photo", "linkedin_url", "github_url", "email",
+            "is_lead", "order",
+        ]

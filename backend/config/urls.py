@@ -9,6 +9,7 @@ urlpatterns = [
     path("api/", include("content.urls")),
     path("api/blog/", include("blog.urls")),
     path("api/portfolio/", include("portfolio.urls")),
+    path("api/news/", include("news.urls")),
     path("api/newsletter/", include("newsletter.urls")),
     path("api/contact/", include("contact.urls")),
 ]

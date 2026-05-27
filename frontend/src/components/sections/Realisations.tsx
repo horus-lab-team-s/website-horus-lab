@@ -13,7 +13,7 @@ import {
   IconLayers,
   IconSpark,
 } from "@/components/icons";
-import { getProjects } from "@/lib/projects";
+import type { Project } from "@/lib/projects";
 
 const ICONS: Record<string, typeof IconCode> = {
   code: IconCode,
@@ -25,11 +25,12 @@ const ICONS: Record<string, typeof IconCode> = {
   check: IconCheck,
 };
 
-export function Realisations() {
-  const { dict, lang, localePath } = useLang();
+export function Realisations({ projects }: { projects: Project[] }) {
+  const { dict, localePath } = useLang();
   const r = dict.realisations;
-  const projects = getProjects(lang).slice(0, 4);
-  const [featured, ...rest] = projects;
+  const top = projects.slice(0, 4);
+  if (top.length === 0) return null;
+  const [featured, ...rest] = top;
   const Featured = ICONS[featured.iconKey] ?? IconCode;
 
   return (

@@ -16,6 +16,7 @@ import { Newsletter } from "@/components/sections/Newsletter";
 import { getAllPosts } from "@/lib/blog";
 import { isLocale } from "@/i18n/dictionaries";
 import { SITE_URL } from "@/lib/site";
+import { getCmsProjects, getCmsNews } from "@/lib/cms";
 
 type Params = { lang: string };
 
@@ -40,7 +41,12 @@ export default async function Home({ params }: { params: Promise<Params> }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
 
-  const latestPosts = getAllPosts(lang).slice(0, 3);
+  // Fetch parallèle CMS + posts (ISR via lib/cms).
+  const [projects, news, latestPosts] = await Promise.all([
+    getCmsProjects(lang),
+    getCmsNews(lang),
+    Promise.resolve(getAllPosts(lang).slice(0, 3)),
+  ]);
 
   return (
     <>
@@ -52,12 +58,12 @@ export default async function Home({ params }: { params: Promise<Params> }) {
       <main id="main" tabIndex={-1}>
         <Hero />
         <Services />
-        <Realisations />
+        <Realisations projects={projects} />
         <Process />
         <WhyUs />
         <Sectors />
         <Testimonials />
-        <News />
+        <News items={news} />
         <BlogPreview posts={latestPosts} />
         <CTA />
         <Contact />

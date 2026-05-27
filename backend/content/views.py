@@ -3,24 +3,32 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import (
+    Achievement,
     HeroContent,
     HeroSlide,
     HeroStat,
+    Partner,
     ProcessStep,
     Sector,
     Service,
     SiteSettings,
+    TeamMember,
+    TechStackItem,
     Testimonial,
     Value,
 )
 from .serializers import (
+    AchievementSerializer,
     HeroContentSerializer,
     HeroSlideSerializer,
     HeroStatSerializer,
+    PartnerSerializer,
     ProcessStepSerializer,
     SectorSerializer,
     ServiceSerializer,
     SiteSettingsSerializer,
+    TeamMemberSerializer,
+    TechStackItemSerializer,
     TestimonialSerializer,
     ValueSerializer,
 )
@@ -72,3 +80,23 @@ class SectorViewSet(viewsets.ReadOnlyModelViewSet):
 class TestimonialViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Testimonial.objects.filter(is_active=True)
     serializer_class = TestimonialSerializer
+
+
+class PartnerViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Partner.objects.filter(is_active=True)
+    serializer_class = PartnerSerializer
+
+
+class AchievementViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Achievement.objects.all()
+    serializer_class = AchievementSerializer
+
+
+class TechStackItemViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = TechStackItem.objects.filter(is_active=True)
+    serializer_class = TechStackItemSerializer
+
+
+class TeamMemberViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = TeamMember.objects.filter(is_active=True)
+    serializer_class = TeamMemberSerializer

@@ -7,7 +7,7 @@ import { Reveal } from "@/components/Reveal";
 import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { IconArrowRight } from "@/components/icons";
 import { isLocale, locales, type Lang } from "@/i18n/dictionaries";
-import { getProjects } from "@/lib/projects";
+import { getCmsProjects } from "@/lib/cms";
 
 type Params = { lang: string };
 
@@ -123,7 +123,7 @@ export default async function PortfolioPage({
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const c = CONTENT[lang];
-  const projects = getProjects(lang);
+  const projects = await getCmsProjects(lang);
 
   return (
     <>
