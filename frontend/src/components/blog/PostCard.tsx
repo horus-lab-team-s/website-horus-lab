@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useLang } from "@/i18n/LanguageProvider";
-import { IconArrowRight } from "@/components/icons";
+import { IconArrowRight, IconEye } from "@/components/icons";
 import type { PostMeta } from "@/lib/blog";
 
 export function formatDate(date: string, lang: string) {
@@ -21,31 +21,45 @@ export function PostCard({ post }: { post: PostMeta }) {
   return (
     <Link
       href={localePath(`/blog/${post.slug}`)}
-      className="group flex h-full flex-col overflow-hidden rounded-3xl border border-brand-100 bg-white transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-200 hover:shadow-2xl hover:shadow-brand-900/10 dark:border-white/10 dark:bg-slate-900"
+      className="group lift-xl relative flex h-full flex-col overflow-hidden rounded-3xl border border-brand-100 bg-white dark:border-white/10 dark:bg-slate-900"
     >
-      {/* Illustration de couverture */}
-      <div className="relative h-44 overflow-hidden bg-gradient-to-br from-brand-700 via-brand-500 to-sky">
+      {/* Couverture immersive */}
+      <div className="relative h-52 overflow-hidden bg-gradient-to-br from-brand-700 via-brand-500 to-sky">
         {post.cover ? (
           <Image
             src={post.cover}
             alt=""
             fill
             sizes="(max-width: 768px) 100vw, 33vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
+            className="zoom-img object-cover"
           />
         ) : (
-          <div className="absolute inset-0 bg-grid opacity-20" />
+          <>
+            <div aria-hidden className="absolute inset-0 bg-grid opacity-20" />
+            <IconEye
+              aria-hidden
+              className="absolute -right-6 -top-6 size-44 text-white/10"
+            />
+          </>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-900/30 to-transparent" />
-        <span className="absolute bottom-3 left-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-brand-700 backdrop-blur">
+        {/* Dégradé descendant pour lisibilité */}
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-gradient-to-t from-brand-900/55 via-brand-900/10 to-transparent"
+        />
+        {/* Badge catégorie */}
+        <span className="absolute bottom-3 left-4 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-brand-700 backdrop-blur">
+          <span className="size-1.5 rounded-full bg-brand-500" />
           {post.category}
         </span>
+        {/* Shine sweep */}
+        <span aria-hidden className="shine pointer-events-none absolute inset-0" />
       </div>
 
       <div className="flex flex-1 flex-col p-6">
         <div className="flex items-center gap-2 text-xs text-muted">
           <time dateTime={post.date}>{formatDate(post.date, lang)}</time>
-          <span aria-hidden>•</span>
+          <span aria-hidden>·</span>
           <span>
             {post.readingMinutes} {dict.blog.readTime}
           </span>
@@ -56,7 +70,7 @@ export function PostCard({ post }: { post: PostMeta }) {
         <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-muted">
           {post.excerpt}
         </p>
-        <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600">
+        <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 transition-colors group-hover:text-brand-700 dark:text-brand-300">
           {dict.blog.readMore}
           <IconArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
         </span>

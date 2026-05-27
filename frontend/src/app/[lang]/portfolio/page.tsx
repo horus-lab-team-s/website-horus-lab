@@ -4,9 +4,10 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
-import { PortfolioGrid, type Project } from "@/components/portfolio/PortfolioGrid";
+import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { IconArrowRight } from "@/components/icons";
 import { isLocale, locales, type Lang } from "@/i18n/dictionaries";
+import { getProjects } from "@/lib/projects";
 
 type Params = { lang: string };
 
@@ -16,6 +17,8 @@ export function generateStaticParams(): { lang: Lang }[] {
   return locales.map((lang) => ({ lang }));
 }
 
+type Achievement = { value: string; label: string };
+
 type Content = {
   eyebrow: string;
   title: string;
@@ -23,18 +26,26 @@ type Content = {
   allLabel: string;
   resultLabel: string;
   note: string;
-  projects: Project[];
+  context: string;
+  contextTeam: string;
+  achievementsTitle: string;
+  achievements: Achievement[];
+  stackTitle: string;
+  stack: string[];
   ctaTitle: string;
   ctaButton: string;
 };
 
-const GRADIENTS = [
-  "from-brand-700 via-brand-500 to-sky",
-  "from-brand-800 via-brand-600 to-brand-400",
-  "from-brand-600 via-sky to-brand-300",
-  "from-brand-900 via-brand-700 to-brand-500",
-  "from-brand-500 via-sky to-brand-200",
-  "from-brand-700 to-brand-900",
+const STACK = [
+  "Next.js",
+  "React",
+  "TypeScript",
+  "JavaScript",
+  "HTML5 · CSS3",
+  "Tailwind CSS",
+  "Prisma",
+  "SQL Server",
+  "JIRA",
 ];
 
 const CONTENT: Record<Lang, Content> = {
@@ -42,39 +53,47 @@ const CONTENT: Record<Lang, Content> = {
     eyebrow: "Réalisations",
     title: "Des projets qui créent de la valeur",
     subtitle:
-      "Un aperçu de ce que nous construisons avec nos clients, du concept à la mise en production.",
+      "Une sélection de produits livrés en production pour des groupes multinationaux. De la conception au déploiement, en équipe.",
     allLabel: "Tous",
-    resultLabel: "résultat",
-    note: "Exemples représentatifs de nos savoir-faire.",
+    resultLabel: "portée",
+    note: "Projets réels livrés en production.",
+    context:
+      "En collaboration avec SOFTRONIC INNOVING — direction Armel SIME (PDG). Équipe : Brailain Loic TONBA et ses collègues.",
+    contextTeam: "Armel SIME (PDG SOFTRONIC INNOVING) · Brailain Loic TONBA · équipe SOFTRONIC INNOVING",
+    achievementsTitle: "Impact mesuré",
+    achievements: [
+      { value: "−30%", label: "temps de chargement" },
+      { value: "+25%", label: "stabilité des applications" },
+      { value: "11", label: "pays couverts (Afrique)" },
+      { value: "3", label: "groupes multinationaux servis" },
+    ],
+    stackTitle: "Stack maîtrisée",
+    stack: STACK,
     ctaTitle: "Votre projet sera le prochain ?",
     ctaButton: "Discutons-en",
-    projects: [
-      { title: "Plateforme de paiement mobile", category: "Fintech", desc: "Application de transferts et paiements mobile money, sécurisée et temps réel, pensée pour le marché africain.", tags: ["Mobile", "API", "Sécurité"], result: "+40% de transactions", iconKey: "globe", gradient: GRADIENTS[0] },
-      { title: "ERP agricole intégré", category: "AgriTech", desc: "Gestion des stocks, des coopératives et de la traçabilité, du champ jusqu'à la vente.", tags: ["ERP", "Cloud", "Data"], result: "−30% de pertes", iconKey: "layers", gradient: GRADIENTS[1] },
-      { title: "Téléconsultation médicale", category: "Santé", desc: "Application de prise de rendez-vous et de consultation à distance, avec dossier patient.", tags: ["Mobile", "Web", "IA"], result: "10k+ patients", iconKey: "spark", gradient: GRADIENTS[2] },
-      { title: "Marketplace e-commerce", category: "Commerce", desc: "Place de marché multi-vendeurs avec paiements intégrés et logistique de livraison.", tags: ["Next.js", "Paiement"], result: "x3 ventes", iconKey: "code", gradient: GRADIENTS[3] },
-      { title: "Plateforme e-learning", category: "Éducation", desc: "Cours en ligne, suivi de progression et certifications, optimisée pour faible bande passante.", tags: ["PWA", "Vidéo"], result: "25k apprenants", iconKey: "eye", gradient: GRADIENTS[4] },
-      { title: "Suivi logistique temps réel", category: "Logistique", desc: "Tableau de bord de géolocalisation et d'optimisation des tournées de livraison.", tags: ["IoT", "Cartographie"], result: "−20% de délais", iconKey: "cog", gradient: GRADIENTS[5] },
-    ],
   },
   en: {
     eyebrow: "Work",
     title: "Projects that create value",
     subtitle:
-      "A glimpse of what we build with our clients, from concept to production.",
+      "A selection of products shipped to production for multinational groups. Concept to deployment, with the team.",
     allLabel: "All",
-    resultLabel: "outcome",
-    note: "Representative examples of our expertise.",
+    resultLabel: "scope",
+    note: "Real projects, live in production.",
+    context:
+      "In collaboration with SOFTRONIC INNOVING — led by Armel SIME (CEO). Team: Brailain Loic TONBA and colleagues.",
+    contextTeam: "Armel SIME (CEO SOFTRONIC INNOVING) · Brailain Loic TONBA · SOFTRONIC INNOVING team",
+    achievementsTitle: "Measured impact",
+    achievements: [
+      { value: "−30%", label: "page load time" },
+      { value: "+25%", label: "application stability" },
+      { value: "11", label: "African countries reached" },
+      { value: "3", label: "multinational groups served" },
+    ],
+    stackTitle: "Stack we master",
+    stack: STACK,
     ctaTitle: "Will your project be next?",
     ctaButton: "Let's talk",
-    projects: [
-      { title: "Mobile payment platform", category: "Fintech", desc: "Secure, real-time mobile-money transfer and payment app, built for the African market.", tags: ["Mobile", "API", "Security"], result: "+40% transactions", iconKey: "globe", gradient: GRADIENTS[0] },
-      { title: "Integrated agri ERP", category: "AgriTech", desc: "Inventory, cooperative and traceability management, from field to sale.", tags: ["ERP", "Cloud", "Data"], result: "−30% losses", iconKey: "layers", gradient: GRADIENTS[1] },
-      { title: "Medical teleconsultation", category: "Health", desc: "Appointment booking and remote consultation app, with patient records.", tags: ["Mobile", "Web", "AI"], result: "10k+ patients", iconKey: "spark", gradient: GRADIENTS[2] },
-      { title: "E-commerce marketplace", category: "Commerce", desc: "Multi-vendor marketplace with integrated payments and delivery logistics.", tags: ["Next.js", "Payments"], result: "3x sales", iconKey: "code", gradient: GRADIENTS[3] },
-      { title: "E-learning platform", category: "Education", desc: "Online courses, progress tracking and certifications, optimized for low bandwidth.", tags: ["PWA", "Video"], result: "25k learners", iconKey: "eye", gradient: GRADIENTS[4] },
-      { title: "Real-time logistics tracking", category: "Logistics", desc: "Geolocation dashboard and delivery-route optimization.", tags: ["IoT", "Mapping"], result: "−20% delays", iconKey: "cog", gradient: GRADIENTS[5] },
-    ],
   },
 };
 
@@ -104,41 +123,111 @@ export default async function PortfolioPage({
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const c = CONTENT[lang];
+  const projects = getProjects(lang);
 
   return (
     <>
       <Header />
       <main id="main" tabIndex={-1}>
-        <section className="relative overflow-hidden bg-gradient-to-b from-brand-50 to-surface pt-32 pb-12 dark:from-slate-950 dark:to-[#070e1c] sm:pt-40">
-          <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid opacity-50" />
-          <div className="relative mx-auto max-w-3xl px-5 text-center sm:px-8">
+        {/* Hero éditorial */}
+        <section className="relative overflow-hidden bg-gradient-to-b from-brand-50 to-surface pt-32 pb-16 dark:from-slate-950 dark:to-[#070e1c] sm:pt-40">
+          <div aria-hidden className="bg-grid-soft pointer-events-none absolute inset-0 opacity-60" />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -left-20 top-1/3 h-[360px] w-[360px] rounded-full bg-brand-400/15 blur-3xl"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-10 bottom-0 h-[300px] w-[300px] rounded-full bg-sky/10 blur-3xl"
+          />
+
+          <div className="relative mx-auto max-w-4xl px-5 text-center sm:px-8">
             <Reveal>
-              <span className="text-sm font-bold uppercase tracking-[0.18em] text-brand-500">
+              <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-500">
+                <span className="h-px w-6 bg-brand-400/60" />
                 {c.eyebrow}
               </span>
-              <h1 className="mt-3 text-4xl font-extrabold tracking-tight text-brand-900 dark:text-white sm:text-5xl">
+              <h1 className="mt-4 text-4xl font-extrabold leading-[1.05] tracking-tight text-brand-900 dark:text-white sm:text-5xl lg:text-6xl">
                 {c.title}
               </h1>
-              <p className="mt-4 text-lg leading-relaxed text-muted">{c.subtitle}</p>
-              <p className="mt-2 text-sm text-muted/80">{c.note}</p>
+              <p className="mt-5 text-lg leading-relaxed text-muted">{c.subtitle}</p>
+              <p className="mt-2 text-sm italic text-muted/80">{c.note}</p>
+            </Reveal>
+
+            <Reveal delay={120}>
+              <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-brand-100 bg-white/70 px-5 py-2.5 text-xs font-medium text-brand-800 backdrop-blur dark:border-white/10 dark:bg-white/5 dark:text-brand-100">
+                <span className="size-1.5 animate-pulse rounded-full bg-brand-500" />
+                {c.context}
+              </div>
             </Reveal>
           </div>
         </section>
 
+        {/* Impact mesuré (compteurs) */}
+        <section className="bg-surface py-12 sm:py-16">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <Reveal>
+              <div className="grid gap-6 rounded-3xl border border-brand-100 bg-white p-8 dark:border-white/10 dark:bg-slate-900 sm:grid-cols-2 sm:p-10 lg:grid-cols-4">
+                {c.achievements.map((a, i) => (
+                  <div key={a.label} className="relative">
+                    {i > 0 && (
+                      <span
+                        aria-hidden
+                        className="absolute -left-3 top-1 hidden h-12 w-px bg-brand-100 lg:block dark:bg-white/10"
+                      />
+                    )}
+                    <div className="text-4xl font-extrabold tracking-tight text-brand-700 dark:text-brand-300 sm:text-5xl">
+                      {a.value}
+                    </div>
+                    <div className="mt-2 text-sm font-medium text-muted">
+                      {a.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+
+            {/* Stack */}
+            <Reveal delay={120} className="mt-10">
+              <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-6">
+                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-500">
+                  {c.stackTitle}
+                </span>
+                <div className="marquee-mask overflow-hidden">
+                  <ul className="marquee-track items-center text-sm font-semibold text-brand-800 dark:text-brand-100">
+                    {[...c.stack, ...c.stack].map((t, i) => (
+                      <li key={`${t}-${i}`} className="flex items-center gap-3 whitespace-nowrap">
+                        <span className="size-1.5 rounded-full bg-brand-400" />
+                        {t}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        {/* Grille des projets */}
         <section className="bg-surface pb-20 sm:pb-28">
           <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <PortfolioGrid
-              projects={c.projects}
+              projects={projects}
               allLabel={c.allLabel}
               resultLabel={c.resultLabel}
             />
           </div>
         </section>
 
+        {/* CTA */}
         <section className="bg-surface px-5 pb-24 sm:px-8">
           <Reveal className="mx-auto max-w-5xl">
             <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-800 via-brand-700 to-brand-900 px-7 py-14 text-center shadow-2xl shadow-brand-900/30 sm:px-16">
               <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid opacity-[0.15]" />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -left-10 -top-10 size-60 rounded-full bg-brand-500/30 blur-3xl animate-float-slow"
+              />
               <h2 className="relative mx-auto max-w-2xl text-2xl font-extrabold text-white sm:text-3xl">
                 {c.ctaTitle}
               </h2>

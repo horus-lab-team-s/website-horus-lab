@@ -127,6 +127,159 @@ body {
   background-size: 32px 32px;
 }
 
+/* Trame de circuit douce — fond éditorial */
+.bg-grid-soft {
+  background-image:
+    linear-gradient(rgba(27, 79, 156, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(27, 79, 156, 0.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+.dark .bg-grid-soft {
+  background-image:
+    linear-gradient(rgba(123, 170, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(123, 170, 255, 0.06) 1px, transparent 1px);
+}
+
+/* Chiffre éditorial géant (filigrane) */
+.numeral {
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-feature-settings: "tnum" 1, "lnum" 1;
+  letter-spacing: -0.04em;
+  line-height: 0.85;
+  background: linear-gradient(
+    180deg,
+    rgba(27, 79, 156, 0.14),
+    rgba(33, 150, 243, 0.06) 60%,
+    transparent
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.dark .numeral {
+  background: linear-gradient(
+    180deg,
+    rgba(123, 170, 255, 0.22),
+    rgba(91, 184, 232, 0.08) 60%,
+    transparent
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Tracé qui se dessine (timeline du Process) */
+@keyframes drawLine {
+  from { stroke-dashoffset: 1000; }
+  to { stroke-dashoffset: 0; }
+}
+.draw-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+}
+.is-visible .draw-line {
+  animation: drawLine 2.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Œil filigrane (motif signature) */
+.eye-watermark {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0.06;
+  color: var(--color-brand-700);
+}
+.dark .eye-watermark { opacity: 0.08; color: #7baaff; }
+
+/* Puces "secteurs" — cascade depuis le parent .reveal visible */
+@keyframes chipIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.sector-chip {
+  opacity: 0;
+  animation: chipIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-play-state: paused;
+}
+.is-visible .sector-chip { animation-play-state: running; }
+@media (prefers-reduced-motion: reduce) {
+  .sector-chip { opacity: 1; animation: none; }
+}
+
+/* Marquee horizontal (bandeau partenaires / défilement) */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  gap: 3rem;
+  width: max-content;
+  animation: marquee 36s linear infinite;
+}
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+/* Reflet "shine" qui balaie la carte au survol */
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+.shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.shine:hover::after { transform: translateX(120%); }
+
+/* Halo qui pulse derrière un point d'accent */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.45); }
+  50% { box-shadow: 0 0 0 14px rgba(33, 150, 243, 0); }
+}
+.glow-pulse { animation: glowPulse 2.6s ease-out infinite; }
+
+/* Élévation premium (cartes "featured") */
+.lift-xl {
+  transition:
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.55s ease;
+}
+.lift-xl:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 38px 60px -30px rgba(15, 42, 94, 0.35);
+}
+.dark .lift-xl:hover {
+  box-shadow: 0 38px 60px -30px rgba(0, 0, 0, 0.7);
+}
+
+/* Étoile/spark animée (ponctuation décorative) */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.4; transform: scale(0.85); }
+  50% { opacity: 1; transform: scale(1.15); }
+}
+.twinkle { animation: twinkle 3.4s ease-in-out infinite; }
+
+/* Image avec zoom au survol du parent .group */
+.zoom-img { transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+.group:hover .zoom-img { transform: scale(1.06); }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track, .glow-pulse, .twinkle { animation: none; }
+  .shine::after { transition: none; }
+}
+
 .glass {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);

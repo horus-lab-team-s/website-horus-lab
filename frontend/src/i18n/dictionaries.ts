@@ -23,9 +23,8 @@ const fr = {
     ctaPrimary: "Démarrer un projet",
     ctaSecondary: "Découvrir nos services",
     stats: [
-      { value: "50+", label: "projets livrés" },
+      { value: "8+", label: "projets livrés" },
       { value: "4", label: "pôles d'expertise" },
-      { value: "98%", label: "clients satisfaits" },
       { value: "24/7", label: "accompagnement" },
     ],
   },
@@ -120,6 +119,15 @@ const fr = {
       "Administration publique",
       "Énergie & Environnement",
     ],
+  },
+  realisations: {
+    eyebrow: "Réalisations",
+    title: "Des produits déjà en production",
+    subtitle:
+      "Aux côtés de SOFTRONIC INNOVING (PDG Armel SIME), nous concevons et livrons des applications utilisées par des groupes multinationaux à travers l'Afrique.",
+    featuredLabel: "Projet phare",
+    viewAll: "Voir toutes les réalisations",
+    detailsLabel: "Détails",
   },
   testimonials: {
     eyebrow: "Témoignages",
@@ -261,9 +269,8 @@ const en: Dict = {
     ctaPrimary: "Start a project",
     ctaSecondary: "Explore our services",
     stats: [
-      { value: "50+", label: "projects delivered" },
+      { value: "8+", label: "projects delivered" },
       { value: "4", label: "areas of expertise" },
-      { value: "98%", label: "happy clients" },
       { value: "24/7", label: "support" },
     ],
   },
@@ -358,6 +365,15 @@ const en: Dict = {
       "Public administration",
       "Energy & Environment",
     ],
+  },
+  realisations: {
+    eyebrow: "Work",
+    title: "Products already live in production",
+    subtitle:
+      "Alongside SOFTRONIC INNOVING (CEO Armel SIME), we design and ship applications used by multinational groups across Africa.",
+    featuredLabel: "Featured project",
+    viewAll: "See all our work",
+    detailsLabel: "Details",
   },
   testimonials: {
     eyebrow: "Testimonials",

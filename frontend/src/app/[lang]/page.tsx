@@ -3,6 +3,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { Services } from "@/components/sections/Services";
+import { Realisations } from "@/components/sections/Realisations";
 import { Process } from "@/components/sections/Process";
 import { WhyUs } from "@/components/sections/WhyUs";
 import { Sectors } from "@/components/sections/Sectors";
@@ -50,6 +51,7 @@ export default async function Home({ params }: { params: Promise<Params> }) {
       <main id="main" tabIndex={-1}>
         <Hero />
         <Services />
+        <Realisations />
         <Process />
         <WhyUs />
         <Sectors />
