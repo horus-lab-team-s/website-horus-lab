@@ -6,7 +6,6 @@ import {
   IconArrowRight,
   IconCode,
   IconCog,
-  IconEye,
   IconLayers,
   IconSpark,
 } from "@/components/icons";
@@ -57,11 +56,6 @@ export function Services() {
                     isFeature ? "min-h-[280px]" : "min-h-[240px]"
                   }`}
                 >
-                  {/* Œil filigrane (signature Horus) */}
-                  {isFeature && (
-                    <IconEye className="eye-watermark -bottom-10 -right-10 size-[280px]" />
-                  )}
-
                   {/* Tracé de circuit qui s'éclaire au survol */}
                   <svg
                     aria-hidden

@@ -96,10 +96,39 @@ export function Realisations() {
                 <circle cx="400" cy="160" r="4" fill="currentColor" />
                 <circle cx="620" cy="200" r="4" fill="currentColor" />
               </svg>
-              <IconEye
+              {/* Constellation décorative (nœuds + connexions) */}
+              <svg
                 aria-hidden
-                className="pointer-events-none absolute -right-10 -top-10 size-[320px] text-white/10"
-              />
+                viewBox="0 0 400 320"
+                className="pointer-events-none absolute -right-6 -top-4 h-72 w-[420px] text-white/20"
+              >
+                <g fill="currentColor">
+                  <circle cx="60" cy="60" r="3" />
+                  <circle cx="180" cy="40" r="2.5" />
+                  <circle cx="300" cy="90" r="3.5" />
+                  <circle cx="120" cy="160" r="2.5" />
+                  <circle cx="240" cy="180" r="3" />
+                  <circle cx="340" cy="220" r="2.5" />
+                  <circle cx="80" cy="260" r="3" />
+                  <circle cx="200" cy="280" r="2" />
+                </g>
+                <g
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="0.7"
+                  opacity="0.6"
+                >
+                  <line x1="60" y1="60" x2="180" y2="40" />
+                  <line x1="180" y1="40" x2="300" y2="90" />
+                  <line x1="60" y1="60" x2="120" y2="160" />
+                  <line x1="120" y1="160" x2="240" y2="180" />
+                  <line x1="240" y1="180" x2="300" y2="90" />
+                  <line x1="240" y1="180" x2="340" y2="220" />
+                  <line x1="120" y1="160" x2="80" y2="260" />
+                  <line x1="80" y1="260" x2="200" y2="280" />
+                  <line x1="200" y1="280" x2="340" y2="220" />
+                </g>
+              </svg>
               {/* Shine sweep */}
               <span aria-hidden className="shine pointer-events-none absolute inset-0" />
 

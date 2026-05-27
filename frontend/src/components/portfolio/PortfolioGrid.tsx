@@ -14,6 +14,7 @@ import {
 } from "@/components/icons";
 import type { Project } from "@/lib/projects";
 
+
 export type { Project };
 
 const ICONS: Record<string, typeof IconCode> = {
@@ -93,12 +94,6 @@ export function PortfolioGrid({
                     <circle cx="460" cy="140" r="3" fill="currentColor" />
                     <circle cx="600" cy="80" r="3" fill="currentColor" />
                   </svg>
-
-                  {/* Œil filigrane */}
-                  <IconEye
-                    aria-hidden
-                    className="pointer-events-none absolute -right-6 -top-4 size-44 text-white/10"
-                  />
 
                   {/* Numéro + icône */}
                   <div className="relative flex h-full items-center justify-between px-8">

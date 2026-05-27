@@ -8,6 +8,7 @@ import { Process } from "@/components/sections/Process";
 import { WhyUs } from "@/components/sections/WhyUs";
 import { Sectors } from "@/components/sections/Sectors";
 import { Testimonials } from "@/components/sections/Testimonials";
+import { News } from "@/components/sections/News";
 import { BlogPreview } from "@/components/sections/BlogPreview";
 import { CTA } from "@/components/sections/CTA";
 import { Contact } from "@/components/sections/Contact";
@@ -56,6 +57,7 @@ export default async function Home({ params }: { params: Promise<Params> }) {
         <WhyUs />
         <Sectors />
         <Testimonials />
+        <News />
         <BlogPreview posts={latestPosts} />
         <CTA />
         <Contact />

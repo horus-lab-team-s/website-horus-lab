@@ -40,9 +40,9 @@ export function Footer() {
       links: [
         { label: dict.nav.about, href: localePath("/about") },
         { label: dict.nav.portfolio, href: localePath("/portfolio") },
-        { label: dict.nav.process, href: localePath("#process") },
-        { label: dict.nav.sectors, href: localePath("#sectors") },
+        { label: dict.nav.news, href: localePath("/news") },
         { label: dict.nav.blog, href: localePath("/blog") },
+        { label: dict.nav.sectors, href: localePath("#sectors") },
       ],
     },
   ];

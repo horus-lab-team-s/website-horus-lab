@@ -5,7 +5,6 @@ import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
 import {
   IconArrowRight,
-  IconEye,
   IconMail,
   IconPhone,
   IconPin,
@@ -63,11 +62,23 @@ export function Contact() {
         {/* Coordonnées éditoriales */}
         <Reveal>
           <div className="relative">
-            <IconEye
+            {/* Anneaux concentriques (radar) — motif technique */}
+            <svg
               aria-hidden
-              className="eye-watermark -left-8 -top-6 size-[280px]"
-            />
-            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-500">
+              viewBox="0 0 320 320"
+              className="pointer-events-none absolute -left-12 -top-8 h-64 w-64 text-brand-300/30 dark:text-brand-600/25"
+            >
+              <g fill="none" stroke="currentColor" strokeWidth="1">
+                <circle cx="160" cy="160" r="40" />
+                <circle cx="160" cy="160" r="80" strokeDasharray="2 5" />
+                <circle cx="160" cy="160" r="120" />
+                <circle cx="160" cy="160" r="155" strokeDasharray="2 8" />
+              </g>
+              <g fill="currentColor">
+                <circle cx="160" cy="160" r="3" />
+              </g>
+            </svg>
+            <span className="relative inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-500">
               <span className="h-px w-6 bg-brand-400/60" />
               {c.eyebrow}
             </span>

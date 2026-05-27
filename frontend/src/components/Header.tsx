@@ -25,8 +25,9 @@ export function Header() {
   const links = [
     { href: localePath("#services"), label: dict.nav.services, anchor: true },
     { href: localePath("/portfolio"), label: dict.nav.portfolio, anchor: false },
-    { href: localePath("/about"), label: dict.nav.about, anchor: false },
+    { href: localePath("/news"), label: dict.nav.news, anchor: false },
     { href: localePath("/blog"), label: dict.nav.blog, anchor: false },
+    { href: localePath("/about"), label: dict.nav.about, anchor: false },
   ];
 
   /** Un lien est "actif" si on est sur la page exacte ou un sous-chemin

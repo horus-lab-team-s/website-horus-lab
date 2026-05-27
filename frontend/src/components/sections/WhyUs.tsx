@@ -2,7 +2,6 @@
 
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
-import { IconEye } from "@/components/icons";
 
 export function WhyUs() {
   const { dict } = useLang();
@@ -23,10 +22,21 @@ export function WhyUs() {
         <div className="grid gap-14 lg:grid-cols-12 lg:gap-20">
           {/* Colonne gauche : manifeste éditorial */}
           <div className="relative lg:col-span-5">
-            <IconEye
+            {/* Lignes topographiques (contour-map) en filigrane */}
+            <svg
               aria-hidden
-              className="eye-watermark -left-10 -top-8 size-[320px]"
-            />
+              viewBox="0 0 400 320"
+              preserveAspectRatio="none"
+              className="pointer-events-none absolute -left-6 -top-4 h-72 w-[420px] text-brand-300/30 dark:text-brand-600/25"
+            >
+              <g fill="none" stroke="currentColor" strokeWidth="1">
+                <path d="M-20 220 C 80 180 180 250 280 200 S 480 220 540 180" />
+                <path d="M-20 180 C 80 140 180 210 280 160 S 480 180 540 140" />
+                <path d="M-20 140 C 80 100 180 170 280 120 S 480 140 540 100" />
+                <path d="M-20 100 C 80 60 180 130 280 80 S 480 100 540 60" />
+                <path d="M-20 60 C 80 20 180 90 280 40 S 480 60 540 20" />
+              </g>
+            </svg>
             <Reveal>
               <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-500">
                 <span className="h-px w-6 bg-brand-400/60" />

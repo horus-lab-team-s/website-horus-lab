@@ -11,6 +11,7 @@ const fr = {
     portfolio: "Réalisations",
     about: "À propos",
     blog: "Blog",
+    news: "Actualités",
     contact: "Contact",
     cta: "Démarrer un projet",
   },
@@ -128,6 +129,17 @@ const fr = {
     featuredLabel: "Projet phare",
     viewAll: "Voir toutes les réalisations",
     detailsLabel: "Détails",
+  },
+  news: {
+    eyebrow: "Actualités",
+    title: "Les nouvelles du studio",
+    subtitle:
+      "Lancements, mises à jour, partenariats — les actualités fraîches de Horus-Lab et de nos produits.",
+    viewAll: "Voir toutes les actualités",
+    readMore: "En savoir plus",
+    backToNews: "Retour aux actualités",
+    empty: "Aucune actualité pour le moment.",
+    pageTitle: "Actualités",
   },
   testimonials: {
     eyebrow: "Témoignages",
@@ -257,6 +269,7 @@ const en: Dict = {
     portfolio: "Work",
     about: "About",
     blog: "Blog",
+    news: "News",
     contact: "Contact",
     cta: "Start a project",
   },
@@ -374,6 +387,17 @@ const en: Dict = {
     featuredLabel: "Featured project",
     viewAll: "See all our work",
     detailsLabel: "Details",
+  },
+  news: {
+    eyebrow: "News",
+    title: "What's happening at the studio",
+    subtitle:
+      "Launches, updates, partnerships — fresh news from Horus-Lab and our products.",
+    viewAll: "See all news",
+    readMore: "Read more",
+    backToNews: "Back to news",
+    empty: "No news yet.",
+    pageTitle: "News",
   },
   testimonials: {
     eyebrow: "Testimonials",
