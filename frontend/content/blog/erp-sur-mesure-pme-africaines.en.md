@@ -5,7 +5,7 @@ excerpt: "Generic management software quickly shows its limits. Here's how an ER
 author: "Horus-Lab Team"
 tags: ["ERP", "Management", "SME"]
 category: "ERP & Management"
-cover: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=70"
+cover: "/blog/cover-erp.jpg"
 ---
 
 Many African SMEs still run their business on scattered spreadsheets and tools that don't talk to each other. It works… until growth exposes the cracks: duplicated data, stock errors, cash flow that's hard to track.

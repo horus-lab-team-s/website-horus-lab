@@ -5,7 +5,7 @@ excerpt: "Artificial intelligence isn't reserved for tech giants. Here are five 
 author: "Horus-Lab Team"
 tags: ["AI", "Automation", "Data"]
 category: "Artificial Intelligence"
-cover: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&q=70"
+cover: "/blog/cover-ia.jpg"
 ---
 
 AI generates a lot of talk, but behind the buzz are very concrete, already-accessible use cases. Here are five examples we deploy for our clients.

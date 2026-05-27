@@ -5,7 +5,7 @@ excerpt: "Les solutions de gestion génériques montrent vite leurs limites. Voi
 author: "Équipe Horus-Lab"
 tags: ["ERP", "Gestion", "PME"]
 category: "ERP & Gestion"
-cover: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=70"
+cover: "/blog/cover-erp.jpg"
 ---
 
 Beaucoup de PME africaines pilotent encore leur activité sur des tableurs éparpillés et des outils qui ne se parlent pas. Cela fonctionne… jusqu'à ce que la croissance révèle les failles : données dupliquées, erreurs de stock, trésorerie difficile à suivre.
