@@ -63,9 +63,8 @@ const CONTENT: Record<Lang, Content> = {
     ctaTitle: "Construisons quelque chose de durable ensemble.",
     ctaButton: "Démarrer un projet",
     stats: [
-      { value: "50+", label: "projets livrés" },
+      { value: "8+", label: "projets livrés" },
       { value: "4", label: "pôles d'expertise" },
-      { value: "98%", label: "clients satisfaits" },
       { value: "8+", label: "secteurs servis" },
     ],
   },
@@ -100,9 +99,8 @@ const CONTENT: Record<Lang, Content> = {
     ctaTitle: "Let's build something lasting together.",
     ctaButton: "Start a project",
     stats: [
-      { value: "50+", label: "projects delivered" },
+      { value: "8+", label: "projects delivered" },
       { value: "4", label: "areas of expertise" },
-      { value: "98%", label: "happy clients" },
       { value: "8+", label: "industries served" },
     ],
   },
@@ -244,16 +242,20 @@ export default async function AboutPage({
               </div>
             </Reveal>
             <Reveal delay={120}>
-              <dl className="grid grid-cols-2 gap-6">
+              <dl className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                 {c.stats.map((s) => (
                   <div
                     key={s.label}
-                    className="rounded-3xl border border-brand-100 bg-gradient-to-b from-brand-50/50 to-white p-6 text-center dark:border-white/10 dark:from-slate-900 dark:to-slate-900"
+                    className="group relative overflow-hidden rounded-3xl border border-brand-100 bg-gradient-to-b from-brand-50/50 to-white p-6 text-center transition-all duration-500 hover:-translate-y-1 hover:border-brand-300 hover:shadow-xl hover:shadow-brand-900/10 dark:border-white/10 dark:from-slate-900 dark:to-slate-900 dark:hover:border-white/25"
                   >
-                    <dt className="text-3xl font-extrabold text-brand-700 dark:text-brand-300">
+                    <dt className="text-4xl font-extrabold tracking-tight text-brand-700 dark:text-brand-300 sm:text-5xl">
                       {s.value}
                     </dt>
-                    <dd className="mt-1 text-sm text-muted">{s.label}</dd>
+                    <dd className="mt-2 text-sm font-medium text-muted">{s.label}</dd>
+                    <span
+                      aria-hidden
+                      className="pointer-events-none absolute inset-x-7 bottom-0 h-px origin-left scale-x-0 bg-gradient-to-r from-brand-500 via-brand-300 to-transparent transition-transform duration-700 group-hover:scale-x-100"
+                    />
                   </div>
                 ))}
               </dl>

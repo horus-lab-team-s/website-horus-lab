@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
 import { IconClose, IconGlobe, IconMenu } from "./icons";
@@ -9,10 +10,11 @@ import { ThemeToggle } from "./ThemeToggle";
 
 export function Header() {
   const { dict, otherLang, switchHref, localePath } = useLang();
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
-  // On épaissit légèrement le fond/l'ombre une fois la page défilée.
+  // Épaissit le fond/l'ombre une fois la page défilée.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
     onScroll();
@@ -21,11 +23,18 @@ export function Header() {
   }, []);
 
   const links = [
-    { href: localePath("#services"), label: dict.nav.services },
-    { href: localePath("/portfolio"), label: dict.nav.portfolio },
-    { href: localePath("/about"), label: dict.nav.about },
-    { href: localePath("/blog"), label: dict.nav.blog },
+    { href: localePath("#services"), label: dict.nav.services, anchor: true },
+    { href: localePath("/portfolio"), label: dict.nav.portfolio, anchor: false },
+    { href: localePath("/about"), label: dict.nav.about, anchor: false },
+    { href: localePath("/blog"), label: dict.nav.blog, anchor: false },
   ];
+
+  /** Un lien est "actif" si on est sur la page exacte ou un sous-chemin
+   *  (ex. /fr/blog/[slug] active aussi "Blog"). Les ancres restent inactives. */
+  const isActive = (link: { href: string; anchor: boolean }) => {
+    if (link.anchor || !pathname) return false;
+    return pathname === link.href || pathname.startsWith(`${link.href}/`);
+  };
 
   return (
     // En-tête FLOTTANT : détaché du bord (top-4), centré, marges latérales.
@@ -55,18 +64,32 @@ export function Header() {
             </span>
           </Link>
 
-          {/* Liens (desktop) — couleurs du thème, sur le fond de la pilule */}
+          {/* Liens (desktop) — état actif marqué visuellement (fond + couleur + point) */}
           <ul className="hidden items-center gap-1 lg:flex">
-            {links.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="rounded-full px-4 py-2 text-sm font-medium text-ink/75 transition-colors hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
+            {links.map((link) => {
+              const active = isActive(link);
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    aria-current={active ? "page" : undefined}
+                    className={`relative flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                      active
+                        ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
+                        : "text-ink/75 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
+                    }`}
+                  >
+                    {active && (
+                      <span
+                        aria-hidden
+                        className="size-1.5 rounded-full bg-brand-500 glow-pulse"
+                      />
+                    )}
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
 
           <div className="flex items-center gap-2">
@@ -108,17 +131,28 @@ export function Header() {
           }`}
         >
           <ul className="flex flex-col gap-1 rounded-2xl border border-brand-100 bg-white/95 p-3 shadow-xl backdrop-blur dark:border-white/10 dark:bg-slate-900/95">
-            {links.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="block rounded-xl px-4 py-3 text-base font-medium text-ink/80 transition-colors hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
+            {links.map((link) => {
+              const active = isActive(link);
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    aria-current={active ? "page" : undefined}
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center gap-2 rounded-xl px-4 py-3 text-base font-medium transition-colors ${
+                      active
+                        ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
+                        : "text-ink/80 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
+                    }`}
+                  >
+                    {active && (
+                      <span aria-hidden className="size-1.5 rounded-full bg-brand-500" />
+                    )}
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
             <li>
               <Link
                 href={localePath("#contact")}

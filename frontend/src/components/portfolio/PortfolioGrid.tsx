@@ -156,9 +156,21 @@ export function PortfolioGrid({
                         {resultLabel}
                       </div>
                     </div>
-                    <span className="inline-flex size-10 items-center justify-center rounded-full bg-brand-50 text-brand-700 transition-all group-hover:bg-brand-700 group-hover:text-white dark:bg-white/5 dark:text-brand-200">
-                      <IconArrowRight className="size-5" />
-                    </span>
+                    {p.url ? (
+                      <a
+                        href={p.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group/btn inline-flex items-center gap-2 rounded-full bg-brand-700 px-4 py-2 text-xs font-semibold text-white shadow-md shadow-brand-700/25 transition-all hover:bg-brand-800 hover:shadow-lg"
+                      >
+                        Voir le site
+                        <IconArrowRight className="size-3.5 transition-transform group-hover/btn:translate-x-0.5" />
+                      </a>
+                    ) : (
+                      <span className="inline-flex size-10 items-center justify-center rounded-full bg-brand-50 text-brand-700 transition-all group-hover:bg-brand-700 group-hover:text-white dark:bg-white/5 dark:text-brand-200">
+                        <IconArrowRight className="size-5" />
+                      </span>
+                    )}
                   </div>
                 </div>
               </article>

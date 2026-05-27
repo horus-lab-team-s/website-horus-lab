@@ -28,7 +28,7 @@ const ICONS: Record<string, typeof IconCode> = {
 export function Realisations() {
   const { dict, lang, localePath } = useLang();
   const r = dict.realisations;
-  const projects = getProjects(lang);
+  const projects = getProjects(lang).slice(0, 4);
   const [featured, ...rest] = projects;
   const Featured = ICONS[featured.iconKey] ?? IconCode;
 
