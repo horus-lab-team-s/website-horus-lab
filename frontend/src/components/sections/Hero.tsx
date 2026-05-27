@@ -4,6 +4,7 @@ import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
 import { HeroBackground } from "./HeroBackground";
 import { IconArrowRight, IconEye } from "@/components/icons";
+import type { CmsHero } from "@/lib/cms";
 
 // Photos Unsplash (professionnels africains + tech) — chargées par le navigateur.
 // Remplaçables par vos propres visuels.
@@ -18,9 +19,9 @@ const HERO_IMAGES = [
   "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1740&q=70",
 ];
 
-export function Hero() {
+export function Hero({ content }: { content?: CmsHero }) {
   const { dict } = useLang();
-  const h = dict.hero;
+  const h = content ?? dict.hero;
 
   return (
     <section

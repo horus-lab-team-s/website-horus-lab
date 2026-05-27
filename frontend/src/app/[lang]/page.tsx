@@ -16,7 +16,16 @@ import { Newsletter } from "@/components/sections/Newsletter";
 import { getAllPosts } from "@/lib/blog";
 import { isLocale } from "@/i18n/dictionaries";
 import { SITE_URL } from "@/lib/site";
-import { getCmsProjects, getCmsNews } from "@/lib/cms";
+import {
+  getCmsHero,
+  getCmsNews,
+  getCmsProcessSteps,
+  getCmsProjects,
+  getCmsSectors,
+  getCmsServices,
+  getCmsTestimonials,
+  getCmsValues,
+} from "@/lib/cms";
 
 type Params = { lang: string };
 
@@ -41,8 +50,25 @@ export default async function Home({ params }: { params: Promise<Params> }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
 
-  // Fetch parallèle CMS + posts (ISR via lib/cms).
-  const [projects, news, latestPosts] = await Promise.all([
+  // Fetch parallèle de TOUT le contenu CMS (chaque appel a son propre
+  // fallback statique, donc même si l'API tombe le site reste intact).
+  const [
+    hero,
+    services,
+    process,
+    values,
+    sectors,
+    testimonials,
+    projects,
+    news,
+    latestPosts,
+  ] = await Promise.all([
+    getCmsHero(lang),
+    getCmsServices(lang),
+    getCmsProcessSteps(lang),
+    getCmsValues(lang),
+    getCmsSectors(lang),
+    getCmsTestimonials(lang),
     getCmsProjects(lang),
     getCmsNews(lang),
     Promise.resolve(getAllPosts(lang).slice(0, 3)),
@@ -56,13 +82,13 @@ export default async function Home({ params }: { params: Promise<Params> }) {
       />
       <Header />
       <main id="main" tabIndex={-1}>
-        <Hero />
-        <Services />
+        <Hero content={hero} />
+        <Services items={services} />
         <Realisations projects={projects} />
-        <Process />
-        <WhyUs />
-        <Sectors />
-        <Testimonials />
+        <Process steps={process} />
+        <WhyUs items={values} />
+        <Sectors items={sectors} />
+        <Testimonials items={testimonials} />
         <News items={news} />
         <BlogPreview posts={latestPosts} />
         <CTA />

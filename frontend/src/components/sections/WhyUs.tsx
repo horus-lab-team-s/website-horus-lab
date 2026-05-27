@@ -3,9 +3,11 @@
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
 
-export function WhyUs() {
+type ValueItem = { title: string; desc: string };
+
+export function WhyUs({ items }: { items?: ValueItem[] }) {
   const { dict } = useLang();
-  const w = dict.why;
+  const w = { ...dict.why, items: items ?? dict.why.items };
 
   return (
     <section

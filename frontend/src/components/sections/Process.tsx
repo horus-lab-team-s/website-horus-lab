@@ -4,9 +4,11 @@ import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "./SectionHeading";
 
-export function Process() {
+type ProcessItem = { title: string; desc: string };
+
+export function Process({ steps }: { steps?: ProcessItem[] }) {
   const { dict } = useLang();
-  const p = dict.process;
+  const p = { ...dict.process, steps: steps ?? dict.process.steps };
 
   return (
     <section id="process" className="relative overflow-hidden bg-surface py-20 sm:py-28">

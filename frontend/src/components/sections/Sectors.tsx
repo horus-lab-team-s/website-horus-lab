@@ -22,9 +22,9 @@ const sizes = [
   "px-5 py-3 text-sm",
 ];
 
-export function Sectors() {
+export function Sectors({ items }: { items?: string[] }) {
   const { dict } = useLang();
-  const s = dict.sectors;
+  const s = { ...dict.sectors, items: items ?? dict.sectors.items };
 
   return (
     <section

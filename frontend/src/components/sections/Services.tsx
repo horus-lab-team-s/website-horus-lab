@@ -21,9 +21,11 @@ const bentoSpans = [
   "lg:col-span-7",
 ];
 
-export function Services() {
+type ServiceItem = { title: string; desc: string; tags: string[] };
+
+export function Services({ items }: { items?: ServiceItem[] }) {
   const { dict } = useLang();
-  const s = dict.services;
+  const s = { ...dict.services, items: items ?? dict.services.items };
 
   return (
     <section

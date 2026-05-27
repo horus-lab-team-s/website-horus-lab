@@ -11,9 +11,11 @@ const avatarPalettes = [
   "bg-gradient-to-br from-brand-800 to-brand-500",
 ];
 
-export function Testimonials() {
+type TestimonialItem = { quote: string; name: string; role: string };
+
+export function Testimonials({ items }: { items?: TestimonialItem[] }) {
   const { dict } = useLang();
-  const t = dict.testimonials;
+  const t = { ...dict.testimonials, items: items ?? dict.testimonials.items };
   const [featured, ...rest] = t.items;
 
   return (
