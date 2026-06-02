@@ -4,16 +4,16 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { BlogPostHeader } from "@/components/blog/BlogPostHeader";
 import { Newsletter } from "@/components/sections/Newsletter";
-import { getAllPostParams, getPost } from "@/lib/blog";
+import { getCmsPostParams, getCmsPost } from "@/lib/cms";
 import { isLocale } from "@/i18n/dictionaries";
 import { SITE_URL } from "@/lib/site";
 
 type Params = { lang: string; slug: string };
 
-export const dynamicParams = false;
+export const dynamicParams = true;
 
-export function generateStaticParams() {
-  return getAllPostParams();
+export async function generateStaticParams() {
+  return getCmsPostParams();
 }
 
 export async function generateMetadata({
@@ -23,7 +23,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang, slug } = await params;
   if (!isLocale(lang)) return {};
-  const post = getPost(slug, lang);
+  const post = await getCmsPost(slug, lang);
   if (!post) return { title: "Article" };
   return {
     title: post.title,
@@ -49,7 +49,7 @@ export default async function BlogPostPage({
   const { lang, slug } = await params;
   if (!isLocale(lang)) notFound();
 
-  const post = getPost(slug, lang);
+  const post = await getCmsPost(slug, lang);
   if (!post) notFound();
 
   const articleLd = {

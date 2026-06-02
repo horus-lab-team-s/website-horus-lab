@@ -7,7 +7,7 @@ import { Reveal } from "@/components/Reveal";
 import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { IconArrowRight } from "@/components/icons";
 import { isLocale, locales, type Lang } from "@/i18n/dictionaries";
-import { getCmsProjects } from "@/lib/cms";
+import { getCmsProjects, getCmsAchievements, getCmsStack } from "@/lib/cms";
 
 type Params = { lang: string };
 
@@ -123,7 +123,11 @@ export default async function PortfolioPage({
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const c = CONTENT[lang];
-  const projects = await getCmsProjects(lang);
+  const [projects, achievements, stack] = await Promise.all([
+    getCmsProjects(lang),
+    getCmsAchievements(lang, c.achievements),
+    getCmsStack(c.stack),
+  ]);
 
   return (
     <>
@@ -168,7 +172,7 @@ export default async function PortfolioPage({
           <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <Reveal>
               <div className="grid gap-6 rounded-3xl border border-brand-100 bg-white p-8 dark:border-white/10 dark:bg-slate-900 sm:grid-cols-2 sm:p-10 lg:grid-cols-4">
-                {c.achievements.map((a, i) => (
+                {achievements.map((a, i) => (
                   <div key={a.label} className="relative">
                     {i > 0 && (
                       <span
@@ -195,7 +199,7 @@ export default async function PortfolioPage({
                 </span>
                 <div className="marquee-mask overflow-hidden">
                   <ul className="marquee-track items-center text-sm font-semibold text-brand-800 dark:text-brand-100">
-                    {[...c.stack, ...c.stack].map((t, i) => (
+                    {[...stack, ...stack].map((t, i) => (
                       <li key={`${t}-${i}`} className="flex items-center gap-3 whitespace-nowrap">
                         <span className="size-1.5 rounded-full bg-brand-400" />
                         {t}

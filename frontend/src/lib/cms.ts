@@ -11,13 +11,21 @@
  * Variable d'environnement : `BACKEND_API_URL` côté serveur uniquement
  * (Next n'expose pas cette URL au navigateur). En dev : http://localhost:8000.
  */
+import { marked } from "marked";
 import type { Dict, Lang } from "@/i18n/dictionaries";
-import { getDictionary } from "@/i18n/dictionaries";
+import { getDictionary, locales } from "@/i18n/dictionaries";
 import {
   getProjects as getStaticProjects,
   type Project,
 } from "@/lib/projects";
 import { getNews as getStaticNews, type NewsItem } from "@/lib/news";
+import {
+  getAllPosts as getStaticPosts,
+  getPost as getStaticPost,
+  getAllPostParams as getStaticPostParams,
+  type PostMeta,
+  type Post,
+} from "@/lib/blog";
 
 export const CMS_REVALIDATE = 60;
 const API_BASE = (process.env.BACKEND_API_URL ?? "http://localhost:8000").replace(/\/$/, "");
@@ -123,6 +131,89 @@ export async function getCmsNews(lang: Lang): Promise<NewsItem[]> {
       .map((n) => mapNews(n, lang));
   } catch {
     return getStaticNews(lang);
+  }
+}
+
+/* ============================================================
+   Blog — articles (CMS Django, repli sur les fichiers Markdown)
+   ============================================================ */
+type ApiCategory = { fr: string; en: string } | null;
+
+type ApiPostList = {
+  slug: string;
+  title_fr: string; title_en: string;
+  excerpt_fr: string; excerpt_en: string;
+  cover: string | null;
+  author: string;
+  category: ApiCategory;
+  tags: string[];
+  published_at: string;
+  reading_minutes: number;
+};
+
+type ApiPostDetail = ApiPostList & { body_fr: string; body_en: string };
+
+function mapPostMeta(p: ApiPostList, lang: Lang): PostMeta {
+  const t = pick(lang);
+  return {
+    slug: p.slug,
+    lang,
+    title: t(p.title_fr, p.title_en),
+    date: p.published_at,
+    excerpt: t(p.excerpt_fr, p.excerpt_en),
+    author: p.author,
+    tags: p.tags ?? [],
+    category: p.category ? t(p.category.fr, p.category.en) : "",
+    cover: p.cover ?? "",
+    readingMinutes: p.reading_minutes,
+  };
+}
+
+/** Liste des articles : CMS si disponible, sinon fichiers Markdown locaux. */
+export async function getCmsPosts(lang: Lang): Promise<PostMeta[]> {
+  try {
+    const data = await fetchList<ApiPostList>("/api/blog/posts/");
+    if (!data.length) return getStaticPosts(lang);
+    return data
+      .map((p) => mapPostMeta(p, lang))
+      .sort((a, b) => (a.date < b.date ? 1 : -1));
+  } catch {
+    return getStaticPosts(lang);
+  }
+}
+
+/** Article unique : CMS si trouvé, sinon fichier Markdown local. */
+export async function getCmsPost(slug: string, lang: Lang): Promise<Post | null> {
+  try {
+    const p = await fetchJson<ApiPostDetail>(`/api/blog/posts/${slug}/`);
+    const t = pick(lang);
+    // Le corps est stocké en Markdown côté admin (le fallback _en bascule sur _fr).
+    const body = t(p.body_fr, p.body_en) || p.body_fr;
+    return {
+      ...mapPostMeta(p, lang),
+      html: marked.parse(body, { async: false }),
+    };
+  } catch {
+    return getStaticPost(slug, lang);
+  }
+}
+
+/**
+ * Paramètres statiques (lang × slug) pour generateStaticParams.
+ * Union des slugs CMS et locaux pour qu'aucun lien ne soit en 404 ;
+ * repli total sur les fichiers si l'API est indisponible.
+ */
+export async function getCmsPostParams(): Promise<{ lang: Lang; slug: string }[]> {
+  const staticParams = getStaticPostParams();
+  try {
+    const data = await fetchList<ApiPostList>("/api/blog/posts/");
+    const slugs = new Set<string>(data.map((p) => p.slug));
+    for (const { slug } of staticParams) slugs.add(slug);
+    return locales.flatMap((lang) =>
+      [...slugs].map((slug) => ({ lang, slug })),
+    );
+  } catch {
+    return staticParams;
   }
 }
 
@@ -264,6 +355,54 @@ export async function getCmsSectors(lang: Lang): Promise<string[]> {
     return data.map((s) => t(s.name_fr, s.name_en));
   } catch {
     return getDictionary(lang).sectors.items;
+  }
+}
+
+/* ============================================================
+   Achievements (chiffres clés — page Réalisations)
+   ============================================================ */
+type ApiAchievement = {
+  id: number;
+  value: string;
+  label_fr: string;
+  label_en: string;
+  order: number;
+};
+
+export type CmsAchievement = { value: string; label: string };
+
+export async function getCmsAchievements(
+  lang: Lang,
+  fallback: CmsAchievement[],
+): Promise<CmsAchievement[]> {
+  try {
+    const data = await fetchList<ApiAchievement>("/api/achievements/");
+    if (!data.length) return fallback;
+    const t = pick(lang);
+    return data
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .map((a) => ({ value: a.value, label: t(a.label_fr, a.label_en) }));
+  } catch {
+    return fallback;
+  }
+}
+
+/* ============================================================
+   Tech stack (bandeau « stack maîtrisée »)
+   ============================================================ */
+type ApiStackItem = { id: number; name: string; order: number };
+
+export async function getCmsStack(fallback: string[]): Promise<string[]> {
+  try {
+    const data = await fetchList<ApiStackItem>("/api/stack/");
+    if (!data.length) return fallback;
+    return data
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .map((s) => s.name);
+  } catch {
+    return fallback;
   }
 }
 

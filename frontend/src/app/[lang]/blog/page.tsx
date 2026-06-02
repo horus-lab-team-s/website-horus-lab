@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { BlogIndex } from "@/components/blog/BlogIndex";
-import { getAllPosts } from "@/lib/blog";
+import { getCmsPosts } from "@/lib/cms";
 import { getDictionary, isLocale, locales, type Lang } from "@/i18n/dictionaries";
 
 type Params = { lang: string };
@@ -40,7 +40,7 @@ export default async function BlogPage({
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
 
-  const posts = getAllPosts(lang);
+  const posts = await getCmsPosts(lang);
   return (
     <>
       <Header />

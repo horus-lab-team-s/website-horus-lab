@@ -13,12 +13,12 @@ import { BlogPreview } from "@/components/sections/BlogPreview";
 import { CTA } from "@/components/sections/CTA";
 import { Contact } from "@/components/sections/Contact";
 import { Newsletter } from "@/components/sections/Newsletter";
-import { getAllPosts } from "@/lib/blog";
 import { isLocale } from "@/i18n/dictionaries";
 import { SITE_URL } from "@/lib/site";
 import {
   getCmsHero,
   getCmsNews,
+  getCmsPosts,
   getCmsProcessSteps,
   getCmsProjects,
   getCmsSectors,
@@ -71,7 +71,7 @@ export default async function Home({ params }: { params: Promise<Params> }) {
     getCmsTestimonials(lang),
     getCmsProjects(lang),
     getCmsNews(lang),
-    Promise.resolve(getAllPosts(lang).slice(0, 3)),
+    getCmsPosts(lang).then((p) => p.slice(0, 3)),
   ]);
 
   return (
