@@ -71,18 +71,33 @@ Le code lit `DATABASE_URL`. Sans elle → SQLite (dev). Avec elle → PostgreSQL
    → la base en ligne contient maintenant toutes les tables. Le CRUD se fait
    dans l'admin Django.
 
-## Déploiement (sur votre serveur)
+## Déploiement (serveur LWS · Docker + Nginx)
+
+👉 **Guide complet pas-à-pas : [`DEPLOYMENT.md`](DEPLOYMENT.md)** — DNS,
+`docker compose up`, certificat HTTPS Let's Encrypt, branchement du frontend,
+sauvegardes. Cible : `https://backend.website.horus-lab.com`.
+
+En résumé (le détail est dans le guide) :
+
+```bash
+cp .env.example .env        # renseigner secrets, domaines, mot de passe DB
+docker compose up -d --build
+```
+
+Le `docker-compose.yml` lance PostgreSQL + Gunicorn/Django + Nginx (reverse
+proxy, HTTPS, service de `/static` et `/media`). Migrations, seed (optionnel via
+`RUN_SEED`), compte admin et `collectstatic` sont automatiques au démarrage
+(voir `entrypoint.sh`).
+
+### Alternative sans Docker (gunicorn nu)
 
 ```bash
 pip install -r requirements.txt
-python manage.py collectstatic --noinput     # statiques admin (whitenoise)
+python manage.py collectstatic --noinput
 python manage.py migrate
 gunicorn config.wsgi:application --bind 0.0.0.0:8000
 ```
-
-Variables d'env de prod : `DJANGO_DEBUG=0`, `DJANGO_SECRET_KEY=...` (longue,
-aléatoire), `DJANGO_ALLOWED_HOSTS=api.horus-lab.com`, `DATABASE_URL=...`,
-`CSRF_TRUSTED_ORIGINS=https://api.horus-lab.com`,
-`CORS_ALLOWED_ORIGINS=https://horus-lab.com`.
-
-Placez Nginx devant Gunicorn (reverse proxy + HTTPS via Let's Encrypt).
+Variables d'env de prod : `DJANGO_DEBUG=0`, `DJANGO_SECRET_KEY=...`,
+`DJANGO_ALLOWED_HOSTS=backend.website.horus-lab.com`, `DATABASE_URL=...`,
+`CSRF_TRUSTED_ORIGINS=https://backend.website.horus-lab.com`,
+`CORS_ALLOWED_ORIGINS=https://horus-lab.com`. Placez Nginx devant Gunicorn.

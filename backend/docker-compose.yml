@@ -1,0 +1,73 @@
+# Stack de production Horus-Lab (API Django) — à lancer sur le serveur LWS.
+#
+#   db      PostgreSQL (données persistantes)
+#   web     Django + Gunicorn (l'image construite par ./Dockerfile)
+#   nginx   reverse proxy : HTTPS, sert /static et /media, proxifie l'API
+#   certbot Let's Encrypt (obtention + renouvellement des certificats)
+#
+# Démarrage : voir DEPLOYMENT.md (« Backend »). Toutes les valeurs sensibles
+# viennent du fichier .env (jamais commité).
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-horuslab}
+      POSTGRES_USER: ${POSTGRES_USER:-horuslab}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Définissez POSTGRES_PASSWORD dans .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-horuslab}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Connexion à la base du conteneur db (prioritaire sur .env).
+      DATABASE_URL: postgresql://${POSTGRES_USER:-horuslab}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-horuslab}
+    volumes:
+      - media:/app/media          # fichiers uploadés (couvertures, photos, logos)
+      - static:/app/staticfiles   # statiques admin (collectstatic)
+    depends_on:
+      db:
+        condition: service_healthy
+    expose:
+      - "8000"                    # interne uniquement ; exposé via nginx
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - media:/var/www/media:ro
+      - static:/var/www/static:ro
+      - certbot-www:/var/www/certbot:ro
+      - certbot-conf:/etc/letsencrypt:ro
+    depends_on:
+      - web
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - certbot-www:/var/www/certbot
+      - certbot-conf:/etc/letsencrypt
+    # Renouvellement automatique toutes les 12 h (sans effet tant qu'aucun
+    # certificat n'est encore émis — voir l'étape certbot du guide).
+    entrypoint: /bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done'
+
+volumes:
+  pgdata:
+  media:
+  static:
+  certbot-www:
+  certbot-conf:

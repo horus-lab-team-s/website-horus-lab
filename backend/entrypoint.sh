@@ -10,8 +10,15 @@ set -e
 echo "→ Migrations..."
 python manage.py migrate --noinput
 
-echo "→ Données par défaut (seed)..."
-python manage.py seed
+# Seed UNIQUEMENT si RUN_SEED=1. `seed` réécrit les contenus par défaut
+# (update_or_create) : à utiliser au 1er déploiement, puis remettre RUN_SEED=0
+# pour que les modifications faites dans l'admin ne soient pas écrasées.
+if [ "$RUN_SEED" = "1" ]; then
+  echo "→ Données par défaut (seed)..."
+  python manage.py seed
+else
+  echo "→ Seed ignoré (RUN_SEED != 1)."
+fi
 
 if [ -n "$DJANGO_SUPERUSER_USERNAME" ] && [ -n "$DJANGO_SUPERUSER_PASSWORD" ]; then
   echo "→ Compte admin (créé s'il n'existe pas)..."
