@@ -14,18 +14,34 @@ import {
   IconX,
 } from "./icons";
 
-const SOCIAL = [
-  { Icon: IconLinkedIn, label: "LinkedIn", href: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259" },
-  { Icon: IconX, label: "X", href: "https://x.com/horuslabafrik" },
-  { Icon: IconFacebook, label: "Facebook", href: "https://www.facebook.com/HorusLab" },
-  { Icon: IconWhatsApp, label: "WhatsApp", href: "https://wa.me/237699173771" },
-  { Icon: IconGitHub, label: "GitHub", href: "https://github.com/horus-lab-team-s" },
-];
+// URLs par défaut si l'admin n'a pas renseigné le réseau correspondant.
+const DEFAULT_SOCIAL = {
+  linkedin: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
+  x: "https://x.com/horuslabafrik",
+  facebook: "https://www.facebook.com/HorusLab",
+  whatsapp: "https://wa.me/237699173771",
+  github: "https://github.com/horus-lab-team-s",
+};
 
 export function Footer() {
-  const { dict, localePath } = useLang();
+  const { dict, localePath, settings } = useLang();
   const f = dict.footer;
   const year = new Date().getFullYear();
+
+  // Réglages éditables (admin) avec repli sur le dictionnaire.
+  const email = settings?.email || f.email;
+  const phones = settings?.phones?.length ? settings.phones : f.phones;
+  const location = settings?.location || f.location;
+  const about = settings?.about || f.about;
+  const tagline = settings?.tagline || f.tagline;
+
+  const social = [
+    { Icon: IconLinkedIn, label: "LinkedIn", href: settings?.socials.linkedin || DEFAULT_SOCIAL.linkedin },
+    { Icon: IconX, label: "X", href: settings?.socials.x || DEFAULT_SOCIAL.x },
+    { Icon: IconFacebook, label: "Facebook", href: settings?.socials.facebook || DEFAULT_SOCIAL.facebook },
+    { Icon: IconWhatsApp, label: "WhatsApp", href: settings?.socials.whatsapp || DEFAULT_SOCIAL.whatsapp },
+    { Icon: IconGitHub, label: "GitHub", href: settings?.socials.github || DEFAULT_SOCIAL.github },
+  ].filter((s) => s.href);
 
   const columns = [
     {
@@ -66,10 +82,10 @@ export function Footer() {
               </span>
             </div>
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-brand-200">
-              {f.about}
+              {about}
             </p>
             <p className="mt-4 text-xs font-medium uppercase tracking-wider text-sky">
-              {f.tagline}
+              {tagline}
             </p>
           </div>
 
@@ -102,17 +118,17 @@ export function Footer() {
             <ul className="mt-5 space-y-4 text-sm">
               <li>
                 <a
-                  href={`mailto:${f.email}`}
+                  href={`mailto:${email}`}
                   className="flex items-center gap-3 text-brand-200 transition-colors hover:text-white"
                 >
                   <IconMail className="size-5 text-sky" />
-                  {f.email}
+                  {email}
                 </a>
               </li>
               <li className="flex items-start gap-3 text-brand-200">
                 <IconPhone className="mt-0.5 size-5 shrink-0 text-sky" />
                 <span className="flex flex-col gap-1">
-                  {f.phones.map((phone) => (
+                  {phones.map((phone) => (
                     <a
                       key={phone}
                       href={`tel:${phone.replace(/\s/g, "")}`}
@@ -125,12 +141,12 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-3 text-brand-200">
                 <IconPin className="size-5 text-sky" />
-                {f.location}
+                {location}
               </li>
             </ul>
 
             <div className="mt-6 flex gap-3">
-              {SOCIAL.map(({ Icon, label, href }) => (
+              {social.map(({ Icon, label, href }) => (
                 <a
                   key={label}
                   href={href}

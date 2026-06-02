@@ -135,6 +135,63 @@ export async function getCmsNews(lang: Lang): Promise<NewsItem[]> {
 }
 
 /* ============================================================
+   Réglages du site (coordonnées + réseaux sociaux)
+   ============================================================ */
+type ApiSiteSettings = {
+  tagline_fr: string; tagline_en: string;
+  about_fr: string; about_en: string;
+  email: string;
+  phone_primary: string; phone_secondary: string;
+  location_fr: string; location_en: string;
+  linkedin_url: string; x_url: string; facebook_url: string;
+  github_url: string; whatsapp_url: string; telegram_url: string;
+};
+
+export type CmsSiteSettings = {
+  email: string;
+  phones: string[];
+  location: string;
+  about: string;
+  tagline: string;
+  socials: {
+    linkedin: string;
+    x: string;
+    facebook: string;
+    github: string;
+    whatsapp: string;
+    telegram: string;
+  };
+};
+
+/**
+ * Réglages du site depuis l'admin. Renvoie `null` si l'API est indisponible —
+ * le Footer retombe alors sur les valeurs du dictionnaire.
+ */
+export async function getCmsSiteSettings(lang: Lang): Promise<CmsSiteSettings | null> {
+  try {
+    const s = await fetchJson<ApiSiteSettings>("/api/site/");
+    const t = pick(lang);
+    return {
+      email: s.email,
+      phones: [s.phone_primary, s.phone_secondary].filter(Boolean),
+      location: t(s.location_fr, s.location_en),
+      about: t(s.about_fr, s.about_en),
+      tagline: t(s.tagline_fr, s.tagline_en),
+      socials: {
+        linkedin: s.linkedin_url,
+        x: s.x_url,
+        facebook: s.facebook_url,
+        github: s.github_url,
+        whatsapp: s.whatsapp_url,
+        telegram: s.telegram_url,
+      },
+    };
+  } catch {
+    return null;
+  }
+}
+
+/* ============================================================
    Blog — articles (CMS Django, repli sur les fichiers Markdown)
    ============================================================ */
 type ApiCategory = { fr: string; en: string } | null;

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LanguageProvider } from "@/i18n/LanguageProvider";
+import { getCmsSiteSettings } from "@/lib/cms";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { BackToTop } from "@/components/BackToTop";
 import { HorusAI } from "@/components/HorusAI";
@@ -62,8 +63,10 @@ export default async function LangLayout({
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
 
+  const settings = await getCmsSiteSettings(lang);
+
   return (
-    <LanguageProvider lang={lang}>
+    <LanguageProvider lang={lang} settings={settings}>
       <ScrollProgress />
       {children}
       <BackToTop />
