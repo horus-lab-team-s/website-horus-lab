@@ -1,14 +1,25 @@
-# Déploiement sur Vercel
+# Déploiement du frontend sur Vercel
 
 Ce projet est une application **Next.js 16** standard : Vercel la détecte
 automatiquement, **aucun `vercel.json` n'est nécessaire**.
 
-## 1. Connecter le dépôt
+> ℹ️ **Architecture.** Le **frontend** (ce dossier `frontend/`) va sur **Vercel**
+> → domaine `horus-lab.com`. Le **backend** Django (dossier `backend/`) est
+> hébergé séparément sur votre serveur LWS via Docker + Nginx
+> → `https://backend.website.horus-lab.com`. Le frontend lit le backend au
+> build et en ISR via la variable `BACKEND_API_URL` ; si le backend est
+> injoignable, le site retombe automatiquement sur son contenu local (zéro
+> page cassée). Voir `backend/DEPLOYMENT.md` pour le backend.
 
-1. Aller sur [vercel.com/new](https://vercel.com/new).
+## 1. Connecter le dépôt (monorepo)
+
+1. Aller sur [vercel.com/new](https://vercel.com/new) (connecté avec votre compte).
 2. Importer le dépôt GitHub `horus-lab-team-s/website-horus-lab`.
-3. Framework Preset : **Next.js** (détecté automatiquement).
-4. Build Command / Output : laisser les valeurs par défaut.
+3. ⚠️ **Root Directory : `frontend`** — c'est un monorepo (frontend + backend).
+   Cliquez sur **Edit** à côté de *Root Directory* et choisissez `frontend`,
+   sinon le build échoue (Vercel ne trouve pas l'app Next.js à la racine).
+4. Framework Preset : **Next.js** (détecté automatiquement une fois le dossier choisi).
+5. Build Command / Output : laisser les valeurs par défaut.
    - Si Vercel le demande, Install Command : `pnpm install`.
 
 ## 2. Variables d'environnement
@@ -20,6 +31,7 @@ Dans **Project → Settings → Environment Variables**, ajouter (scope *Product
 
 | Variable | Exemple / valeur | Requis |
 |----------|------------------|--------|
+| `BACKEND_API_URL` | `https://backend.website.horus-lab.com` | ✅ (sinon le contenu CMS retombe sur les données locales) |
 | `BREVO_API_KEY` | _votre clé Brevo_ | ✅ (sinon les formulaires renvoient une erreur en prod) |
 | `BREVO_NEWSLETTER_LIST_ID` | `3` | recommandé |
 | `BREVO_CONTACT_TO` | `contact@horus-lab.com` | recommandé |
@@ -50,9 +62,16 @@ Après ajout/modification des variables : **redéployer** pour qu'elles soient p
 - [ ] `/` redirige vers `/fr`
 - [ ] `/fr` et `/en` s'affichent, le sélecteur de langue bascule l'URL
 - [ ] `/fr/blog` et un article s'ouvrent
+- [ ] `/fr/about` affiche la section **Équipe** (vient du backend)
+- [ ] Le **footer** affiche e-mail, téléphones, localisation et réseaux (backend)
+- [ ] `/fr/portfolio` : chiffres clés + stack (backend)
 - [ ] `/sitemap.xml` et `/robots.txt` répondent
 - [ ] Inscription newsletter → contact visible dans Brevo (liste)
 - [ ] Message de contact → e-mail reçu sur `BREVO_CONTACT_TO`
+
+> Pour vérifier que le contenu vient bien du backend : modifiez un texte dans
+> l'admin Django, attendez ~1 min (ISR) puis rechargez — le site se met à jour.
+> Si le backend est éteint, tout reste affiché grâce au repli local.
 
 ## Notes techniques
 

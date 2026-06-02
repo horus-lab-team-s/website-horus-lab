@@ -5,8 +5,18 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
-import { IconArrowRight, IconCheck, IconCog, IconEye, IconSpark } from "@/components/icons";
+import {
+  IconArrowRight,
+  IconCheck,
+  IconCog,
+  IconEye,
+  IconGitHub,
+  IconLinkedIn,
+  IconMail,
+  IconSpark,
+} from "@/components/icons";
 import { isLocale, locales, type Lang } from "@/i18n/dictionaries";
+import { getCmsTeam } from "@/lib/cms";
 
 type Params = { lang: string };
 
@@ -26,6 +36,8 @@ type Content = {
   values: { title: string; desc: string }[];
   storyTitle: string;
   story: string[];
+  teamTitle: string;
+  teamSubtitle: string;
   ctaTitle: string;
   ctaButton: string;
   stats: { value: string; label: string }[];
@@ -60,6 +72,8 @@ const CONTENT: Record<Lang, Content> = {
       "Née de la conviction que l'Afrique a tout pour devenir un acteur majeur du numérique, Horus-Lab réunit des talents pluridisciplinaires autour d'une exigence commune : la qualité.",
       "Nous avançons par incréments, en livrant de la valeur tôt et souvent, et en gardant nos clients aux commandes à chaque étape.",
     ],
+    teamTitle: "L'équipe",
+    teamSubtitle: "Les personnes qui conçoivent et livrent vos produits.",
     ctaTitle: "Construisons quelque chose de durable ensemble.",
     ctaButton: "Démarrer un projet",
     stats: [
@@ -96,6 +110,8 @@ const CONTENT: Record<Lang, Content> = {
       "Born from the belief that Africa has everything it takes to become a major digital player, Horus-Lab brings together cross-functional talent around one shared standard: quality.",
       "We move in increments, delivering value early and often, and keeping our clients in control at every step.",
     ],
+    teamTitle: "The team",
+    teamSubtitle: "The people who design and ship your products.",
     ctaTitle: "Let's build something lasting together.",
     ctaButton: "Start a project",
     stats: [
@@ -134,6 +150,7 @@ export default async function AboutPage({
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const c = CONTENT[lang];
+  const team = await getCmsTeam(lang);
 
   return (
     <>
@@ -262,6 +279,93 @@ export default async function AboutPage({
             </Reveal>
           </div>
         </section>
+
+        {/* Équipe */}
+        {team.length > 0 && (
+          <section className="bg-surface py-20 sm:py-24">
+            <div className="mx-auto max-w-7xl px-5 sm:px-8">
+              <Reveal className="mx-auto max-w-2xl text-center">
+                <span className="text-sm font-bold uppercase tracking-[0.18em] text-brand-500">
+                  {c.teamTitle}
+                </span>
+                <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-brand-900 dark:text-white sm:text-4xl">
+                  {c.teamSubtitle}
+                </h2>
+              </Reveal>
+              <div className="mx-auto mt-14 grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {team.map((m, i) => (
+                  <Reveal key={m.name} delay={i * 90}>
+                    <article className="group h-full rounded-3xl border border-brand-100 bg-white p-7 text-center transition-all duration-300 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand-900/10 dark:border-white/10 dark:bg-slate-900">
+                      <div className="relative mx-auto size-28 overflow-hidden rounded-full ring-2 ring-brand-100 dark:ring-white/10">
+                        {m.photo ? (
+                          <Image
+                            src={m.photo}
+                            alt={m.name}
+                            fill
+                            sizes="112px"
+                            className="object-cover"
+                          />
+                        ) : (
+                          <div className="grid size-full place-items-center bg-gradient-to-br from-brand-700 via-brand-500 to-sky text-2xl font-extrabold text-white">
+                            {m.name
+                              .split(" ")
+                              .map((w) => w[0])
+                              .slice(0, 2)
+                              .join("")}
+                          </div>
+                        )}
+                      </div>
+                      <h3 className="mt-5 text-lg font-bold text-brand-900 dark:text-white">
+                        {m.name}
+                      </h3>
+                      <p className="mt-1 text-sm font-medium text-brand-600 dark:text-brand-300">
+                        {m.role}
+                      </p>
+                      {m.bio && (
+                        <p className="mt-3 text-sm leading-relaxed text-muted">{m.bio}</p>
+                      )}
+                      {(m.linkedin || m.github || m.email) && (
+                        <div className="mt-5 flex justify-center gap-3">
+                          {m.linkedin && (
+                            <a
+                              href={m.linkedin}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={`LinkedIn — ${m.name}`}
+                              className="grid size-9 place-items-center rounded-full bg-brand-50 text-brand-700 transition-colors hover:bg-brand-700 hover:text-white dark:bg-white/5 dark:text-brand-200"
+                            >
+                              <IconLinkedIn className="size-4" />
+                            </a>
+                          )}
+                          {m.github && (
+                            <a
+                              href={m.github}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              aria-label={`GitHub — ${m.name}`}
+                              className="grid size-9 place-items-center rounded-full bg-brand-50 text-brand-700 transition-colors hover:bg-brand-700 hover:text-white dark:bg-white/5 dark:text-brand-200"
+                            >
+                              <IconGitHub className="size-4" />
+                            </a>
+                          )}
+                          {m.email && (
+                            <a
+                              href={`mailto:${m.email}`}
+                              aria-label={`E-mail — ${m.name}`}
+                              className="grid size-9 place-items-center rounded-full bg-brand-50 text-brand-700 transition-colors hover:bg-brand-700 hover:text-white dark:bg-white/5 dark:text-brand-200"
+                            >
+                              <IconMail className="size-4" />
+                            </a>
+                          )}
+                        </div>
+                      )}
+                    </article>
+                  </Reveal>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
 
         {/* CTA */}
         <section className="bg-surface px-5 pb-24 sm:px-8">

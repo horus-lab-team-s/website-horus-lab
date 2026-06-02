@@ -135,6 +135,56 @@ export async function getCmsNews(lang: Lang): Promise<NewsItem[]> {
 }
 
 /* ============================================================
+   Équipe (membres affichés sur la page À propos)
+   ============================================================ */
+type ApiTeamMember = {
+  id: number;
+  name: string;
+  role_fr: string; role_en: string;
+  bio_fr: string; bio_en: string;
+  photo: string | null;
+  linkedin_url: string;
+  github_url: string;
+  email: string;
+  is_lead: boolean;
+  order: number;
+};
+
+export type CmsTeamMember = {
+  name: string;
+  role: string;
+  bio: string;
+  photo: string | null;
+  linkedin: string;
+  github: string;
+  email: string;
+  isLead: boolean;
+};
+
+/** Membres de l'équipe depuis l'admin. Tableau vide si aucun / API indisponible. */
+export async function getCmsTeam(lang: Lang): Promise<CmsTeamMember[]> {
+  try {
+    const data = await fetchList<ApiTeamMember>("/api/team/");
+    const t = pick(lang);
+    return data
+      .slice()
+      .sort((a, b) => Number(b.is_lead) - Number(a.is_lead) || a.order - b.order)
+      .map((m) => ({
+        name: m.name,
+        role: t(m.role_fr, m.role_en),
+        bio: t(m.bio_fr, m.bio_en),
+        photo: m.photo,
+        linkedin: m.linkedin_url,
+        github: m.github_url,
+        email: m.email,
+        isLead: m.is_lead,
+      }));
+  } catch {
+    return [];
+  }
+}
+
+/* ============================================================
    Réglages du site (coordonnées + réseaux sociaux)
    ============================================================ */
 type ApiSiteSettings = {

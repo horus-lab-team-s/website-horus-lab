@@ -10,6 +10,7 @@ import {
   IconMail,
   IconPhone,
   IconPin,
+  IconTelegram,
   IconWhatsApp,
   IconX,
 } from "./icons";
@@ -21,6 +22,7 @@ const DEFAULT_SOCIAL = {
   facebook: "https://www.facebook.com/HorusLab",
   whatsapp: "https://wa.me/237699173771",
   github: "https://github.com/horus-lab-team-s",
+  telegram: "",
 };
 
 export function Footer() {
@@ -41,6 +43,7 @@ export function Footer() {
     { Icon: IconFacebook, label: "Facebook", href: settings?.socials.facebook || DEFAULT_SOCIAL.facebook },
     { Icon: IconWhatsApp, label: "WhatsApp", href: settings?.socials.whatsapp || DEFAULT_SOCIAL.whatsapp },
     { Icon: IconGitHub, label: "GitHub", href: settings?.socials.github || DEFAULT_SOCIAL.github },
+    { Icon: IconTelegram, label: "Telegram", href: settings?.socials.telegram || DEFAULT_SOCIAL.telegram },
   ].filter((s) => s.href);
 
   const columns = [
