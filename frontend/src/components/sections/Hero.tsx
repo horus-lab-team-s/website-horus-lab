@@ -6,22 +6,34 @@ import { HeroBackground } from "./HeroBackground";
 import { IconArrowRight, IconEye } from "@/components/icons";
 import type { CmsHero } from "@/lib/cms";
 
-// Photos Unsplash (professionnels africains + tech) — chargées par le navigateur.
-// Remplaçables par vos propres visuels.
 const HERO_IMAGES = [
-  // Femmes noires dans la tech (collection WOCinTech)
-  "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1740&q=70",
-  // Circuit / technologie (bleu)
-  "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1740&q=70",
-  // Professionnelle africaine à l'ordinateur
-  "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1740&q=70",
-  // Code / développement
-  "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1740&q=70",
+  "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1740&q=75",
+  "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1740&q=75",
+  "https://images.unsplash.com/photo-1607706189992-eae578626c86?auto=format&fit=crop&w=1740&q=75",
+  "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1740&q=75",
+  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1740&q=75",
 ];
 
+/* Services Horus-Lab — affiches sous le titre hero */
+const SERVICES = {
+  fr: [
+    "Applications sur mesure",
+    "Systèmes d'information",
+    "Digitalisation entreprises",
+    "Formation & Audit",
+  ],
+  en: [
+    "Custom Applications",
+    "Information Systems",
+    "Business Digitalisation",
+    "Training & Audit",
+  ],
+};
+
 export function Hero({ content }: { content?: CmsHero }) {
-  const { dict } = useLang();
+  const { dict, lang } = useLang();
   const h = content ?? dict.hero;
+  const services = SERVICES[lang] ?? SERVICES.fr;
 
   return (
     <section
@@ -53,7 +65,22 @@ export function Hero({ content }: { content?: CmsHero }) {
           </p>
         </Reveal>
 
-        <Reveal delay={240}>
+        {/* ── Chips services ── */}
+        <Reveal delay={210}>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+            {services.map((svc) => (
+              <span
+                key={svc}
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold text-white/90 backdrop-blur transition-colors hover:bg-white/20"
+              >
+                <span className="size-1.5 shrink-0 rounded-full bg-sky" />
+                {svc}
+              </span>
+            ))}
+          </div>
+        </Reveal>
+
+        <Reveal delay={280}>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a
               href="#contact"
@@ -71,7 +98,7 @@ export function Hero({ content }: { content?: CmsHero }) {
           </div>
         </Reveal>
 
-        <Reveal delay={320}>
+        <Reveal delay={360}>
           <dl className="mx-auto mt-14 grid max-w-xl grid-cols-3 gap-6 border-t border-white/15 pt-8">
             {h.stats.map((stat) => (
               <div key={stat.label}>
@@ -83,7 +110,7 @@ export function Hero({ content }: { content?: CmsHero }) {
         </Reveal>
       </div>
 
-      {/* Indice de défilement (discret, desktop) */}
+      {/* Scroll hint */}
       <a
         href="#services"
         aria-label={h.ctaSecondary}
@@ -94,33 +121,17 @@ export function Hero({ content }: { content?: CmsHero }) {
         </span>
       </a>
 
-      {/* Vague animée de transition vers la section suivante */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[90px] text-white dark:text-[#070e1c]"
-      >
-        {/* Couche arrière (plus lente, translucide) */}
-        <svg
-          viewBox="0 0 2880 120"
-          preserveAspectRatio="none"
-          className="absolute bottom-0 left-0 h-full w-[200%] animate-[waveX_16s_linear_infinite]"
-        >
-          <path
-            fill="currentColor"
-            opacity="0.45"
-            d="M0,50 C240,90 480,10 720,50 C960,90 1200,10 1440,50 C1680,90 1920,10 2160,50 C2400,90 2640,10 2880,50 L2880,120 L0,120 Z"
-          />
+      {/* Vague animée bas */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[90px] text-white dark:text-[#070e1c]">
+        <svg viewBox="0 0 2880 120" preserveAspectRatio="none"
+          className="absolute bottom-0 left-0 h-full w-[200%] animate-[waveX_16s_linear_infinite]">
+          <path fill="currentColor" opacity="0.45"
+            d="M0,50 C240,90 480,10 720,50 C960,90 1200,10 1440,50 C1680,90 1920,10 2160,50 C2400,90 2640,10 2880,50 L2880,120 L0,120 Z" />
         </svg>
-        {/* Couche avant (plus rapide, sens inverse, pleine couleur) */}
-        <svg
-          viewBox="0 0 2880 120"
-          preserveAspectRatio="none"
-          className="absolute bottom-0 left-0 h-full w-[200%] animate-[waveX_11s_linear_infinite_reverse]"
-        >
-          <path
-            fill="currentColor"
-            d="M0,60 C360,100 720,30 1440,60 C2160,90 2520,30 2880,60 L2880,120 L0,120 Z"
-          />
+        <svg viewBox="0 0 2880 120" preserveAspectRatio="none"
+          className="absolute bottom-0 left-0 h-full w-[200%] animate-[waveX_11s_linear_infinite_reverse]">
+          <path fill="currentColor"
+            d="M0,60 C360,100 720,30 1440,60 C2160,90 2520,30 2880,60 L2880,120 L0,120 Z" />
         </svg>
       </div>
     </section>

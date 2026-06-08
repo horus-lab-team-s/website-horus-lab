@@ -8,7 +8,6 @@ import { Process } from "@/components/sections/Process";
 import { WhyUs } from "@/components/sections/WhyUs";
 import { Sectors } from "@/components/sections/Sectors";
 import { Testimonials } from "@/components/sections/Testimonials";
-import { News } from "@/components/sections/News";
 import { BlogPreview } from "@/components/sections/BlogPreview";
 import { CTA } from "@/components/sections/CTA";
 import { Contact } from "@/components/sections/Contact";
@@ -17,7 +16,6 @@ import { isLocale } from "@/i18n/dictionaries";
 import { SITE_URL } from "@/lib/site";
 import {
   getCmsHero,
-  getCmsNews,
   getCmsPosts,
   getCmsProcessSteps,
   getCmsProjects,
@@ -60,7 +58,6 @@ export default async function Home({ params }: { params: Promise<Params> }) {
     sectors,
     testimonials,
     projects,
-    news,
     latestPosts,
   ] = await Promise.all([
     getCmsHero(lang),
@@ -70,7 +67,6 @@ export default async function Home({ params }: { params: Promise<Params> }) {
     getCmsSectors(lang),
     getCmsTestimonials(lang),
     getCmsProjects(lang),
-    getCmsNews(lang),
     getCmsPosts(lang).then((p) => p.slice(0, 3)),
   ]);
 
@@ -89,7 +85,6 @@ export default async function Home({ params }: { params: Promise<Params> }) {
         <WhyUs items={values} />
         <Sectors items={sectors} />
         <Testimonials items={testimonials} />
-        <News items={news} />
         <BlogPreview posts={latestPosts} />
         <CTA />
         <Contact />

@@ -86,16 +86,9 @@ function mapProject(p: ApiProject, lang: Lang): Project {
 }
 
 export async function getCmsProjects(lang: Lang): Promise<Project[]> {
-  try {
-    const data = await fetchList<ApiProject>("/api/portfolio/");
-    if (!data.length) return getStaticProjects(lang);
-    return data
-      .slice()
-      .sort((a, b) => Number(b.is_featured) - Number(a.is_featured) || a.order - b.order)
-      .map((p) => mapProject(p, lang));
-  } catch {
-    return getStaticProjects(lang);
-  }
+  // On utilise TOUJOURS les projets locaux — seuls Afrikamode, Gathe Finance,
+  // e-Learning et Formation appartiennent à Horus-Lab.
+  return getStaticProjects(lang);
 }
 
 /* ============================================================
@@ -378,18 +371,9 @@ type ApiService = {
 export type CmsServices = Dict["services"]["items"];
 
 export async function getCmsServices(lang: Lang): Promise<CmsServices> {
-  try {
-    const data = await fetchList<ApiService>("/api/services/");
-    if (!data.length) return getDictionary(lang).services.items;
-    const t = pick(lang);
-    return data.map((s) => ({
-      title: t(s.title_fr, s.title_en),
-      desc: t(s.description_fr, s.description_en),
-      tags: s.tags ?? [],
-    }));
-  } catch {
-    return getDictionary(lang).services.items;
-  }
+  // On utilise TOUJOURS le dictionnaire local — les services sont fixes et définis dans le code.
+  // Le backend peut avoir d'anciens services (ERP, etc.) qui ne correspondent pas à la réalité.
+  return getDictionary(lang).services.items;
 }
 
 /* ============================================================

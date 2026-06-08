@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { BlogHero } from "@/components/blog/BlogHero";
 import { BlogIndex } from "@/components/blog/BlogIndex";
+import { LiveChat } from "@/components/blog/LiveChat";
 import { getCmsPosts } from "@/lib/cms";
 import { getDictionary, isLocale, locales, type Lang } from "@/i18n/dictionaries";
 
@@ -45,8 +47,10 @@ export default async function BlogPage({
     <>
       <Header />
       <main id="main" tabIndex={-1}>
+        <BlogHero />
         <BlogIndex posts={posts} />
       </main>
+      <LiveChat />
       <Footer />
     </>
   );

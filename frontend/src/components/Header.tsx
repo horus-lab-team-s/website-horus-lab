@@ -2,90 +2,175 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
-import { IconClose, IconGlobe, IconMenu } from "./icons";
+import { IconClose, IconMenu } from "./icons";
+import { FlagIcon } from "./Flags";
 import { ThemeToggle } from "./ThemeToggle";
 
-export function Header() {
-  const { dict, otherLang, switchHref, localePath } = useLang();
-  const pathname = usePathname();
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
+/* ── Données de langues ── */
+const LANGS = [
+  { code: "fr", flag: "🇫🇷", label: "Français" },
+  { code: "en", flag: "🇬🇧", label: "English" },
+] as const;
 
-  // Épaissit le fond/l'ombre une fois la page défilée.
+type LangCode = "fr" | "en";
+
+/* ── Sous-menus services ── */
+const SERVICE_SUBMENU: Record<LangCode, { slug: string; label: string }[]> = {
+  fr: [
+    { slug: "applications",        label: "Applications sur mesure" },
+    { slug: "systemes-information", label: "Systèmes d'information" },
+    { slug: "digitalisation",      label: "Digitalisation entreprises" },
+    { slug: "formation-audit",     label: "Formation & Audit" },
+  ],
+  en: [
+    { slug: "applications",        label: "Custom Applications" },
+    { slug: "systemes-information", label: "Information Systems" },
+    { slug: "digitalisation",      label: "Business Digitalisation" },
+    { slug: "formation-audit",     label: "Training & Audit" },
+  ],
+};
+
+export function Header() {
+  const { dict, lang, switchHref, localePath } = useLang();
+  const pathname  = usePathname();
+  const router    = useRouter();
+
+  const [scrolled,            setScrolled]            = useState(false);
+  const [menuOpen,            setMenuOpen]            = useState(false);
+  const [servicesOpen,        setServicesOpen]        = useState(false);
+  const [mobileServicesOpen,  setMobileServicesOpen]  = useState(false);
+  const [langOpen,            setLangOpen]            = useState(false);
+
+  const servicesRef = useRef<HTMLLIElement>(null);
+  const langRef     = useRef<HTMLDivElement>(null);
+  const svcTimer    = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  /* Scroll */
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const fn = () => setScrolled(window.scrollY > 24);
+    fn();
+    window.addEventListener("scroll", fn, { passive: true });
+    return () => window.removeEventListener("scroll", fn);
   }, []);
 
+  /* Fermer services dropdown au clic extérieur */
+  useEffect(() => {
+    const fn = (e: MouseEvent) => {
+      if (servicesRef.current && !servicesRef.current.contains(e.target as Node))
+        setServicesOpen(false);
+    };
+    document.addEventListener("mousedown", fn);
+    return () => document.removeEventListener("mousedown", fn);
+  }, []);
+
+  /* Fermer lang dropdown au clic extérieur */
+  useEffect(() => {
+    const fn = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node))
+        setLangOpen(false);
+    };
+    document.addEventListener("mousedown", fn);
+    return () => document.removeEventListener("mousedown", fn);
+  }, []);
+
+  const openSvc  = () => { if (svcTimer.current) clearTimeout(svcTimer.current); setServicesOpen(true); };
+  const closeSvc = () => { svcTimer.current = setTimeout(() => setServicesOpen(false), 180); };
+
+  const submenus = SERVICE_SUBMENU[lang as LangCode] ?? SERVICE_SUBMENU.fr;
+  const currentLang = LANGS.find(l => l.code === lang) ?? LANGS[0];
+
   const links = [
-    { href: localePath("#services"), label: dict.nav.services, anchor: true },
-    { href: localePath("/portfolio"), label: dict.nav.portfolio, anchor: false },
-    { href: localePath("/news"), label: dict.nav.news, anchor: false },
-    { href: localePath("/blog"), label: dict.nav.blog, anchor: false },
-    { href: localePath("/about"), label: dict.nav.about, anchor: false },
+    { href: localePath("/portfolio"), label: dict.nav.portfolio },
+    { href: localePath("/blog"),      label: dict.nav.blog },
+    { href: localePath("/about"),     label: dict.nav.about },
   ];
 
-  /** Un lien est "actif" si on est sur la page exacte ou un sous-chemin
-   *  (ex. /fr/blog/[slug] active aussi "Blog"). Les ancres restent inactives. */
-  const isActive = (link: { href: string; anchor: boolean }) => {
-    if (link.anchor || !pathname) return false;
-    return pathname === link.href || pathname.startsWith(`${link.href}/`);
-  };
+  const isActive = (href: string) =>
+    !!(pathname && (pathname === href || pathname.startsWith(`${href}/`)));
+
+  const isServicesActive = !!(pathname?.includes("/services"));
+
+  /* Changement de langue */
+  function switchLang(targetLang: string) {
+    setLangOpen(false);
+    setMenuOpen(false);
+    // Remplace la locale dans l'URL courante
+    const newPath = (pathname ?? `/${lang}`).replace(/^\/(fr|en)(?=\/|$)/, `/${targetLang}`);
+    router.push(newPath);
+  }
 
   return (
-    // En-tête FLOTTANT : détaché du bord (top-4), centré, marges latérales.
     <header className="fixed inset-x-0 top-3 z-50 px-3 sm:top-4 sm:px-4">
       <div className="mx-auto max-w-6xl">
-        {/* La "pilule" a TOUJOURS un fond translucide (glass) : les menus
-            restent lisibles partout — y compris au-dessus du hero — sans avoir
-            à changer la couleur du texte selon l'arrière-plan. */}
-        <nav
-          className={`flex h-16 items-center justify-between gap-3 rounded-full border border-brand-100 px-3 backdrop-blur-md transition-all duration-300 dark:border-white/10 sm:px-5 ${
-            scrolled
-              ? "bg-white/90 shadow-xl shadow-brand-900/10 dark:bg-slate-900/90"
-              : "bg-white/75 shadow-lg shadow-brand-900/5 dark:bg-slate-900/70"
-          }`}
-        >
-          <Link href={localePath("/")} className="flex items-center gap-2.5">
-            <Image
-              src="/Logo-HORUS-LAB.jpeg"
-              alt="Horus-Lab"
-              width={40}
-              height={40}
-              priority
-              className="rounded-full ring-1 ring-brand-100 dark:ring-white/10"
-            />
+
+        {/* ── Pilule principale ── */}
+        <nav className={`flex h-16 items-center justify-between gap-3 rounded-full border border-brand-100 px-3 backdrop-blur-md transition-all duration-300 dark:border-white/10 sm:px-5 ${
+          scrolled ? "bg-white/90 shadow-xl shadow-brand-900/10 dark:bg-slate-900/90"
+                   : "bg-white/75 shadow-lg shadow-brand-900/5  dark:bg-slate-900/70"
+        }`}>
+
+          {/* Logo */}
+          <Link href={localePath("/")} className="flex shrink-0 items-center gap-2.5">
+            <Image src="/Logo-HORUS-LAB.jpeg" alt="Horus-Lab" width={40} height={40} priority
+              className="rounded-full ring-1 ring-brand-100 dark:ring-white/10" />
             <span className="text-lg font-bold tracking-tight text-brand-900 dark:text-white">
               horus<span className="text-brand-500">-lab</span>
             </span>
           </Link>
 
-          {/* Liens (desktop) — état actif marqué visuellement (fond + couleur + point) */}
+          {/* Liens desktop */}
           <ul className="hidden items-center gap-1 lg:flex">
-            {links.map((link) => {
-              const active = isActive(link);
+
+            {/* Services dropdown */}
+            <li ref={servicesRef} className="relative" onMouseEnter={openSvc} onMouseLeave={closeSvc}>
+              <button type="button" aria-haspopup="true" aria-expanded={servicesOpen}
+                onClick={() => setServicesOpen(v => !v)}
+                className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                  isServicesActive
+                    ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
+                    : "text-ink/75 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
+                }`}>
+                {isServicesActive && <span aria-hidden className="size-1.5 rounded-full bg-brand-500 glow-pulse" />}
+                {dict.nav.services}
+                <svg className={`size-3.5 transition-transform duration-200 ${servicesOpen ? "rotate-180" : ""}`}
+                  fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+
+              {/* Dropdown services */}
+              <div onMouseEnter={openSvc} onMouseLeave={closeSvc}
+                className={`absolute left-0 top-full mt-2 w-58 origin-top-left rounded-2xl border border-brand-100 bg-white/95 shadow-xl shadow-brand-900/10 backdrop-blur transition-all duration-200 dark:border-white/10 dark:bg-slate-900/95 ${
+                  servicesOpen ? "scale-100 opacity-100 pointer-events-auto" : "scale-95 opacity-0 pointer-events-none"
+                }`}>
+                <ul className="p-2">
+                  {submenus.map(s => (
+                    <li key={s.slug}>
+                      <Link href={localePath(`/services/${s.slug}`)} onClick={() => setServicesOpen(false)}
+                        className="flex items-center gap-2.5 rounded-xl px-4 py-2.5 text-sm font-medium text-ink/80 transition-colors hover:bg-brand-50 hover:text-brand-700 dark:text-brand-100/80 dark:hover:bg-white/5 dark:hover:text-brand-200">
+                        <span className="size-1.5 rounded-full bg-brand-500/60" />
+                        {s.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+
+            {/* Autres liens */}
+            {links.map(link => {
+              const active = isActive(link.href);
               return (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    aria-current={active ? "page" : undefined}
-                    className={`relative flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                      active
-                        ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
-                        : "text-ink/75 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
-                    }`}
-                  >
-                    {active && (
-                      <span
-                        aria-hidden
-                        className="size-1.5 rounded-full bg-brand-500 glow-pulse"
-                      />
-                    )}
+                  <Link href={link.href} aria-current={active ? "page" : undefined}
+                    className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                      active ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
+                             : "text-ink/75 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
+                    }`}>
+                    {active && <span aria-hidden className="size-1.5 rounded-full bg-brand-500 glow-pulse" />}
                     {link.label}
                   </Link>
                 </li>
@@ -93,73 +178,149 @@ export function Header() {
             })}
           </ul>
 
+          {/* Actions droite */}
           <div className="flex items-center gap-2">
             <ThemeToggle />
 
-            <Link
-              href={switchHref}
-              hrefLang={otherLang}
-              aria-label="Changer de langue / Switch language"
-              className="flex items-center gap-1.5 rounded-full border border-brand-200 px-3 py-2 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:text-brand-200 dark:hover:bg-white/5"
-            >
-              <IconGlobe className="size-4" />
-              {otherLang.toUpperCase()}
-            </Link>
+            {/* ── Sélecteur de langue (dropdown) ── */}
+            <div ref={langRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setLangOpen(v => !v)}
+                aria-label="Changer de langue"
+                aria-expanded={langOpen}
+                className="flex items-center gap-1.5 rounded-full border border-brand-200 px-3 py-1.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:text-brand-200 dark:hover:bg-white/5"
+              >
+                <FlagIcon code={currentLang.code} className="h-4 w-6 shrink-0 shadow-sm ring-1 ring-black/5" />
+                <span>{currentLang.code.toUpperCase()}</span>
+                <svg className={`size-3 transition-transform duration-200 ${langOpen ? "rotate-180" : ""}`}
+                  fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
 
-            <Link
-              href={localePath("#contact")}
-              className="hidden rounded-full bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-700/25 transition-all hover:bg-brand-800 sm:inline-flex"
-            >
+              {/* Dropdown langues */}
+              <div className={`absolute right-0 top-full mt-2 w-40 origin-top-right rounded-2xl border border-brand-100 bg-white/95 shadow-xl shadow-brand-900/10 backdrop-blur transition-all duration-200 dark:border-white/10 dark:bg-slate-900/95 ${
+                langOpen ? "scale-100 opacity-100 pointer-events-auto" : "scale-95 opacity-0 pointer-events-none"
+              }`}>
+                <ul className="p-1.5">
+                  {LANGS.map(l => {
+                    const isCurrentLang = l.code === lang;
+                    return (
+                      <li key={l.code}>
+                        <button
+                          type="button"
+                          onClick={() => switchLang(l.code)}
+                          className={`flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
+                            isCurrentLang
+                              ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
+                              : "text-ink/80 hover:bg-brand-50 hover:text-brand-700 dark:text-brand-100/80 dark:hover:bg-white/5 dark:hover:text-brand-200"
+                          }`}
+                        >
+                          <FlagIcon code={l.code} className="h-4 w-6 shrink-0 shadow-sm ring-1 ring-black/5" />
+                          <span>{l.label}</span>
+                          {isCurrentLang && (
+                            <span className="ml-auto size-2 rounded-full bg-brand-500" />
+                          )}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+
+            {/* CTA */}
+            <Link href={localePath("#contact")}
+              className="hidden rounded-full bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-700/25 transition-all hover:bg-brand-800 sm:inline-flex">
               {dict.nav.cta}
             </Link>
 
-            <button
-              type="button"
-              onClick={() => setOpen((v) => !v)}
-              aria-label="Menu"
-              aria-expanded={open}
-              className="flex size-10 items-center justify-center rounded-full border border-brand-200 text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:text-brand-200 lg:hidden"
-            >
-              {open ? <IconClose className="size-5" /> : <IconMenu className="size-5" />}
+            {/* Burger mobile */}
+            <button type="button" onClick={() => setMenuOpen(v => !v)} aria-label="Menu" aria-expanded={menuOpen}
+              className="flex size-10 items-center justify-center rounded-full border border-brand-200 text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:text-brand-200 lg:hidden">
+              {menuOpen ? <IconClose className="size-5" /> : <IconMenu className="size-5" />}
             </button>
           </div>
         </nav>
 
-        {/* Menu mobile : carte arrondie qui se déploie sous la pilule */}
-        <div
-          className={`overflow-hidden transition-[max-height,opacity] duration-300 lg:hidden ${
-            open ? "mt-2 max-h-96 opacity-100" : "max-h-0 opacity-0"
-          }`}
-        >
+        {/* ── Menu mobile ── */}
+        <div className={`overflow-hidden transition-[max-height,opacity] duration-300 lg:hidden ${
+          menuOpen ? "mt-2 max-h-[36rem] opacity-100" : "max-h-0 opacity-0"
+        }`}>
           <ul className="flex flex-col gap-1 rounded-2xl border border-brand-100 bg-white/95 p-3 shadow-xl backdrop-blur dark:border-white/10 dark:bg-slate-900/95">
-            {links.map((link) => {
-              const active = isActive(link);
+
+            {/* Services accordion */}
+            <li>
+              <button type="button" onClick={() => setMobileServicesOpen(v => !v)}
+                className={`flex w-full items-center justify-between gap-2 rounded-xl px-4 py-3 text-base font-medium transition-colors ${
+                  isServicesActive ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
+                                   : "text-ink/80 hover:bg-brand-50 hover:text-brand-700"
+                }`}>
+                {dict.nav.services}
+                <svg className={`size-4 transition-transform ${mobileServicesOpen ? "rotate-180" : ""}`}
+                  fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              {mobileServicesOpen && (
+                <ul className="mt-1 ml-4 flex flex-col gap-0.5">
+                  {submenus.map(s => (
+                    <li key={s.slug}>
+                      <Link href={localePath(`/services/${s.slug}`)}
+                        onClick={() => { setMenuOpen(false); setMobileServicesOpen(false); }}
+                        className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-ink/70 hover:bg-brand-50 hover:text-brand-700">
+                        <span className="size-1.5 rounded-full bg-brand-500/60" />
+                        {s.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+
+            {/* Autres liens */}
+            {links.map(link => {
+              const active = isActive(link.href);
               return (
                 <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    aria-current={active ? "page" : undefined}
-                    onClick={() => setOpen(false)}
+                  <Link href={link.href} aria-current={active ? "page" : undefined}
+                    onClick={() => setMenuOpen(false)}
                     className={`flex items-center gap-2 rounded-xl px-4 py-3 text-base font-medium transition-colors ${
-                      active
-                        ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
-                        : "text-ink/80 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
-                    }`}
-                  >
-                    {active && (
-                      <span aria-hidden className="size-1.5 rounded-full bg-brand-500" />
-                    )}
+                      active ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
+                             : "text-ink/80 hover:bg-brand-50 hover:text-brand-700"
+                    }`}>
+                    {active && <span aria-hidden className="size-1.5 rounded-full bg-brand-500" />}
                     {link.label}
                   </Link>
                 </li>
               );
             })}
+
+            {/* Sélecteur langue mobile */}
+            <li className="mt-1 border-t border-brand-100 pt-2 dark:border-white/10">
+              <p className="px-4 pb-1 text-[11px] font-bold uppercase tracking-[0.15em] text-muted">
+                {lang === "fr" ? "Langue" : "Language"}
+              </p>
+              <div className="flex gap-2 px-2">
+                {LANGS.map(l => (
+                  <button key={l.code} type="button" onClick={() => switchLang(l.code)}
+                    className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors ${
+                      l.code === lang
+                        ? "bg-brand-700 text-white"
+                        : "border border-brand-200 text-brand-700 hover:bg-brand-50 dark:border-white/15 dark:text-brand-200"
+                    }`}>
+                    <FlagIcon code={l.code} className="h-4 w-6 shrink-0 shadow-sm ring-1 ring-black/5" />
+                    <span>{l.code.toUpperCase()}</span>
+                  </button>
+                ))}
+              </div>
+            </li>
+
+            {/* CTA */}
             <li>
-              <Link
-                href={localePath("#contact")}
-                onClick={() => setOpen(false)}
-                className="mt-1 block rounded-xl bg-brand-700 px-4 py-3 text-center text-base font-semibold text-white"
-              >
+              <Link href={localePath("#contact")} onClick={() => setMenuOpen(false)}
+                className="mt-1 block rounded-xl bg-brand-700 px-4 py-3 text-center text-base font-semibold text-white">
                 {dict.nav.cta}
               </Link>
             </li>

@@ -20,7 +20,7 @@ const fr = {
     titleLead: "Nous transformons vos idées en",
     titleHighlight: "solutions numériques durables",
     subtitle:
-      "Développement web & mobile, ERP, logiciels sur-mesure et solutions d'intelligence artificielle. Une expertise locale au service de votre croissance.",
+      "Vos idées, nos solutions — du concept au déploiement.",
     ctaPrimary: "Démarrer un projet",
     ctaSecondary: "Découvrir nos services",
     stats: [
@@ -36,24 +36,24 @@ const fr = {
       "Nous couvrons l'ensemble de votre chaîne de valeur numérique avec des équipes pluridisciplinaires.",
     items: [
       {
-        title: "Développement Web & Mobile",
+        title: "Applications sur mesure",
         desc: "Sites vitrines, plateformes, applications iOS / Android et PWA performantes, pensées pour vos utilisateurs.",
         tags: ["React", "Next.js", "Flutter", "PWA"],
       },
       {
-        title: "ERP & Systèmes de gestion",
-        desc: "Pilotez votre activité avec des outils intégrés : finances, RH, stocks, ventes — centralisés et fiables.",
-        tags: ["Gestion", "Finance", "RH", "Stocks"],
+        title: "Systèmes d'information",
+        desc: "Analyse, conception et architecture de vos SI avec rigueur — méthode RUP, UML, audit de l'existant.",
+        tags: ["UML", "RUP", "Architecture", "API"],
       },
       {
-        title: "Logiciels sur-mesure",
-        desc: "Des applications métier conçues autour de vos processus réels, évolutives et faciles à maintenir.",
-        tags: ["SaaS", "API", "Cloud", "Automatisation"],
+        title: "Digitalisation d'entreprise",
+        desc: "Dématérialisation, automatisation des workflows et outils de gestion adaptés à votre contexte.",
+        tags: ["Automatisation", "CRM", "GED", "Cloud"],
       },
       {
-        title: "Solutions d'Intelligence Artificielle",
-        desc: "Chatbots, analyse de données, automatisation intelligente et modèles prédictifs adaptés à vos besoins.",
-        tags: ["IA", "Data", "NLP", "Vision"],
+        title: "Formation & Audit IT",
+        desc: "Formations techniques, ateliers pratiques, audit de code et de sécurité pour vos équipes.",
+        tags: ["Formation", "Cybersécurité", "Audit", "Certification"],
       },
     ],
   },
@@ -125,7 +125,7 @@ const fr = {
     eyebrow: "Réalisations",
     title: "Des produits déjà en production",
     subtitle:
-      "Aux côtés de SOFTRONIC INNOVING (PDG Armel SIME), nous concevons et livrons des applications utilisées par des groupes multinationaux à travers l'Afrique.",
+      "Des applications conçues et livrées pour des clients africains — du concept au déploiement.",
     featuredLabel: "Projet phare",
     viewAll: "Voir toutes les réalisations",
     detailsLabel: "Détails",
@@ -204,9 +204,9 @@ const fr = {
   },
   blog: {
     eyebrow: "Blog",
-    title: "Nos articles & ressources",
+    title: "Actualités tech & ressources",
     subtitle:
-      "Conseils, retours d'expérience et décryptages tech pour les entreprises africaines.",
+      "Les dernières nouvelles de la tech mondiale (GAFAM, NVIDIA, IA) et des conseils pour les entreprises africaines.",
     readMore: "Lire l'article",
     readTime: "min de lecture",
     backToBlog: "Retour au blog",
@@ -241,11 +241,11 @@ const fr = {
     columns: [
       {
         title: "Services",
-        links: ["Développement Web & Mobile", "ERP & Gestion", "Logiciels sur-mesure", "Solutions IA"],
+        links: ["Applications sur mesure", "Systèmes d'information", "Digitalisation", "Formation & Audit IT"],
       },
       {
         title: "Entreprise",
-        links: ["À propos", "Notre méthode", "Secteurs", "Carrières"],
+        links: ["À propos", "Réalisations", "Actualités", "Carrières"],
       },
     ],
     contactTitle: "Contact",
@@ -278,7 +278,7 @@ const en: Dict = {
     titleLead: "We turn your ideas into",
     titleHighlight: "lasting digital solutions",
     subtitle:
-      "Web & mobile development, ERPs, custom software and artificial intelligence solutions. Local expertise driving your growth.",
+      "Your ideas, our solutions — from concept to deployment.",
     ctaPrimary: "Start a project",
     ctaSecondary: "Explore our services",
     stats: [
@@ -294,24 +294,24 @@ const en: Dict = {
       "We cover your entire digital value chain with cross-functional teams.",
     items: [
       {
-        title: "Web & Mobile Development",
+        title: "Custom Applications",
         desc: "Websites, platforms, iOS / Android apps and high-performance PWAs, built around your users.",
         tags: ["React", "Next.js", "Flutter", "PWA"],
       },
       {
-        title: "ERP & Management Systems",
-        desc: "Run your business with integrated tools: finance, HR, inventory, sales — centralized and reliable.",
-        tags: ["Management", "Finance", "HR", "Inventory"],
+        title: "Information Systems",
+        desc: "Analysis, design and IS architecture with rigour — RUP method, UML, existing system audit.",
+        tags: ["UML", "RUP", "Architecture", "API"],
       },
       {
-        title: "Custom Software",
-        desc: "Business applications designed around your real processes — scalable and easy to maintain.",
-        tags: ["SaaS", "API", "Cloud", "Automation"],
+        title: "Business Digitalisation",
+        desc: "Dematerialisation, workflow automation and management tools adapted to your context.",
+        tags: ["Automation", "CRM", "DMS", "Cloud"],
       },
       {
-        title: "Artificial Intelligence Solutions",
-        desc: "Chatbots, data analytics, smart automation and predictive models tailored to your needs.",
-        tags: ["AI", "Data", "NLP", "Vision"],
+        title: "Training & IT Audit",
+        desc: "Technical training, hands-on workshops, code and security audits for your teams.",
+        tags: ["Training", "Cybersecurity", "Audit", "Certification"],
       },
     ],
   },
@@ -383,7 +383,7 @@ const en: Dict = {
     eyebrow: "Work",
     title: "Products already live in production",
     subtitle:
-      "Alongside SOFTRONIC INNOVING (CEO Armel SIME), we design and ship applications used by multinational groups across Africa.",
+      "Applications designed and delivered for African clients — concept to deployment.",
     featuredLabel: "Featured project",
     viewAll: "See all our work",
     detailsLabel: "Details",
@@ -462,9 +462,9 @@ const en: Dict = {
   },
   blog: {
     eyebrow: "Blog",
-    title: "Articles & resources",
+    title: "Tech news & resources",
     subtitle:
-      "Tips, lessons learned and tech insights for African businesses.",
+      "The latest from global tech (GAFAM, NVIDIA, AI) and practical insights for African businesses.",
     readMore: "Read article",
     readTime: "min read",
     backToBlog: "Back to blog",
@@ -499,11 +499,11 @@ const en: Dict = {
     columns: [
       {
         title: "Services",
-        links: ["Web & Mobile Development", "ERP & Management", "Custom Software", "AI Solutions"],
+        links: ["Custom Applications", "Information Systems", "Business Digitalisation", "Training & IT Audit"],
       },
       {
         title: "Company",
-        links: ["About", "Our method", "Industries", "Careers"],
+        links: ["About", "Our work", "News", "Careers"],
       },
     ],
     contactTitle: "Contact",

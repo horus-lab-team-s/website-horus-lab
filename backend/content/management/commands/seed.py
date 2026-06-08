@@ -40,15 +40,13 @@ class Command(BaseCommand):
         self.seed_sectors()
         self.seed_testimonials()
         self.seed_partners()
-        self.seed_achievements()
-        self.seed_stack()
         self.seed_team()
         self.seed_blog()
         self.seed_portfolio()
-        self.seed_news()
-        self.stdout.write(self.style.SUCCESS("Seed termine."))
+        self.stdout.write(self.style.SUCCESS("Seed terminé."))
 
-    # ------------------------------------------------------------------
+    # ──────────────────────────────────────────────────────────
+
     def seed_site_settings(self):
         SiteSettings.objects.update_or_create(
             pk=1,
@@ -82,43 +80,41 @@ class Command(BaseCommand):
                 title_lead_en="We turn your ideas into",
                 title_highlight_fr="solutions numériques durables",
                 title_highlight_en="lasting digital solutions",
-                subtitle_fr="Développement web & mobile, ERP, logiciels sur-mesure et solutions d'intelligence artificielle. Une expertise locale au service de votre croissance.",
-                subtitle_en="Web & mobile development, ERPs, custom software and artificial intelligence solutions. Local expertise driving your growth.",
+                subtitle_fr="Applications sur mesure, systèmes d'information, digitalisation et formation — une expertise locale au service de votre croissance.",
+                subtitle_en="Custom applications, information systems, digitalisation and training — local expertise driving your growth.",
                 cta_primary_fr="Démarrer un projet",
                 cta_primary_en="Start a project",
                 cta_secondary_fr="Découvrir nos services",
                 cta_secondary_en="Explore our services",
             ),
         )
-        # Important : aligné avec le frontend (8+, 4, 24/7 — pas de "98%").
         HeroStat.objects.all().delete()
-        for i, (value, fr, en) in enumerate(
-            [
-                ("8+", "projets livrés", "projects delivered"),
-                ("4", "pôles d'expertise", "areas of expertise"),
-                ("24/7", "accompagnement", "support"),
-            ]
-        ):
+        for i, (value, fr, en) in enumerate([
+            ("8+",  "projets livrés",     "projects delivered"),
+            ("4",   "pôles d'expertise",  "areas of expertise"),
+            ("24/7","accompagnement",     "support"),
+        ]):
             HeroStat.objects.create(value=value, label_fr=fr, label_en=en, order=i)
 
     def seed_services(self):
+        # 4 services — sans ERP & Gestion
         items = [
-            ("code", "Développement Web & Mobile", "Web & Mobile Development",
+            ("code", "Applications sur mesure", "Custom Applications",
              "Sites vitrines, plateformes, applications iOS / Android et PWA performantes, pensées pour vos utilisateurs.",
              "Websites, platforms, iOS / Android apps and high-performance PWAs, built around your users.",
              ["React", "Next.js", "Flutter", "PWA"]),
-            ("layers", "ERP & Systèmes de gestion", "ERP & Management Systems",
-             "Pilotez votre activité avec des outils intégrés : finances, RH, stocks, ventes — centralisés et fiables.",
-             "Run your business with integrated tools: finance, HR, inventory, sales — centralized and reliable.",
-             ["Gestion", "Finance", "RH", "Stocks"]),
-            ("cog", "Logiciels sur-mesure", "Custom Software",
-             "Des applications métier conçues autour de vos processus réels, évolutives et faciles à maintenir.",
-             "Business applications designed around your real processes — scalable and easy to maintain.",
-             ["SaaS", "API", "Cloud", "Automatisation"]),
-            ("spark", "Solutions d'Intelligence Artificielle", "AI Solutions",
-             "Chatbots, analyse de données, automatisation intelligente et modèles prédictifs adaptés à vos besoins.",
-             "Chatbots, data analytics, smart automation and predictive models tailored to your needs.",
-             ["IA", "Data", "NLP", "Vision"]),
+            ("eye", "Systèmes d'information", "Information Systems",
+             "Analyse, conception et architecture de vos SI avec rigueur — méthode RUP, UML, audit de l'existant.",
+             "Analysis, design and IS architecture with rigour — RUP method, UML, existing system audit.",
+             ["UML", "RUP", "Architecture", "API"]),
+            ("cog", "Digitalisation d'entreprise", "Business Digitalisation",
+             "Dématérialisation, automatisation des workflows et outils de gestion adaptés à votre contexte africain.",
+             "Dematerialisation, workflow automation and management tools adapted to your African context.",
+             ["Automatisation", "CRM", "GED", "Cloud"]),
+            ("spark", "Formation & Audit IT", "Training & IT Audit",
+             "Formations techniques, ateliers pratiques, audit de code et de sécurité pour vos équipes.",
+             "Technical training, hands-on workshops, code and security audits for your teams.",
+             ["Formation", "Cybersécurité", "Audit", "Certification"]),
         ]
         for i, (icon, tfr, ten, dfr, den, tags) in enumerate(items):
             Service.objects.update_or_create(
@@ -172,13 +168,13 @@ class Command(BaseCommand):
     def seed_sectors(self):
         items = [
             ("Fintech & Paiement", "Fintech & Payments"),
-            ("Santé & e-Santé", "Health & e-Health"),
+            ("Santé & e-Santé",    "Health & e-Health"),
             ("Éducation & EdTech", "Education & EdTech"),
             ("Agriculture & AgriTech", "Agriculture & AgriTech"),
-            ("Commerce & e-Commerce", "Commerce & e-Commerce"),
+            ("Commerce & e-Commerce",  "Commerce & e-Commerce"),
             ("Logistique & Transport", "Logistics & Transport"),
-            ("Administration publique", "Public administration"),
-            ("Énergie & Environnement", "Energy & Environment"),
+            ("Administration publique","Public administration"),
+            ("Énergie & Environnement","Energy & Environment"),
         ]
         for i, (fr, en) in enumerate(items):
             Sector.objects.update_or_create(
@@ -192,12 +188,12 @@ class Command(BaseCommand):
              "Horus-Lab delivered our platform on time with flawless quality. A truly skilled team that listens.",
              True),
             ("Kwame O.", "Fondateur, AgriConnect", "Founder, AgriConnect",
-             "Leur ERP sur-mesure a transformé notre gestion quotidienne. Nous gagnons un temps précieux chaque semaine.",
-             "Their custom ERP transformed our daily operations. We save precious time every single week.",
+             "La plateforme e-learning qu'ils ont conçue a changé la façon dont nous formons nos équipes. Parcours clairs, suivi précis.",
+             "The e-learning platform they built changed how we train our teams. Clear paths, precise tracking.",
              False),
-            ("Sandrine M.", "Responsable Support, MediCare", "Support Lead, MediCare",
-             "Le chatbot IA qu'ils ont conçu gère 70% de nos demandes clients. Un vrai bond en avant pour notre service.",
-             "The AI chatbot they built handles 70% of our customer requests. A real leap forward for our support.",
+            ("Sandrine M.", "Responsable Digitale, MediCare", "Digital Lead, MediCare",
+             "La digitalisation de nos processus a réduit nos délais de traitement de 40%. Un accompagnement professionnel du début à la fin.",
+             "Digitalising our processes cut our processing times by 40%. Professional support from start to finish.",
              False),
         ]
         for i, (name, rfr, ren, qfr, qen, featured) in enumerate(items):
@@ -208,63 +204,49 @@ class Command(BaseCommand):
             )
 
     def seed_partners(self):
-        names = ["OMA Group", "FMG", "CAPEWEST", "SOFTRONIC INNOVING", "Gathe Finance", "Afrikamode"]
+        # Uniquement les partenaires/clients réels de Horus-Lab
+        names = ["Gathe Finance", "Afrikamode"]
         for i, name in enumerate(names):
             Partner.objects.update_or_create(
                 name=name, defaults=dict(order=i, is_active=True)
             )
 
-    def seed_achievements(self):
-        items = [
-            ("−30%", "temps de chargement", "page load time"),
-            ("+25%", "stabilité des applications", "application stability"),
-            ("11", "pays couverts (Afrique)", "African countries reached"),
-            ("3", "groupes multinationaux servis", "multinational groups served"),
-        ]
-        Achievement.objects.all().delete()
-        for i, (value, fr, en) in enumerate(items):
-            Achievement.objects.create(value=value, label_fr=fr, label_en=en, order=i)
-
-    def seed_stack(self):
-        names = [
-            "Next.js", "React", "TypeScript", "JavaScript",
-            "HTML5 · CSS3", "Tailwind CSS", "Prisma", "SQL Server", "JIRA",
-        ]
-        for i, name in enumerate(names):
-            TechStackItem.objects.update_or_create(
-                name=name, defaults=dict(order=i, is_active=True)
-            )
-
     def seed_team(self):
+        # ── Co-fondateurs Horus-Lab (sans Armel SIME) ──
         members = [
             dict(
-                name="Brailain Loic TONBA",
-                role_fr="Ingénieur logiciel · Co-fondateur Horus-Lab",
-                role_en="Software engineer · Horus-Lab co-founder",
-                bio_fr="Développeur full-stack, je conçois des produits numériques de bout en bout pour des groupes multinationaux et des marques africaines.",
-                bio_en="Full-stack developer building digital products end-to-end for multinational groups and African brands.",
+                name="Brailain Loïc TONBA",
+                role_fr="Ingénieur logiciel · Co-fondateur & CEO",
+                role_en="Software engineer · Co-founder & CEO",
+                bio_fr="Développeur full-stack, je conçois des produits numériques de bout en bout pour des entreprises africaines et internationales.",
+                bio_en="Full-stack developer building digital products end-to-end for African and international businesses.",
                 email="tonbaloic@gmail.com",
                 linkedin_url="https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
                 github_url="https://github.com/LoicTonba",
                 is_lead=True, order=0,
             ),
             dict(
-                name="Armel SIME",
-                role_fr="PDG, SOFTRONIC INNOVING — partenaire technique",
-                role_en="CEO, SOFTRONIC INNOVING — technical partner",
-                bio_fr="Direction technique et stratégique des projets SFX déployés à travers 11 pays africains.",
-                bio_en="Technical and strategic lead of the SFX products deployed across 11 African countries.",
+                name="Edwin TCHAMBA TCHAKOUNTE",
+                role_fr="Architecte logiciel · Co-fondateur & CTO",
+                role_en="Software architect · Co-founder & CTO",
+                bio_fr="Senior Software Engineer & Architecte logiciel. 3+ ans d'expérience full-stack (web & mobile), APIs REST et déploiement cloud. Maîtrise UML/RUP. Lauréat du Prix du Meilleur Projet de Fin d'Études — IUT-FV Bandjoun (2024).",
+                bio_en="Senior Software Engineer & Software Architect. 3+ years full-stack experience (web & mobile), REST APIs and cloud deployment. Expert in UML/RUP. Winner of the Best Final Year Project Award — IUT-FV Bandjoun (2024).",
                 is_lead=True, order=1,
             ),
         ]
+        # Supprimer Armel SIME s'il existe
+        TeamMember.objects.filter(name="Armel SIME").delete()
         for m in members:
             TeamMember.objects.update_or_create(name=m["name"], defaults=m)
 
     def seed_blog(self):
+        # Catégories orientées tech/tendances — sans ERP ni IA seule
         cats = {
-            "erp": ("ERP & Gestion", "ERP & Management"),
-            "ia": ("Intelligence Artificielle", "Artificial Intelligence"),
-            "dev": ("Développement", "Development"),
+            "dev":      ("Développement",          "Development"),
+            "tech":     ("Actualités Tech",         "Tech News"),
+            "digital":  ("Transformation Digitale", "Digital Transformation"),
+            "africa":   ("Tech Afrique",            "Tech Africa"),
+            "training": ("Formation IT",            "IT Training"),
         }
         cat_obj = {}
         for slug, (fr, en) in cats.items():
@@ -273,26 +255,49 @@ class Command(BaseCommand):
             )
 
         posts = [
+            # ── Actualités tech mondiales ──
             dict(
-                slug="erp-sur-mesure-pme-africaines", cat="erp",
-                tfr="Pourquoi les ERP sur-mesure transforment les PME africaines",
-                ten="Why custom ERPs are transforming African SMEs",
-                efr="Les solutions de gestion génériques montrent vite leurs limites. Voici comment un ERP pensé pour votre réalité change la donne.",
-                een="Generic management software quickly shows its limits. Here's how an ERP designed for your reality changes the game.",
-                bfr="Beaucoup de PME africaines pilotent encore leur activité sur des tableurs éparpillés. Un ERP sur-mesure centralise ventes, stocks, finances et RH dans une seule source de vérité, automatise les tâches répétitives et accélère la décision.\n\nChez Horus-Lab, nous procédons par incréments : on démarre par le module qui crée le plus de valeur, puis on étend.",
-                ben="Many African SMEs still run their business on scattered spreadsheets. A custom ERP centralizes sales, inventory, finance and HR into a single source of truth, automates repetitive tasks and speeds up decisions.\n\nAt Horus-Lab we work in increments: start with the module that creates the most value, then expand.",
-                tags=["ERP", "Gestion", "PME"], date="2026-05-12",
+                slug="nvidia-blackwell-revolution-ia", cat="tech",
+                tfr="NVIDIA Blackwell : la révolution silencieuse qui accélère l'IA mondiale",
+                ten="NVIDIA Blackwell: the silent revolution accelerating global AI",
+                efr="L'architecture Blackwell de NVIDIA redéfinit ce que les data centers peuvent faire. Voici pourquoi cela change tout pour les développeurs africains.",
+                een="NVIDIA's Blackwell architecture redefines what data centres can do. Here's why it changes everything for African developers.",
+                bfr="NVIDIA a dévoilé Blackwell, sa nouvelle architecture GPU, avec des performances doublées par rapport à Hopper sur les charges de travail LLM. Pour les startups et entreprises africaines qui veulent intégrer l'IA dans leurs produits, cela signifie des coûts de cloud inférence en baisse constante.\n\nConcrètement : des assistants clients alimentés par de grands modèles de langage deviennent accessibles à des budgets PME. Horus-Lab suit ces évolutions de près pour vous proposer les bonnes architectures au bon moment.",
+                ben="NVIDIA unveiled Blackwell, its new GPU architecture, with doubled performance over Hopper on LLM workloads. For African startups and businesses integrating AI, this means consistently falling cloud inference costs.\n\nIn practice: customer assistants powered by large language models become accessible on SME budgets. Horus-Lab tracks these developments closely to offer you the right architectures at the right time.",
+                tags=["NVIDIA", "IA", "GPU", "Tech"], date="2026-06-01",
             ),
             dict(
-                slug="cas-usage-ia-entreprises-afrique", cat="ia",
-                tfr="5 cas d'usage concrets de l'IA pour les entreprises en Afrique",
-                ten="5 concrete AI use cases for businesses in Africa",
-                efr="L'intelligence artificielle n'est pas réservée aux géants de la tech. Voici cinq applications immédiatement utiles.",
-                een="Artificial intelligence isn't reserved for tech giants. Here are five immediately useful applications.",
-                bfr="Service client automatisé, détection de fraude, prévision de la demande, analyse documentaire et personnalisation : autant d'usages déjà accessibles.\n\nLe secret n'est pas d'utiliser « de l'IA » pour le principe, mais de résoudre un problème métier précis avec le bon outil.",
-                ben="Automated customer service, fraud detection, demand forecasting, document analysis and personalization: all already accessible.\n\nThe secret isn't to use 'AI' for its own sake, but to solve a specific business problem with the right tool.",
-                tags=["IA", "Automatisation", "Data"], date="2026-05-05",
+                slug="google-io-2026-annonces-cles", cat="tech",
+                tfr="Google I/O 2026 : les annonces qui vont impacter votre business",
+                ten="Google I/O 2026: the announcements that will impact your business",
+                efr="Gemini Ultra 2, Project Astra, Android XR — Google a frappé fort. Décryptage des annonces avec un impact réel sur les entreprises africaines.",
+                een="Gemini Ultra 2, Project Astra, Android XR — Google hit hard. Breaking down the announcements with real impact on African businesses.",
+                bfr="Le Google I/O 2026 a marqué un tournant avec l'intégration de Gemini directement dans les outils de productivité (Workspace, Android). Pour les entreprises africaines, les implications sont concrètes : automatisation des workflows, génération de documents, traduction multilingue en temps réel.\n\nAndroid XR ouvre également un nouveau terrain pour les applications mobiles immersives.",
+                ben="Google I/O 2026 marked a turning point with Gemini integration directly into productivity tools (Workspace, Android). For African businesses, the implications are tangible: workflow automation, document generation, real-time multilingual translation.\n\nAndroid XR also opens new ground for immersive mobile applications.",
+                tags=["Google", "Gemini", "Android", "IA"], date="2026-05-28",
             ),
+            dict(
+                slug="anthropic-claude-4-africa", cat="tech",
+                tfr="Claude 4 d'Anthropic : ce que les développeurs africains doivent savoir",
+                ten="Anthropic Claude 4: what African developers need to know",
+                efr="Anthropic continue de pousser les limites de la sécurité et des capacités des LLM. Claude 4 introduit des fonctionnalités qui intéressent directement les équipes tech.",
+                een="Anthropic keeps pushing the limits of LLM safety and capabilities. Claude 4 introduces features that directly interest tech teams.",
+                bfr="Claude 4 se distingue par sa capacité à raisonner sur de longs documents (200K tokens de contexte) et ses améliorations en code generation. Pour les équipes qui construisent des outils de traitement documentaire ou d'assistance au développement, c'est un bond significatif.\n\nL'API reste accessible et les tarifs compétitifs font de Claude 4 un candidat sérieux pour les intégrations en Afrique.",
+                ben="Claude 4 stands out for its ability to reason over long documents (200K token context) and improvements in code generation. For teams building document processing tools or development assistance, this is a significant leap.\n\nThe API remains accessible and competitive pricing makes Claude 4 a serious candidate for African integrations.",
+                tags=["Anthropic", "Claude", "LLM", "Dev"], date="2026-05-20",
+            ),
+            # ── Tech Afrique ──
+            dict(
+                slug="orange-mtn-5g-afrique-2026", cat="africa",
+                tfr="5G en Afrique : Orange et MTN accélèrent, les opportunités s'ouvrent",
+                ten="5G in Africa: Orange and MTN accelerate, opportunities open up",
+                efr="Le déploiement 5G d'Orange et MTN dans plusieurs pays africains crée un nouveau terrain pour les applications mobiles et IoT. Voici ce que cela signifie pour les développeurs.",
+                een="Orange and MTN's 5G rollout across multiple African countries creates new ground for mobile and IoT applications. Here's what it means for developers.",
+                bfr="Orange a confirmé le déploiement commercial de la 5G au Maroc, en Côte d'Ivoire et au Cameroun. MTN accélère également en Afrique du Sud, Nigeria et Ghana. Ces déploiements ouvrent des opportunités concrètes : applications temps réel, télémédecine haute définition, agriculture connectée.\n\nPour les développeurs africains, maîtriser les architectures optimisées pour la 5G devient un avantage compétitif.",
+                ben="Orange confirmed commercial 5G deployment in Morocco, Côte d'Ivoire and Cameroon. MTN is also accelerating in South Africa, Nigeria and Ghana. These rollouts open concrete opportunities: real-time applications, HD telemedicine, connected agriculture.\n\nFor African developers, mastering 5G-optimised architectures is becoming a competitive advantage.",
+                tags=["Orange", "MTN", "5G", "Afrique"], date="2026-05-15",
+            ),
+            # ── Développement ──
             dict(
                 slug="web-ou-mobile-par-ou-commencer", cat="dev",
                 tfr="Web ou mobile : par où commencer pour votre produit numérique ?",
@@ -301,7 +306,18 @@ class Command(BaseCommand):
                 een="Website, mobile app, PWA… Your platform choice drives your budget, reach and time-to-launch.",
                 bfr="Commencez par vos utilisateurs. Une PWA offre souvent le meilleur des deux mondes : un seul code, pas de friction d'installation, des coûts maîtrisés.\n\nValidez votre idée vite, puis investissez dans le natif une fois la traction prouvée.",
                 ben="Start with your users. A PWA often offers the best of both worlds: a single codebase, no install friction, controlled costs.\n\nValidate your idea fast, then invest in native once traction is proven.",
-                tags=["Web", "Mobile", "Stratégie produit"], date="2026-04-28",
+                tags=["Web", "Mobile", "PWA", "Stratégie"], date="2026-04-28",
+            ),
+            # ── Transformation digitale ──
+            dict(
+                slug="digitalisation-pme-africaines-guide", cat="digital",
+                tfr="Comment digitaliser une PME africaine sans exploser son budget",
+                ten="How to digitalise an African SME without blowing the budget",
+                efr="La transformation digitale n'est pas réservée aux grandes entreprises. Voici un guide pratique pour les PME africaines qui veulent passer à l'action.",
+                een="Digital transformation isn't reserved for large companies. Here's a practical guide for African SMEs ready to take action.",
+                bfr="La clé est de commencer par les processus qui coûtent le plus cher en temps : facturation, suivi des stocks, communication client. Des outils SaaS modernes permettent d'automatiser ces tâches à des coûts mensuels accessibles.\n\nChez Horus-Lab, nous proposons une approche progressive : on commence par un audit de vos processus, puis on déploie par phases pour mesurer le ROI à chaque étape.",
+                ben="The key is to start with the processes that cost the most time: invoicing, inventory tracking, customer communication. Modern SaaS tools automate these tasks at accessible monthly costs.\n\nAt Horus-Lab, we offer a phased approach: we start with a process audit, then deploy in stages to measure ROI at each step.",
+                tags=["Digitalisation", "PME", "Afrique", "Automatisation"], date="2026-04-10",
             ),
         ]
         for p in posts:
@@ -317,33 +333,15 @@ class Command(BaseCommand):
             )
 
     def seed_portfolio(self):
-        # Vraie portfolio Horus-Lab (alignée avec frontend/src/lib/projects.ts).
-        # gradient = classes Tailwind sans le préfixe bg-gradient-to-br
+        # Portfolio Horus-Lab — sans les projets SFX/SOFTRONIC
         items = [
-            dict(
-                title_fr="SFX Pre-Douane", title_en="SFX Pre-Douane",
-                client_fr="OMA Group · 11 pays africains",
-                client_en="OMA Group · 11 African countries",
-                category_fr="Logistique & Transit",
-                category_en="Logistics & Transit",
-                description_fr="Application web multinationale de gestion de transitaire pour le groupe OMA et ses filiales — un outil central utilisé quotidiennement à travers 11 pays africains.",
-                description_en="Multinational web application for customs and freight forwarding for the OMA group and its subsidiaries — used daily across 11 African countries.",
-                role_fr="Développeur full-stack", role_en="Full-stack developer",
-                scope_fr="Application web métier multi-pays",
-                scope_en="Multi-country business web app",
-                tags=["Next.js", "TypeScript", "Prisma", "SQL Server", "Tailwind"],
-                result_fr="11 pays · production", result_en="11 countries · live",
-                icon="globe",
-                gradient="from-brand-700 via-brand-500 to-sky",
-                is_featured=True,
-            ),
             dict(
                 title_fr="Gathe Finance", title_en="Gathe Finance",
                 client_fr="PME & freelances africains",
                 client_en="African SMEs & freelancers",
                 category_fr="Fintech & Gestion", category_en="Fintech & Management",
-                description_fr="Plateforme de gestion financière pour indépendants et PME africaines : suivi multi-comptes (espèces, mobile money, banque), catégorisation, budgets, reporting.",
-                description_en="Financial management platform for African freelancers and SMEs: multi-account tracking (cash, mobile money, bank), categorisation, budgets, reporting.",
+                description_fr="Plateforme de gestion financière pour indépendants et PME africaines : suivi multi-comptes (espèces, mobile money, banque), catégorisation, budgets, reporting trésorerie et P&L.",
+                description_en="Financial management platform for African freelancers and SMEs: multi-account tracking (cash, mobile money, bank), categorisation, budgets, cash flow and P&L reporting.",
                 role_fr="Conception & développement", role_en="Design & development",
                 scope_fr="Gestion financière PME · multi-comptes & reporting",
                 scope_en="SME financial management · multi-account & reporting",
@@ -351,14 +349,15 @@ class Command(BaseCommand):
                 result_fr="Trésorerie sous contrôle", result_en="Cash flow under control",
                 icon="layers",
                 gradient="from-slate-800 via-brand-700 to-amber-500",
+                is_featured=True,
             ),
             dict(
                 title_fr="Afrikamode", title_en="Afrikamode",
                 client_fr="Marque de mode africaine",
                 client_en="African fashion brand",
                 category_fr="Mode & e-commerce", category_en="Fashion & e-commerce",
-                description_fr="L'Afrique de la mode ne se résume pas au folklore. Des ateliers de Lagos à Dakar, de Bamako à Abidjan, des créateurs réinventent chaque saison une esthétique précise, exigeante, contemporaine. Afrikamode les porte au regard du public — et porte une petite ligne maison.",
-                description_en="African fashion is not folklore. From Lagos to Dakar, Bamako to Abidjan, designers reinvent a precise, demanding, contemporary aesthetic every season. Afrikamode brings them to your eye — and ships a small in-house line.",
+                description_fr="Boutique e-commerce complète : catalogue, fiches produits, panier et paiement. Des créateurs de Lagos à Abidjan, une ligne maison, une esthétique contemporaine.",
+                description_en="Full e-commerce store: catalogue, product pages, cart and checkout. Designers from Lagos to Abidjan, an in-house line, a contemporary aesthetic.",
                 role_fr="Conception & développement", role_en="Design & development",
                 scope_fr="Boutique en ligne · marque maison + créateurs invités",
                 scope_en="Online shop · house line + guest designers",
@@ -374,8 +373,8 @@ class Command(BaseCommand):
                 client_fr="Apprenants & professionnels IT",
                 client_en="IT learners & professionals",
                 category_fr="Éducation & EdTech", category_en="Education & EdTech",
-                description_fr="Plateforme de formation aux métiers de l'informatique : développement web, Python, cybersécurité et plus encore. Parcours structurés et suivi des apprenants — pensée pour rendre la tech accessible partout en Afrique.",
-                description_en="Training platform covering IT careers: web development, Python, cybersecurity and more. Structured tracks and learner tracking — built to make tech accessible everywhere across Africa.",
+                description_fr="Plateforme de formation aux métiers de l'informatique : développement web, Python, cybersécurité. Parcours structurés, ressources progressives et suivi des apprenants.",
+                description_en="IT career training platform: web development, Python, cybersecurity. Structured tracks, progressive resources and learner tracking.",
                 role_fr="Conception & développement", role_en="Design & development",
                 scope_fr="Plateforme de formation IT en ligne",
                 scope_en="Online IT training platform",
@@ -385,100 +384,21 @@ class Command(BaseCommand):
                 gradient="from-emerald-500 via-teal-500 to-sky",
             ),
             dict(
-                title_fr="SFX eVAT", title_en="SFX eVAT",
-                client_fr="OMA · FMG · CAPEWEST", client_en="OMA · FMG · CAPEWEST",
-                category_fr="Finance & Fiscalité", category_en="Finance & Tax",
-                description_fr="Plateforme multinationale de normalisation des factures, conforme aux exigences fiscales locales. Conception base de données + interfaces + chaîne d'intégration backend.",
-                description_en="Multinational platform for invoice normalisation, compliant with local tax requirements. Database, UI and backend integration designed and built end-to-end.",
-                role_fr="Développeur full-stack", role_en="Full-stack developer",
-                scope_fr="SaaS de normalisation fiscale",
-                scope_en="Tax-normalisation SaaS",
-                tags=["Next.js", "TypeScript", "Prisma", "SQL Server"],
-                result_fr="3 groupes · multi-pays",
-                result_en="3 groups · multi-country",
-                icon="layers",
-                gradient="from-brand-800 via-brand-600 to-brand-400",
-            ),
-            dict(
-                title_fr="SFX RelanceAuto", title_en="SFX RelanceAuto",
-                client_fr="OMA Group", client_en="OMA Group",
-                category_fr="Automatisation", category_en="Automation",
-                description_fr="Application web de relances automatiques des clients : pipeline d'envoi, suivi des statuts, tableaux de bord temps réel.",
-                description_en="Automated customer follow-up web app: send pipeline, status tracking, real-time dashboards.",
-                role_fr="Développeur", role_en="Developer",
-                scope_fr="Automatisation des relances clients",
-                scope_en="Customer follow-up automation",
-                tags=["Next.js", "TypeScript", "Prisma", "SQL Server"],
-                result_fr="Pipeline automatisé", result_en="Automated pipeline",
-                icon="cog",
-                gradient="from-brand-600 via-sky to-brand-300",
-            ),
-            dict(
-                title_fr="SOFTRONIC INNOVING — site corporate",
-                title_en="SOFTRONIC INNOVING — corporate site",
-                client_fr="SOFTRONIC INNOVING", client_en="SOFTRONIC INNOVING",
-                category_fr="Site corporate", category_en="Corporate site",
-                description_fr="Conception et réalisation du site institutionnel de SOFTRONIC INNOVING : identité, contenus, performance et SEO de bout en bout.",
-                description_en="Design and build of the SOFTRONIC INNOVING corporate website: identity, content, performance and SEO end-to-end.",
-                role_fr="Développeur frontend", role_en="Frontend developer",
-                scope_fr="Site institutionnel responsive",
-                scope_en="Responsive corporate site",
-                tags=["Next.js", "React", "Tailwind", "TypeScript"],
-                result_fr="En production", result_en="Live in production",
-                icon="code",
-                gradient="from-brand-900 via-brand-700 to-brand-500",
+                title_fr="Programme Formation IT", title_en="IT Training Programme",
+                client_fr="Professionnels & entreprises",
+                client_en="Professionals & businesses",
+                category_fr="Formation", category_en="Training",
+                description_fr="Programme de formation aux technologies modernes : développement web, mobile, cybersécurité, gestion de projet IT. Sessions pratiques adaptées au niveau des équipes.",
+                description_en="Modern technology training programme: web & mobile development, cybersecurity, IT project management. Practical sessions adapted to team levels.",
+                role_fr="Formation & accompagnement", role_en="Training & coaching",
+                scope_fr="Formation IT sur mesure",
+                scope_en="Custom IT training",
+                tags=["Formation", "Cybersécurité", "Développement", "Certification"],
+                result_fr="Équipes opérationnelles", result_en="Operational teams",
+                icon="spark",
+                gradient="from-brand-700 via-brand-500 to-sky",
             ),
         ]
-        # Reset puis recréation propre, parce qu'on a changé d'ensemble de projets.
         Project.objects.all().delete()
         for i, p in enumerate(items):
             Project.objects.create(order=i, is_active=True, **p)
-
-    def seed_news(self):
-        items = [
-            dict(
-                title_fr="Gathe Finance ouvre en bêta privée",
-                title_en="Gathe Finance enters private beta",
-                body_fr="Notre plateforme de gestion financière pour PME et freelances entre en bêta : suivi multi-comptes, budgets, reporting trésorerie. Les premiers utilisateurs rejoignent la liste d'attente.",
-                body_en="Our financial management platform for SMEs and freelancers opens its private beta: multi-account tracking, budgets, cash-flow reporting. First users joining the waitlist.",
-                tag_fr="Produit", tag_en="Product",
-                published_at=date(2026, 5, 25),
-            ),
-            dict(
-                title_fr="Afrikamode est en ligne sur afrikamode.store",
-                title_en="Afrikamode is live on afrikamode.store",
-                body_fr="La boutique en ligne d'Afrikamode ouvre ses portes : créateurs invités de Lagos à Abidjan + ligne maison. Catalogue, panier et paiement bout-en-bout.",
-                body_en="Afrikamode opens its online store: guest designers from Lagos to Abidjan + the house line. Catalogue, cart and checkout end-to-end.",
-                tag_fr="Lancement", tag_en="Launch",
-                url="https://afrikamode.store",
-                published_at=date(2026, 5, 12),
-            ),
-            dict(
-                title_fr="Plateforme e-Learning — nouveau parcours Cybersécurité",
-                title_en="e-Learning platform — new Cybersecurity track",
-                body_fr="Le cycle Cybersécurité rejoint le développement web et Python. Modules progressifs, exercices guidés et certificats à la clé.",
-                body_en="The Cybersecurity track joins web development and Python. Progressive modules, guided exercises and certificates.",
-                tag_fr="Roadmap", tag_en="Roadmap",
-                published_at=date(2026, 4, 10),
-            ),
-            dict(
-                title_fr="SFX Pre-Douane étendu à 2 nouveaux pays",
-                title_en="SFX Pre-Douane extended to 2 new countries",
-                body_fr="Le déploiement multinational atteint désormais 11 filiales OMA à travers l'Afrique. Stabilité et performances confirmées en production.",
-                body_en="Multinational rollout now reaches 11 OMA subsidiaries across Africa. Stability and performance confirmed in production.",
-                tag_fr="Déploiement", tag_en="Rollout",
-                published_at=date(2026, 3, 8),
-            ),
-            dict(
-                title_fr="Partenariat renforcé avec SOFTRONIC INNOVING",
-                title_en="Deepened partnership with SOFTRONIC INNOVING",
-                body_fr="Aux côtés d'Armel SIME et de son équipe, nous prolongeons notre collaboration autour des produits SFX et de nouveaux projets africains.",
-                body_en="Together with Armel SIME and his team, we are extending our collaboration on the SFX products and new African initiatives.",
-                tag_fr="Partenariat", tag_en="Partnership",
-                published_at=date(2026, 2, 14),
-            ),
-        ]
-        for it in items:
-            News.objects.update_or_create(
-                title_fr=it["title_fr"], defaults=dict(**it, is_published=True),
-            )

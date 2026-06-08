@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
 import {
   IconClose,
-  IconEye,
   IconHeadset,
   IconSend,
   IconTelegram,
@@ -16,6 +15,38 @@ type Msg = { role: "user" | "assistant"; content: string };
 const WHATSAPP = "https://wa.me/237699173771";
 const TELEGRAM = "https://t.me/tonbacm";
 const SUPPORT = "mailto:contact@horus-lab.com";
+
+/** Icône chatbot IA sophistiquée — cerveau connecté / robot */
+function IconAIBot({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 40 40"
+      fill="none"
+      className={className}
+      aria-hidden
+    >
+      {/* Tête robot */}
+      <rect x="8" y="13" width="24" height="18" rx="6" fill="currentColor" opacity="0.15" />
+      <rect x="8" y="13" width="24" height="18" rx="6" stroke="currentColor" strokeWidth="1.8" />
+      {/* Antenne */}
+      <line x1="20" y1="13" x2="20" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="20" cy="6.5" r="2" fill="currentColor" className="animate-pulse" />
+      {/* Yeux */}
+      <circle cx="15" cy="21" r="2.5" fill="currentColor" />
+      <circle cx="25" cy="21" r="2.5" fill="currentColor" />
+      {/* Pupilles lumineuses */}
+      <circle cx="15.8" cy="20.2" r="0.8" fill="white" />
+      <circle cx="25.8" cy="20.2" r="0.8" fill="white" />
+      {/* Bouche / expression */}
+      <path d="M14 27 Q20 30 26 27" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+      {/* Oreilles */}
+      <rect x="4" y="17" width="4" height="8" rx="2" stroke="currentColor" strokeWidth="1.6" />
+      <rect x="32" y="17" width="4" height="8" rx="2" stroke="currentColor" strokeWidth="1.6" />
+      {/* Signal wifi sur le front */}
+      <path d="M17 17 Q20 14.5 23 17" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" fill="none" opacity="0.6" />
+    </svg>
+  );
+}
 
 function ChannelLink({
   href,
@@ -63,7 +94,6 @@ export function HorusAI() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- resync sur changement de langue
     setMessages((prev) =>
       prev.length <= 1 ? [{ role: "assistant", content: ai.greeting }] : prev
     );
@@ -104,41 +134,40 @@ export function HorusAI() {
 
   return (
     <>
-      {/* Réseaux de contact — bas droite (cluster distinct) */}
+      {/* Cluster bas-droite : Support + Telegram + WhatsApp + Horus AI */}
       <div
         className={`fixed bottom-6 right-6 z-40 flex flex-col items-center gap-3 transition-all duration-300 ${
           open ? "pointer-events-none translate-y-2 opacity-0" : "opacity-100"
         }`}
       >
+        {/* Support email */}
         <ChannelLink href={SUPPORT} label={supportLabel} className="bg-brand-600">
           <IconHeadset className="size-6" />
         </ChannelLink>
+
+        {/* Telegram */}
         <ChannelLink href={TELEGRAM} label="Telegram" className="bg-[#229ED9]">
           <IconTelegram className="size-6" />
         </ChannelLink>
+
+        {/* WhatsApp */}
         <ChannelLink href={WHATSAPP} label="WhatsApp" className="bg-[#25D366]" pulse>
           <IconWhatsApp className="size-6" />
         </ChannelLink>
-      </div>
 
-      {/* Horus AI — milieu droite, séparé des réseaux pour éviter toute confusion */}
-      <div
-        className={`fixed right-4 top-1/2 z-50 -translate-y-1/2 transition-opacity duration-300 ${
-          open ? "pointer-events-none opacity-0" : "opacity-100"
-        }`}
-      >
+        {/* Horus AI — dans le même cluster, juste au-dessus */}
         <button
           type="button"
           onClick={() => setOpen(true)}
           aria-label={ai.open}
           aria-expanded={open}
-          className="group relative grid size-16 place-items-center rounded-full bg-gradient-to-br from-brand-700 to-brand-500 text-white shadow-xl shadow-brand-900/30 transition-transform hover:scale-105 animate-bob"
+          className="group relative grid size-14 place-items-center rounded-full bg-gradient-to-br from-brand-700 to-brand-500 text-white shadow-xl shadow-brand-900/30 transition-transform hover:scale-105 animate-bob ring-2 ring-white/20"
         >
-          <span className="absolute inset-0 rounded-full bg-brand-500/60 animate-pulse-ring" />
+          <span className="absolute inset-0 rounded-full bg-brand-500/50 animate-pulse-ring" />
           <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-lg bg-brand-900 px-2.5 py-1 text-xs font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100">
             {ai.title}
           </span>
-          <IconEye className="relative size-8" />
+          <IconAIBot className="relative size-9 text-white" />
         </button>
       </div>
 
@@ -146,16 +175,17 @@ export function HorusAI() {
       <div
         role="dialog"
         aria-label={ai.title}
-        className={`fixed right-4 top-1/2 z-50 flex w-[min(380px,calc(100vw-2rem))] -translate-y-1/2 origin-right flex-col overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-2xl shadow-brand-900/25 transition-[transform,opacity] duration-300 dark:border-white/10 dark:bg-slate-900 ${
+        className={`fixed bottom-6 right-6 z-50 flex w-[min(380px,calc(100vw-2rem))] origin-bottom-right flex-col overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-2xl shadow-brand-900/25 transition-[transform,opacity] duration-300 dark:border-white/10 dark:bg-slate-900 ${
           open
             ? "pointer-events-auto scale-100 opacity-100"
-            : "pointer-events-none scale-95 opacity-0"
+            : "pointer-events-none scale-90 opacity-0"
         }`}
         style={{ height: "min(560px, calc(100vh - 5rem))" }}
       >
+        {/* Header */}
         <div className="flex items-center gap-3 bg-gradient-to-r from-brand-800 to-brand-600 px-5 py-4 text-white">
           <span className="grid size-10 place-items-center rounded-full bg-white/15">
-            <IconEye className="size-6" />
+            <IconAIBot className="size-7 text-white" />
           </span>
           <div className="flex-1">
             <p className="font-bold leading-tight">{ai.title}</p>
@@ -176,11 +206,17 @@ export function HorusAI() {
           </button>
         </div>
 
+        {/* Messages */}
         <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto bg-surface/40 px-4 py-4">
           {messages.map((m, i) => (
             <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+              {m.role === "assistant" && (
+                <span className="mr-2 mt-1 flex size-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-700 to-brand-500">
+                  <IconAIBot className="size-5 text-white" />
+                </span>
+              )}
               <div
-                className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                className={`max-w-[80%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                   m.role === "user"
                     ? "rounded-br-md bg-brand-700 text-white"
                     : "rounded-bl-md bg-white text-ink shadow-sm ring-1 ring-brand-100 dark:bg-slate-800 dark:text-brand-50 dark:ring-white/10"
@@ -192,7 +228,10 @@ export function HorusAI() {
           ))}
 
           {loading && (
-            <div className="flex justify-start">
+            <div className="flex items-center justify-start gap-2">
+              <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-700 to-brand-500">
+                <IconAIBot className="size-5 text-white" />
+              </span>
               <div className="flex gap-1.5 rounded-2xl rounded-bl-md bg-white px-4 py-3 shadow-sm ring-1 ring-brand-100 dark:bg-slate-800 dark:ring-white/10">
                 {[0, 1, 2].map((d) => (
                   <span
@@ -221,6 +260,7 @@ export function HorusAI() {
           )}
         </div>
 
+        {/* Zone de saisie */}
         <form
           onSubmit={(e) => {
             e.preventDefault();

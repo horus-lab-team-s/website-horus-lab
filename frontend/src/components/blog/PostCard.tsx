@@ -3,74 +3,118 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useLang } from "@/i18n/LanguageProvider";
-import { IconArrowRight, IconEye } from "@/components/icons";
+import { IconArrowRight } from "@/components/icons";
 import type { PostMeta } from "@/lib/blog";
 
 export function formatDate(date: string, lang: string) {
   if (!date) return "";
   return new Intl.DateTimeFormat(lang === "fr" ? "fr-FR" : "en-US", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
+    day: "numeric", month: "long", year: "numeric",
   }).format(new Date(date));
 }
 
+/* Image par catégorie (Unsplash) */
+const CAT_IMAGES: Record<string, string> = {
+  "Actualités Tech":          "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=700&q=75",
+  "Tech News":                "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=700&q=75",
+  "Développement":            "https://images.unsplash.com/photo-1607706189992-eae578626c86?auto=format&fit=crop&w=700&q=75",
+  "Development":              "https://images.unsplash.com/photo-1607706189992-eae578626c86?auto=format&fit=crop&w=700&q=75",
+  "Tech Afrique":             "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=700&q=75",
+  "Tech Africa":              "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=700&q=75",
+  "Transformation Digitale":  "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=700&q=75",
+  "Digital Transformation":   "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=700&q=75",
+  "Formation IT":             "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&w=700&q=75",
+  "IT Training":              "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&w=700&q=75",
+};
+
+const CAT_GRADIENTS: Record<string, string> = {
+  "Actualités Tech":          "from-brand-700 to-brand-500",
+  "Tech News":                "from-brand-700 to-brand-500",
+  "Développement":            "from-slate-700 to-brand-600",
+  "Development":              "from-slate-700 to-brand-600",
+  "Tech Afrique":             "from-emerald-600 to-teal-500",
+  "Tech Africa":              "from-emerald-600 to-teal-500",
+  "Transformation Digitale":  "from-violet-600 to-brand-500",
+  "Digital Transformation":   "from-violet-600 to-brand-500",
+  "Formation IT":             "from-amber-500 to-orange-400",
+  "IT Training":              "from-amber-500 to-orange-400",
+};
+
+/* Couleurs de badge catégorie */
+const CAT_BADGE: Record<string, string> = {
+  "Actualités Tech":         "bg-brand-600 text-white",
+  "Tech News":               "bg-brand-600 text-white",
+  "Développement":           "bg-slate-700 text-white",
+  "Development":             "bg-slate-700 text-white",
+  "Tech Afrique":            "bg-emerald-600 text-white",
+  "Tech Africa":             "bg-emerald-600 text-white",
+  "Transformation Digitale": "bg-violet-600 text-white",
+  "Digital Transformation":  "bg-violet-600 text-white",
+  "Formation IT":            "bg-amber-500 text-white",
+  "IT Training":             "bg-amber-500 text-white",
+};
+
 export function PostCard({ post }: { post: PostMeta }) {
   const { dict, lang, localePath } = useLang();
+  const img  = post.cover || CAT_IMAGES[post.category] || "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=700&q=75";
+  const grad = CAT_GRADIENTS[post.category] ?? "from-brand-700 to-brand-500";
+  const badge = CAT_BADGE[post.category] ?? "bg-brand-600 text-white";
 
   return (
     <Link
       href={localePath(`/blog/${post.slug}`)}
       className="group lift-xl relative flex h-full flex-col overflow-hidden rounded-3xl border border-brand-100 bg-white dark:border-white/10 dark:bg-slate-900"
     >
-      {/* Couverture immersive */}
-      <div className="relative h-52 overflow-hidden bg-gradient-to-br from-brand-700 via-brand-500 to-sky">
-        {post.cover ? (
-          <Image
-            src={post.cover}
-            alt=""
-            fill
-            sizes="(max-width: 768px) 100vw, 33vw"
-            className="zoom-img object-cover"
-          />
-        ) : (
-          <>
-            <div aria-hidden className="absolute inset-0 bg-grid opacity-20" />
-            <IconEye
-              aria-hidden
-              className="absolute -right-6 -top-6 size-44 text-white/10"
-            />
-          </>
-        )}
-        {/* Dégradé descendant pour lisibilité */}
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-gradient-to-t from-brand-900/55 via-brand-900/10 to-transparent"
+      {/* ── Couverture avec image réelle ── */}
+      <div className={`relative h-52 overflow-hidden bg-gradient-to-br ${grad}`}>
+        <Image
+          src={img}
+          alt={post.title}
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className="zoom-img object-cover opacity-80"
         />
-        {/* Badge catégorie */}
-        <span className="absolute bottom-3 left-4 inline-flex items-center gap-1.5 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-brand-700 backdrop-blur">
-          <span className="size-1.5 rounded-full bg-brand-500" />
+        {/* Overlay dégradé bas */}
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+
+        {/* Badge catégorie coloré */}
+        <span className={`absolute bottom-3 left-4 inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold backdrop-blur ${badge}`}>
+          <span className="size-1.5 rounded-full bg-white/70" />
           {post.category}
         </span>
-        {/* Shine sweep */}
+
+        {/* Shine */}
         <span aria-hidden className="shine pointer-events-none absolute inset-0" />
       </div>
 
+      {/* ── Corps ── */}
       <div className="flex flex-1 flex-col p-6">
         <div className="flex items-center gap-2 text-xs text-muted">
           <time dateTime={post.date}>{formatDate(post.date, lang)}</time>
           <span aria-hidden>·</span>
-          <span>
-            {post.readingMinutes} {dict.blog.readTime}
-          </span>
+          <span>{post.readingMinutes} {dict.blog.readTime}</span>
         </div>
-        <h3 className="mt-3 text-lg font-bold leading-snug text-brand-900 transition-colors group-hover:text-brand-700 dark:text-white dark:group-hover:text-brand-300">
+
+        <h3 className="mt-3 text-lg font-bold leading-snug text-brand-900 transition-colors group-hover:text-brand-600 dark:text-white dark:group-hover:text-brand-300 line-clamp-2">
           {post.title}
         </h3>
+
         <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-muted">
           {post.excerpt}
         </p>
-        <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 transition-colors group-hover:text-brand-700 dark:text-brand-300">
+
+        {/* Tags */}
+        {post.tags?.length > 0 && (
+          <ul className="mt-3 flex flex-wrap gap-1.5">
+            {post.tags.slice(0, 3).map(tag => (
+              <li key={tag} className="rounded-full bg-brand-50 px-2.5 py-0.5 text-[11px] font-semibold text-brand-600 dark:bg-white/5 dark:text-brand-300">
+                #{tag}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 transition-colors group-hover:text-brand-700 dark:text-brand-300">
           {dict.blog.readMore}
           <IconArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
         </span>
