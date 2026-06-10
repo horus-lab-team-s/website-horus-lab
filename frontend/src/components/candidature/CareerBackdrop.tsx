@@ -18,7 +18,7 @@ function Glyph({ shape, size }: { shape: Shape; size: number }) {
     viewBox: "0 0 24 24",
     fill: "none",
     stroke: "currentColor",
-    strokeWidth: 1.2,
+    strokeWidth: 1.7,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
   };
@@ -77,28 +77,28 @@ export function CareerBackdrop({ variant }: { variant: "perks" | "form" }) {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       {/* Trame technique */}
-      <div className="absolute inset-0 bg-grid-soft opacity-40" />
+      <div className="absolute inset-0 bg-grid-soft opacity-60" />
       {/* Halos colorés en mouvement */}
-      <div className="absolute -left-16 top-8 h-64 w-64 rounded-full bg-brand-300/12 blur-3xl animate-float-slow dark:bg-brand-600/10" />
-      <div className="absolute right-0 bottom-0 h-60 w-60 rounded-full bg-sky/10 blur-3xl animate-drift dark:bg-sky/6" />
-      <div className="absolute left-1/2 top-1/4 h-52 w-52 rounded-full bg-violet-200/10 blur-3xl animate-float dark:bg-violet-500/6" style={{ animationDelay: "1.5s" }} />
+      <div className="absolute -left-16 top-8 h-72 w-72 rounded-full bg-brand-300/25 blur-3xl animate-float-slow dark:bg-brand-600/20" />
+      <div className="absolute right-0 bottom-0 h-64 w-64 rounded-full bg-sky/20 blur-3xl animate-drift dark:bg-sky/12" />
+      <div className="absolute left-1/2 top-1/4 h-56 w-56 rounded-full bg-violet-300/18 blur-3xl animate-float dark:bg-violet-500/12" style={{ animationDelay: "1.5s" }} />
 
-      {/* Tracé « circuit » subtil */}
+      {/* Tracé « circuit » */}
       <svg viewBox="0 0 1400 400" preserveAspectRatio="none"
-        className="absolute inset-0 h-full w-full text-brand-300/10 dark:text-brand-600/10">
+        className="absolute inset-0 h-full w-full text-brand-400/20 dark:text-brand-500/20">
         <path d="M0 220 H220 L280 160 H520 L580 220 H800 L860 150 H1080 L1140 220 H1400"
-          fill="none" stroke="currentColor" strokeWidth="0.8" />
+          fill="none" stroke="currentColor" strokeWidth="1.2" />
         {[220, 520, 800, 1080].map((x, k) => (
-          <circle key={k} cx={x} cy={k % 2 === 0 ? 160 : 220} r="2.5" fill="currentColor" />
+          <circle key={k} cx={x} cy={k % 2 === 0 ? 160 : 220} r="3" fill="currentColor" />
         ))}
       </svg>
 
       {/* Objets flottants thématiques */}
       {shapes.map((sh, i) => (
         <div key={i}
-          className="absolute animate-float text-brand-400/[0.13] dark:text-brand-300/[0.10]"
+          className="absolute animate-float text-brand-500/30 dark:text-brand-300/25"
           style={{ left: sh.x, top: sh.y, animationDelay: sh.d, animationDuration: sh.dur }}>
-          <Glyph shape={sh.s} size={sh.sz} />
+          <Glyph shape={sh.s} size={Math.round(sh.sz * 1.4)} />
         </div>
       ))}
     </div>

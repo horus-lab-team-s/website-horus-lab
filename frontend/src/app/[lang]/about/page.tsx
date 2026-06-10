@@ -410,7 +410,7 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
                 <Reveal key={m.name} delay={i * 120}>
                   <article className="group relative h-full overflow-hidden rounded-3xl border border-white/12 bg-white/[0.04] backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:border-white/25 hover:shadow-2xl hover:shadow-black/50">
                     {/* En-tête : photo réelle si disponible, sinon dégradé + initiales */}
-                    <div className={`relative h-40 overflow-hidden ${m.photo ? "" : `bg-gradient-to-br ${m.gradient}`}`}>
+                    <div className={`relative h-60 overflow-hidden ${m.photo ? "" : `bg-gradient-to-br ${m.gradient}`}`}>
                       {m.photo ? (
                         <>
                           <Image
