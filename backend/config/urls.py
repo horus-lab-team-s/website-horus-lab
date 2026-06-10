@@ -13,6 +13,7 @@ urlpatterns = [
     path("api/newsletter/", include("newsletter.urls")),
     path("api/contact/", include("contact.urls")),
     path("api/chat/", include("chat.urls")),
+    path("api/applications/", include("applications.urls")),
 ]
 
 # Sert les médias uploadés en développement.

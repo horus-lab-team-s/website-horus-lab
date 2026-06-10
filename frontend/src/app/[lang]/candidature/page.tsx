@@ -4,6 +4,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
 import { CandidatureForm } from "@/components/candidature/CandidatureForm";
+import { CareerBackdrop } from "@/components/candidature/CareerBackdrop";
 import { IconArrowRight, IconCheck, IconCog, IconEye, IconSpark } from "@/components/icons";
 import { isLocale, locales, type Lang } from "@/i18n/dictionaries";
 
@@ -157,9 +158,7 @@ export default async function CandidaturePage({ params }: { params: Promise<Para
             POURQUOI NOUS — cartes animées
         ═══════════════════════════════════════════════════════ */}
         <section className="relative overflow-hidden bg-surface py-20 dark:bg-[#070e1c] sm:py-24">
-          <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-soft opacity-40" />
-          <div aria-hidden className="pointer-events-none absolute -left-16 top-10 h-64 w-64 rounded-full bg-brand-300/10 blur-3xl animate-float-slow dark:bg-brand-600/8" />
-          <div aria-hidden className="pointer-events-none absolute right-0 bottom-0 h-56 w-56 rounded-full bg-sky/8 blur-3xl animate-drift" />
+          <CareerBackdrop variant="perks" />
 
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
             <Reveal className="mx-auto max-w-2xl text-center">
@@ -193,7 +192,7 @@ export default async function CandidaturePage({ params }: { params: Promise<Para
         ═══════════════════════════════════════════════════════ */}
         <section id="postuler" className="relative scroll-mt-28 overflow-hidden bg-white py-20 dark:bg-[#070e1c] sm:py-24">
           <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-b from-surface to-white dark:from-slate-900/40 dark:to-[#070e1c]" />
-          <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-soft opacity-30" />
+          <CareerBackdrop variant="form" />
 
           <div className="relative mx-auto max-w-3xl px-5 sm:px-8">
             <Reveal className="mb-10 text-center">

@@ -13,8 +13,10 @@ class Conversation(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     token = models.UUIDField(default=uuid.uuid4, editable=False)
-    visitor_name = models.CharField("Nom du visiteur", max_length=120)
-    visitor_email = models.EmailField("E-mail du visiteur")
+    visitor_name = models.CharField("Nom du visiteur", max_length=120, default="Visiteur", blank=True)
+    # Optionnel : esprit « forum ». Un visiteur anonyme peut discuter sans e-mail ;
+    # s'il le laisse, l'équipe peut le recontacter par mail.
+    visitor_email = models.EmailField("E-mail du visiteur", blank=True)
     page = models.CharField("Page d'origine", max_length=300, blank=True)
     is_closed = models.BooleanField("Clôturée", default=False)
     created_at = models.DateTimeField(auto_now_add=True)

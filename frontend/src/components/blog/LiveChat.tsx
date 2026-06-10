@@ -84,10 +84,9 @@ function isEmail(v: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 }
 
-/** Identité anonyme synthétique — valide pour le backend, sans gêner le visiteur. */
+/** Identité anonyme — le backend accepte un e-mail vide (esprit forum). */
 function anonymousVisitor(): Visitor {
-  const rand = Math.random().toString(36).slice(2, 10);
-  return { name: "Visiteur", email: `visiteur-${rand}@visitors.horus-lab.com`, anonymous: true };
+  return { name: "Visiteur", email: "", anonymous: true };
 }
 
 let tmpCounter = 0;

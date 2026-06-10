@@ -31,9 +31,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ id: "bot", token: "bot", messages: [] });
   }
 
-  const name = str(b.name, 120);
+  // Esprit forum : nom et e-mail facultatifs. On retombe sur « Visiteur » et,
+  // si un e-mail est fourni, il doit être valide.
+  const name = str(b.name, 120) ?? "Visiteur";
   const page = str(b.page, 300) ?? "";
-  if (!name || !isEmail(b.email)) {
+  const emailRaw = typeof b.email === "string" ? b.email.trim() : "";
+  if (emailRaw && !isEmail(emailRaw)) {
     return NextResponse.json({ error: "invalid_fields" }, { status: 422 });
   }
 
@@ -44,7 +47,7 @@ export async function POST(request: Request) {
       cache: "no-store",
       body: JSON.stringify({
         visitor_name: name,
-        visitor_email: (b.email as string).trim().toLowerCase(),
+        visitor_email: emailRaw.toLowerCase(),
         page,
       }),
     });

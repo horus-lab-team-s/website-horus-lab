@@ -2,9 +2,35 @@ import { NextResponse } from "next/server";
 import { isValidEmail, saveApplication, type ApplicationPayload } from "@/lib/leads";
 
 /* Dépôt de candidature (page Candidature).
-   Reçoit un formulaire multipart : coordonnées + un dossier ZIP. */
+   Reçoit un formulaire multipart : coordonnées + un dossier ZIP.
+
+   Flux : on transmet d'abord la candidature au backend Django (source de
+   vérité : stockage du ZIP + gestion dans l'admin + notifications). Si le
+   backend est indisponible, on retombe sur une sauvegarde locale + e-mail
+   Brevo — zéro perte de candidature. */
 
 export const runtime = "nodejs";
+
+const API_BASE = (process.env.BACKEND_API_URL ?? "http://localhost:8000").replace(/\/$/, "");
+
+/** Transmet la candidature au backend Django (multipart). */
+async function forwardToBackend(payload: ApplicationPayload, file: Buffer): Promise<boolean> {
+  try {
+    const fd = new FormData();
+    fd.set("first_name", payload.firstName);
+    fd.set("last_name", payload.lastName);
+    fd.set("email", payload.email);
+    fd.set("phone", payload.phone);
+    fd.set("type", payload.type);
+    fd.set("position", payload.position);
+    fd.set("message", payload.message);
+    fd.set("document", new Blob([new Uint8Array(file)], { type: "application/zip" }), payload.fileName);
+    const res = await fetch(`${API_BASE}/api/applications/`, { method: "POST", body: fd, cache: "no-store" });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
 
 const MAX_FILE = 15 * 1024 * 1024; // 15 Mo
 const ZIP_TYPES = new Set([
@@ -71,6 +97,12 @@ export async function POST(request: Request) {
     fileSize: file.size,
   };
 
+  // 1. Backend Django (stockage + admin + notifications).
+  if (await forwardToBackend(payload, buffer)) {
+    return NextResponse.json({ ok: true });
+  }
+
+  // 2. Repli : sauvegarde locale + e-mail Brevo si le backend est indisponible.
   const { ok } = await saveApplication(payload, buffer);
   if (!ok) {
     return NextResponse.json({ error: "store_failed" }, { status: 502 });
