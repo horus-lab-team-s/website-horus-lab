@@ -26,7 +26,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   // L'attribut lang est ajusté par langue côté client (LanguageProvider).
   return (
-    <html lang="fr" className={`${geistSans.variable} h-full`} suppressHydrationWarning>
+    <html lang="fr" data-scroll-behavior="smooth" className={`${geistSans.variable} h-full`} suppressHydrationWarning>
       <head>
         {/* Applique le thème avant le 1er paint → pas de flash. */}
         <script

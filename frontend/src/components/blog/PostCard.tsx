@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLang } from "@/i18n/LanguageProvider";
 import { IconArrowRight } from "@/components/icons";
+import { coverFor } from "@/lib/blogImages";
 import type { PostMeta } from "@/lib/blog";
 
 export function formatDate(date: string, lang: string) {
@@ -12,20 +13,6 @@ export function formatDate(date: string, lang: string) {
     day: "numeric", month: "long", year: "numeric",
   }).format(new Date(date));
 }
-
-/* Image par catégorie (Unsplash) */
-const CAT_IMAGES: Record<string, string> = {
-  "Actualités Tech":          "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=700&q=75",
-  "Tech News":                "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=700&q=75",
-  "Développement":            "https://images.unsplash.com/photo-1607706189992-eae578626c86?auto=format&fit=crop&w=700&q=75",
-  "Development":              "https://images.unsplash.com/photo-1607706189992-eae578626c86?auto=format&fit=crop&w=700&q=75",
-  "Tech Afrique":             "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=700&q=75",
-  "Tech Africa":              "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=700&q=75",
-  "Transformation Digitale":  "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=700&q=75",
-  "Digital Transformation":   "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=700&q=75",
-  "Formation IT":             "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&w=700&q=75",
-  "IT Training":              "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&w=700&q=75",
-};
 
 const CAT_GRADIENTS: Record<string, string> = {
   "Actualités Tech":          "from-brand-700 to-brand-500",
@@ -56,7 +43,7 @@ const CAT_BADGE: Record<string, string> = {
 
 export function PostCard({ post }: { post: PostMeta }) {
   const { dict, lang, localePath } = useLang();
-  const img  = post.cover || CAT_IMAGES[post.category] || "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=700&q=75";
+  const img  = coverFor(post);
   const grad = CAT_GRADIENTS[post.category] ?? "from-brand-700 to-brand-500";
   const badge = CAT_BADGE[post.category] ?? "bg-brand-600 text-white";
 

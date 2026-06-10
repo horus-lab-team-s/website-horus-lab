@@ -33,7 +33,7 @@ const TEAM_MEMBERS = {
       role: "Ingénieur logiciel · Co-fondateur",
       bio: "Développeur full-stack et entrepreneur tech, je pilote la vision produit de Horus-Lab et conçois des solutions numériques de bout en bout pour des entreprises africaines et internationales. Passionné par l'impact de la technologie sur le continent.",
       initials: "BT",
-      photo: "",
+      photo: "/photo-loic-tonba-cofounder.png",
       linkedin: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
       github: "https://github.com/LoicTonba",
       email: "tonbaloic@gmail.com",
@@ -61,7 +61,7 @@ const TEAM_MEMBERS = {
       role: "Software engineer · Co-founder",
       bio: "Full-stack developer and tech entrepreneur, I drive the product vision at Horus-Lab and build end-to-end digital solutions for African and international businesses. Passionate about technology's impact across the continent.",
       initials: "BT",
-      photo: "",
+      photo: "/photo-loic-tonba-cofounder.png",
       linkedin: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
       github: "https://github.com/LoicTonba",
       email: "tonbaloic@gmail.com",
@@ -410,7 +410,7 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
                 <Reveal key={m.name} delay={i * 120}>
                   <article className="group relative h-full overflow-hidden rounded-3xl border border-white/12 bg-white/[0.04] backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:border-white/25 hover:shadow-2xl hover:shadow-black/50">
                     {/* En-tête : photo réelle si disponible, sinon dégradé + initiales */}
-                    <div className={`relative h-40 overflow-hidden ${m.photo ? "" : `bg-gradient-to-br ${m.gradient}`}`}>
+                    <div className={`relative h-60 overflow-hidden ${m.photo ? "" : `bg-gradient-to-br ${m.gradient}`}`}>
                       {m.photo ? (
                         <>
                           <Image

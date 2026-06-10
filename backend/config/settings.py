@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "newsletter",
     "contact",
     "chat",
+    "applications",
 ]
 
 MIDDLEWARE = [
