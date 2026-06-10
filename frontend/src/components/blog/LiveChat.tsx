@@ -7,11 +7,14 @@ import { useLang } from "@/i18n/LanguageProvider";
 import { IconClose, IconSend, IconTelegram, IconWhatsApp } from "@/components/icons";
 
 /* ============================================================
-   Module de chat du blog — TEMPS RÉEL & bidirectionnel.
-   Le visiteur ouvre une conversation (backend Django), envoie des
-   messages et reçoit les réponses de l'équipe EN DIRECT dans le widget
-   (polling). L'équipe répond depuis la boîte de réception de l'admin.
-   Indépendant de Horus AI. WhatsApp / Telegram restent offerts.
+   Module de chat du blog — TEMPS RÉEL & sans friction.
+   Esprit « forum moderne » : le visiteur ouvre la discussion et écrit
+   immédiatement, sans formulaire d'inscription. Une identité anonyme est
+   créée à la volée à l'envoi du premier message. Il peut, s'il le souhaite,
+   laisser son e-mail (optionnel) pour être recontacté — sinon le système le
+   traite comme un visiteur anonyme. L'équipe répond depuis l'admin Django et
+   les réponses s'affichent ici en direct (polling). WhatsApp / Telegram restent
+   offerts. Indépendant de Horus AI.
    ============================================================ */
 
 type Msg = {
@@ -22,9 +25,9 @@ type Msg = {
   status?: "pending" | "sent" | "failed";
 };
 type Conversation = { id: string; token: string };
-type Visitor = { name: string; email: string };
+type Visitor = { name: string; email: string; anonymous: boolean };
 
-const STORAGE_KEY = "horus-blog-chat-v2";
+const STORAGE_KEY = "horus-blog-chat-v3";
 const WHATSAPP = "https://wa.me/237699173771";
 const TELEGRAM = "https://t.me/tonbacm";
 const POLL_OPEN = 3500;
@@ -38,20 +41,18 @@ const T = {
     online: "En ligne · réponse en direct",
     introTitle: "Bonjour 👋",
     introText:
-      "Discutez en direct avec l'équipe Horus-Lab. Laissez vos coordonnées : nos réponses s'affichent ici même, en temps réel.",
-    namePlaceholder: "Votre nom",
-    emailPlaceholder: "Votre e-mail",
-    start: "Démarrer la discussion",
-    invalid: "Indiquez un nom et un e-mail valide.",
+      "Posez votre question, on vous répond ici même, en direct. Pas besoin de compte — écrivez simplement votre message.",
+    emailToggle: "Laisser mon e-mail (optionnel)",
+    emailPlaceholder: "Votre e-mail (pour être recontacté)",
+    emailHint: "Optionnel — utile uniquement si vous voulez une réponse par mail.",
+    welcome:
+      "Bonjour 🙌 L'équipe Horus-Lab vous répond ici en direct. Quelle est votre question ?",
+    placeholder: "Écrivez votre message…",
     connError:
       "Impossible d'ouvrir la discussion pour le moment. Réessayez ou écrivez-nous sur WhatsApp / Telegram.",
-    welcome: (n: string) =>
-      `Bonjour ${n} ! 🙌 L'équipe Horus-Lab vous répond ici en direct. Quelle est votre question ?`,
-    placeholder: "Écrivez votre message…",
     sendFail: "Message non envoyé. Réessayez.",
     instant: "Réponse instantanée aussi sur :",
     quick: ["Je veux un devis", "Question sur un article", "Travailler avec vous"],
-    disclaimer: "Vos coordonnées servent uniquement à vous répondre.",
     waiting: "L'équipe a été notifiée — la réponse s'affichera ici.",
     closed: "Cette conversation a été clôturée. Merci !",
   },
@@ -62,20 +63,18 @@ const T = {
     online: "Online · live replies",
     introTitle: "Hi there 👋",
     introText:
-      "Chat live with the Horus-Lab team. Leave your details: our replies appear right here, in real time.",
-    namePlaceholder: "Your name",
-    emailPlaceholder: "Your email",
-    start: "Start the chat",
-    invalid: "Please enter a name and a valid email.",
+      "Ask your question and we'll reply right here, live. No account needed — just type your message.",
+    emailToggle: "Leave my email (optional)",
+    emailPlaceholder: "Your email (to be contacted back)",
+    emailHint: "Optional — only useful if you'd like a reply by email.",
+    welcome:
+      "Hi 🙌 The Horus-Lab team replies here live. What's your question?",
+    placeholder: "Type your message…",
     connError:
       "Couldn't open the chat right now. Try again or message us on WhatsApp / Telegram.",
-    welcome: (n: string) =>
-      `Hi ${n}! 🙌 The Horus-Lab team replies here live. What's your question?`,
-    placeholder: "Type your message…",
     sendFail: "Message not sent. Try again.",
     instant: "Instant reply also on:",
     quick: ["I'd like a quote", "Question about an article", "Work with you"],
-    disclaimer: "Your details are only used to reply to you.",
     waiting: "The team has been notified — the reply will appear here.",
     closed: "This conversation has been closed. Thank you!",
   },
@@ -83,6 +82,12 @@ const T = {
 
 function isEmail(v: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+}
+
+/** Identité anonyme synthétique — valide pour le backend, sans gêner le visiteur. */
+function anonymousVisitor(): Visitor {
+  const rand = Math.random().toString(36).slice(2, 10);
+  return { name: "Visiteur", email: `visiteur-${rand}@visitors.horus-lab.com`, anonymous: true };
 }
 
 let tmpCounter = 0;
@@ -101,10 +106,9 @@ export function LiveChat() {
   const [unread, setUnread] = useState(0);
   const [closed, setClosed] = useState(false);
 
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [formError, setFormError] = useState("");
-  const [starting, setStarting] = useState(false);
+  const [emailOpen, setEmailOpen] = useState(false);
+  const [error, setError] = useState("");
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
 
@@ -202,53 +206,67 @@ export function LiveChat() {
     return () => clearInterval(interval);
   }, [mounted, conversation, open, poll]);
 
-  /* ── Démarrer une conversation ── */
-  async function startChat(e: React.FormEvent) {
-    e.preventDefault();
-    if (!name.trim() || !isEmail(email)) {
-      setFormError(t.invalid);
-      return;
-    }
-    setStarting(true);
-    setFormError("");
+  /* ── Crée la conversation à la volée (1er message) ──
+     Identité anonyme par défaut ; e-mail réel utilisé seulement s'il est saisi
+     et valide. Renvoie la conversation prête, ou null en cas d'échec. */
+  const ensureConversation = useCallback(async (): Promise<Conversation | null> => {
+    if (conversation) return conversation;
+
+    const v: Visitor =
+      email.trim() && isEmail(email)
+        ? { name: "Visiteur", email: email.trim().toLowerCase(), anonymous: false }
+        : anonymousVisitor();
+
     try {
       const res = await fetch("/api/blog-chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), page: pathname, website: website.current }),
+        body: JSON.stringify({
+          name: v.name,
+          email: v.email,
+          page: pathname,
+          website: website.current,
+        }),
       });
       if (!res.ok) throw new Error("start_failed");
       const data = (await res.json()) as Conversation;
-      const v = { name: name.trim(), email: email.trim() };
-      setVisitor(v);
-      setConversation({ id: data.id, token: data.token });
+      const convo = { id: data.id, token: data.token };
       lastIdRef.current = 0;
-      setMessages([
-        { key: "welcome", id: null, from: "team", text: t.welcome(v.name.split(" ")[0]) },
-      ]);
+      setVisitor(v);
+      setConversation(convo);
+      setMessages([{ key: "welcome", id: null, from: "team", text: t.welcome }]);
+      return convo;
     } catch {
-      setFormError(t.connError);
-    } finally {
-      setStarting(false);
+      setError(t.connError);
+      return null;
     }
-  }
+  }, [conversation, email, pathname, t.welcome, t.connError]);
 
-  /* ── Envoyer un message ── */
+  /* ── Envoyer un message (crée la conversation si besoin) ── */
   async function send(text: string) {
     const content = text.trim();
-    if (!content || sending || !conversation || closed) return;
+    if (!content || sending || closed) return;
+
+    setError("");
+    setSending(true);
+    sendingRef.current = true;
+
+    const convo = await ensureConversation();
+    if (!convo) {
+      setSending(false);
+      sendingRef.current = false;
+      return;
+    }
 
     const key = `tmp-${tmpCounter++}`;
     setMessages((prev) => [...prev, { key, id: null, from: "visitor", text: content, status: "pending" }]);
     setInput("");
-    setSending(true);
-    sendingRef.current = true;
 
     try {
       const res = await fetch("/api/blog-chat/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: conversation.id, token: conversation.token, text: content }),
+        body: JSON.stringify({ id: convo.id, token: convo.token, text: content }),
       });
       if (!res.ok) throw new Error("send_failed");
       const m = (await res.json()) as { id: number };
@@ -266,7 +284,8 @@ export function LiveChat() {
 
   if (!mounted) return null;
 
-  const showQuick = !!conversation && messages.filter((m) => m.from === "visitor").length === 0;
+  const noMessageYet = messages.filter((m) => m.from === "visitor").length === 0;
+  const showQuick = noMessageYet && !closed;
   const sentOnce = messages.some((m) => m.from === "visitor" && m.status === "sent");
 
   return (
@@ -332,124 +351,142 @@ export function LiveChat() {
           </button>
         </div>
 
-        {/* Corps */}
+        {/* Corps — conversation immédiate (esprit forum, sans inscription) */}
         <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto bg-surface/40 px-4 py-4">
-          {!conversation ? (
-            /* ── Étape 1 : présentation + capture du visiteur ── */
-            <div className="flex flex-col gap-3">
-              <div className="rounded-2xl rounded-bl-md bg-white p-4 text-sm leading-relaxed text-ink shadow-sm ring-1 ring-brand-100 dark:bg-slate-800 dark:text-brand-50 dark:ring-white/10">
-                <p className="font-bold">{t.introTitle}</p>
-                <p className="mt-1 text-muted dark:text-brand-100/70">{t.introText}</p>
-              </div>
-              <form onSubmit={startChat} className="flex flex-col gap-2.5 rounded-2xl bg-white p-4 shadow-sm ring-1 ring-brand-100 dark:bg-slate-800 dark:ring-white/10">
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder={t.namePlaceholder}
-                  className="rounded-xl border border-brand-100 bg-surface/60 px-3.5 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 dark:border-white/10 dark:bg-white/5 dark:text-white"
-                />
-                <input
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  type="email"
-                  placeholder={t.emailPlaceholder}
-                  className="rounded-xl border border-brand-100 bg-surface/60 px-3.5 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 dark:border-white/10 dark:bg-white/5 dark:text-white"
-                />
-                {/* Honeypot */}
-                <input tabIndex={-1} autoComplete="off" aria-hidden className="hidden"
-                  onChange={(e) => { website.current = e.target.value; }} />
-                {formError && <p className="text-xs font-medium text-red-500">{formError}</p>}
-                <button type="submit" disabled={starting}
-                  className="mt-1 rounded-full bg-brand-700 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-800 disabled:opacity-60">
-                  {starting ? "…" : t.start}
-                </button>
-                <p className="text-center text-[11px] text-muted">{t.disclaimer}</p>
-              </form>
+          {/* Bulle d'accueil */}
+          <div className="flex items-start gap-2">
+            <span className="mt-1 grid size-7 shrink-0 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-brand-700 to-brand-500">
+              <Image src="/photo-the-co-founders-together.png" alt="" width={28} height={28} className="size-full object-cover" />
+            </span>
+            <div className="rounded-2xl rounded-bl-md bg-white p-4 text-sm leading-relaxed text-ink shadow-sm ring-1 ring-brand-100 dark:bg-slate-800 dark:text-brand-50 dark:ring-white/10">
+              <p className="font-bold">{t.introTitle}</p>
+              <p className="mt-1 text-muted dark:text-brand-100/70">{t.introText}</p>
             </div>
-          ) : (
-            /* ── Étape 2 : conversation temps réel ── */
-            <>
-              {messages.map((m) => (
-                <div key={m.key} className={`flex ${m.from === "visitor" ? "justify-end" : "justify-start"}`}>
-                  {m.from === "team" && (
-                    <span className="mr-2 mt-1 grid size-7 shrink-0 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-brand-700 to-brand-500">
-                      <Image src="/photo-the-co-founders-together.png" alt="" width={28} height={28} className="size-full object-cover" />
-                    </span>
-                  )}
-                  <div className="flex flex-col">
-                    <div className={`max-w-[80%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
-                      m.from === "visitor"
-                        ? `rounded-br-md text-white ${m.status === "failed" ? "bg-red-500" : "bg-brand-700"}`
-                        : "rounded-bl-md bg-white text-ink shadow-sm ring-1 ring-brand-100 dark:bg-slate-800 dark:text-brand-50 dark:ring-white/10"
-                    }`}>
-                      {m.text}
-                    </div>
-                    {m.from === "visitor" && m.status === "failed" && (
-                      <button type="button" onClick={() => send(m.text)} className="mt-0.5 self-end text-[11px] font-medium text-red-500 hover:underline">
-                        {t.sendFail}
-                      </button>
-                    )}
+          </div>
+
+          {/* Messages de la conversation */}
+          {messages
+            .filter((m) => m.key !== "welcome")
+            .map((m) => (
+              <div key={m.key} className={`flex ${m.from === "visitor" ? "justify-end" : "justify-start"}`}>
+                {m.from === "team" && (
+                  <span className="mr-2 mt-1 grid size-7 shrink-0 place-items-center overflow-hidden rounded-full bg-gradient-to-br from-brand-700 to-brand-500">
+                    <Image src="/photo-the-co-founders-together.png" alt="" width={28} height={28} className="size-full object-cover" />
+                  </span>
+                )}
+                <div className="flex flex-col">
+                  <div className={`max-w-[80%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                    m.from === "visitor"
+                      ? `rounded-br-md text-white ${m.status === "failed" ? "bg-red-500" : "bg-brand-700"}`
+                      : "rounded-bl-md bg-white text-ink shadow-sm ring-1 ring-brand-100 dark:bg-slate-800 dark:text-brand-50 dark:ring-white/10"
+                  }`}>
+                    {m.text}
                   </div>
-                </div>
-              ))}
-
-              {/* Note discrète après le 1er envoi */}
-              {sentOnce && !closed && (
-                <p className="px-2 text-center text-[11px] text-muted">{t.waiting}</p>
-              )}
-              {closed && <p className="px-2 text-center text-[11px] font-medium text-muted">{t.closed}</p>}
-
-              {/* Suggestions rapides au démarrage */}
-              {showQuick && (
-                <div className="flex flex-wrap gap-2 pt-1">
-                  {t.quick.map((q) => (
-                    <button key={q} type="button" onClick={() => send(q)}
-                      className="rounded-full border border-brand-200 bg-white px-3 py-1.5 text-xs font-medium text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:bg-slate-800 dark:text-brand-200 dark:hover:bg-white/5">
-                      {q}
+                  {m.from === "visitor" && m.status === "failed" && (
+                    <button type="button" onClick={() => send(m.text)} className="mt-0.5 self-end text-[11px] font-medium text-red-500 hover:underline">
+                      {t.sendFail}
                     </button>
-                  ))}
-                </div>
-              )}
-
-              {/* Canaux instantanés */}
-              <div className="flex flex-col gap-2 pt-1">
-                <p className="text-center text-[11px] font-semibold uppercase tracking-wide text-muted">{t.instant}</p>
-                <div className="flex gap-2">
-                  <a href={WHATSAPP} target="_blank" rel="noopener noreferrer"
-                    className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#25D366] px-3 py-2 text-xs font-semibold text-white transition-transform hover:scale-[1.02]">
-                    <IconWhatsApp className="size-4" /> WhatsApp
-                  </a>
-                  <a href={TELEGRAM} target="_blank" rel="noopener noreferrer"
-                    className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#229ED9] px-3 py-2 text-xs font-semibold text-white transition-transform hover:scale-[1.02]">
-                    <IconTelegram className="size-4" /> Telegram
-                  </a>
+                  )}
                 </div>
               </div>
-            </>
+            ))}
+
+          {/* Note discrète après le 1er envoi */}
+          {sentOnce && !closed && (
+            <p className="px-2 text-center text-[11px] text-muted">{t.waiting}</p>
           )}
+          {closed && <p className="px-2 text-center text-[11px] font-medium text-muted">{t.closed}</p>}
+          {error && <p className="px-2 text-center text-[11px] font-medium text-red-500">{error}</p>}
+
+          {/* E-mail optionnel — uniquement tant qu'aucun message n'est parti */}
+          {noMessageYet && !conversation && (
+            <div className="rounded-2xl bg-white p-3 shadow-sm ring-1 ring-brand-100 dark:bg-slate-800 dark:ring-white/10">
+              {emailOpen ? (
+                <>
+                  <input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    type="email"
+                    placeholder={t.emailPlaceholder}
+                    aria-label={t.emailPlaceholder}
+                    className="w-full rounded-xl border border-brand-100 bg-surface/60 px-3.5 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 dark:border-white/10 dark:bg-white/5 dark:text-white"
+                  />
+                  <p className="mt-1.5 px-1 text-[11px] text-muted">{t.emailHint}</p>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setEmailOpen(true)}
+                  className="flex w-full items-center gap-2 text-left text-[12px] font-medium text-brand-600 dark:text-brand-300"
+                >
+                  <IconMailSmall className="size-4" />
+                  {t.emailToggle}
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Suggestions rapides au démarrage */}
+          {showQuick && (
+            <div className="flex flex-wrap gap-2 pt-1">
+              {t.quick.map((q) => (
+                <button key={q} type="button" onClick={() => send(q)}
+                  className="rounded-full border border-brand-200 bg-white px-3 py-1.5 text-xs font-medium text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:bg-slate-800 dark:text-brand-200 dark:hover:bg-white/5">
+                  {q}
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Honeypot anti-bot */}
+          <input tabIndex={-1} autoComplete="off" aria-hidden className="hidden"
+            onChange={(e) => { website.current = e.target.value; }} />
+
+          {/* Canaux instantanés */}
+          <div className="flex flex-col gap-2 pt-1">
+            <p className="text-center text-[11px] font-semibold uppercase tracking-wide text-muted">{t.instant}</p>
+            <div className="flex gap-2">
+              <a href={WHATSAPP} target="_blank" rel="noopener noreferrer"
+                className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#25D366] px-3 py-2 text-xs font-semibold text-white transition-transform hover:scale-[1.02]">
+                <IconWhatsApp className="size-4" /> WhatsApp
+              </a>
+              <a href={TELEGRAM} target="_blank" rel="noopener noreferrer"
+                className="flex flex-1 items-center justify-center gap-2 rounded-full bg-[#229ED9] px-3 py-2 text-xs font-semibold text-white transition-transform hover:scale-[1.02]">
+                <IconTelegram className="size-4" /> Telegram
+              </a>
+            </div>
+          </div>
         </div>
 
-        {/* Saisie */}
-        {conversation && (
-          <form onSubmit={(e) => { e.preventDefault(); send(input); }}
-            className="border-t border-brand-100 bg-white p-3 dark:border-white/10 dark:bg-slate-900">
-            <div className="flex items-end gap-2">
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder={t.placeholder}
-                aria-label={t.placeholder}
-                disabled={closed}
-                className="min-w-0 flex-1 rounded-full border border-brand-100 bg-surface/60 px-4 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 disabled:opacity-50 dark:border-white/10 dark:bg-white/5 dark:text-white"
-              />
-              <button type="submit" disabled={sending || closed || !input.trim()} aria-label="Send"
-                className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-700 text-white transition-colors hover:bg-brand-800 disabled:opacity-50">
-                <IconSend className="size-5" />
-              </button>
-            </div>
-          </form>
-        )}
+        {/* Saisie — toujours disponible */}
+        <form onSubmit={(e) => { e.preventDefault(); send(input); }}
+          className="border-t border-brand-100 bg-white p-3 dark:border-white/10 dark:bg-slate-900">
+          <div className="flex items-end gap-2">
+            <input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder={t.placeholder}
+              aria-label={t.placeholder}
+              disabled={closed}
+              className="min-w-0 flex-1 rounded-full border border-brand-100 bg-surface/60 px-4 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 disabled:opacity-50 dark:border-white/10 dark:bg-white/5 dark:text-white"
+            />
+            <button type="submit" disabled={sending || closed || !input.trim()} aria-label="Send"
+              className="grid size-10 shrink-0 place-items-center rounded-full bg-brand-700 text-white transition-colors hover:bg-brand-800 disabled:opacity-50">
+              <IconSend className="size-5" />
+            </button>
+          </div>
+        </form>
       </div>
     </>
+  );
+}
+
+/* Petite icône enveloppe (e-mail optionnel) */
+function IconMailSmall({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="m3 7 9 6 9-6" />
+    </svg>
   );
 }

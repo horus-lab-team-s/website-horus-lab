@@ -343,7 +343,9 @@ export async function getCmsHero(lang: Lang): Promise<CmsHero> {
       eyebrow: t(data.content.eyebrow_fr, data.content.eyebrow_en),
       titleLead: t(data.content.title_lead_fr, data.content.title_lead_en),
       titleHighlight: t(data.content.title_highlight_fr, data.content.title_highlight_en),
-      subtitle: t(data.content.subtitle_fr, data.content.subtitle_en),
+      // Sous-titre TOUJOURS local : le backend peut contenir une ancienne
+      // accroche (ERP, IA…) qui ne reflète plus nos services réels.
+      subtitle: fallback.subtitle,
       ctaPrimary: t(data.content.cta_primary_fr, data.content.cta_primary_en),
       ctaSecondary: t(data.content.cta_secondary_fr, data.content.cta_secondary_en),
       stats: data.stats
@@ -500,33 +502,11 @@ export async function getCmsStack(fallback: string[]): Promise<string[]> {
 /* ============================================================
    Testimonials
    ============================================================ */
-type ApiTestimonial = {
-  id: number;
-  quote_fr: string; quote_en: string;
-  name: string;
-  role_fr: string; role_en: string;
-  avatar: string | null;
-  is_featured: boolean;
-  order: number;
-};
-
 export type CmsTestimonials = Dict["testimonials"]["items"];
 
 export async function getCmsTestimonials(lang: Lang): Promise<CmsTestimonials> {
-  try {
-    const data = await fetchList<ApiTestimonial>("/api/testimonials/");
-    if (!data.length) return getDictionary(lang).testimonials.items;
-    const t = pick(lang);
-    // Featured d'abord (devient le grand témoignage).
-    return data
-      .slice()
-      .sort((a, b) => Number(b.is_featured) - Number(a.is_featured) || a.order - b.order)
-      .map((tt) => ({
-        quote: t(tt.quote_fr, tt.quote_en),
-        name: tt.name,
-        role: t(tt.role_fr, tt.role_en),
-      }));
-  } catch {
-    return getDictionary(lang).testimonials.items;
-  }
+  // On utilise TOUJOURS le dictionnaire local — le backend peut contenir
+  // d'anciens témoignages (ERP, chatbot IA…) qui ne correspondent pas à nos
+  // services réels (applications, SI, digitalisation, formation & audit).
+  return getDictionary(lang).testimonials.items;
 }

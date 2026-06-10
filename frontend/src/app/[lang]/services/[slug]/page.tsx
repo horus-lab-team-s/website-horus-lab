@@ -14,15 +14,19 @@ import {
   IconEye,
   IconSpark,
 } from "@/components/icons";
-import { isLocale, locales, type Lang } from "@/i18n/dictionaries";
+import { isLocale, type Lang } from "@/i18n/dictionaries";
 
 type Params = { lang: string; slug: string };
 
 export const dynamicParams = false;
 
+// Le segment parent [lang] génère déjà la locale (top-down) : on ne renvoie
+// donc QUE le slug ici. Renvoyer aussi `lang` re-génère la locale et casse
+// l'appariement des paramètres statiques (→ 404 sur toutes les pages services).
 export function generateStaticParams() {
-  const slugs = ["applications", "systemes-information", "digitalisation", "formation-audit"];
-  return locales.flatMap((lang) => slugs.map((slug) => ({ lang, slug })));
+  return ["applications", "systemes-information", "digitalisation", "formation-audit"].map(
+    (slug) => ({ slug }),
+  );
 }
 
 /* ─── Images Unsplash par feature ────────────────────────────── */

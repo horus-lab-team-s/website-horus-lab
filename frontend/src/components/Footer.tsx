@@ -70,6 +70,7 @@ export function Footer() {
     { label: dict.nav.about,     href: localePath("/about") },
     { label: dict.nav.portfolio, href: localePath("/portfolio") },
     { label: dict.nav.blog,      href: localePath("/blog") },
+    { label: dict.nav.careers,   href: localePath("/candidature") },
     { label: lang === "fr" ? "Contact" : "Contact", href: localePath("/#contact") },
   ];
 

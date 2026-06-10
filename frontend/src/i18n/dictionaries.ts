@@ -12,6 +12,7 @@ const fr = {
     about: "À propos",
     blog: "Blog",
     news: "Actualités",
+    careers: "Candidature",
     contact: "Contact",
     cta: "Démarrer un projet",
   },
@@ -147,21 +148,27 @@ const fr = {
     items: [
       {
         quote:
-          "Horus-Lab a livré notre plateforme dans les délais et avec une qualité irréprochable. Une équipe à l'écoute et terriblement compétente.",
+          "Horus-Lab a conçu notre application sur mesure de bout en bout. Livraison dans les délais, qualité irréprochable et une équipe terriblement à l'écoute.",
         name: "Aïcha N.",
         role: "Directrice Générale, FinPay",
       },
       {
         quote:
-          "Leur ERP sur-mesure a transformé notre gestion quotidienne. Nous gagnons un temps précieux chaque semaine.",
+          "Ils ont modélisé et architecturé notre système d'information avec une rigueur remarquable. Une base solide, documentée et évolutive sur laquelle nous construisons sereinement.",
         name: "Kwame O.",
         role: "Fondateur, AgriConnect",
       },
       {
         quote:
-          "Le chatbot IA qu'ils ont conçu gère 70% de nos demandes clients. Un vrai bond en avant pour notre service.",
+          "La digitalisation de nos processus nous fait gagner un temps précieux chaque semaine. Workflows automatisés, validations dématérialisées : le papier a quasiment disparu.",
         name: "Sandrine M.",
-        role: "Responsable Support, MediCare",
+        role: "Responsable des opérations, MediCare",
+      },
+      {
+        quote:
+          "Leur audit a révélé des failles que nous ignorions, et la formation a fait monter toute notre équipe en compétences. Un accompagnement concret et durable.",
+        name: "David K.",
+        role: "Directeur des SI, LogiTrans",
       },
     ],
   },
@@ -270,6 +277,7 @@ const en: Dict = {
     about: "About",
     blog: "Blog",
     news: "News",
+    careers: "Careers",
     contact: "Contact",
     cta: "Start a project",
   },
@@ -405,21 +413,27 @@ const en: Dict = {
     items: [
       {
         quote:
-          "Horus-Lab delivered our platform on time with flawless quality. A truly skilled team that listens.",
+          "Horus-Lab built our custom application end to end. On-time delivery, flawless quality and a team that genuinely listens.",
         name: "Aïcha N.",
         role: "CEO, FinPay",
       },
       {
         quote:
-          "Their custom ERP transformed our daily operations. We save precious time every single week.",
+          "They modelled and architected our information system with remarkable rigour. A solid, documented and scalable foundation we build on with confidence.",
         name: "Kwame O.",
         role: "Founder, AgriConnect",
       },
       {
         quote:
-          "The AI chatbot they built handles 70% of our customer requests. A real leap forward for our support.",
+          "Digitalising our processes saves us precious time every single week. Automated workflows, paperless approvals — the paper has all but disappeared.",
         name: "Sandrine M.",
-        role: "Support Lead, MediCare",
+        role: "Operations Lead, MediCare",
+      },
+      {
+        quote:
+          "Their audit uncovered gaps we didn't know we had, and the training levelled up our whole team. Hands-on, lasting support.",
+        name: "David K.",
+        role: "Head of IT, LogiTrans",
       },
     ],
   },

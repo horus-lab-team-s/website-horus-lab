@@ -6,21 +6,8 @@ import { useEffect, useRef } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
 import { IconArrowRight } from "@/components/icons";
+import { coverFor } from "@/lib/blogImages";
 import type { PostMeta } from "@/lib/blog";
-
-/* ── Images Unsplash par catégorie ── */
-const CAT_IMAGES: Record<string, string> = {
-  "Actualités Tech":         "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=70",
-  "Tech News":               "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=500&q=70",
-  "Développement":           "https://images.unsplash.com/photo-1607706189992-eae578626c86?auto=format&fit=crop&w=500&q=70",
-  "Development":             "https://images.unsplash.com/photo-1607706189992-eae578626c86?auto=format&fit=crop&w=500&q=70",
-  "Tech Afrique":            "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=500&q=70",
-  "Tech Africa":             "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=500&q=70",
-  "Transformation Digitale": "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=500&q=70",
-  "Digital Transformation":  "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=500&q=70",
-  "Formation IT":            "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&w=500&q=70",
-  "IT Training":             "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&w=500&q=70",
-};
 
 const CAT_GRAD: Record<string, string> = {
   "Actualités Tech":         "from-brand-700 to-brand-500",
@@ -50,7 +37,7 @@ const CAT_ACCENT: Record<string, { border: string; badge: string; dot: string }>
 };
 
 function getImg(post: PostMeta) {
-  return post.cover || CAT_IMAGES[post.category] || "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=500&q=70";
+  return coverFor(post);
 }
 function getGrad(post: PostMeta) { return CAT_GRAD[post.category] ?? "from-brand-700 to-brand-500"; }
 function getAccent(post: PostMeta) {

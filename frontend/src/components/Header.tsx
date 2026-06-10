@@ -83,9 +83,10 @@ export function Header() {
   const currentLang = LANGS.find(l => l.code === lang) ?? LANGS[0];
 
   const links = [
-    { href: localePath("/portfolio"), label: dict.nav.portfolio },
-    { href: localePath("/blog"),      label: dict.nav.blog },
-    { href: localePath("/about"),     label: dict.nav.about },
+    { href: localePath("/portfolio"),   label: dict.nav.portfolio },
+    { href: localePath("/blog"),        label: dict.nav.blog },
+    { href: localePath("/about"),       label: dict.nav.about },
+    { href: localePath("/candidature"), label: dict.nav.careers },
   ];
 
   const isActive = (href: string) =>
