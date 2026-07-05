@@ -26,7 +26,7 @@ class ProjectAdmin(admin.ModelAdmin):
             "Détails",
             {"fields": ("description_fr", "description_en", "role_fr", "role_en", "scope_fr", "scope_en")},
         ),
-        ("Visuel", {"fields": ("cover", "icon", "gradient")}),
+        ("Visuel", {"fields": ("logo", "cover", "screenshots", "icon", "gradient")}),
         ("Méta", {"fields": ("tags", "result_fr", "result_en", "url")}),
         (
             "Publication",

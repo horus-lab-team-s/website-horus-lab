@@ -4,7 +4,6 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { BlogHero } from "@/components/blog/BlogHero";
 import { BlogIndex } from "@/components/blog/BlogIndex";
-import { LiveChat } from "@/components/blog/LiveChat";
 import { getCmsPosts } from "@/lib/cms";
 import { getDictionary, isLocale, locales, type Lang } from "@/i18n/dictionaries";
 
@@ -50,7 +49,6 @@ export default async function BlogPage({
         <BlogHero />
         <BlogIndex posts={posts} />
       </main>
-      <LiveChat />
       <Footer />
     </>
   );

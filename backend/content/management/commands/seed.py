@@ -80,8 +80,8 @@ class Command(BaseCommand):
                 title_lead_en="We turn your ideas into",
                 title_highlight_fr="solutions numériques durables",
                 title_highlight_en="lasting digital solutions",
-                subtitle_fr="Applications sur mesure, systèmes d'information, digitalisation et formation — une expertise locale au service de votre croissance.",
-                subtitle_en="Custom applications, information systems, digitalisation and training — local expertise driving your growth.",
+                subtitle_fr="Vos idées, nos solutions — du concept au déploiement.",
+                subtitle_en="Your ideas, our solutions — from concept to deployment.",
                 cta_primary_fr="Démarrer un projet",
                 cta_primary_en="Start a project",
                 cta_secondary_fr="Découvrir nos services",
@@ -182,18 +182,24 @@ class Command(BaseCommand):
             )
 
     def seed_testimonials(self):
+        # Doit refléter le dictionnaire frontend (src/i18n/dictionaries.ts) :
+        # au 1er seed, la home reste identique, puis l'admin prend la main.
         items = [
             ("Aïcha N.", "Directrice Générale, FinPay", "CEO, FinPay",
-             "Horus-Lab a livré notre plateforme dans les délais et avec une qualité irréprochable. Une équipe à l'écoute et terriblement compétente.",
-             "Horus-Lab delivered our platform on time with flawless quality. A truly skilled team that listens.",
+             "Horus-Lab a conçu notre application sur mesure de bout en bout. Livraison dans les délais, qualité irréprochable et une équipe terriblement à l'écoute.",
+             "Horus-Lab built our custom application end to end. On-time delivery, flawless quality and a team that genuinely listens.",
              True),
             ("Kwame O.", "Fondateur, AgriConnect", "Founder, AgriConnect",
-             "La plateforme e-learning qu'ils ont conçue a changé la façon dont nous formons nos équipes. Parcours clairs, suivi précis.",
-             "The e-learning platform they built changed how we train our teams. Clear paths, precise tracking.",
+             "Ils ont modélisé et architecturé notre système d'information avec une rigueur remarquable. Une base solide, documentée et évolutive sur laquelle nous construisons sereinement.",
+             "They modelled and architected our information system with remarkable rigour. A solid, documented and scalable foundation we build on with confidence.",
              False),
-            ("Sandrine M.", "Responsable Digitale, MediCare", "Digital Lead, MediCare",
-             "La digitalisation de nos processus a réduit nos délais de traitement de 40%. Un accompagnement professionnel du début à la fin.",
-             "Digitalising our processes cut our processing times by 40%. Professional support from start to finish.",
+            ("Sandrine M.", "Responsable des opérations, MediCare", "Operations Lead, MediCare",
+             "La digitalisation de nos processus nous fait gagner un temps précieux chaque semaine. Workflows automatisés, validations dématérialisées : le papier a quasiment disparu.",
+             "Digitalising our processes saves us precious time every single week. Automated workflows, paperless approvals — the paper has all but disappeared.",
+             False),
+            ("David K.", "Directeur des SI, LogiTrans", "Head of IT, LogiTrans",
+             "Leur audit a révélé des failles que nous ignorions, et la formation a fait monter toute notre équipe en compétences. Un accompagnement concret et durable.",
+             "Their audit uncovered gaps we didn't know we had, and the training levelled up our whole team. Hands-on, lasting support.",
              False),
         ]
         for i, (name, rfr, ren, qfr, qen, featured) in enumerate(items):
@@ -212,14 +218,17 @@ class Command(BaseCommand):
             )
 
     def seed_team(self):
-        # ── Co-fondateurs Horus-Lab (sans Armel SIME) ──
+        # Doit refléter la page « À propos » du frontend (about/page.tsx) : au 1er
+        # seed les cartes fondateurs restent identiques, puis l'admin prend la main.
+        # La photo (/public) est ré-associée par nom côté front ; un éditeur peut
+        # aussi uploader une photo depuis l'admin.
         members = [
             dict(
                 name="Brailain Loïc TONBA",
-                role_fr="Ingénieur logiciel · Co-fondateur & CEO",
-                role_en="Software engineer · Co-founder & CEO",
-                bio_fr="Développeur full-stack, je conçois des produits numériques de bout en bout pour des entreprises africaines et internationales.",
-                bio_en="Full-stack developer building digital products end-to-end for African and international businesses.",
+                role_fr="Ingénieur logiciel · Co-fondateur",
+                role_en="Software engineer · Co-founder",
+                bio_fr="Développeur full-stack et entrepreneur tech, je pilote la vision produit de Horus-Lab et conçois des solutions numériques de bout en bout pour des entreprises africaines et internationales. Passionné par l'impact de la technologie sur le continent.",
+                bio_en="Full-stack developer and tech entrepreneur, I drive the product vision at Horus-Lab and build end-to-end digital solutions for African and international businesses. Passionate about technology's impact across the continent.",
                 email="tonbaloic@gmail.com",
                 linkedin_url="https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
                 github_url="https://github.com/LoicTonba",
@@ -227,10 +236,10 @@ class Command(BaseCommand):
             ),
             dict(
                 name="Edwin TCHAMBA TCHAKOUNTE",
-                role_fr="Architecte logiciel · Co-fondateur & CTO",
-                role_en="Software architect · Co-founder & CTO",
-                bio_fr="Senior Software Engineer & Architecte logiciel. 3+ ans d'expérience full-stack (web & mobile), APIs REST et déploiement cloud. Maîtrise UML/RUP. Lauréat du Prix du Meilleur Projet de Fin d'Études — IUT-FV Bandjoun (2024).",
-                bio_en="Senior Software Engineer & Software Architect. 3+ years full-stack experience (web & mobile), REST APIs and cloud deployment. Expert in UML/RUP. Winner of the Best Final Year Project Award — IUT-FV Bandjoun (2024).",
+                role_fr="Architecte logiciel · Co-fondateur",
+                role_en="Software architect · Co-founder",
+                bio_fr="Senior Software Engineer & Architecte logiciel, passionné par la résolution de problèmes complexes et l'innovation technologique. Avec plus de 3 ans d'expérience en développement full-stack (web & mobile), conception d'APIs REST et déploiement cloud, je livre des solutions performantes et adaptées aux besoins réels. Maîtrise de la méthode RUP et de la modélisation UML. Formation IUT-FV & ENSPD. Lauréat du Prix du Meilleur Projet de Fin d'Études — IUT-FV Bandjoun (2024).",
+                bio_en="Senior Software Engineer & Software Architect, driven by complex problem-solving and technological innovation. With 3+ years of hands-on experience in full-stack web & mobile development, REST API design and cloud deployment, I deliver high-performance solutions tailored to real-world needs. Expert in RUP methodology and UML modelling, trained at IUT-FV and ENSPD. Winner of the Best Final Year Project Award — IUT-FV Bandjoun (2024).",
                 is_lead=True, order=1,
             ),
         ]
@@ -333,48 +342,50 @@ class Command(BaseCommand):
             )
 
     def seed_portfolio(self):
-        # Portfolio Horus-Lab — sans les projets SFX/SOFTRONIC
+        # Doit refléter le catalogue frontend (src/lib/projects.ts), même ordre :
+        # au 1er seed la home/portfolio restent identiques, puis l'admin pilote.
+        # Les logos (/public) et captures sont ré-associés par titre côté front ;
+        # un éditeur peut aussi uploader un logo / des captures depuis l'admin.
         items = [
+            dict(
+                title_fr="Afrikamode", title_en="Afrikamode",
+                client_fr="Italie · France · Belgique · Cameroun",
+                client_en="Italy · France · Belgium · Cameroon",
+                category_fr="Mode & e-commerce", category_en="Fashion & e-commerce",
+                description_fr="Plateforme e-commerce internationale pour une marque de mode africaine présente en Europe et en Afrique. Catalogue multilingue, fiches produits, panier, paiement sécurisé. Des créateurs de Lagos à Abidjan, une ligne maison, une esthétique contemporaine — portée sur 4 pays.",
+                description_en="International e-commerce platform for an African fashion brand present across Europe and Africa. Multilingual catalogue, product pages, cart, secure checkout. Designers from Lagos to Abidjan, an in-house line — live in 4 countries.",
+                role_fr="Conception & développement", role_en="Design & development",
+                scope_fr="Boutique e-commerce internationale",
+                scope_en="International e-commerce store",
+                tags=["Next.js", "React", "Tailwind", "TypeScript", "e-commerce"],
+                result_fr="Live en Europe & Afrique", result_en="Live in Europe & Africa",
+                icon="spark",
+                gradient="from-rose-500 via-orange-500 to-amber-400",
+                url="https://afrikamode.store",
+                is_featured=True,
+            ),
             dict(
                 title_fr="Gathe Finance", title_en="Gathe Finance",
                 client_fr="PME & freelances africains",
                 client_en="African SMEs & freelancers",
                 category_fr="Fintech & Gestion", category_en="Fintech & Management",
-                description_fr="Plateforme de gestion financière pour indépendants et PME africaines : suivi multi-comptes (espèces, mobile money, banque), catégorisation, budgets, reporting trésorerie et P&L.",
-                description_en="Financial management platform for African freelancers and SMEs: multi-account tracking (cash, mobile money, bank), categorisation, budgets, cash flow and P&L reporting.",
+                description_fr="Plateforme de gestion financière pensée pour les indépendants et les PME africaines : suivi multi-comptes (espèces, mobile money, banque), catégorisation automatique des opérations, budgets et objectifs, tableaux de bord et reporting (trésorerie, P&L).",
+                description_en="Financial management platform for African freelancers and SMEs: multi-account tracking (cash, mobile money, bank), auto-categorisation, budgets and goals, dashboards and reporting (cash flow, P&L).",
                 role_fr="Conception & développement", role_en="Design & development",
                 scope_fr="Gestion financière PME · multi-comptes & reporting",
-                scope_en="SME financial management · multi-account & reporting",
+                scope_en="SME financial management",
                 tags=["Next.js", "TypeScript", "Prisma", "Postgres", "PWA"],
                 result_fr="Trésorerie sous contrôle", result_en="Cash flow under control",
                 icon="layers",
                 gradient="from-slate-800 via-brand-700 to-amber-500",
-                is_featured=True,
-            ),
-            dict(
-                title_fr="Afrikamode", title_en="Afrikamode",
-                client_fr="Marque de mode africaine",
-                client_en="African fashion brand",
-                category_fr="Mode & e-commerce", category_en="Fashion & e-commerce",
-                description_fr="Boutique e-commerce complète : catalogue, fiches produits, panier et paiement. Des créateurs de Lagos à Abidjan, une ligne maison, une esthétique contemporaine.",
-                description_en="Full e-commerce store: catalogue, product pages, cart and checkout. Designers from Lagos to Abidjan, an in-house line, a contemporary aesthetic.",
-                role_fr="Conception & développement", role_en="Design & development",
-                scope_fr="Boutique en ligne · marque maison + créateurs invités",
-                scope_en="Online shop · house line + guest designers",
-                tags=["Next.js", "React", "Tailwind", "TypeScript", "e-commerce"],
-                result_fr="afrikamode.store · en ligne",
-                result_en="afrikamode.store · live",
-                icon="spark",
-                gradient="from-rose-500 via-orange-500 to-amber-400",
-                url="https://afrikamode.store",
             ),
             dict(
                 title_fr="Plateforme e-Learning", title_en="e-Learning platform",
                 client_fr="Apprenants & professionnels IT",
                 client_en="IT learners & professionals",
                 category_fr="Éducation & EdTech", category_en="Education & EdTech",
-                description_fr="Plateforme de formation aux métiers de l'informatique : développement web, Python, cybersécurité. Parcours structurés, ressources progressives et suivi des apprenants.",
-                description_en="IT career training platform: web development, Python, cybersecurity. Structured tracks, progressive resources and learner tracking.",
+                description_fr="Plateforme de formation aux métiers de l'informatique : développement web, Python, cybersécurité et plus. Parcours structurés, ressources progressives et suivi des apprenants — pour rendre la tech accessible à tous, partout en Afrique.",
+                description_en="Training platform covering IT careers: web development, Python, cybersecurity and more. Structured tracks, progressive resources and learner tracking — built to make tech accessible everywhere across Africa.",
                 role_fr="Conception & développement", role_en="Design & development",
                 scope_fr="Plateforme de formation IT en ligne",
                 scope_en="Online IT training platform",
@@ -384,12 +395,27 @@ class Command(BaseCommand):
                 gradient="from-emerald-500 via-teal-500 to-sky",
             ),
             dict(
+                title_fr="Elec One", title_en="Elec One",
+                client_fr="Secteur Énergie & Industrie",
+                client_en="Energy & Industry sector",
+                category_fr="Énergie & Industrie", category_en="Energy & Industry",
+                description_fr="Application web de gestion et de supervision pour le secteur électrique et industriel : suivi des équipements, tableaux de bord temps réel, alertes et reporting. Conçue pour les professionnels de l'énergie qui veulent piloter leur infrastructure avec précision.",
+                description_en="Web application for management and supervision in the electrical and industrial sector: equipment monitoring, real-time dashboards, alerts and reporting. Built for energy professionals who want to drive their infrastructure with precision.",
+                role_fr="Conception & développement", role_en="Design & development",
+                scope_fr="Application de gestion énergétique",
+                scope_en="Energy management application",
+                tags=["Next.js", "TypeScript", "Dashboard", "IoT", "Cloud"],
+                result_fr="Supervision en temps réel", result_en="Real-time supervision",
+                icon="cog",
+                gradient="from-yellow-500 via-orange-400 to-red-500",
+            ),
+            dict(
                 title_fr="Programme Formation IT", title_en="IT Training Programme",
                 client_fr="Professionnels & entreprises",
                 client_en="Professionals & businesses",
                 category_fr="Formation", category_en="Training",
-                description_fr="Programme de formation aux technologies modernes : développement web, mobile, cybersécurité, gestion de projet IT. Sessions pratiques adaptées au niveau des équipes.",
-                description_en="Modern technology training programme: web & mobile development, cybersecurity, IT project management. Practical sessions adapted to team levels.",
+                description_fr="Programme de formation aux technologies modernes : développement web, mobile, cybersécurité, gestion de projet IT. Sessions pratiques adaptées au niveau des équipes et aux outils de l'entreprise.",
+                description_en="Training programme on modern technologies: web & mobile development, cybersecurity, IT project management. Hands-on sessions adapted to team levels and company tools.",
                 role_fr="Formation & accompagnement", role_en="Training & coaching",
                 scope_fr="Formation IT sur mesure",
                 scope_en="Custom IT training",

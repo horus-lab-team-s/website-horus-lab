@@ -1,12 +1,8 @@
 from django.urls import path
 
-from .views import ConversationCreateView, MessageListCreateView
+from .views import ForumThreadView
 
 urlpatterns = [
-    path("conversations/", ConversationCreateView.as_view(), name="chat-conversation-create"),
-    path(
-        "conversations/<uuid:pk>/messages/",
-        MessageListCreateView.as_view(),
-        name="chat-messages",
-    ),
+    # Forum public par article (lecture libre, écriture throttlée).
+    path("forum/<slug:slug>/", ForumThreadView.as_view(), name="forum-thread"),
 ]

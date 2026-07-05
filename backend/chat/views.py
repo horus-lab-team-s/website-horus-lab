@@ -1,87 +1,67 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
 
-from .models import ChatMessage, Conversation
-from .notifications import notify_new_message
-from .serializers import ChatMessageSerializer, ConversationCreateSerializer
+from .models import ForumPost, ForumThread
+from .notifications import notify_new_forum_post
+from .serializers import ForumPostCreateSerializer, ForumPostSerializer
 
 
-def _token_from(request):
-    return (
-        request.headers.get("X-Chat-Token")
-        or request.query_params.get("token")
-        or (request.data.get("token") if hasattr(request, "data") else None)
-    )
+class ForumThreadView(APIView):
+    """Forum PUBLIC rattaché à un article (slug).
 
+    GET  ?after=<id>  -> le fil public (messages non masqués).
+    POST { author_name?, author_email?, text, thread_title? } -> un visiteur poste.
 
-def _authorized(request, conversation) -> bool:
-    token = _token_from(request)
-    return bool(token) and str(token) == str(conversation.token)
+    Lecture libre (aucun throttle) ; écriture limitée par ScopedRateThrottle."""
 
+    throttle_scope = "forum_post"
 
-class ConversationCreateView(APIView):
-    """POST { visitor_name, visitor_email, page } -> crée une conversation.
+    def get_throttles(self):
+        # On ne limite QUE l'écriture publique ; la lecture reste libre.
+        if self.request.method == "POST":
+            return [ScopedRateThrottle()]
+        return []
 
-    Renvoie l'id public + le token secret que le visiteur conservera pour
-    lire/écrire dans SA conversation."""
-
-    def post(self, request):
-        serializer = ConversationCreateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        conversation = serializer.save()
-        return Response(
-            {
-                "id": str(conversation.id),
-                "token": str(conversation.token),
-                "messages": [],
-            },
-            status=status.HTTP_201_CREATED,
-        )
-
-
-class MessageListCreateView(APIView):
-    """GET  ?token=&after=<id>  -> messages postérieurs à `after` (polling).
-    POST { token, text }        -> le visiteur envoie un message."""
-
-    def get(self, request, pk):
-        conversation = get_object_or_404(Conversation, pk=pk)
-        if not _authorized(request, conversation):
-            return Response({"detail": "forbidden"}, status=status.HTTP_403_FORBIDDEN)
-
-        messages = conversation.messages.all()
+    def get(self, request, slug):
+        thread = ForumThread.objects.filter(slug=slug).first()
+        if thread is None:
+            return Response({"thread": {"slug": slug, "title": ""}, "posts": []})
+        posts = thread.posts.filter(is_hidden=False)
         after = request.query_params.get("after")
         if after:
             try:
-                messages = messages.filter(id__gt=int(after))
+                posts = posts.filter(id__gt=int(after))
             except (TypeError, ValueError):
                 pass
-
         return Response(
             {
-                "messages": ChatMessageSerializer(messages, many=True).data,
-                "is_closed": conversation.is_closed,
+                "thread": {"slug": thread.slug, "title": thread.title},
+                "posts": ForumPostSerializer(posts, many=True).data,
             }
         )
 
-    def post(self, request, pk):
-        conversation = get_object_or_404(Conversation, pk=pk)
-        if not _authorized(request, conversation):
-            return Response({"detail": "forbidden"}, status=status.HTTP_403_FORBIDDEN)
-        if conversation.is_closed:
-            return Response({"detail": "closed"}, status=status.HTTP_409_CONFLICT)
-
-        text = (request.data.get("text") or "").strip()
+    def post(self, request, slug):
+        serializer = ForumPostCreateSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        text = (serializer.validated_data.get("text") or "").strip()
         if not text:
             return Response({"detail": "empty"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
-        message = ChatMessage.objects.create(
-            conversation=conversation,
-            sender=ChatMessage.VISITOR,
+        title = str(request.data.get("thread_title") or "").strip()[:300]
+        thread, _ = ForumThread.objects.get_or_create(slug=slug, defaults={"title": title})
+        if title and not thread.title:
+            thread.title = title
+            thread.save(update_fields=["title"])
+
+        name = (serializer.validated_data.get("author_name") or "").strip()[:120] or "Visiteur"
+        post = ForumPost.objects.create(
+            thread=thread,
+            author_name=name,
+            author_email=(serializer.validated_data.get("author_email") or "").strip(),
             text=text[:5000],
+            is_staff=False,
         )
-        notify_new_message(message)
-        return Response(
-            ChatMessageSerializer(message).data, status=status.HTTP_201_CREATED
-        )
+        notify_new_forum_post(post)
+        return Response(ForumPostSerializer(post).data, status=status.HTTP_201_CREATED)

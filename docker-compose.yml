@@ -1,7 +1,8 @@
 # Stack backend : PostgreSQL + API Django.
 # Démarrage :  docker compose up --build -d
 # Admin       :  docker compose exec backend python manage.py createsuperuser
-# Variables   :  copiez .env.example en .env et adaptez (surtout les mots de passe).
+# Variables   :  créez un .env à la racine ; les clés (et comment les obtenir) sont
+#                documentées dans backend/.env et frontend/.env.local.
 
 services:
   db:
@@ -39,13 +40,18 @@ services:
       - "8000:8000"
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        # Passé au build pour que next/image autorise l'hôte média du backend.
+        BACKEND_API_URL: ${BACKEND_API_URL:-http://backend:8000}
     restart: unless-stopped
     depends_on:
       - backend
     environment:
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}
-      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000/api}
+      # URL du backend lue au runtime (SSR/ISR). Nom du service docker "backend".
+      BACKEND_API_URL: ${BACKEND_API_URL:-http://backend:8000}
       # Clés serveur (Horus AI / e-mails) lues par les routes /api du frontend
       GROQ_API_KEY: ${GROQ_API_KEY:-}
       GROQ_MODEL: ${GROQ_MODEL:-llama-3.3-70b-versatile}

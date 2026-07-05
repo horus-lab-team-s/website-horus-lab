@@ -34,13 +34,13 @@ const organizationLd = {
   url: SITE_URL,
   logo: `${SITE_URL}/Logo-HORUS-LAB.jpeg`,
   description:
-    "Entreprise technologique africaine : développement web & mobile, ERP, logiciels sur-mesure et solutions d'intelligence artificielle.",
+    "Entreprise technologique africaine : applications web & mobile sur mesure, systèmes d'information, digitalisation d'entreprise et formation & audit IT.",
   email: "contact@horus-lab.com",
   areaServed: "Africa",
   sameAs: [
-    "https://www.linkedin.com/company/horus-lab",
-    "https://twitter.com/horuslab",
-    "https://github.com/horus-lab",
+    "https://x.com/horuslabafrik",
+    "https://www.facebook.com/HorusLab",
+    "https://github.com/horus-lab-team-s",
   ],
 };
 

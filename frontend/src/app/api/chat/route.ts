@@ -5,7 +5,7 @@ type ChatMessage = { role: "user" | "assistant"; content: string };
 const KNOWLEDGE = `
 Horus-Lab — entreprise technologique africaine (vision au-delà des frontières, impact durable).
 Basée à Douala, Cameroun. Sert toute l'Afrique.
-Services : développement web & mobile ; ERP & systèmes de gestion ; logiciels sur-mesure ; solutions d'intelligence artificielle.
+Services : applications web & mobile sur mesure (React, Next.js, Flutter, PWA) ; systèmes d'information (analyse, conception & architecture — UML/RUP) ; digitalisation d'entreprise (automatisation des workflows, CRM, GED, cloud) ; formation & audit IT (ateliers, cybersécurité, audit de code).
 Méthode : 1) Écoute & cadrage 2) Conception & design 3) Développement agile 4) Livraison & accompagnement.
 Secteurs : fintech, santé, éducation, agriculture, commerce, logistique, administration publique, énergie.
 Contact : email contact@horus-lab.com ; téléphones +237 673398046 et +237 699173771.
@@ -27,8 +27,8 @@ function faqFallback(message: string, lang: string): string {
 
   if (has("service", "faites", "proposez", "offer", "do you do"))
     return fr
-      ? "Horus-Lab conçoit des sites & applications web et mobile, des ERP, des logiciels sur-mesure et des solutions d'IA. Que souhaitez-vous construire ?"
-      : "Horus-Lab builds web & mobile apps, ERPs, custom software and AI solutions. What would you like to build?";
+      ? "Horus-Lab conçoit des applications web & mobile sur mesure, des systèmes d'information, des projets de digitalisation d'entreprise et de la formation & audit IT. Que souhaitez-vous construire ?"
+      : "Horus-Lab builds custom web & mobile apps, information systems, business digitalisation and IT training & audits. What would you like to build?";
   if (has("contact", "email", "mail", "téléphone", "phone", "joindre", "reach"))
     return fr
       ? "Vous pouvez nous écrire à contact@horus-lab.com ou appeler le +237 673398046 / +237 699173771."

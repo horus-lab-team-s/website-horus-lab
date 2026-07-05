@@ -100,11 +100,11 @@ export function BlogPreview({ posts }: { posts: PostMeta[] }) {
             <circle key={k} cx={x} cy={k % 2 === 0 ? 140 : 200} r="2.5" fill="currentColor" />
           ))}
         </svg>
-        {/* Logos tech en filigrane très subtil */}
+        {/* Nos réalisations en filigrane très subtil (nos vrais projets) */}
         <div className="absolute inset-x-0 bottom-4 overflow-hidden opacity-[0.04] select-none dark:opacity-[0.06]">
           <div className="flex gap-8 whitespace-nowrap text-4xl font-black text-brand-900 dark:text-white animate-[marquee_50s_linear_infinite]">
-            {["NVIDIA","Google","OpenAI","Apple","Microsoft","Anthropic","Meta","Amazon","Orange","MTN",
-              "NVIDIA","Google","OpenAI","Apple","Microsoft","Anthropic","Meta","Amazon","Orange","MTN"].map((n,i) => (
+            {["Afrikamode","Gathe Finance","Elec One","e-Learning","Formation IT","Horus-Lab",
+              "Afrikamode","Gathe Finance","Elec One","e-Learning","Formation IT","Horus-Lab"].map((n,i) => (
               <span key={i} className="shrink-0">{n}</span>
             ))}
           </div>

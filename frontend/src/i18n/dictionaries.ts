@@ -213,7 +213,7 @@ const fr = {
     eyebrow: "Blog",
     title: "Actualités tech & ressources",
     subtitle:
-      "Les dernières nouvelles de la tech mondiale (GAFAM, NVIDIA, IA) et des conseils pour les entreprises africaines.",
+      "Les dernières nouvelles de la tech mondiale et des conseils concrets pour les entreprises africaines.",
     readMore: "Lire l'article",
     readTime: "min de lecture",
     backToBlog: "Retour au blog",
@@ -478,7 +478,7 @@ const en: Dict = {
     eyebrow: "Blog",
     title: "Tech news & resources",
     subtitle:
-      "The latest from global tech (GAFAM, NVIDIA, AI) and practical insights for African businesses.",
+      "The latest from global tech and practical insights for African businesses.",
     readMore: "Read article",
     readTime: "min read",
     backToBlog: "Back to blog",

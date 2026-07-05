@@ -32,6 +32,19 @@ class Project(models.Model):
     result_en = models.CharField(max_length=80, blank=True)
 
     cover = models.ImageField(upload_to="portfolio/", blank=True, null=True)
+    # Logo de la marque affiché en couverture (sinon icône + dégradé côté front).
+    logo = models.ImageField(
+        upload_to="portfolio/logos/",
+        blank=True,
+        null=True,
+        help_text="Logo affiché en couverture. Sinon icône + dégradé.",
+    )
+    # Captures d'écran (liste d'URLs). La 1re sert de couverture si pas de logo.
+    screenshots = models.JSONField(
+        default=list,
+        blank=True,
+        help_text="Liste d'URLs d'images (captures). La 1re sert de couverture si pas de logo.",
+    )
     icon = models.CharField(
         max_length=20,
         default="code",

@@ -61,6 +61,8 @@ type ApiProject = {
   tags: string[];
   result_fr: string; result_en: string;
   cover: string | null;
+  logo: string | null;
+  screenshots: string[];
   icon: string;
   gradient: string;
   url: string;
@@ -68,10 +70,23 @@ type ApiProject = {
   order: number;
 };
 
-function mapProject(p: ApiProject, lang: Lang): Project {
+/**
+ * Le backend pilote les textes/ordre/tags. Les visuels de marque (logo dans
+ * /public, captures Unsplash) ne sont pas stockés côté API pour les projets
+ * seedés : on les ré-associe par TITRE depuis le catalogue local. Un éditeur
+ * peut néanmoins uploader un logo / renseigner des captures dans l'admin :
+ * ces valeurs-là (absolues) sont alors prioritaires.
+ */
+function mapProject(
+  p: ApiProject,
+  lang: Lang,
+  staticByTitle: Map<string, Project>,
+): Project {
   const t = pick(lang);
+  const title = t(p.title_fr, p.title_en);
+  const local = staticByTitle.get(title);
   return {
-    title: t(p.title_fr, p.title_en),
+    title,
     client: t(p.client_fr, p.client_en) || undefined,
     category: t(p.category_fr, p.category_en),
     desc: t(p.description_fr, p.description_en),
@@ -82,13 +97,26 @@ function mapProject(p: ApiProject, lang: Lang): Project {
     iconKey: p.icon,
     gradient: p.gradient,
     url: p.url || undefined,
+    logo: p.logo ?? local?.logo,
+    screenshots: p.screenshots?.length ? p.screenshots : local?.screenshots,
   };
 }
 
 export async function getCmsProjects(lang: Lang): Promise<Project[]> {
-  // On utilise TOUJOURS les projets locaux — seuls Afrikamode, Gathe Finance,
-  // e-Learning et Formation appartiennent à Horus-Lab.
-  return getStaticProjects(lang);
+  // Piloté par l'admin (`/admin/` → Réalisations). Repli total sur le catalogue
+  // local si l'API est vide/indisponible → la home et /portfolio restent intacts.
+  const local = getStaticProjects(lang);
+  try {
+    const data = await fetchList<ApiProject>("/api/portfolio/");
+    if (!data.length) return local;
+    const byTitle = new Map(local.map((p) => [p.title, p]));
+    return data
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .map((p) => mapProject(p, lang, byTitle));
+  } catch {
+    return local;
+  }
 }
 
 /* ============================================================
@@ -343,9 +371,8 @@ export async function getCmsHero(lang: Lang): Promise<CmsHero> {
       eyebrow: t(data.content.eyebrow_fr, data.content.eyebrow_en),
       titleLead: t(data.content.title_lead_fr, data.content.title_lead_en),
       titleHighlight: t(data.content.title_highlight_fr, data.content.title_highlight_en),
-      // Sous-titre TOUJOURS local : le backend peut contenir une ancienne
-      // accroche (ERP, IA…) qui ne reflète plus nos services réels.
-      subtitle: fallback.subtitle,
+      // Piloté par l'admin ; repli sur le dictionnaire si le champ est vide.
+      subtitle: t(data.content.subtitle_fr, data.content.subtitle_en) || fallback.subtitle,
       ctaPrimary: t(data.content.cta_primary_fr, data.content.cta_primary_en),
       ctaSecondary: t(data.content.cta_secondary_fr, data.content.cta_secondary_en),
       stats: data.stats
@@ -373,9 +400,26 @@ type ApiService = {
 export type CmsServices = Dict["services"]["items"];
 
 export async function getCmsServices(lang: Lang): Promise<CmsServices> {
-  // On utilise TOUJOURS le dictionnaire local — les services sont fixes et définis dans le code.
-  // Le backend peut avoir d'anciens services (ERP, etc.) qui ne correspondent pas à la réalité.
-  return getDictionary(lang).services.items;
+  // Piloté par l'admin (`/admin/` → Services). La section home dérive l'icône,
+  // le thème couleur et le slug de la page service à partir de l'ORDRE et du
+  // TITRE ; gardez donc l'ordre 0→3 et les titres cohérents avec les 4 pages
+  // service. Repli sur le dictionnaire local si l'API est vide ou indisponible.
+  const fallback = getDictionary(lang).services.items;
+  try {
+    const data = await fetchList<ApiService>("/api/services/");
+    if (!data.length) return fallback;
+    const t = pick(lang);
+    return data
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .map((s) => ({
+        title: t(s.title_fr, s.title_en),
+        desc: t(s.description_fr, s.description_en),
+        tags: s.tags ?? [],
+      }));
+  } catch {
+    return fallback;
+  }
 }
 
 /* ============================================================
@@ -502,11 +546,36 @@ export async function getCmsStack(fallback: string[]): Promise<string[]> {
 /* ============================================================
    Testimonials
    ============================================================ */
+type ApiTestimonial = {
+  id: number;
+  quote_fr: string; quote_en: string;
+  name: string;
+  role_fr: string; role_en: string;
+  avatar: string | null;
+  is_featured: boolean;
+  order: number;
+};
+
 export type CmsTestimonials = Dict["testimonials"]["items"];
 
 export async function getCmsTestimonials(lang: Lang): Promise<CmsTestimonials> {
-  // On utilise TOUJOURS le dictionnaire local — le backend peut contenir
-  // d'anciens témoignages (ERP, chatbot IA…) qui ne correspondent pas à nos
-  // services réels (applications, SI, digitalisation, formation & audit).
-  return getDictionary(lang).testimonials.items;
+  // Piloté par l'admin (`/admin/` → Témoignages). La section home affiche le
+  // 1er élément en grand : on trie donc « mis en avant » d'abord, puis par
+  // ordre. Repli sur le dictionnaire local si l'API est vide/indisponible.
+  const fallback = getDictionary(lang).testimonials.items;
+  try {
+    const data = await fetchList<ApiTestimonial>("/api/testimonials/");
+    if (!data.length) return fallback;
+    const t = pick(lang);
+    return data
+      .slice()
+      .sort((a, b) => Number(b.is_featured) - Number(a.is_featured) || a.order - b.order)
+      .map((it) => ({
+        quote: t(it.quote_fr, it.quote_en),
+        name: it.name,
+        role: t(it.role_fr, it.role_en),
+      }));
+  } catch {
+    return fallback;
+  }
 }

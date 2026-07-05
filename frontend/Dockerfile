@@ -12,6 +12,10 @@ FROM node:22-alpine AS builder
 WORKDIR /app
 RUN corepack enable
 ENV NEXT_TELEMETRY_DISABLED=1
+# Hôte du backend connu au build : next.config l'utilise pour autoriser
+# next/image à charger les médias uploadés (logos, couvertures) depuis Django.
+ARG BACKEND_API_URL=http://localhost:8000
+ENV BACKEND_API_URL=$BACKEND_API_URL
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN pnpm build

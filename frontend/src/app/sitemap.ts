@@ -20,12 +20,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     });
     entries.push({
-      url: `${BASE}/${lang}/news`,
-      changeFrequency: "weekly",
-      priority: 0.7,
-      alternates: { languages: { fr: `${BASE}/fr/news`, en: `${BASE}/en/news` } },
-    });
-    entries.push({
       url: `${BASE}/${lang}/portfolio`,
       changeFrequency: "monthly",
       priority: 0.7,

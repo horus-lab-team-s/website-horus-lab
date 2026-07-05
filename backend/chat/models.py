@@ -1,61 +1,48 @@
-import uuid
-
 from django.db import models
 from django.utils import timezone
 
 
-class Conversation(models.Model):
-    """Une conversation de chat ouverte par un visiteur du blog.
+class ForumThread(models.Model):
+    """Fil de discussion PUBLIC rattaché à un article de blog (une entrée par
+    article, identifiée par le slug). Tout le monde le lit : c'est le « forum »."""
 
-    L'`id` (UUID) sert de handle public dans les URLs ; le `token` (UUID secret)
-    autorise le visiteur à lire/écrire uniquement sa propre conversation.
-    L'équipe répond depuis l'admin Django (boîte de réception)."""
-
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    token = models.UUIDField(default=uuid.uuid4, editable=False)
-    visitor_name = models.CharField("Nom du visiteur", max_length=120, default="Visiteur", blank=True)
-    # Optionnel : esprit « forum ». Un visiteur anonyme peut discuter sans e-mail ;
-    # s'il le laisse, l'équipe peut le recontacter par mail.
-    visitor_email = models.EmailField("E-mail du visiteur", blank=True)
-    page = models.CharField("Page d'origine", max_length=300, blank=True)
-    is_closed = models.BooleanField("Clôturée", default=False)
+    slug = models.SlugField("Slug de l'article", max_length=300, unique=True)
+    title = models.CharField("Titre (repère admin)", max_length=300, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ["-updated_at"]
-        verbose_name = "Conversation (chat)"
-        verbose_name_plural = "Conversations (chat)"
+        verbose_name = "Forum — fil d'un article"
+        verbose_name_plural = "Forum — fils par article"
 
     def __str__(self):
-        return f"{self.visitor_name} — {self.visitor_email}"
-
-    def touch(self):
-        """Remonte la conversation en tête de la boîte de réception."""
-        Conversation.objects.filter(pk=self.pk).update(updated_at=timezone.now())
+        return self.title or self.slug
 
 
-class ChatMessage(models.Model):
-    VISITOR = "visitor"
-    TEAM = "team"
-    SENDER_CHOICES = [(VISITOR, "Visiteur"), (TEAM, "Équipe Horus-Lab")]
+class ForumPost(models.Model):
+    """Message PUBLIC dans un fil de forum. `is_staff` = réponse de l'équipe
+    (badge) ; `is_hidden` = masqué par la modération. L'e-mail (facultatif) reste
+    privé : jamais exposé par l'API publique."""
 
-    conversation = models.ForeignKey(
-        Conversation, related_name="messages", on_delete=models.CASCADE
-    )
-    sender = models.CharField(max_length=10, choices=SENDER_CHOICES, default=VISITOR)
+    thread = models.ForeignKey(ForumThread, related_name="posts", on_delete=models.CASCADE)
+    author_name = models.CharField("Auteur", max_length=120, default="Visiteur", blank=True)
+    author_email = models.EmailField("E-mail (privé, jamais public)", blank=True)
     text = models.TextField()
+    is_staff = models.BooleanField("Réponse de l'équipe Horus-Lab", default=False)
+    is_hidden = models.BooleanField("Masqué (modération)", default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ["id"]
-        verbose_name = "Message"
-        verbose_name_plural = "Messages"
+        verbose_name = "Forum — message"
+        verbose_name_plural = "Forum — messages"
 
     def __str__(self):
-        return f"{self.get_sender_display()}: {self.text[:40]}"
+        who = "Équipe Horus-Lab" if self.is_staff else (self.author_name or "Visiteur")
+        return f"{who}: {self.text[:40]}"
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        # Toute nouvelle ligne fait remonter la conversation (tri inbox).
-        self.conversation.touch()
+        # Remonte le fil dans la liste (tri par activité récente).
+        ForumThread.objects.filter(pk=self.thread_id).update(updated_at=timezone.now())

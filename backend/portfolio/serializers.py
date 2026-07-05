@@ -24,6 +24,8 @@ class ProjectSerializer(serializers.ModelSerializer):
             "result_fr",
             "result_en",
             "cover",
+            "logo",
+            "screenshots",
             "icon",
             "gradient",
             "url",

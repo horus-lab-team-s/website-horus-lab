@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { BlogPostHeader } from "@/components/blog/BlogPostHeader";
-import { LiveChat } from "@/components/blog/LiveChat";
+import { BlogForum } from "@/components/blog/BlogForum";
 import { Newsletter } from "@/components/sections/Newsletter";
 import { getCmsPostParams, getCmsPost } from "@/lib/cms";
 import { isLocale } from "@/i18n/dictionaries";
@@ -86,9 +86,9 @@ export default async function BlogPostPage({
             dangerouslySetInnerHTML={{ __html: post.html }}
           />
         </article>
+        <BlogForum slug={slug} title={post.title} />
         <Newsletter />
       </main>
-      <LiveChat />
       <Footer />
     </>
   );

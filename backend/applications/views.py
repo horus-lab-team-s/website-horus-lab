@@ -1,5 +1,6 @@
 from rest_framework import generics
 from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.throttling import ScopedRateThrottle
 
 from .models import Application
 from .notifications import notify_new_application
@@ -13,6 +14,8 @@ class ApplicationCreateView(generics.CreateAPIView):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
     parser_classes = [MultiPartParser, FormParser]
+    throttle_classes = [ScopedRateThrottle]
+    throttle_scope = "application"
 
     def perform_create(self, serializer):
         application = serializer.save()

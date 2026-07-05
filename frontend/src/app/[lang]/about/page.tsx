@@ -17,6 +17,7 @@ import {
   IconSpark,
 } from "@/components/icons";
 import { isLocale, locales, type Lang } from "@/i18n/dictionaries";
+import { getCmsTeam } from "@/lib/cms";
 
 type Params = { lang: string };
 
@@ -162,6 +163,51 @@ const CONTENT: Record<Lang, {
 const VALUE_ICONS = [IconCog, IconEye, IconSpark, IconCheck];
 const VALUE_COLORS = ["from-brand-700 to-brand-500","from-sky to-brand-400","from-brand-600 to-sky","from-brand-500 to-brand-300"];
 
+/* Dégradés de repli pour les cartes d'équipe venues du CMS (par position). */
+const TEAM_GRADIENTS = ["from-brand-700 via-brand-500 to-sky", "from-slate-800 via-brand-700 to-amber-500"];
+
+/** Initiales = 1re lettre du prénom + 1re lettre du dernier mot du nom. */
+function initialsOf(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  const first = parts[0]?.[0] ?? "";
+  const last = parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? "") : "";
+  return (first + last).toUpperCase();
+}
+
+type TeamCard = {
+  name: string; role: string; bio: string; initials: string;
+  photo: string | null; linkedin: string; github: string; email: string;
+  isLead: boolean; gradient: string; badge: string;
+};
+
+/**
+ * Équipe affichée : pilotée par l'admin (`/admin/` → Équipe) si des membres y
+ * existent, sinon repli sur l'équipe statique. La photo (/public) et le dégradé
+ * sont ré-associés par nom ; initiales et badge sont dérivés.
+ */
+async function resolveTeam(lang: Lang): Promise<TeamCard[]> {
+  const staticTeam = TEAM_MEMBERS[lang];
+  const cms = await getCmsTeam(lang);
+  if (!cms.length) return staticTeam;
+  const byName = new Map(staticTeam.map((m) => [m.name, m]));
+  return cms.map((m, i) => {
+    const local = byName.get(m.name);
+    return {
+      name: m.name,
+      role: m.role,
+      bio: m.bio,
+      initials: initialsOf(m.name),
+      photo: m.photo ?? local?.photo ?? null,
+      linkedin: m.linkedin,
+      github: m.github,
+      email: m.email,
+      isLead: m.isLead,
+      gradient: local?.gradient ?? TEAM_GRADIENTS[i % TEAM_GRADIENTS.length],
+      badge: m.isLead ? (lang === "fr" ? "Co-fondateur" : "Co-founder") : m.role,
+    };
+  });
+}
+
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
@@ -177,7 +223,7 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const c = CONTENT[lang];
-  const team = TEAM_MEMBERS[lang];
+  const team = await resolveTeam(lang);
 
   return (
     <>

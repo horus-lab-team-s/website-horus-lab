@@ -7,6 +7,7 @@ from pathlib import Path
 import os
 
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +28,13 @@ def env_list(name: str, default: str = "") -> list[str]:
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-secret-change-me")
 DEBUG = env_bool("DJANGO_DEBUG", "1")
 ALLOWED_HOSTS = env_list("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1")
+
+# Garde-fou : interdit de démarrer en production (DEBUG=0) avec la clé de dev.
+if not DEBUG and SECRET_KEY == "dev-secret-change-me":
+    raise ImproperlyConfigured(
+        "DJANGO_SECRET_KEY doit être défini (valeur unique et secrète) "
+        "lorsque DJANGO_DEBUG=0. Renseignez-le dans l'environnement/.env."
+    )
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -82,9 +90,13 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Base de données : PostgreSQL via DATABASE_URL en prod, SQLite en repli local.
 # Ex. DATABASE_URL=postgresql://user:pass@host/dbname?sslmode=require
+# NB : une DATABASE_URL présente mais VIDE (cas du .env local) doit se comporter
+# comme absente → repli SQLite. dj_database_url.config() ne le fait pas (chaîne
+# vide = moteur "dummy"), d'où le `or` explicite avant parse().
+DATABASE_URL = os.environ.get("DATABASE_URL") or "sqlite:///" + str(BASE_DIR / "db.sqlite3")
 DATABASES = {
-    "default": dj_database_url.config(
-        default="sqlite:///" + str(BASE_DIR / "db.sqlite3"),
+    "default": dj_database_url.parse(
+        DATABASE_URL,
         conn_max_age=600,
         conn_health_checks=True,
     )
@@ -115,6 +127,17 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 20,
+    # Anti-abus : limites appliquées UNIQUEMENT aux formulaires publics (POST),
+    # via ScopedRateThrottle par vue. Les lectures GET ne sont pas limitées.
+    # NB : en prod multi-workers, utilisez un cache partagé (Redis/Memcached)
+    # pour un comptage global — sinon chaque worker compte séparément. Et si le
+    # frontend proxifie ces appels, pensez à propager l'IP réelle (X-Forwarded-For).
+    "DEFAULT_THROTTLE_RATES": {
+        "newsletter": "10/hour",
+        "contact": "6/hour",
+        "application": "10/hour",
+        "forum_post": "20/hour",
+    },
 }
 
 # --- CORS : autorise le frontend Next.js à appeler l'API ---
