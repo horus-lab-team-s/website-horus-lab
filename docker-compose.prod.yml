@@ -1,0 +1,82 @@
+# Stack de PRODUCTION Horus-Lab — à lancer sur le VPS Contabo.
+#
+# ⚠️ Le VPS héberge DÉJÀ d'autres projets derrière un reverse proxy Nginx EN
+# CONTENEUR (ports 80/443). Ce stack ne lance donc NI Nginx NI certbot : `web` et
+# `frontend` rejoignent le RÉSEAU Docker de ton proxy (variable PROXY_NETWORK) et
+# y sont joignables par NOM (horus_web:8000 / horus_frontend:3000). C'est ton
+# proxy existant qui termine le TLS et route horus-lab.com / api.horus-lab.com
+# vers eux (voir deploy/nginx-horus.conf + RESTE-A-FAIRE.md).
+#
+# Le réseau `proxy` est déclaré `external` : ainsi, même quand un conteneur est
+# recréé lors d'un redéploiement, il REJOINT automatiquement le proxy (pas de
+# `docker network connect` manuel à refaire).
+#
+# Les images `web` et `frontend` sont pré-construites par GitHub Actions et
+# tirées depuis GHCR. Toutes les valeurs sensibles viennent de .env (chmod 600) :
+# copier stack.env.example -> .env et le remplir.
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-horuslab}
+      POSTGRES_USER: ${POSTGRES_USER:-horuslab}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Definir POSTGRES_PASSWORD dans .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks: [internal]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-horuslab}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    container_name: horus_web        # nom stable : utile si ton proxy est en conteneur
+    image: ${BACKEND_IMAGE:-ghcr.io/horus-lab-team-s/horus-backend:latest}
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-horuslab}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-horuslab}
+    volumes:
+      - media:/app/media          # fichiers uploadés (couvertures, photos, logos)
+      - static:/app/staticfiles   # statiques admin (collectstatic)
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [internal, proxy]      # `proxy` = réseau de ton reverse proxy conteneur
+    ports:
+      # Facultatif : boucle locale, utile seulement pour déboguer depuis le VPS
+      # (curl 127.0.0.1:8082). Ton proxy, lui, passe par le réseau `proxy`.
+      # Change/retire le port si 8082 est déjà pris par un autre projet.
+      - "127.0.0.1:${BACKEND_PORT:-8082}:8000"
+
+  frontend:
+    container_name: horus_frontend
+    image: ${FRONTEND_IMAGE:-ghcr.io/horus-lab-team-s/horus-frontend:latest}
+    restart: unless-stopped
+    env_file: .env               # BREVO_*, GROQ_* lus par les routes /api/* de Next
+    environment:
+      # URL PUBLIQUE du backend : sert au SSR ET à construire les URLs des médias
+      # (next/image, chargées par le navigateur) -> doit rester le domaine public.
+      BACKEND_API_URL: ${BACKEND_API_URL:-https://api.horus-lab.com}
+      NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://horus-lab.com}
+    depends_on:
+      - web
+    networks: [internal, proxy]
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-8081}:3000"
+
+networks:
+  internal:
+  # Réseau EXISTANT de ton reverse proxy conteneur. Mets son nom dans .env :
+  #   PROXY_NETWORK=<nom>   (trouve-le avec: docker network ls)
+  proxy:
+    external: true
+    name: ${PROXY_NETWORK}
+
+volumes:
+  pgdata:
+  media:
+  static:
