@@ -2,7 +2,8 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
+from django.views.static import serve as _serve_media
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -16,6 +17,19 @@ urlpatterns = [
     path("api/applications/", include("applications.urls")),
 ]
 
-# Sert les médias uploadés en développement.
+# Fichiers médias uploadés (couvertures, photos d'équipe, logos…).
 if settings.DEBUG:
+    # En dev : helper standard Django.
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    # En prod : l'app sert /media elle-même (WhiteNoise gère déjà /static). Ça
+    # évite de monter le volume média dans le reverse proxy existant — un seul
+    # proxy_pass vers l'app suffit. Suffisant pour un site vitrine ; pour un très
+    # fort trafic, servir /media directement depuis le proxy (volume monté).
+    urlpatterns += [
+        re_path(
+            r"^media/(?P<path>.*)$",
+            _serve_media,
+            {"document_root": settings.MEDIA_ROOT},
+        ),
+    ]
