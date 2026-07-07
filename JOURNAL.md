@@ -6,6 +6,53 @@
 
 ---
 
+## 2026-07-08 — Favicon : logo Horus-Lab au lieu de l'icône Next.js ✅
+
+L'onglet navigateur affichait encore le **favicon Next.js par défaut** (`src/app/favicon.ico`,
+pris pour « le logo Vercel »). La métadonnée `icons` de `layout.tsx` pointait bien
+vers `/Logo-HORUS-LAB.jpeg`, mais la **convention App Router `app/favicon.ico`**
+est prioritaire sur `/favicon.ico` → c'est le logo Next qui sortait.
+
+**Corrigé** : `src/app/favicon.ico` **régénéré** depuis `public/Logo-HORUS-LAB.jpeg`
+(source 1254×1254) via Pillow — **masque circulaire lissé** (coins noirs du JPEG
+rendus transparents), **multi-tailles** 16/32/48/64/128/256. Métadonnée `icons`
+retirée de `layout.tsx` (la convention `app/favicon.ico` injecte le `<link>` seule,
+plus de référence au lourd JPEG). Rendu vérifié : badge circulaire horus-lab net.
+
+---
+
+## 2026-07-08 — Chaîne de déploiement CI/CD (GHCR) créée 🚀 (infra)
+
+Mise en place complète du déploiement **CI/CD via GHCR** (modèle inspiré du projet
+séparé *Tchokos*), adapté à notre infra : **VPS Contabo** (héberge déjà d'autres
+projets derrière un **reverse proxy Nginx conteneur**), DNS **LWS**, domaine
+`horus-lab.com`. Fichiers créés (PR #1 mergée sur `main`) :
+
+- **`.github/workflows/backend.yml` + `frontend.yml`** : sur push `main` (filtre par
+  chemin), build image → push `ghcr.io/horus-lab-team-s/horus-{backend,frontend}`
+  (tags `latest` + `sha-court`), puis deploy SSH **conditionné par `DEPLOY_ENABLED`**.
+- **`docker-compose.prod.yml`** : `db` + `web` + `frontend` **tirés depuis GHCR** ;
+  `web`/`frontend` rejoignent le **réseau du proxy existant** (`PROXY_NETWORK`,
+  déclaré `external` → survit aux redéploiements) → joignables par nom
+  `horus_web:8000` / `horus_frontend:3000`. Pas de Nginx/certbot chez nous (le
+  proxy occupe déjà 80/443). Ports `127.0.0.1` exposés pour debug local.
+- **`stack.env.example`** : modèle du `.env` VPS (secrets Django, Brevo backend,
+  superuser, `PROXY_NETWORK`, `ADMIN_BASE_URL`, ports).
+- **`deploy/nginx-horus.conf`** : 2 blocs `server` (site + api) à coller dans le
+  proxy conteneur existant (upstreams par nom, TLS via le certbot habituel).
+- **`backend/config/urls.py`** : sert `/media` **en prod** (WhiteNoise gère déjà
+  `/static`) → aucun volume média à monter dans le proxy, un `proxy_pass` suffit.
+- **`RESTE-A-FAIRE.md`** : guide pas-à-pas complet (DNS → GHCR public → user/clé CI
+  → secrets → `.env` → `up -d` → HTTPS → auto-deploy) + encart terminal
+  Git Bash/PowerShell. `manage.py check` OK, route `/media` active en prod vérifiée.
+
+**Décision clé** : VPS partagé → on **se branche sur le proxy existant** (jamais
+notre propre Nginx, sinon conflit 80/443 qui casserait les autres sites). Reste à
+faire côté utilisateur : suivre `RESTE-A-FAIRE.md` (DNS, images publiques, `.env`
+avec `PROXY_NETWORK`, démarrage, HTTPS). Auto-déploiement activé en dernier.
+
+---
+
 ## 2026-07-05 — Purge du backend chat privé (code + tables) ✅
 
 Suite du retrait : nettoyage complet du backend, **le forum intact**.

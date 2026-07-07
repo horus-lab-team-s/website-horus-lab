@@ -14,7 +14,8 @@ export const metadata: Metadata = {
     default: "Horus-Lab",
     template: "%s — Horus-Lab",
   },
-  icons: { icon: "/Logo-HORUS-LAB.jpeg" },
+  // Le favicon vient de la convention App Router `app/favicon.ico` (badge Horus-Lab
+  // circulaire, coins transparents) — Next injecte le <link rel="icon"> tout seul.
 };
 
 export const viewport: Viewport = {
