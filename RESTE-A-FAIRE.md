@@ -21,6 +21,27 @@ Accès (dans chaque terminal de **ton** PC — tu te connectes en root + mot de 
 SRV=root@<IP_VPS_CONTABO>        # ⬅️ toi seul connais cette valeur
 ```
 
+> 💻 **Quel terminal côté PC (Windows) ?**
+>
+> - **Git Bash (recommandé — tu l'as)** : toutes les commandes `bash` de ce guide se
+>   collent **telles quelles** (`SRV=...`, `ssh "$SRV"`, `scp`, `$(...)`). Ouvre Git
+>   Bash **à la racine du dépôt** (clic droit dans le dossier → *Git Bash Here*).
+> - **PowerShell (alternative)** : `ssh`/`scp` fonctionnent, mais **pas** la syntaxe
+>   bash. Équivalents des seules commandes exécutées côté-PC (Étape 4) :
+>   ```powershell
+>   $SRV = "root@<IP_VPS_CONTABO>"
+>   scp docker-compose.prod.yml stack.env.example "${SRV}:/opt/horus-lab/"
+>   scp -r deploy "${SRV}:/opt/horus-lab/"
+>   ssh $SRV "chown -R horus:horus /opt/horus-lab"
+>   ssh $SRV                     # se connecter au VPS
+>   ```
+> - **Sur le VPS** (après `ssh`) : tu es en **bash Linux** → colle les commandes du
+>   guide **telles quelles**, quel que soit le terminal utilisé côté PC.
+>
+> ℹ️ `gh` (GitHub CLI) **n'est pas installé** : fais les Étapes 3 & 8 dans l'interface
+> web GitHub (*dépôt → Settings → Secrets and variables → Actions*), ou installe-le
+> (`winget install --id GitHub.cli` puis `gh auth login`).
+
 ---
 
 ## Contexte VPS (important pour le design)
