@@ -15,6 +15,11 @@ const backendHost = (() => {
 const nextConfig: NextConfig = {
   // Sortie autonome : Next génère un serveur Node minimal, idéal pour Docker.
   output: "standalone",
+  // Épingle la racine du projet au dossier frontend : évite que Next infère une
+  // racine plus haute à cause d'un package-lock.json présent dans le home (~).
+  turbopack: {
+    root: __dirname,
+  },
   images: {
     // Autorise next/image à servir nos illustrations SVG locales (de confiance),
     // en les isolant via une CSP sandbox.
