@@ -569,7 +569,7 @@ Le **CMS existe déjà** : c'est **l'admin Django** (`/admin/`). Il n'y a PAS de
 - **Candidatures** : `FileField` (ZIP dossier), statut `new/reviewing/accepted/rejected`, lien « Télécharger le ZIP » dans l'admin. Notifications idem chat.
 - **Seed** : `python manage.py seed` — seeder idempotent riche (site settings, hero, 4 services, process, 8 secteurs, 3 témoignages, 2 fondateurs réels [Loïc Tonba CEO, Edwin Tchamba CTO], 6 posts blog, 4 réalisations). En Docker : ne tourne QUE si `RUN_SEED=1`.
 
-**Note** : il existe **deux** docker-compose — celui de la **racine** (db + backend + frontend, dev simple) et `backend/docker-compose.yml` (stack prod complète : postgres + gunicorn + nginx + certbot HTTPS).
+**Note** : deux docker-compose à la **racine** — `docker-compose.yml` (db + backend + frontend, dev simple, build local) et `docker-compose.prod.yml` (prod VPS Contabo : postgres + `web`/`frontend` tirés de GHCR, branchés sur le reverse proxy conteneur existant qui termine le TLS). Les anciens guides/stacks obsolètes ont été retirés : stack LWS backend (`backend/docker-compose.yml` + `backend/nginx/` + `backend/DEPLOYMENT.md`) et guide Vercel frontend (`frontend/DEPLOYMENT.md`) — remplacés par GHCR + `docker-compose.prod.yml` (voir `RESTE-A-FAIRE.md`).
 
 ### Frontend (Next.js 16) — état
 

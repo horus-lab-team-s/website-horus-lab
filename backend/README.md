@@ -71,23 +71,17 @@ Le code lit `DATABASE_URL`. Sans elle → SQLite (dev). Avec elle → PostgreSQL
    → la base en ligne contient maintenant toutes les tables. Le CRUD se fait
    dans l'admin Django.
 
-## Déploiement (serveur LWS · Docker + Nginx)
+## Déploiement (VPS Contabo · GHCR + reverse proxy existant)
 
-👉 **Guide complet pas-à-pas : [`DEPLOYMENT.md`](DEPLOYMENT.md)** — DNS,
-`docker compose up`, certificat HTTPS Let's Encrypt, branchement du frontend,
-sauvegardes. Cible : `https://backend.website.horus-lab.com`.
+👉 **Guide complet pas-à-pas : [`../RESTE-A-FAIRE.md`](../RESTE-A-FAIRE.md)** —
+l'image est construite par GitHub Actions et poussée sur GHCR
+(`ghcr.io/horus-lab-team-s/horus-backend`), puis le stack de prod la tire.
 
-En résumé (le détail est dans le guide) :
-
-```bash
-cp .env.example .env        # renseigner secrets, domaines, mot de passe DB
-docker compose up -d --build
-```
-
-Le `docker-compose.yml` lance PostgreSQL + Gunicorn/Django + Nginx (reverse
-proxy, HTTPS, service de `/static` et `/media`). Migrations, seed (optionnel via
-`RUN_SEED`), compte admin et `collectstatic` sont automatiques au démarrage
-(voir `entrypoint.sh`).
+Le stack de prod vit à la **racine** du dépôt : [`../docker-compose.prod.yml`](../docker-compose.prod.yml).
+Il lance PostgreSQL + Gunicorn/Django (service `web`) et rejoint le réseau du
+reverse proxy conteneur déjà en place sur le VPS (qui termine le TLS et route
+`api.horus-lab.com`). Migrations, seed (optionnel via `RUN_SEED`), compte admin
+et `collectstatic` sont automatiques au démarrage (voir `entrypoint.sh`).
 
 ### Alternative sans Docker (gunicorn nu)
 
