@@ -4,8 +4,16 @@
 # CONTENEUR (ports 80/443). Ce stack ne lance donc NI Nginx NI certbot : `web` et
 # `frontend` rejoignent le RÉSEAU Docker de ton proxy (variable PROXY_NETWORK) et
 # y sont joignables par NOM (horus_web:8000 / horus_frontend:3000). C'est ton
-# proxy existant qui termine le TLS et route horus-lab.com / api.horus-lab.com
-# vers eux (voir deploy/nginx-horus.conf + RESTE-A-FAIRE.md).
+# proxy existant (conteneur `backend-nginx-1`) qui termine le TLS et route
+# horus-lab.com / api.horus-lab.com vers eux (voir deploy/nginx-horus.conf).
+#
+# ⚠️ BASE PARTAGÉE : ce stack ne lance PAS son propre PostgreSQL. Il RÉUTILISE le
+# conteneur postgres déjà en marche `backend-db-1` (variable POSTGRES_HOST),
+# joignable PAR NOM sur le réseau du proxy. On y crée une base + un rôle DÉDIÉS
+# `horuslab` (voir RESTE-A-FAIRE.md). Couplage assumé : ne fais JAMAIS
+# `docker compose down -v` sur le projet propriétaire de `backend-db-1` (ça
+# effacerait aussi notre base). Nos données uploadées, elles, vivent dans les
+# volumes `media`/`static` ci-dessous, indépendants de leur projet.
 #
 # Le réseau `proxy` est déclaré `external` : ainsi, même quand un conteneur est
 # recréé lors d'un redéploiement, il REJOINT automatiquement le proxy (pas de
@@ -16,36 +24,20 @@
 # copier stack.env.example -> .env et le remplir.
 
 services:
-  db:
-    image: postgres:16-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-horuslab}
-      POSTGRES_USER: ${POSTGRES_USER:-horuslab}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Definir POSTGRES_PASSWORD dans .env}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    networks: [internal]
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-horuslab}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
   web:
-    container_name: horus_web        # nom stable : utile si ton proxy est en conteneur
+    container_name: horus_web        # nom stable : le proxy route dessus par ce nom
     image: ${BACKEND_IMAGE:-ghcr.io/horus-lab-team-s/horus-backend:latest}
     restart: unless-stopped
     env_file: .env
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-horuslab}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-horuslab}
+      # Base RÉUTILISÉE : conteneur postgres existant (POSTGRES_HOST=backend-db-1),
+      # joignable par nom sur le réseau `proxy`. Rôle + base DÉDIÉS `horuslab`
+      # (POSTGRES_PASSWORD = mot de passe de CE rôle, pas celui de leur base).
+      DATABASE_URL: postgresql://${POSTGRES_USER:-horuslab}:${POSTGRES_PASSWORD}@${POSTGRES_HOST:-backend-db-1}:5432/${POSTGRES_DB:-horuslab}
     volumes:
       - media:/app/media          # fichiers uploadés (couvertures, photos, logos)
       - static:/app/staticfiles   # statiques admin (collectstatic)
-    depends_on:
-      db:
-        condition: service_healthy
-    networks: [internal, proxy]      # `proxy` = réseau de ton reverse proxy conteneur
+    networks: [proxy]                # réseau où vivent le proxy ET backend-db-1
     ports:
       # Facultatif : boucle locale, utile seulement pour déboguer depuis le VPS
       # (curl 127.0.0.1:8082). Ton proxy, lui, passe par le réseau `proxy`.
@@ -64,19 +56,20 @@ services:
       NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://horus-lab.com}
     depends_on:
       - web
-    networks: [internal, proxy]
+    networks: [proxy]
     ports:
       - "127.0.0.1:${FRONTEND_PORT:-8081}:3000"
 
 networks:
-  internal:
-  # Réseau EXISTANT de ton reverse proxy conteneur. Mets son nom dans .env :
-  #   PROXY_NETWORK=<nom>   (trouve-le avec: docker network ls)
+  # Réseau EXISTANT de ton reverse proxy conteneur, où tourne AUSSI `backend-db-1`.
+  # Mets son nom dans .env :  PROXY_NETWORK=<nom>  (souvent `backend_default`,
+  # à confirmer avec: docker network ls / docker inspect backend-db-1).
+  # ⚠️ Si `backend-db-1` et le proxy sont sur des réseaux DIFFÉRENTS, ajoute le
+  #    réseau de la base ici et dans `networks:` de `web`.
   proxy:
     external: true
     name: ${PROXY_NETWORK}
 
 volumes:
-  pgdata:
   media:
   static:

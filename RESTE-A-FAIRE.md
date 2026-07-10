@@ -26,41 +26,47 @@ SRV=root@<IP_VPS_CONTABO>        # ⬅️ toi seul connais cette valeur
 ## Contexte VPS (important pour le design)
 
 Ton VPS héberge **déjà plusieurs projets** derrière un **reverse proxy Nginx EN
-CONTENEUR** (ports 80/443). **On ne lance donc PAS notre propre Nginx** (conflit de
-ports → casse tes autres sites). À la place :
+CONTENEUR** (`backend-nginx-1`, ports 80/443). **On ne lance donc PAS notre propre
+Nginx** (conflit de ports → casse tes autres sites). De plus, **on ne lance PAS non
+plus notre propre PostgreSQL** : on **réutilise le conteneur `backend-db-1` déjà en
+marche** (une base + un rôle dédiés `horuslab`). À la place :
 
 - Nos conteneurs `horus_web` / `horus_frontend` **rejoignent le réseau Docker de
   ton proxy** (variable `PROXY_NETWORK`) → joignables **par nom**.
-- **Ton proxy existant** termine le TLS et route `horus-lab.com` + `api.horus-lab.com`
-  vers eux (2 blocs `server` à ajouter — fournis dans `deploy/nginx-horus.conf`).
+- **Ton proxy existant** (`backend-nginx-1`) termine le TLS et route `horus-lab.com`
+  + `api.horus-lab.com` vers eux (2 blocs `server` — dans `deploy/nginx-horus.conf`).
+- **`horus_web` se connecte à `backend-db-1`** par nom sur ce même réseau
+  (`DATABASE_URL` → `POSTGRES_HOST=backend-db-1`).
 
 ```
         Internet (HTTPS)
               │
-   ┌──────────▼───────────┐   TON reverse proxy conteneur (déjà là, 80/443)
+   ┌──────────▼───────────┐   backend-nginx-1 (déjà là, 80/443)
    │  horus-lab.com / www  │   + TES autres projets · termine le TLS
-   │  api.horus-lab.com    │   (ton certbot habituel)
+   │  api.horus-lab.com    │   (certbot: backend-certbot-1)
    └─────┬───────────┬─────┘
          │  réseau Docker `PROXY_NETWORK` (par NOM de conteneur)
-   ┌─────▼─────┐  ┌──▼───────────────┐
-   │horus_front│  │   horus_web       │  ← images GHCR (build par GitHub Actions)
-   │end :3000  │  │  (Django) :8000   │
-   └───────────┘  └──────┬───────────┘
-                         │  réseau `internal`
-                  ┌──────▼──────┐
-                  │ db Postgres │  volume persistant
-                  └─────────────┘
+   ┌─────▼─────┐  ┌──▼───────────────┐      ┌──────────────┐
+   │horus_front│  │   horus_web       │────▶│ backend-db-1 │  postgres EXISTANT
+   │end :3000  │  │  (Django) :8000   │ nom │ base horuslab │  (réutilisé)
+   └───────────┘  └───────────────────┘     └──────────────┘
 ```
 
 **Décisions retenues :**
 - API sur **`api.horus-lab.com`** (le site sur `horus-lab.com` + `www`).
 - Images : `ghcr.io/horus-lab-team-s/horus-frontend` et `…/horus-backend`.
+- **Base réutilisée** : conteneur `backend-db-1` (aucun postgres lancé par notre
+  stack). ⚠️ Couplage assumé : ne fais JAMAIS `docker compose down -v` sur le
+  projet propriétaire de `backend-db-1` (ça effacerait aussi notre base). Nos
+  fichiers uploadés vivent, eux, dans nos volumes `media`/`static` (indépendants).
 - `/static` servi par WhiteNoise, `/media` servi par l'app Django (aucun volume à
   monter dans ton proxy → un simple `proxy_pass` suffit).
 
-> Avant l'Étape 4, récupère le **nom du réseau** de ton proxy : `docker network ls`
-> (souvent `<projet>_default` ou un réseau dédié type `proxy`/`web`). Tu le mettras
-> dans `PROXY_NETWORK` du `.env`.
+> Avant l'Étape 4, récupère le **nom du réseau** partagé par le proxy ET
+> `backend-db-1` : `docker inspect backend-db-1 backend-nginx-1 --format '{{range
+> $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}'` (souvent `backend_default`).
+> Tu le mettras dans `PROXY_NETWORK` du `.env`. Si les deux sont sur des réseaux
+> DIFFÉRENTS, ajoute le réseau de la base à `web` dans `docker-compose.prod.yml`.
 
 ---
 
@@ -73,7 +79,7 @@ Ces fichiers **ont été créés** dans le dépôt (branche courante). Il te res
 |---|---|---|---|
 | A1 | `.github/workflows/backend.yml` | Push `backend/**` → build → `ghcr.io/horus-lab-team-s/horus-backend` → (si activé) SSH deploy | ✅ créé |
 | A2 | `.github/workflows/frontend.yml` | Idem `frontend/**` → `horus-frontend` (build-arg `BACKEND_API_URL`) | ✅ créé |
-| A3 | `docker-compose.prod.yml` | Stack prod : db + web + frontend, exposés sur `127.0.0.1` (pas de Nginx/certbot) | ✅ créé |
+| A3 | `docker-compose.prod.yml` | Stack prod : web + frontend (exposés sur `127.0.0.1`), **base réutilisée `backend-db-1`** (pas de db/Nginx/certbot lancés) | ✅ créé |
 | A4 | `stack.env.example` | Modèle du `.env` du VPS (secrets, Brevo, superuser…) | ✅ créé |
 | A5 | `deploy/nginx-horus.conf` | Les 2 blocs `server` à coller dans **ton proxy existant** | ✅ créé |
 | A6 | `backend/config/urls.py` | Sert `/media` en prod (évite de monter le volume média dans ton proxy) | ✅ modifié |
@@ -192,6 +198,7 @@ nano .env
 ```
 À remplir dans `.env` (garde secret + mot de passe base **au chaud**) :
 - `DJANGO_SECRET_KEY`, `POSTGRES_PASSWORD` (les valeurs générées ci-dessus)
+- `POSTGRES_HOST=backend-db-1` (conteneur postgres réutilisé — déjà pré-rempli)
 - `DJANGO_ALLOWED_HOSTS=api.horus-lab.com`
 - `CORS_ALLOWED_ORIGINS=https://horus-lab.com,https://www.horus-lab.com`
 - `CSRF_TRUSTED_ORIGINS=https://api.horus-lab.com`
@@ -199,13 +206,21 @@ nano .env
 - `BREVO_API_KEY` (clé dédiée, compte horus8391), `BREVO_CONTACT_TO`/`BREVO_SENDER_EMAIL=contact@horus-lab.com`
 - `ADMIN_BASE_URL=https://api.horus-lab.com`, `GROQ_API_KEY`
 - `RUN_SEED=1`  ⬅️ **1er déploiement seulement** (on repasse à 0 à l'Étape 7)
-- `PROXY_NETWORK=<nom>`  ⬅️ **le réseau Docker de ton proxy** (`docker network ls`) — indispensable, sinon `up -d` échoue
+- `PROXY_NETWORK=<nom>`  ⬅️ **le réseau partagé par le proxy ET `backend-db-1`** (voir « Contexte VPS ») — indispensable, sinon `up -d` échoue
 - `BACKEND_PORT=8082`, `FRONTEND_PORT=8081` (ports 127.0.0.1 de débogage ; change-les si déjà pris)
 
+**Créer la base + le rôle dédiés dans `backend-db-1`** (une seule fois ; remplace
+`<POSTGRES_PASSWORD>` par la valeur mise dans `.env`) :
+```bash
+docker exec -i backend-db-1 sh -c 'psql -U "$POSTGRES_USER"' <<'SQL'
+CREATE ROLE horuslab LOGIN PASSWORD '<POSTGRES_PASSWORD>';
+CREATE DATABASE horuslab OWNER horuslab;
+SQL
+```
 > ⚠️ **Brevo — IP autorisées** : le compte horus8391 filtre par IP → **autorise
 > l'IP du VPS** dans Brevo (Sécurité → IP autorisées), sinon les e-mails → 401.
 
-**📝** `.env` rempli (chmod 600) ☐ · `PROXY_NETWORK` renseigné ☐ · secrets notés ☐ · IP VPS autorisée dans Brevo ☐
+**📝** `.env` rempli (chmod 600) ☐ · `PROXY_NETWORK` renseigné ☐ · base+rôle `horuslab` créés dans `backend-db-1` ☐ · secrets notés ☐ · IP VPS autorisée dans Brevo ☐
 
 ---
 
@@ -314,13 +329,15 @@ Désormais chaque `git push` sur `main` :
   HTTP→HTTPS est déjà faite par ton proxy ; ceci durcit côté Django).
 - **Rollback** : dans `.env`, épingle `BACKEND_IMAGE=…:sha-XXXX` (ou `FRONTEND_IMAGE`)
   puis `up -d`.
-- **Sauvegardes** :
+- **Sauvegardes** (la base vit dans `backend-db-1`, PAS dans notre stack) :
   ```bash
-  docker compose -f docker-compose.prod.yml exec db pg_dump -U horuslab horuslab > backup_$(date +%F).sql
+  docker exec backend-db-1 pg_dump -U horuslab horuslab > backup_$(date +%F).sql
   docker run --rm -v horus-lab_media:/m -v "$PWD":/out alpine tar czf /out/media_$(date +%F).tgz -C /m .
   ```
   (Le nom du volume est préfixé par le dossier : `horus-lab_media` — vérifie avec `docker volume ls`.)
-- ⚠️ `docker compose down -v` supprime **les volumes** (base + médias) : JAMAIS en prod.
+- ⚠️ `docker compose down -v` supprime **nos volumes** (`media`/`static`) : JAMAIS en
+  prod. Notre **base** est dans `backend-db-1` (projet d'un coéquipier) → un
+  `down -v` sur SON projet détruirait la base `horuslab` : à ne jamais faire non plus.
 
 ## Dépannage
 | Symptôme | Piste |
