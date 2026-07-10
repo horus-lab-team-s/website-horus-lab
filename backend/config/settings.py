@@ -119,6 +119,15 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# Stockage des fichiers : médias uploadés sur le disque (volume `media`), et
+# statiques admin servis par WhiteNoise. Par défaut (dev) : stockage standard,
+# pour ne pas exiger de manifest sous `runserver`. En prod, on bascule sur le
+# stockage WhiteNoise compressé + hashé (voir le bloc `if not DEBUG` plus bas).
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # --- Django REST Framework ---
@@ -154,3 +163,7 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_SSL_REDIRECT = env_bool("SECURE_SSL_REDIRECT", "0")
+    # WhiteNoise : statiques admin compressés (gzip/brotli) + noms hashés
+    # (cache-busting). Sûr en prod car l'entrypoint lance `collectstatic` avant
+    # Gunicorn → le manifest staticfiles.json existe toujours.
+    STORAGES["staticfiles"]["BACKEND"] = "whitenoise.storage.CompressedManifestStaticFilesStorage"
