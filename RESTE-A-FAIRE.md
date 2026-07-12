@@ -31,6 +31,17 @@ Nginx** (conflit de ports → casse tes autres sites). De plus, **on ne lance PA
 plus notre propre PostgreSQL** : on **réutilise le conteneur `backend-db-1` déjà en
 marche** (une base + un rôle dédiés `horuslab`). À la place :
 
+> 🧭 **Repère concret (relevé sur le VPS, `docker ps`).** Le proxy `backend-nginx-1`
+> et la base `backend-db-1` font partie du **même projet Docker Compose `backend` =
+> le projet AFRIKAMODE** (mêmes préfixes : `backend-nginx-1`, `backend-db-1`,
+> `backend-web-1`, `backend-celery_*`, `backend-redis-1`, `backend-certbot-1`).
+> **Conséquence directe** : proxy ET base sont sur **le même réseau `backend_default`**.
+> On fait donc rejoindre à nos conteneurs **ce seul réseau** (`PROXY_NETWORK=backend_default`)
+> → il couvre **à la fois** le routage par le proxy **et** l'accès à la base par nom.
+> ⚠️ On ne touche JAMAIS au projet afrikamode (pas de `down`, pas de `-v`) : on ne
+> fait que **rejoindre son réseau** et **lire sa base** via notre rôle dédié `horuslab`.
+
+
 - Nos conteneurs `horus_web` / `horus_frontend` **rejoignent le réseau Docker de
   ton proxy** (variable `PROXY_NETWORK`) → joignables **par nom**.
 - **Ton proxy existant** (`backend-nginx-1`) termine le TLS et route `horus-lab.com`
@@ -62,10 +73,15 @@ marche** (une base + un rôle dédiés `horuslab`). À la place :
 - `/static` servi par WhiteNoise, `/media` servi par l'app Django (aucun volume à
   monter dans ton proxy → un simple `proxy_pass` suffit).
 
-> Avant l'Étape 4, récupère le **nom du réseau** partagé par le proxy ET
-> `backend-db-1` : `docker inspect backend-db-1 backend-nginx-1 --format '{{range
-> $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}'` (souvent `backend_default`).
-> Tu le mettras dans `PROXY_NETWORK` du `.env`. Si les deux sont sur des réseaux
+> Avant l'Étape 4, **confirme** le nom du réseau partagé par le proxy ET
+> `backend-db-1` (attendu : **`backend_default`**, puisqu'ils sont dans le même
+> projet afrikamode) :
+> ```bash
+> docker inspect backend-db-1 backend-nginx-1 \
+>   --format '{{.Name}} : {{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}'
+> ```
+> Les deux lignes doivent afficher **le même** réseau → c'est la valeur de
+> `PROXY_NETWORK`. Dans le cas (improbable ici) où ils seraient sur des réseaux
 > DIFFÉRENTS, ajoute le réseau de la base à `web` dans `docker-compose.prod.yml`.
 
 ---
@@ -122,16 +138,30 @@ dig +short api.horus-lab.com
 
 ---
 
-## ÉTAPE 1 — Rendre les 2 images GHCR PUBLIQUES *(web)* 🔴
-Sinon le VPS ne peut pas les télécharger. Sur GitHub, org `horus-lab-team-s` →
-onglet **Packages** (visibles une fois la CI passée au vert) :
-- `horus-backend` → **Package settings → Change visibility → Public**
-- `horus-frontend` → **Public**
+## ÉTAPE 1 — Authentifier le VPS à GHCR (images PRIVÉES) *(VPS, user horus)* 🔴
+**Décision retenue : on garde les 2 images PRIVÉES.** Le VPS doit donc s'identifier
+auprès de GHCR pour les `pull`. *(L'étape 1.2 se fait en tant que `horus` → si tu
+n'as pas encore créé cet utilisateur, fais d'abord l'Étape 2, puis reviens ici.)*
 
-> Alternative (images privées) : un PAT `read:packages` + `docker login ghcr.io`
-> sur le VPS. Public = plus simple pour un site vitrine.
+1. Sur GitHub → **Settings → Developer settings → Personal access tokens (classic)**
+   → *Generate* avec le **seul** scope **`read:packages`** (le VPS ne fait que puller).
+   L'image appartenant à l'**org** `horus-lab-team-s`, vérifie que l'org autorise ce
+   PAT (Org → Settings → Personal access tokens) et que le package est bien lié au repo.
+2. Sur le VPS, **en tant que `horus`** (l'utilisateur que le CI utilise pour déployer —
+   ⚠️ *pas* root, sinon le `pull` du CI ne trouvera pas les creds) :
+   ```bash
+   su - horus
+   echo 'ghp_TON_TOKEN' | docker login ghcr.io -u TON_USER_GITHUB --password-stdin
+   ```
+   Les identifiants persistent dans `/home/horus/.docker/config.json` (chmod 600) →
+   valable pour les `pull` manuels **et** l'auto-déploiement (Étape 8). Un seul login
+   couvre `horus-backend` **et** `horus-frontend` (même registre `ghcr.io`).
 
-**📝** Public ? ☐ backend ☐ frontend
+> Si un jour le PAT expire → `pull` en `denied`/`unauthorized` : refais ce login.
+> Alternative (rendre les 2 packages **Public** → plus aucun login) reste possible,
+> mais on a choisi le privé.
+
+**📝** PAT `read:packages` créé ☐ · `docker login ghcr.io` réussi (user horus) ☐
 
 ---
 
@@ -206,7 +236,7 @@ nano .env
 - `BREVO_API_KEY` (clé dédiée, compte horus8391), `BREVO_CONTACT_TO`/`BREVO_SENDER_EMAIL=contact@horus-lab.com`
 - `ADMIN_BASE_URL=https://api.horus-lab.com`, `GROQ_API_KEY`
 - `RUN_SEED=1`  ⬅️ **1er déploiement seulement** (on repasse à 0 à l'Étape 7)
-- `PROXY_NETWORK=<nom>`  ⬅️ **le réseau partagé par le proxy ET `backend-db-1`** (voir « Contexte VPS ») — indispensable, sinon `up -d` échoue
+- `PROXY_NETWORK=backend_default`  ⬅️ **le réseau partagé par le proxy ET `backend-db-1`** (projet afrikamode ; confirme avec la commande du « Contexte VPS ») — indispensable, sinon `up -d` échoue
 - `BACKEND_PORT=8082`, `FRONTEND_PORT=8081` (ports 127.0.0.1 de débogage ; change-les si déjà pris)
 
 **Créer la base + le rôle dédiés dans `backend-db-1`** (une seule fois ; remplace
@@ -244,33 +274,47 @@ curl -s -o /dev/null -w "%{http_code}\n" http://127.0.0.1:8081/
 
 ---
 
-## ÉTAPE 6 — Brancher ton proxy conteneur + HTTPS *(VPS, root)* 🔴
-DNS de l'Étape 0 propagé **avant** d'émettre le certificat.
+## ÉTAPE 6 — Brancher le proxy afrikamode (`backend-nginx-1`) + HTTPS *(VPS, root)* 🔴
+DNS de l'Étape 0 propagé **avant** d'émettre le certificat. Ici on modifie la config
+du **proxy d'afrikamode** (`backend-nginx-1`) — donc **on sauvegarde d'abord** et on
+ne recharge qu'après un `nginx -t` OK, pour **ne pas casser afrikamode** ni tes autres
+sites.
 
 **a) Vérifier que nos conteneurs sont bien sur le réseau du proxy** (fait
 automatiquement par le compose via `PROXY_NETWORK`, y compris après redéploiement) :
 ```bash
-docker network inspect <PROXY_NETWORK> | grep -E "horus_web|horus_frontend"
-#   doit lister les 2 conteneurs (+ celui de ton proxy)
+docker network inspect backend_default | grep -E "horus_web|horus_frontend"
+#   doit lister les 2 conteneurs (+ backend-nginx-1)
 ```
 
-**b) Ajouter les 2 blocs `server` à la config de ton proxy.** Ouvre
-`deploy/nginx-horus.conf` (upstreams déjà réglés sur `horus_web:8000` /
-`horus_frontend:3000`), adapte les chemins TLS + le webroot ACME, puis colle-les
-dans **ta** config Nginx (⚠️ **sauvegarde d'abord** : `cp ta-conf ta-conf.bak`).
-
-**c) Émettre le certificat des 3 noms** avec **ton mécanisme certbot habituel**
-(le même que pour tes autres domaines), ex. via ton conteneur certbot :
+**b) Localiser la config Nginx montée dans `backend-nginx-1`.** C'est un `nginx:alpine`
+brut → sa conf vient d'un **bind-mount** du projet afrikamode sur l'hôte. Trouve le
+fichier/dossier hôte à éditer :
 ```bash
-docker exec <TON_CERTBOT> certbot certonly --webroot -w <TON_WEBROOT_ACME> \
+docker inspect backend-nginx-1 \
+  --format '{{range .Mounts}}{{.Source}} -> {{.Destination}}{{"\n"}}{{end}}'
+#   repère la Source hôte mappée sur /etc/nginx/conf.d (ou /etc/nginx/…)
+```
+
+**c) Ajouter les 2 blocs `server`.** Ouvre `deploy/nginx-horus.conf` (upstreams déjà
+réglés sur `horus_web:8000` / `horus_frontend:3000`), adapte les chemins TLS + le
+webroot ACME, puis **ajoute-le côté hôte** dans le dossier repéré en (b) — de
+préférence comme **fichier séparé** `horus.conf` (ne modifie pas les blocs afrikamode).
+⚠️ **Sauvegarde d'abord** le dossier de conf : `cp -r <SOURCE_HÔTE> <SOURCE_HÔTE>.bak`.
+
+**d) Émettre le certificat des 3 noms** via le **certbot d'afrikamode**
+(`backend-certbot-1`), même mécanisme que pour ses domaines :
+```bash
+docker exec backend-certbot-1 certbot certonly --webroot -w <TON_WEBROOT_ACME> \
   -d horus-lab.com -d www.horus-lab.com -d api.horus-lab.com \
   --email contact@horus-lab.com --agree-tos --no-eff-email
+#   <TON_WEBROOT_ACME> = le webroot ACME déjà utilisé par afrikamode (visible dans sa conf nginx)
 ```
 
-**d) Tester la config puis recharger** (sans couper tes autres sites) :
+**e) Tester la config puis recharger** (sans couper afrikamode ni tes autres sites) :
 ```bash
-docker exec <TON_PROXY> nginx -t && docker exec <TON_PROXY> nginx -s reload
-#   si -t échoue : restaure ta-conf.bak et reload.
+docker exec backend-nginx-1 nginx -t && docker exec backend-nginx-1 nginx -s reload
+#   si -t échoue : restaure <SOURCE_HÔTE>.bak puis reload.
 ```
 
 Vérifier depuis l'extérieur :
@@ -350,7 +394,7 @@ Désormais chaque `git push` sur `main` :
 | Port déjà pris au `up -d` | un autre projet occupe 8081/8082 → change `BACKEND_PORT`/`FRONTEND_PORT` dans `.env` |
 | Images/médias en 404 | `/media` : vérifier que l'image backend inclut le fix `config/urls.py` (A6) |
 | E-mails en 401 | IP du VPS non autorisée dans Brevo |
-| Le VPS ne `pull` pas | images GHCR pas passées **Public** (Étape 1) |
+| Le VPS ne `pull` pas (`denied`/`unauthorized`) | pas de `docker login ghcr.io` (ou fait en root au lieu de `horus`), ou PAT expiré → refais l'Étape 1 en tant que `horus` |
 
 ## État de départ (pour mémoire)
 - ✅ Monorepo `horus-lab-team-s/website-horus-lab` · Dockerfiles front+back · gunicorn ·
