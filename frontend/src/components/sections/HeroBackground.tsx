@@ -4,21 +4,6 @@ import { useEffect, useState } from "react";
 
 export function HeroBackground({ images }: { images: string[] }) {
   const [index, setIndex] = useState(0);
-  const [loaded, setLoaded] = useState<boolean[]>(images.map(() => false));
-
-  useEffect(() => {
-    // Précharge toutes les images
-    images.forEach((src, i) => {
-      const img = new Image();
-      img.src = src;
-      img.onload = () =>
-        setLoaded((prev) => {
-          const next = [...prev];
-          next[i] = true;
-          return next;
-        });
-    });
-  }, [images]);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -31,12 +16,12 @@ export function HeroBackground({ images }: { images: string[] }) {
       {/* Base dégradée de marque (fallback permanent) */}
       <div className="absolute inset-0 bg-gradient-to-br from-brand-900 via-brand-800 to-brand-700" />
 
-      {/* Photos en fondu enchaîné — apparaissent seulement une fois chargées */}
+      {/* Photos en fondu enchaîné (image locale, affichée directement) */}
       {images.map((src, i) => (
         <div
           key={src}
           className={`absolute inset-0 bg-cover bg-center transition-opacity duration-[2000ms] ease-in-out ${
-            i === index && loaded[i] ? "opacity-100" : "opacity-0"
+            i === index ? "opacity-100" : "opacity-0"
           }`}
           style={{ backgroundImage: `url(${src})` }}
         />
