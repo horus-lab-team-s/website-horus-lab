@@ -135,6 +135,7 @@ Ces fichiers **ont été créés** dans le dépôt (branche courante). Il te res
 ```bash
 git add .github docker-compose.prod.yml stack.env.example deploy backend/config/urls.py RESTE-A-FAIRE.md
 git commit -m "infra: chaine CI/CD GHCR + stack prod (branchement proxy existant)"
+
 git push origin main
 ```
 Puis, onglet **Actions** du dépôt : les 2 workflows doivent passer au **vert**

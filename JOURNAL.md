@@ -6,6 +6,58 @@
 
 ---
 
+## 2026-07-13 — 🚀 MISE EN LIGNE PROD réussie (horus-lab.com en HTTPS) ✅
+
+Le site est **officiellement en ligne** sur le VPS Contabo, en **mode manuel/root**
+(pas d'auto-déploiement CI). Vérifié en direct : `https://horus-lab.com/fr` → **200**
+(site Next.js complet) et `https://api.horus-lab.com/api/site/` → **JSON Django**.
+
+**Architecture retenue (se branche sur le projet AFRIKAMODE, ne le touche jamais) :**
+- Images **privées** `ghcr.io/horus-lab-team-s/horus-{backend,frontend}` → `docker login
+  ghcr.io` en root avec un **PAT `read:packages`**, puis `pull` + `up -d` à la main.
+- Stack `docker-compose.prod.yml` : conteneurs **`horus_web`** (Django :8000) +
+  **`horus_frontend`** (Next :3000), exposés en `127.0.0.1:8082/8081`, rejoignant le
+  réseau **`backend_default`** (celui d'afrikamode) via `PROXY_NETWORK`.
+- **Proxy** = `backend-nginx-1` (afrikamode). Config horus **copiée dans le conteneur**
+  (`docker cp horus.conf → /etc/nginx/conf.d/`) — comme gathe/tchokos, **PAS** un
+  bind-mount → ⚠️ **non persistant** si afrikamode recrée nginx. Motif `resolver
+  127.0.0.11` + `set $up` (le `up -d` recrée les conteneurs → nginx re-résout, pas de 502).
+- **TLS** : certbot `backend-certbot-1`, webroot `/var/www/certbot`, cert
+  `/etc/letsencrypt/live/horus-lab.com/` (3 noms). Émission en **2 temps** (conf port 80
+  ACME → cert → conf 443).
+- **Base réutilisée** : `backend-db-1` (postgres afrikamode), rôle + base dédiés
+  **`horuslab`**. `DATABASE_URL` → `POSTGRES_HOST=backend-db-1`.
+- VPS IPv4 : **81.0.246.144**. Dossier : `/opt/horus-lab/` (à plat : `.env` +
+  `docker-compose.prod.yml` + `horus.conf`).
+
+**🐞 Pièges rencontrés & corrigés (à retenir pour un redéploiement) :**
+1. **`.env` `PROXY_NETWORK=backend_defaut`** (faute de frappe, manque le « l ») → le
+   réseau externe n'existait pas → `up -d` **échouait silencieusement** → **aucun**
+   conteneur horus → 502. Corrigé en `backend_default`.
+2. **`POSTGRES_USER=horus`** dans le `.env` alors que le rôle créé est **`horuslab`**
+   → `password authentication failed for user "horus"`, `horus_web` en crash-loop.
+   Corrigé : `POSTGRES_USER=horuslab` + `POSTGRES_DB=horuslab` + `ALTER ROLE horuslab
+   PASSWORD …` (réaligné sur le `.env`). Ensuite : migrations + seed + superuser + Gunicorn OK.
+3. **DNS LWS** : `api` **sans enregistrement A** (NXDOMAIN) + **AAAA parasites** sur
+   apex/`www` (`2a00:7ee0:…`) → Let's Encrypt **ET** le navigateur partaient en IPv6
+   sur LWS (404 / page parking). Corrigé chez LWS : **A `api`** ajouté, **tous les AAAA
+   supprimés** (`www` = CNAME → apex). MX/SPF/DKIM Brevo intacts.
+4. **`certbot certonly` interactif** via `docker exec` → `EOFError` inoffensif quand le
+   cert existe déjà (pas de TTY). Le cert était bien créé.
+5. **Terminal qui tronque les gros collages** (heredoc `cat >`) → on est passé par un
+   **vrai fichier** (`scp` du repo → `docker cp`).
+
+**Reste à faire (important) :** `RUN_SEED=0` **avant** de saisir du vrai contenu (sinon
+le seed écrase à chaque `up -d`) · **changer le mot de passe admin** (celui du `.env`
+est connu) · **régénérer le PAT GHCR** (collé en clair pendant la session) · rendre la
+conf nginx **durable** (montage plutôt que `docker cp`) · côté user : **vider le cache
+DNS/navigateur** local (montrait encore LWS alors que le serveur sert le site).
+
+**Fichiers** : `deploy/nginx-horus.conf` mis à jour (valeurs réelles : webroot
+`/var/www/certbot`, motif resolver). `RESTE-A-FAIRE.md` déjà annoté « mode manuel/root ».
+
+---
+
 ## 2026-07-05 — Purge du backend chat privé (code + tables) ✅
 
 Suite du retrait : nettoyage complet du backend, **le forum intact**.
