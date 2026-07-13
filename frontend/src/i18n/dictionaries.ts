@@ -131,6 +131,15 @@ const fr = {
     viewAll: "Voir toutes les réalisations",
     detailsLabel: "Détails",
   },
+  achievements: {
+    eyebrow: "Notre impact",
+    title: "Des résultats concrets",
+    subtitle: "Ce que nos produits changent, en chiffres.",
+  },
+  stack: {
+    eyebrow: "Notre stack",
+    title: "Les technologies que nous maîtrisons",
+  },
   news: {
     eyebrow: "Actualités",
     title: "Les nouvelles du studio",
@@ -395,6 +404,15 @@ const en: Dict = {
     featuredLabel: "Featured project",
     viewAll: "See all our work",
     detailsLabel: "Details",
+  },
+  achievements: {
+    eyebrow: "Our impact",
+    title: "Concrete results",
+    subtitle: "What our products change, in numbers.",
+  },
+  stack: {
+    eyebrow: "Our stack",
+    title: "The technologies we master",
   },
   news: {
     eyebrow: "News",

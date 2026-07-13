@@ -43,6 +43,9 @@ class Command(BaseCommand):
         self.seed_team()
         self.seed_blog()
         self.seed_portfolio()
+        self.seed_achievements()
+        self.seed_stack()
+        self.seed_news()
         self.stdout.write(self.style.SUCCESS("Seed terminé."))
 
     # ──────────────────────────────────────────────────────────
@@ -428,3 +431,64 @@ class Command(BaseCommand):
         Project.objects.all().delete()
         for i, p in enumerate(items):
             Project.objects.create(order=i, is_active=True, **p)
+
+    def seed_achievements(self):
+        items = [
+            ("8+",   "projets livrés",     "projects delivered"),
+            ("4",    "pays couverts",      "countries covered"),
+            ("11",   "filiales déployées", "subsidiaries deployed"),
+            ("24/7", "accompagnement",     "support"),
+        ]
+        Achievement.objects.all().delete()
+        for i, (value, fr, en) in enumerate(items):
+            Achievement.objects.create(value=value, label_fr=fr, label_en=en, order=i)
+
+    def seed_stack(self):
+        names = [
+            "React", "Next.js", "TypeScript", "Flutter", "Python", "Django",
+            "PostgreSQL", "Docker", "REST API", "Tailwind CSS", "Node.js",
+            "Cybersécurité",
+        ]
+        TechStackItem.objects.all().delete()
+        for i, name in enumerate(names):
+            TechStackItem.objects.create(name=name, order=i, is_active=True)
+
+    def seed_news(self):
+        items = [
+            dict(
+                title_fr="Gathe Finance ouvre en bêta privée",
+                title_en="Gathe Finance enters private beta",
+                body_fr="Notre plateforme de gestion financière pour PME et freelances entre en bêta : suivi multi-comptes, budgets, reporting trésorerie. Les premiers utilisateurs rejoignent la liste d'attente.",
+                body_en="Our financial management platform for SMEs and freelancers opens its private beta: multi-account tracking, budgets, cash-flow reporting. First users joining the waitlist.",
+                tag_fr="Produit", tag_en="Product",
+                published_at=date(2026, 5, 25),
+            ),
+            dict(
+                title_fr="Afrikamode est en ligne sur afrikamode.store",
+                title_en="Afrikamode is live on afrikamode.store",
+                body_fr="La boutique en ligne d'Afrikamode ouvre ses portes : créateurs invités de Lagos à Abidjan et ligne maison. Catalogue, panier et paiement bout-en-bout.",
+                body_en="Afrikamode opens its online store: guest designers from Lagos to Abidjan and the house line. Catalogue, cart and checkout end-to-end.",
+                tag_fr="Lancement", tag_en="Launch",
+                url="https://afrikamode.store",
+                published_at=date(2026, 5, 12),
+            ),
+            dict(
+                title_fr="Plateforme e-Learning : nouveau parcours Cybersécurité",
+                title_en="e-Learning platform: new Cybersecurity track",
+                body_fr="Le cycle Cybersécurité rejoint le développement web et Python. Modules progressifs, exercices guidés et certificats à la clé.",
+                body_en="The Cybersecurity track joins web development and Python. Progressive modules, guided exercises and certificates.",
+                tag_fr="Roadmap", tag_en="Roadmap",
+                published_at=date(2026, 4, 10),
+            ),
+            dict(
+                title_fr="SFX Pre-Douane étendu à 2 nouveaux pays",
+                title_en="SFX Pre-Douane extended to 2 new countries",
+                body_fr="Le déploiement multinational atteint désormais 11 filiales à travers l'Afrique. Stabilité et performances confirmées en production.",
+                body_en="The multinational rollout now reaches 11 subsidiaries across Africa. Stability and performance confirmed in production.",
+                tag_fr="Déploiement", tag_en="Rollout",
+                published_at=date(2026, 3, 8),
+            ),
+        ]
+        News.objects.all().delete()
+        for p in items:
+            News.objects.create(is_published=True, **p)
