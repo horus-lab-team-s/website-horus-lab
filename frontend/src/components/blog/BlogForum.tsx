@@ -26,7 +26,7 @@ const POLL_MS = 10000;
 const T = {
   fr: {
     heading: "Discussion",
-    intro: "Une question, un avis ? Écrivez ici, l'équipe et les autres lecteurs vous répondent, publiquement.",
+    intro: "Une question, un avis ? Écrivez ici — l'équipe et les autres lecteurs vous répondent, publiquement.",
     empty: "Aucun message pour l'instant. Lancez la discussion 👇",
     name: "Votre nom (optionnel)",
     message: "Écrivez un message public…",
@@ -34,12 +34,12 @@ const T = {
     publishing: "Publication…",
     team: "Équipe Horus-Lab",
     anon: "Visiteur",
-    retry: "Non publié, réessayer",
+    retry: "Non publié — réessayer",
     note: "Les messages sont publics, visibles par tous les lecteurs.",
   },
   en: {
     heading: "Discussion",
-    intro: "A question or a thought? Post here, the team and other readers reply, publicly.",
+    intro: "A question or a thought? Post here — the team and other readers reply, publicly.",
     empty: "No messages yet. Start the discussion 👇",
     name: "Your name (optional)",
     message: "Write a public message…",
@@ -47,7 +47,7 @@ const T = {
     publishing: "Posting…",
     team: "Horus-Lab team",
     anon: "Visitor",
-    retry: "Not posted, retry",
+    retry: "Not posted — retry",
     note: "Messages are public, visible to all readers.",
   },
 };

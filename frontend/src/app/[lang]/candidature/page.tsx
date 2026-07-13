@@ -30,7 +30,7 @@ const CONTENT: Record<Lang, {
   fr: {
     eyebrow: "Rejoignez-nous",
     title: "Construisons l'avenir numérique de l'Afrique, ensemble",
-    intro: "Vous êtes développeur, designer, analyste ou étudiant en quête d'un stage qui compte ? Déposez votre candidature en ligne (emploi ou stage professionnel) et rejoignez une équipe qui livre des produits qui ont du sens.",
+    intro: "Vous êtes développeur, designer, analyste ou étudiant en quête d'un stage qui compte ? Déposez votre candidature en ligne — emploi ou stage professionnel — et rejoignez une équipe qui livre des produits qui ont du sens.",
     scrollCta: "Postuler maintenant",
     perksTitle: "Pourquoi Horus-Lab",
     perksSubtitle: "Une équipe à taille humaine où votre travail a un impact réel.",
@@ -47,7 +47,7 @@ const CONTENT: Record<Lang, {
   en: {
     eyebrow: "Join us",
     title: "Let's build Africa's digital future, together",
-    intro: "Are you a developer, designer, analyst or a student looking for an internship that matters? Apply online (job or professional internship) and join a team that ships products that count.",
+    intro: "Are you a developer, designer, analyst or a student looking for an internship that matters? Apply online — job or professional internship — and join a team that ships products that count.",
     scrollCta: "Apply now",
     perksTitle: "Why Horus-Lab",
     perksSubtitle: "A human-scale team where your work has real impact.",

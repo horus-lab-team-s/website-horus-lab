@@ -24,7 +24,7 @@ const CONTENT: Record<Lang, {
   fr: {
     eyebrow: "Réalisations",
     title: "Des projets qui créent de la valeur",
-    subtitle: "Une sélection de produits livrés en production, du concept au déploiement.",
+    subtitle: "Une sélection de produits livrés en production — du concept au déploiement.",
     allLabel: "Tous",
     resultLabel: "portée",
     ctaTitle: "Votre projet sera le prochain ?",
@@ -33,7 +33,7 @@ const CONTENT: Record<Lang, {
   en: {
     eyebrow: "Work",
     title: "Projects that create value",
-    subtitle: "A selection of products shipped to production, concept to deployment.",
+    subtitle: "A selection of products shipped to production — concept to deployment.",
     allLabel: "All",
     resultLabel: "scope",
     ctaTitle: "Will your project be next?",

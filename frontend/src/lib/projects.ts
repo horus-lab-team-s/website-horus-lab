@@ -23,7 +23,7 @@ const GRADIENTS = [
   "from-slate-800 via-brand-700 to-amber-500",  // Gathe Finance
   "from-emerald-500 via-teal-500 to-sky",       // e-Learning
   "from-brand-700 via-brand-500 to-sky",        // Formation
-  "from-yellow-500 via-orange-400 to-red-500",  // Elec One, énergie
+  "from-yellow-500 via-orange-400 to-red-500",  // Elec One — énergie
 ];
 
 const PROJECTS: Record<Lang, Project[]> = {
@@ -32,7 +32,7 @@ const PROJECTS: Record<Lang, Project[]> = {
       title: "Afrikamode",
       client: "Italie · France · Belgique · Cameroun",
       category: "Mode & e-commerce",
-      desc: "Plateforme e-commerce internationale pour une marque de mode africaine présente en Europe et en Afrique. Catalogue multilingue, fiches produits, panier, paiement sécurisé. Des créateurs de Lagos à Abidjan, une ligne maison, une esthétique contemporaine, portée sur 4 pays.",
+      desc: "Plateforme e-commerce internationale pour une marque de mode africaine présente en Europe et en Afrique. Catalogue multilingue, fiches produits, panier, paiement sécurisé. Des créateurs de Lagos à Abidjan, une ligne maison, une esthétique contemporaine — portée sur 4 pays.",
       tags: ["Next.js", "React", "Tailwind", "TypeScript", "e-commerce"],
       result: "Live en Europe & Afrique",
       iconKey: "spark",
@@ -71,7 +71,7 @@ const PROJECTS: Record<Lang, Project[]> = {
       title: "Plateforme e-Learning",
       client: "Apprenants & professionnels IT",
       category: "Éducation & EdTech",
-      desc: "Plateforme de formation aux métiers de l'informatique : développement web, Python, cybersécurité et plus. Parcours structurés, ressources progressives et suivi des apprenants, pour rendre la tech accessible à tous, partout en Afrique.",
+      desc: "Plateforme de formation aux métiers de l'informatique : développement web, Python, cybersécurité et plus. Parcours structurés, ressources progressives et suivi des apprenants — pour rendre la tech accessible à tous, partout en Afrique.",
       tags: ["Next.js", "TypeScript", "Tailwind", "Vidéo", "PWA"],
       result: "Catalogue tech complet",
       iconKey: "eye",
@@ -130,7 +130,7 @@ const PROJECTS: Record<Lang, Project[]> = {
       title: "Afrikamode",
       client: "Italy · France · Belgium · Cameroon",
       category: "Fashion & e-commerce",
-      desc: "International e-commerce platform for an African fashion brand present across Europe and Africa. Multilingual catalogue, product pages, cart, secure checkout. Designers from Lagos to Abidjan, an in-house line, live in 4 countries.",
+      desc: "International e-commerce platform for an African fashion brand present across Europe and Africa. Multilingual catalogue, product pages, cart, secure checkout. Designers from Lagos to Abidjan, an in-house line — live in 4 countries.",
       tags: ["Next.js", "React", "Tailwind", "TypeScript", "e-commerce"],
       result: "Live in Europe & Africa",
       iconKey: "spark",
@@ -169,7 +169,7 @@ const PROJECTS: Record<Lang, Project[]> = {
       title: "e-Learning platform",
       client: "IT learners & professionals",
       category: "Education & EdTech",
-      desc: "Training platform covering IT careers: web development, Python, cybersecurity and more. Structured tracks, progressive resources and learner tracking, built to make tech accessible everywhere across Africa.",
+      desc: "Training platform covering IT careers: web development, Python, cybersecurity and more. Structured tracks, progressive resources and learner tracking — built to make tech accessible everywhere across Africa.",
       tags: ["Next.js", "TypeScript", "Tailwind", "Video", "PWA"],
       result: "Full tech catalogue",
       iconKey: "eye",

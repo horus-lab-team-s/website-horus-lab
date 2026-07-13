@@ -21,7 +21,7 @@ const fr = {
     titleLead: "Nous transformons vos idées en",
     titleHighlight: "solutions numériques durables",
     subtitle:
-      "Vos idées, nos solutions : du concept au déploiement.",
+      "Vos idées, nos solutions — du concept au déploiement.",
     ctaPrimary: "Démarrer un projet",
     ctaSecondary: "Découvrir nos services",
     stats: [
@@ -43,7 +43,7 @@ const fr = {
       },
       {
         title: "Systèmes d'information",
-        desc: "Analyse, conception et architecture de vos SI avec rigueur : méthode RUP, UML, audit de l'existant.",
+        desc: "Analyse, conception et architecture de vos SI avec rigueur — méthode RUP, UML, audit de l'existant.",
         tags: ["UML", "RUP", "Architecture", "API"],
       },
       {
@@ -126,7 +126,7 @@ const fr = {
     eyebrow: "Réalisations",
     title: "Des produits déjà en production",
     subtitle:
-      "Des applications conçues et livrées pour des clients africains, du concept au déploiement.",
+      "Des applications conçues et livrées pour des clients africains — du concept au déploiement.",
     featuredLabel: "Projet phare",
     viewAll: "Voir toutes les réalisations",
     detailsLabel: "Détails",
@@ -135,7 +135,7 @@ const fr = {
     eyebrow: "Actualités",
     title: "Les nouvelles du studio",
     subtitle:
-      "Lancements, mises à jour, partenariats : les actualités fraîches de Horus-Lab et de nos produits.",
+      "Lancements, mises à jour, partenariats — les actualités fraîches de Horus-Lab et de nos produits.",
     viewAll: "Voir toutes les actualités",
     readMore: "En savoir plus",
     backToNews: "Retour aux actualités",
@@ -286,7 +286,7 @@ const en: Dict = {
     titleLead: "We turn your ideas into",
     titleHighlight: "lasting digital solutions",
     subtitle:
-      "Your ideas, our solutions: from concept to deployment.",
+      "Your ideas, our solutions — from concept to deployment.",
     ctaPrimary: "Start a project",
     ctaSecondary: "Explore our services",
     stats: [
@@ -308,7 +308,7 @@ const en: Dict = {
       },
       {
         title: "Information Systems",
-        desc: "Analysis, design and IS architecture with rigour: RUP method, UML, existing system audit.",
+        desc: "Analysis, design and IS architecture with rigour — RUP method, UML, existing system audit.",
         tags: ["UML", "RUP", "Architecture", "API"],
       },
       {
@@ -391,7 +391,7 @@ const en: Dict = {
     eyebrow: "Work",
     title: "Products already live in production",
     subtitle:
-      "Applications designed and delivered for African clients, concept to deployment.",
+      "Applications designed and delivered for African clients — concept to deployment.",
     featuredLabel: "Featured project",
     viewAll: "See all our work",
     detailsLabel: "Details",
@@ -400,7 +400,7 @@ const en: Dict = {
     eyebrow: "News",
     title: "What's happening at the studio",
     subtitle:
-      "Launches, updates, partnerships: fresh news from Horus-Lab and our products.",
+      "Launches, updates, partnerships — fresh news from Horus-Lab and our products.",
     viewAll: "See all news",
     readMore: "Read more",
     backToNews: "Back to news",
@@ -425,7 +425,7 @@ const en: Dict = {
       },
       {
         quote:
-          "Digitalising our processes saves us precious time every single week. Automated workflows, paperless approvals, the paper has all but disappeared.",
+          "Digitalising our processes saves us precious time every single week. Automated workflows, paperless approvals — the paper has all but disappeared.",
         name: "Sandrine M.",
         role: "Operations Lead, MediCare",
       },

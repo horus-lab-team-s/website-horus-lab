@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
 import { IconArrowRight, IconCode, IconCog, IconEye, IconSpark } from "@/components/icons";
+import { Starfield } from "@/components/Starfield";
 import { SectionHeading } from "./SectionHeading";
 
 /* Mapping titre → slug de page service */
@@ -90,7 +91,10 @@ export function Services({ items }: { items?: ServiceItem[] }) {
       id="services"
       className="relative overflow-hidden bg-white py-20 dark:bg-[#070e1c] sm:py-28"
     >
-      {/* ── Fond vivant multi-couches (halos animés) ── */}
+      {/* ── Champ d'étoiles & astres animés (ambiance spatiale) ── */}
+      <Starfield tone="brand" density="light" />
+
+      {/* ── Fond vivant multi-couches ── */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         {/* Grille fine */}
         <div className="absolute inset-0 bg-grid-soft opacity-[0.5] dark:opacity-[0.3]" />
@@ -105,6 +109,19 @@ export function Services({ items }: { items?: ServiceItem[] }) {
         {/* Cercle milieu bas */}
         <div className="absolute left-1/3 bottom-1/4 h-56 w-56 rounded-full bg-amber-100/40 blur-2xl animate-bob dark:bg-amber-900/10" style={{ animationDelay: "3s" }} />
 
+        {/* Particules (points) flottantes */}
+        {[
+          { x: "15%", y: "20%", c: "bg-blue-400",   d: "0s",   s: "size-2" },
+          { x: "80%", y: "12%", c: "bg-violet-400", d: "1.2s", s: "size-1.5" },
+          { x: "65%", y: "70%", c: "bg-emerald-400",d: "0.8s", s: "size-2.5" },
+          { x: "25%", y: "80%", c: "bg-amber-400",  d: "2s",   s: "size-2" },
+          { x: "48%", y: "38%", c: "bg-sky-400",    d: "1.5s", s: "size-1.5" },
+          { x: "90%", y: "55%", c: "bg-blue-300",   d: "3s",   s: "size-2" },
+        ].map((p, i) => (
+          <div key={i}
+            className={`absolute rounded-full opacity-60 animate-float dark:opacity-40 ${p.c} ${p.s}`}
+            style={{ left: p.x, top: p.y, animationDelay: p.d }} />
+        ))}
       </div>
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">

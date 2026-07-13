@@ -3,6 +3,34 @@
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
 
+/* ── Émojis style Telegram — fond animé ────────────────────── */
+const EMOJI_BG = [
+  "🌍","🚀","💡","🤖","📱","💻","🌐","⚡","🎯","🏆",
+  "✨","🔥","💎","🌟","🎉","🙌","👏","💪","🤝","🌱",
+  "📊","🔒","⚙️","🎨","🏗️","📡","🔬","💡","🌈","⭐",
+  "🦁","🦅","🐘","🦊","🐬","🦋","🦚","🐆","🦁","🌺",
+];
+
+/* Positions pseudo-aléatoires fixes (SSR safe) */
+const EMOJI_POSITIONS = [
+  { x:3,  y:5,  s:1.4, d:0,   rot:-12 }, { x:12, y:18, s:1.1, d:1.2, rot:8  },
+  { x:22, y:3,  s:1.3, d:0.5, rot:-5  }, { x:35, y:12, s:1.0, d:2,   rot:15 },
+  { x:48, y:6,  s:1.5, d:0.3, rot:-20 }, { x:60, y:20, s:1.2, d:1.8, rot:10 },
+  { x:72, y:2,  s:1.1, d:0.7, rot:-8  }, { x:85, y:14, s:1.4, d:2.5, rot:18 },
+  { x:93, y:7,  s:1.0, d:1,   rot:-15 }, { x:5,  y:35, s:1.3, d:1.5, rot:5  },
+  { x:18, y:45, s:1.1, d:0.2, rot:-10 }, { x:30, y:30, s:1.4, d:2.2, rot:12 },
+  { x:45, y:40, s:1.0, d:0.8, rot:-6  }, { x:58, y:32, s:1.2, d:1.6, rot:20 },
+  { x:70, y:48, s:1.3, d:0.4, rot:-18 }, { x:82, y:36, s:1.1, d:2.8, rot:7  },
+  { x:95, y:42, s:1.4, d:1.1, rot:-12 }, { x:8,  y:60, s:1.0, d:0.6, rot:14 },
+  { x:20, y:70, s:1.3, d:2.1, rot:-4  }, { x:33, y:58, s:1.2, d:1.3, rot:16 },
+  { x:48, y:65, s:1.1, d:0.9, rot:-22 }, { x:62, y:72, s:1.4, d:2.4, rot:9  },
+  { x:75, y:62, s:1.0, d:0.1, rot:-7  }, { x:88, y:68, s:1.2, d:1.7, rot:19 },
+  { x:2,  y:80, s:1.3, d:0.4, rot:-11 }, { x:15, y:88, s:1.1, d:2.3, rot:6  },
+  { x:28, y:82, s:1.4, d:0.7, rot:-16 }, { x:42, y:90, s:1.0, d:1.9, rot:13 },
+  { x:56, y:85, s:1.2, d:0.3, rot:-3  }, { x:68, y:92, s:1.3, d:2.6, rot:21 },
+  { x:80, y:80, s:1.1, d:1.0, rot:-9  }, { x:92, y:88, s:1.4, d:0.5, rot:17 },
+];
+
 const avatarGradients = [
   "from-brand-700 to-brand-500",
   "from-rose-500 to-orange-400",
@@ -21,9 +49,29 @@ export function Testimonials({ items }: { items?: TestimonialItem[] }) {
       id="testimonials"
       className="relative overflow-hidden bg-brand-900 py-20 sm:py-28"
     >
-      {/* Fond : dégradé bleu Horus + halos animés (émojis retirés) */}
+      {/* ── Fond style Telegram — émojis flottants ── */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden select-none">
+        {/* Overlay dégradé par-dessus les émojis */}
         <div className="absolute inset-0 bg-gradient-to-br from-brand-900/92 via-brand-900/85 to-slate-900/90" />
+
+        {/* Émojis */}
+        {EMOJI_POSITIONS.map((pos, i) => (
+          <span
+            key={i}
+            className="absolute animate-float"
+            style={{
+              left:  `${pos.x}%`,
+              top:   `${pos.y}%`,
+              fontSize: `${pos.s * 1.6}rem`,
+              transform: `rotate(${pos.rot}deg)`,
+              animationDelay: `${pos.d}s`,
+              animationDuration: `${6 + pos.d * 2}s`,
+              opacity: 0.18,
+            }}
+          >
+            {EMOJI_BG[i % EMOJI_BG.length]}
+          </span>
+        ))}
 
         {/* Halos de couleur */}
         <div className="absolute -left-20 top-1/4 h-80 w-80 rounded-full bg-brand-500/15 blur-3xl animate-float-slow" />

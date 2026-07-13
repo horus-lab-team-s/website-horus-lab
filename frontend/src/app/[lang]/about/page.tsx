@@ -45,7 +45,7 @@ const TEAM_MEMBERS = {
     {
       name: "Edwin TCHAMBA TCHAKOUNTE",
       role: "Architecte logiciel · Co-fondateur",
-      bio: "Senior Software Engineer & Architecte logiciel, passionné par la résolution de problèmes complexes et l'innovation technologique. Avec plus de 3 ans d'expérience en développement full-stack (web & mobile), conception d'APIs REST et déploiement cloud, je livre des solutions performantes et adaptées aux besoins réels. Maîtrise de la méthode RUP et de la modélisation UML. Formation IUT-FV & ENSPD. Lauréat du Prix du Meilleur Projet de Fin d'Études, IUT-FV Bandjoun (2024).",
+      bio: "Senior Software Engineer & Architecte logiciel, passionné par la résolution de problèmes complexes et l'innovation technologique. Avec plus de 3 ans d'expérience en développement full-stack (web & mobile), conception d'APIs REST et déploiement cloud, je livre des solutions performantes et adaptées aux besoins réels. Maîtrise de la méthode RUP et de la modélisation UML. Formation IUT-FV & ENSPD. Lauréat du Prix du Meilleur Projet de Fin d'Études — IUT-FV Bandjoun (2024).",
       initials: "ET",
       photo: "/photo-Edwin-co-founder.png",
       linkedin: "",
@@ -73,7 +73,7 @@ const TEAM_MEMBERS = {
     {
       name: "Edwin TCHAMBA TCHAKOUNTE",
       role: "Software architect · Co-founder",
-      bio: "Senior Software Engineer & Software Architect, driven by complex problem-solving and technological innovation. With 3+ years of hands-on experience in full-stack web & mobile development, REST API design and cloud deployment, I deliver high-performance solutions tailored to real-world needs. Expert in RUP methodology and UML modelling, trained at IUT-FV and ENSPD. Winner of the Best Final Year Project Award, IUT-FV Bandjoun (2024).",
+      bio: "Senior Software Engineer & Software Architect, driven by complex problem-solving and technological innovation. With 3+ years of hands-on experience in full-stack web & mobile development, REST API design and cloud deployment, I deliver high-performance solutions tailored to real-world needs. Expert in RUP methodology and UML modelling, trained at IUT-FV and ENSPD. Winner of the Best Final Year Project Award — IUT-FV Bandjoun (2024).",
       initials: "ET",
       photo: "/photo-Edwin-co-founder.png",
       linkedin: "",
@@ -99,17 +99,17 @@ const CONTENT: Record<Lang, {
   fr: {
     eyebrow: "À propos",
     title: "Au-delà des frontières, au service de votre impact",
-    intro: "Horus-Lab est une entreprise technologique africaine. Nous concevons des produits numériques (applications web & mobile, logiciels sur-mesure, systèmes d'information et solutions de digitalisation) pensés pour les réalités du continent et construits pour durer.",
+    intro: "Horus-Lab est une entreprise technologique africaine. Nous concevons des produits numériques — applications web & mobile, logiciels sur-mesure, systèmes d'information et solutions de digitalisation — pensés pour les réalités du continent et construits pour durer.",
     pillars: [
       { h: "Notre mission", body: "Rendre la technologie de pointe accessible et utile aux organisations africaines, en les accompagnant de l'idée jusqu'à l'impact." },
-      { h: "Notre vision",  body: "Une Afrique qui construit ses propres solutions numériques, à la hauteur des standards mondiaux, et au-delà des frontières." },
+      { h: "Notre vision",  body: "Une Afrique qui construit ses propres solutions numériques, à la hauteur des standards mondiaux — et au-delà des frontières." },
     ],
     valuesTitle: "Nos valeurs",
     valuesSubtitle: "Ce qui guide chacune de nos décisions et de nos lignes de code.",
     values: [
       { title: "Excellence technique",    desc: "Des solutions robustes, performantes et maintenables, sans compromis sur la qualité." },
       { title: "Proximité & écoute",      desc: "Nous travaillons avec vous, pas seulement pour vous : transparence et disponibilité à chaque étape." },
-      { title: "Innovation utile",        desc: "La bonne technologie au service d'un problème réel, jamais l'inverse." },
+      { title: "Innovation utile",        desc: "La bonne technologie au service d'un problème réel — jamais l'inverse." },
       { title: "Impact durable",          desc: "Nous construisons pour durer : code pérenne, documentation complète et transfert de compétences." },
     ],
     storyTitle: "Notre approche",
@@ -130,17 +130,17 @@ const CONTENT: Record<Lang, {
   en: {
     eyebrow: "About",
     title: "Beyond borders, in service of your impact",
-    intro: "Horus-Lab is an African technology company. We build digital products (web & mobile apps, custom software, information systems and digitalisation solutions) designed for the realities of the continent and built to last.",
+    intro: "Horus-Lab is an African technology company. We build digital products — web & mobile apps, custom software, information systems and digitalisation solutions — designed for the realities of the continent and built to last.",
     pillars: [
       { h: "Our mission", body: "Make leading-edge technology accessible and useful to African organizations, guiding them from idea to impact." },
-      { h: "Our vision",  body: "An Africa that builds its own digital solutions, matching world-class standards, and reaching beyond borders." },
+      { h: "Our vision",  body: "An Africa that builds its own digital solutions, matching world-class standards — and reaching beyond borders." },
     ],
     valuesTitle: "Our values",
     valuesSubtitle: "What guides every decision and every line of code.",
     values: [
       { title: "Technical excellence", desc: "Robust, performant and maintainable solutions, with no compromise on quality." },
       { title: "Closeness & listening", desc: "We work with you, not just for you: transparency and availability at every step." },
-      { title: "Useful innovation",    desc: "The right technology for a real problem, never the other way around." },
+      { title: "Useful innovation",    desc: "The right technology for a real problem — never the other way around." },
       { title: "Lasting impact",       desc: "We build to last: durable code, complete documentation and skills transfer." },
     ],
     storyTitle: "Our approach",
