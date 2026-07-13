@@ -6,14 +6,12 @@ import { HeroBackground } from "./HeroBackground";
 import { IconArrowRight, IconEye } from "@/components/icons";
 import type { CmsHero } from "@/lib/cms";
 
-/* Images hébergées en local (frontend/public) : toujours disponibles,
-   aucune dépendance à un service externe. */
 const HERO_IMAGES = [
-  "/hero-1.jpg",
-  "/hero-2.jpg",
-  "/hero-3.jpg",
-  "/hero-4.jpg",
-  "/hero-5.jpg",
+  "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1740&q=75",
+  "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1740&q=75",
+  "https://images.unsplash.com/photo-1607706189992-eae578626c86?auto=format&fit=crop&w=1740&q=75",
+  "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1740&q=75",
+  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=1740&q=75",
 ];
 
 /* Services Horus-Lab — affiches sous le titre hero */
