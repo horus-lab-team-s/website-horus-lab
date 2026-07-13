@@ -30,7 +30,7 @@ function IconAIBot({ className }: { className?: string }) {
       <rect x="8" y="13" width="24" height="18" rx="6" stroke="currentColor" strokeWidth="1.8" />
       {/* Antenne */}
       <line x1="20" y1="13" x2="20" y2="8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <circle cx="20" cy="6.5" r="2" fill="currentColor" className="animate-pulse" />
+      <circle cx="20" cy="6.5" r="2" fill="currentColor" />
       {/* Yeux */}
       <circle cx="15" cy="21" r="2.5" fill="currentColor" />
       <circle cx="25" cy="21" r="2.5" fill="currentColor" />
@@ -151,7 +151,7 @@ export function HorusAI() {
         </ChannelLink>
 
         {/* WhatsApp */}
-        <ChannelLink href={WHATSAPP} label="WhatsApp" className="bg-[#25D366]" pulse>
+        <ChannelLink href={WHATSAPP} label="WhatsApp" className="bg-[#25D366]">
           <IconWhatsApp className="size-6" />
         </ChannelLink>
 
@@ -161,9 +161,8 @@ export function HorusAI() {
           onClick={() => setOpen(true)}
           aria-label={ai.open}
           aria-expanded={open}
-          className="group relative grid size-14 place-items-center rounded-full bg-gradient-to-br from-brand-700 to-brand-500 text-white shadow-xl shadow-brand-900/30 transition-transform hover:scale-105 animate-bob ring-2 ring-white/20"
+          className="group relative grid size-14 place-items-center rounded-full bg-gradient-to-br from-brand-700 to-brand-500 text-white shadow-xl shadow-brand-900/30 transition-transform hover:scale-105 ring-2 ring-white/20"
         >
-          <span className="absolute inset-0 rounded-full bg-brand-500/50 animate-pulse-ring" />
           <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-lg bg-brand-900 px-2.5 py-1 text-xs font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100">
             {ai.title}
           </span>

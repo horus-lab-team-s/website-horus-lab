@@ -132,7 +132,7 @@ const SERVICES_DATA: Record<string, Record<Lang, ServiceContent>> = {
       heroImage: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1920&q=85",
       title: "Systèmes d'information",
       subtitle: "Analyse, conception et architecture SI",
-      intro: "Nous modélisons et architecturons vos systèmes d'information avec rigueur — méthode RUP, UML, audit de l'existant — pour vous livrer une base solide, évolutive et documentée.",
+      intro: "Nous modélisons et architecturons vos systèmes d'information avec rigueur (méthode RUP, UML, audit de l'existant) pour vous livrer une base solide, évolutive et documentée.",
       features: [
         { title: "Audit de l'existant", desc: "Cartographie de votre SI, identification des points de friction et opportunités." },
         { title: "Modélisation UML", desc: "Diagrammes de cas d'usage, classes, séquences, déploiement." },
@@ -156,7 +156,7 @@ const SERVICES_DATA: Record<string, Record<Lang, ServiceContent>> = {
       heroImage: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1920&q=85",
       title: "Information Systems",
       subtitle: "Analysis, design and IS architecture",
-      intro: "We model and architect your information systems with rigour — RUP method, UML, existing system audit — delivering a solid, scalable and documented foundation.",
+      intro: "We model and architect your information systems with rigour (RUP method, UML, existing system audit) delivering a solid, scalable and documented foundation.",
       features: [
         { title: "Existing system audit", desc: "Mapping your IS, identifying friction points and opportunities." },
         { title: "UML modelling", desc: "Use case, class, sequence and deployment diagrams." },
@@ -234,7 +234,7 @@ const SERVICES_DATA: Record<string, Record<Lang, ServiceContent>> = {
       subtitle: "Montez en compétences, sécurisez vos systèmes",
       intro: "Nous formons vos équipes aux technologies modernes et auditons vos systèmes pour identifier les risques, les inefficacités et les opportunités d'amélioration.",
       features: [
-        { title: "Formations techniques", desc: "Développement web, mobile, bases de données, cybersécurité — adaptées à votre niveau." },
+        { title: "Formations techniques", desc: "Développement web, mobile, bases de données, cybersécurité, adaptées à votre niveau." },
         { title: "Ateliers pratiques", desc: "Sessions hands-on sur vos propres outils et projets réels." },
         { title: "Audit de code", desc: "Revue de votre codebase : qualité, sécurité, performances, dette technique." },
         { title: "Audit de sécurité", desc: "Tests de pénétration, analyse des vulnérabilités, recommandations concrètes." },
@@ -258,7 +258,7 @@ const SERVICES_DATA: Record<string, Record<Lang, ServiceContent>> = {
       subtitle: "Upskill your teams, secure your systems",
       intro: "We train your teams on modern technologies and audit your systems to identify risks, inefficiencies and improvement opportunities.",
       features: [
-        { title: "Technical training", desc: "Web dev, mobile, databases, cybersecurity — adapted to your level." },
+        { title: "Technical training", desc: "Web dev, mobile, databases, cybersecurity, adapted to your level." },
         { title: "Hands-on workshops", desc: "Practical sessions on your own tools and real projects." },
         { title: "Code audit", desc: "Codebase review: quality, security, performance, technical debt." },
         { title: "Security audit", desc: "Penetration testing, vulnerability analysis, concrete recommendations." },

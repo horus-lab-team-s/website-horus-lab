@@ -28,7 +28,7 @@ const NEWS: Record<Lang, NewsItem[]> = {
     },
     {
       date: "2026-04-10",
-      title: "Plateforme e-Learning — nouveau parcours Cybersécurité",
+      title: "Plateforme e-Learning : nouveau parcours Cybersécurité",
       body:
         "Le cycle Cybersécurité rejoint le développement web et Python. Modules progressifs, exercices guidés et certificats à la clé.",
       tag: "Roadmap",
@@ -66,7 +66,7 @@ const NEWS: Record<Lang, NewsItem[]> = {
     },
     {
       date: "2026-04-10",
-      title: "e-Learning platform — new Cybersecurity track",
+      title: "e-Learning platform: new Cybersecurity track",
       body:
         "The Cybersecurity track joins web development and Python. Progressive modules, guided exercises and certificates.",
       tag: "Roadmap",

@@ -32,12 +32,12 @@ export async function generateMetadata({
 
   const title =
     lang === "fr"
-      ? "Horus-Lab — Solutions technologiques intelligentes"
-      : "Horus-Lab — Intelligent technology solutions";
+      ? "Horus-Lab | Solutions technologiques intelligentes"
+      : "Horus-Lab | Intelligent technology solutions";
   const description = dict.hero.subtitle;
 
   return {
-    title: { absolute: title, template: "%s — Horus-Lab" },
+    title: { absolute: title, template: "%s | Horus-Lab" },
     description,
     alternates: {
       canonical: `/${lang}`,

@@ -30,68 +30,6 @@ const PROJECT_IMAGES: Record<string, string> = {
     "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=800&q=75",
 };
 
-/* ── Formes SVG disposées individuellement dans tout le fond ──
-   Chaque forme est positionnée de façon absolue, chacune avec sa propre
-   animation. On n'utilise PAS un SVG global — chaque <svg> est indépendant.
-*/
-const BG_PATHS = [
-  // Étoile 4 branches
-  (op: number) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.2" opacity="${op}"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>`,
-  // Diamant
-  (op: number) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.2" opacity="${op}"><rect x="6" y="6" width="12" height="12" rx="1" transform="rotate(45 12 12)"/></svg>`,
-  // Hexagone
-  (op: number) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.2" opacity="${op}"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7"/></svg>`,
-  // Double cercle
-  (op: number) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.1" opacity="${op}"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>`,
-  // Croix
-  (op: number) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" opacity="${op}"><path d="M12 2v20M2 12h20"/></svg>`,
-  // Triangle
-  (op: number) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.2" opacity="${op}"><polygon points="12,3 22,21 2,21"/></svg>`,
-  // Bouclier
-  (op: number) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.2" opacity="${op}"><path d="M12 2l8 4v6c0 5-4 8-8 9-4-1-8-4-8-9V6z"/></svg>`,
-  // Vague
-  (op: number) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="42" height="26" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" opacity="${op}"><path d="M2 12 Q6 6 10 12 Q14 18 18 12 Q20 8 22 12"/></svg>`,
-  // Losange simple
-  (op: number) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.2" opacity="${op}"><polygon points="12,2 22,12 12,22 2,12"/></svg>`,
-  // Octogone
-  (op: number) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.1" opacity="${op}"><polygon points="7,2 17,2 22,7 22,17 17,22 7,22 2,17 2,7"/></svg>`,
-];
-
-/* 32 positions bien réparties sur TOUT le fond (x% y%) */
-const SHAPE_POSITIONS = [
-  { x:"3%",  y:"4%",  i:0, d:"0s",   dur:"8s"  },
-  { x:"14%", y:"16%", i:1, d:"1.2s", dur:"9s"  },
-  { x:"24%", y:"2%",  i:2, d:"0.5s", dur:"10s" },
-  { x:"36%", y:"10%", i:3, d:"2s",   dur:"7s"  },
-  { x:"48%", y:"5%",  i:4, d:"0.3s", dur:"11s" },
-  { x:"60%", y:"18%", i:5, d:"1.8s", dur:"8s"  },
-  { x:"72%", y:"1%",  i:6, d:"0.7s", dur:"9s"  },
-  { x:"84%", y:"12%", i:7, d:"2.5s", dur:"10s" },
-  { x:"93%", y:"6%",  i:8, d:"1s",   dur:"8s"  },
-  { x:"7%",  y:"32%", i:9, d:"1.5s", dur:"9s"  },
-  { x:"18%", y:"46%", i:0, d:"0.2s", dur:"11s" },
-  { x:"30%", y:"30%", i:1, d:"2.2s", dur:"8s"  },
-  { x:"42%", y:"42%", i:2, d:"0.8s", dur:"7s"  },
-  { x:"55%", y:"35%", i:3, d:"1.6s", dur:"10s" },
-  { x:"67%", y:"50%", i:4, d:"0.4s", dur:"9s"  },
-  { x:"80%", y:"38%", i:5, d:"2.8s", dur:"8s"  },
-  { x:"91%", y:"44%", i:6, d:"1.1s", dur:"11s" },
-  { x:"5%",  y:"60%", i:7, d:"0.6s", dur:"9s"  },
-  { x:"20%", y:"70%", i:8, d:"2.1s", dur:"8s"  },
-  { x:"33%", y:"58%", i:9, d:"1.3s", dur:"10s" },
-  { x:"46%", y:"66%", i:0, d:"0.9s", dur:"9s"  },
-  { x:"58%", y:"74%", i:1, d:"2.4s", dur:"8s"  },
-  { x:"71%", y:"62%", i:2, d:"0.1s", dur:"11s" },
-  { x:"88%", y:"68%", i:3, d:"1.7s", dur:"7s"  },
-  { x:"2%",  y:"80%", i:4, d:"0.4s", dur:"9s"  },
-  { x:"16%", y:"88%", i:5, d:"2.3s", dur:"8s"  },
-  { x:"29%", y:"82%", i:6, d:"0.7s", dur:"10s" },
-  { x:"44%", y:"91%", i:7, d:"1.9s", dur:"9s"  },
-  { x:"57%", y:"85%", i:8, d:"0.3s", dur:"8s"  },
-  { x:"70%", y:"92%", i:9, d:"2.6s", dur:"11s" },
-  { x:"83%", y:"80%", i:0, d:"1.0s", dur:"9s"  },
-  { x:"95%", y:"88%", i:1, d:"0.5s", dur:"8s"  },
-];
 
 function RealisationsBackground() {
   return (
@@ -99,25 +37,7 @@ function RealisationsBackground() {
       {/* Base dégradée */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-brand-50/20 dark:from-[#070e1c] dark:via-slate-900 dark:to-[#0a1326]" />
 
-      {/* Formes SVG — chacune positionnée individuellement, animée séparément */}
-      {SHAPE_POSITIONS.map((pos, idx) => (
-        <div
-          key={idx}
-          className="absolute animate-float text-brand-400/[0.15] dark:text-brand-300/[0.12]"
-          style={{
-            left: pos.x,
-            top: pos.y,
-            animationDelay: pos.d,
-            animationDuration: pos.dur,
-            color: "currentColor",
-          }}
-          dangerouslySetInnerHTML={{
-            __html: BG_PATHS[pos.i % BG_PATHS.length](0.18),
-          }}
-        />
-      ))}
-
-      {/* Halos de profondeur */}
+      {/* Halos de profondeur (animés) */}
       <div className="absolute -left-20 bottom-1/4 h-72 w-72 rounded-full bg-rose-200/10 blur-3xl animate-float-slow dark:bg-rose-500/5" />
       <div className="absolute right-0 top-1/3 h-64 w-64 rounded-full bg-amber-200/10 blur-3xl animate-drift dark:bg-amber-500/5" />
       <div className="absolute left-1/3 top-0 h-56 w-56 rounded-full bg-brand-200/8 blur-3xl animate-float dark:bg-brand-500/4" style={{ animationDelay: "2s" }} />

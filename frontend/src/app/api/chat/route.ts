@@ -3,9 +3,9 @@ import { NextResponse } from "next/server";
 type ChatMessage = { role: "user" | "assistant"; content: string };
 
 const KNOWLEDGE = `
-Horus-Lab — entreprise technologique africaine (vision au-delà des frontières, impact durable).
+Horus-Lab, entreprise technologique africaine (vision au-delà des frontières, impact durable).
 Basée à Douala, Cameroun. Sert toute l'Afrique.
-Services : applications web & mobile sur mesure (React, Next.js, Flutter, PWA) ; systèmes d'information (analyse, conception & architecture — UML/RUP) ; digitalisation d'entreprise (automatisation des workflows, CRM, GED, cloud) ; formation & audit IT (ateliers, cybersécurité, audit de code).
+Services : applications web & mobile sur mesure (React, Next.js, Flutter, PWA) ; systèmes d'information (analyse, conception & architecture, UML/RUP) ; digitalisation d'entreprise (automatisation des workflows, CRM, GED, cloud) ; formation & audit IT (ateliers, cybersécurité, audit de code).
 Méthode : 1) Écoute & cadrage 2) Conception & design 3) Développement agile 4) Livraison & accompagnement.
 Secteurs : fintech, santé, éducation, agriculture, commerce, logistique, administration publique, énergie.
 Contact : email contact@horus-lab.com ; téléphones +237 673398046 et +237 699173771.
@@ -40,7 +40,7 @@ function faqFallback(message: string, lang: string): string {
   if (has("démarrer", "commencer", "projet", "start", "begin", "project", "devis", "quote"))
     return fr
       ? "Avec plaisir ! Décrivez votre besoin via le formulaire de contact ou écrivez à contact@horus-lab.com : nous répondons sous 24h."
-      : "Glad to help! Describe your need via the contact form or email contact@horus-lab.com — we reply within 24h.";
+      : "Glad to help! Describe your need via the contact form or email contact@horus-lab.com. We reply within 24h.";
   if (has("bonjour", "salut", "hello", "hi", "hey", "coucou"))
     return fr
       ? "Bonjour 👋 Comment puis-je vous aider à propos de Horus-Lab ?"
