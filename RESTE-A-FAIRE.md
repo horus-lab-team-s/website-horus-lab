@@ -23,30 +23,6 @@ SRV=root@<IP_VPS_CONTABO>        # ⬅️ toi seul connais cette valeur
 
 ---
 
-## 🖐️ Deux modes de déploiement (lis ceci d'abord)
-
-Cette doc décrit **deux façons** de mettre à jour le serveur. Le contenu de chaque
-étape reste écrit pour le **mode A** (auto-déploiement) ; les encadrés
-**« 🖐️ Variante manuel/root »** indiquent ce qui **change** si tu choisis le mode B.
-
-- **Mode A — CI/CD auto-déploiement** *(le fil principal ci-dessous)*
-  GitHub Actions **construit ET pousse** les images sur GHCR, **puis** se connecte en
-  SSH au VPS (user `horus`) et lance `pull && up -d` **tout seul** à chaque `git push`.
-  → nécessite : user `horus` (Étape 2), clé SSH + secrets GitHub (Étape 3), `DEPLOY_ENABLED=true` (Étape 8).
-
-- **Mode B — MANUEL / root** ✅ *(mode choisi)*
-  GitHub Actions **construit ET pousse** juste les images sur GHCR (ou tu build en
-  local). **Le déploiement, c'est TOI** : tu te connectes en **root** sur le VPS et
-  tu lances `pull && up -d` **à la main** quand tu veux.
-  → tu peux **sauter** les étapes/parties « user `horus` », « clé SSH CI », « secrets
-  GitHub » et « Étape 8 ». `DEPLOY_ENABLED` reste `false`.
-
-> Les deux modes partagent **exactement** le même stack (`docker-compose.prod.yml`),
-> le même `.env`, le même login GHCR et le même branchement proxy. Seul **qui lance
-> `pull && up -d`** (le CI, ou toi en root) diffère.
-
----
-
 ## Contexte VPS (important pour le design)
 
 Ton VPS héberge **déjà plusieurs projets** derrière un **reverse proxy Nginx EN
@@ -114,13 +90,6 @@ marche** (une base + un rôle dédiés `horuslab`). À la place :
 
 Ces fichiers **ont été créés** dans le dépôt (branche courante). Il te reste à les
 **relire, committer et pousser sur `main`** pour que la CI construise les images.
-
-> **🖐️ Variante manuel/root** — Cette partie reste utile **même en mode B** : les
-> workflows `backend.yml`/`frontend.yml` servent à **construire et pousser** les
-> images sur GHCR (leur bloc « SSH deploy » ne se déclenche que si `DEPLOY_ENABLED=true`,
-> qu'on laisse à `false`). Tu peux donc **tout garder** tel quel. *(Si tu préférais
-> même build les images à la main sur ton PC — `docker build` + `docker push ghcr.io/...`
-> — tu pourrais te passer entièrement de ces workflows ; dis-le-moi si tu veux ces commandes.)*
 
 | # | Fichier | Rôle | État |
 |---|---|---|---|
@@ -193,32 +162,13 @@ n'as pas encore créé cet utilisateur, fais d'abord l'Étape 2, puis reviens ic
 > Alternative (rendre les 2 packages **Public** → plus aucun login) reste possible,
 > mais on a choisi le privé.
 
-> **🖐️ Variante manuel/root** — Comme c'est **toi** (root) qui pulleras, fais le
-> `docker login` **en root**, pas en `horus` (l'étape 2 « user horus » devient
-> inutile). Les creds iront dans `/root/.docker/config.json` :
-> ```bash
-> # en root, directement :
-> echo 'ghp_TON_TOKEN' | docker login ghcr.io -u TON_USER_GITHUB --password-stdin
-> ```
-
-**📝** PAT `read:packages` créé ☐ · `docker login ghcr.io` réussi *(horus = mode A · root = mode B)* ☐
+**📝** PAT `read:packages` créé ☐ · `docker login ghcr.io` réussi (user horus) ☐
 
 ---
 
 ## ÉTAPE 2 — Préparer le VPS : user de déploiement + clé CI *(VPS, root)* 🔴
 Docker est sans doute **déjà installé** (tu as d'autres projets). On crée juste un
 utilisateur dédié + un dossier + une clé SSH pour le CI (séparée de ton accès root).
-
-> **🖐️ Variante manuel/root** — En mode B, **tu n'as pas besoin** du user `horus`, de
-> la clé SSH ni de `authorized_keys` (tout ça ne servait qu'au CI qui se connecte en
-> SSH). Il te reste **juste à créer le dossier**, en root :
-> ```bash
-> ssh "$SRV"                # root (toi seul)
-> docker compose version    # confirme que Docker est là
-> mkdir -p /opt/horus-lab   # (reste en root, pas de chown horus)
-> ```
-> Passe directement à l'Étape 4 (les secrets GitHub de l'Étape 3 ne servent qu'au CI).
-
 ```bash
 ssh "$SRV"          # root + mot de passe (toi seul)
 # --- sur le VPS ---
@@ -249,12 +199,6 @@ exit
 
 ## ÉTAPE 3 — Poser les secrets CI sur le dépôt GitHub *(ton PC)* 🔴
 Monorepo = **un seul dépôt**, donc un seul jeu de secrets.
-
-> **🖐️ Variante manuel/root** — **Étape entière à sauter.** Ces secrets (`SSH_KEY`,
-> `SSH_HOST`, `SSH_USER`, `DEPLOY_PATH`) ne servent qu'au CI pour se connecter au VPS.
-> En mode B, personne ne se connecte au VPS à ta place → rien à poser. Laisse juste
-> `DEPLOY_ENABLED=false` (c'est le défaut) pour être sûr que le CI ne déploie jamais.
-
 ```bash
 R=horus-lab-team-s/website-horus-lab
 gh secret set SSH_KEY  -R $R     # colle la clé privée CI (Étape 2) puis Ctrl-D
@@ -283,20 +227,6 @@ echo "DJANGO_SECRET_KEY = $(python3 -c 'import secrets;print(secrets.token_urlsa
 echo "POSTGRES_PASSWORD = $(openssl rand -hex 24)"
 nano .env
 ```
-
-> **🖐️ Variante manuel/root** — Le dossier `/opt/horus-lab` appartient à root (pas de
-> user `horus`) → **enlève la ligne `chown horus`** et fais tout en root :
-> ```bash
-> # depuis ton PC (le dossier /opt/horus-lab a été créé à l'Étape 2 en root) :
-> scp docker-compose.prod.yml stack.env.example "$SRV":/opt/horus-lab/
-> scp -r deploy                                 "$SRV":/opt/horus-lab/
-> # sur le VPS, en root (pas de `su - horus`) :
-> ssh "$SRV"
-> cd /opt/horus-lab
-> cp stack.env.example .env && chmod 600 .env
-> nano .env
-> ```
-> Le reste du contenu du `.env` ci-dessous est **identique** dans les deux modes.
 À remplir dans `.env` (garde secret + mot de passe base **au chaud**) :
 - `DJANGO_SECRET_KEY`, `POSTGRES_PASSWORD` (les valeurs générées ci-dessus)
 - `POSTGRES_HOST=backend-db-1` (conteneur postgres réutilisé — déjà pré-rempli)
@@ -333,12 +263,6 @@ docker compose -f docker-compose.prod.yml up -d
 docker compose -f docker-compose.prod.yml logs -f web
 #   attendu : Migrations → seed (RUN_SEED=1) → compte admin → collectstatic → Gunicorn :8000
 ```
-
-> **🖐️ Variante manuel/root** — **Mêmes 3 commandes, en root** (pas de `su - horus`).
-> **C'est CE trio que tu relanceras à chaque mise à jour** de tes images : `pull`
-> (télécharge la nouvelle `:latest` depuis GHCR) → `up -d` (recrée le conteneur) →
-> `logs -f`. C'est ton « déploiement manuel » — celui que le CI aurait fait à ta place
-> en mode A.
 Vérifier en local sur le VPS *(le header `Host` est obligatoire pour l'API, sinon
 Django renvoie 400 `DisallowedHost` — c'est NORMAL, pas une erreur)* :
 ```bash
@@ -440,17 +364,6 @@ Désormais chaque `git push` sur `main` :
 - touchant `frontend/**` → rebuild `horus-frontend` → GHCR → SSH → `pull && up -d frontend`
 
 **📝** auto-déploiement activé ☐
-
-> **🖐️ Variante manuel/root** — **Étape à NE PAS faire.** Tu laisses `DEPLOY_ENABLED=false`.
-> Le CI continue de **construire et pousser** les images sur GHCR à chaque `git push`,
-> mais **ne touche jamais** ton serveur. Pour mettre en ligne une nouvelle version,
-> **c'est toi** qui relances, en root, le trio de l'Étape 5 :
-> ```bash
-> cd /opt/horus-lab
-> docker compose -f docker-compose.prod.yml pull
-> docker compose -f docker-compose.prod.yml up -d          # ou `up -d web` / `up -d frontend`
-> docker compose -f docker-compose.prod.yml logs -f
-> ```
 
 ---
 
