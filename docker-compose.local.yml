@@ -1,0 +1,66 @@
+# ============================================================================
+# LOCAL — faire tourner LES IMAGES DÉPLOYÉES (GHCR) sur ta machine.
+# Pas de build : on tire exactement les images de production + une base
+# Postgres locale. But : avoir en local une copie fidèle de la prod.
+#
+#   docker login ghcr.io -u TON_USER_GITHUB      # (images privées)
+#   docker compose -f docker-compose.local.yml up -d
+#   -> site   http://localhost:3000
+#   -> admin  http://localhost:8000/admin/   (admin / HorusLab2026!)
+#
+#   Arrêter :  docker compose -f docker-compose.local.yml down
+#   (ajoute -v pour effacer aussi la base locale)
+# ============================================================================
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: horuslab
+      POSTGRES_USER: horuslab
+      POSTGRES_PASSWORD: localdev
+    volumes:
+      - localpg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U horuslab -d horuslab"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    image: ghcr.io/horus-lab-team-s/horus-backend:latest
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://horuslab:localdev@db:5432/horuslab
+      DJANGO_SECRET_KEY: dev-secret-local-change-me
+      DJANGO_DEBUG: "1"
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1,backend
+      CORS_ALLOWED_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      CSRF_TRUSTED_ORIGINS: http://localhost:3000,http://127.0.0.1:3000
+      # Remplit la base au 1er démarrage (contenu de démo) :
+      RUN_SEED: "1"
+      DJANGO_SUPERUSER_USERNAME: admin
+      DJANGO_SUPERUSER_EMAIL: contact@horus-lab.com
+      DJANGO_SUPERUSER_PASSWORD: HorusLab2026!
+    ports:
+      - "8000:8000"
+
+  frontend:
+    image: ghcr.io/horus-lab-team-s/horus-frontend:latest
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      # Le SSR/ISR interroge le backend PAR NOM de conteneur (réseau interne).
+      BACKEND_API_URL: http://backend:8000
+      NEXT_PUBLIC_SITE_URL: http://localhost:3100
+    ports:
+      # Port hôte 3100 (3000 est souvent réservé par Windows/Hyper-V).
+      - "3100:3000"
+
+volumes:
+  localpg:
