@@ -83,8 +83,8 @@ class Command(BaseCommand):
                 title_lead_en="We turn your ideas into",
                 title_highlight_fr="solutions numériques durables",
                 title_highlight_en="lasting digital solutions",
-                subtitle_fr="Vos idées, nos solutions — du concept au déploiement.",
-                subtitle_en="Your ideas, our solutions — from concept to deployment.",
+                subtitle_fr="Vos idées, nos solutions, du concept au déploiement.",
+                subtitle_en="Your ideas, our solutions, from concept to deployment.",
                 cta_primary_fr="Démarrer un projet",
                 cta_primary_en="Start a project",
                 cta_secondary_fr="Découvrir nos services",
@@ -93,7 +93,7 @@ class Command(BaseCommand):
         )
         HeroStat.objects.all().delete()
         for i, (value, fr, en) in enumerate([
-            ("8+",  "projets livrés",     "projects delivered"),
+            ("5",   "projets livrés",     "projects delivered"),
             ("4",   "pôles d'expertise",  "areas of expertise"),
             ("24/7","accompagnement",     "support"),
         ]):
@@ -107,8 +107,8 @@ class Command(BaseCommand):
              "Websites, platforms, iOS / Android apps and high-performance PWAs, built around your users.",
              ["React", "Next.js", "Flutter", "PWA"]),
             ("eye", "Systèmes d'information", "Information Systems",
-             "Analyse, conception et architecture de vos SI avec rigueur — méthode RUP, UML, audit de l'existant.",
-             "Analysis, design and IS architecture with rigour — RUP method, UML, existing system audit.",
+             "Analyse, conception et architecture de vos SI avec rigueur : méthode RUP, UML, audit de l'existant.",
+             "Analysis, design and IS architecture with rigour: RUP method, UML, existing system audit.",
              ["UML", "RUP", "Architecture", "API"]),
             ("cog", "Digitalisation d'entreprise", "Business Digitalisation",
              "Dématérialisation, automatisation des workflows et outils de gestion adaptés à votre contexte africain.",
@@ -198,7 +198,7 @@ class Command(BaseCommand):
              False),
             ("Sandrine M.", "Responsable des opérations, MediCare", "Operations Lead, MediCare",
              "La digitalisation de nos processus nous fait gagner un temps précieux chaque semaine. Workflows automatisés, validations dématérialisées : le papier a quasiment disparu.",
-             "Digitalising our processes saves us precious time every single week. Automated workflows, paperless approvals — the paper has all but disappeared.",
+             "Digitalising our processes saves us precious time every single week. Automated workflows, paperless approvals, the paper has all but disappeared.",
              False),
             ("David K.", "Directeur des SI, LogiTrans", "Head of IT, LogiTrans",
              "Leur audit a révélé des failles que nous ignorions, et la formation a fait monter toute notre équipe en compétences. Un accompagnement concret et durable.",
@@ -241,8 +241,10 @@ class Command(BaseCommand):
                 name="Edwin TCHAMBA TCHAKOUNTE",
                 role_fr="Architecte logiciel · Co-fondateur",
                 role_en="Software architect · Co-founder",
-                bio_fr="Senior Software Engineer & Architecte logiciel, passionné par la résolution de problèmes complexes et l'innovation technologique. Avec plus de 3 ans d'expérience en développement full-stack (web & mobile), conception d'APIs REST et déploiement cloud, je livre des solutions performantes et adaptées aux besoins réels. Maîtrise de la méthode RUP et de la modélisation UML. Formation IUT-FV & ENSPD. Lauréat du Prix du Meilleur Projet de Fin d'Études — IUT-FV Bandjoun (2024).",
-                bio_en="Senior Software Engineer & Software Architect, driven by complex problem-solving and technological innovation. With 3+ years of hands-on experience in full-stack web & mobile development, REST API design and cloud deployment, I deliver high-performance solutions tailored to real-world needs. Expert in RUP methodology and UML modelling, trained at IUT-FV and ENSPD. Winner of the Best Final Year Project Award — IUT-FV Bandjoun (2024).",
+                bio_fr="Ingénieur logiciel senior & architecte. Plus de 3 ans en full-stack (web & mobile), APIs REST et déploiement cloud, avec la rigueur des méthodes RUP et UML. Lauréat du Prix du Meilleur Projet de Fin d'Études, IUT-FV Bandjoun (2024).",
+                bio_en="Senior software engineer & architect. 3+ years in full-stack (web & mobile) development, REST APIs and cloud deployment, with the rigour of RUP and UML methods. Winner of the Best Final Year Project Award, IUT-FV Bandjoun (2024).",
+                github_url="https://github.com/EdwinTchakounte",
+                email="tchambaedwin@gmail.com",
                 is_lead=True, order=1,
             ),
         ]
@@ -282,8 +284,8 @@ class Command(BaseCommand):
                 slug="google-io-2026-annonces-cles", cat="tech",
                 tfr="Google I/O 2026 : les annonces qui vont impacter votre business",
                 ten="Google I/O 2026: the announcements that will impact your business",
-                efr="Gemini Ultra 2, Project Astra, Android XR — Google a frappé fort. Décryptage des annonces avec un impact réel sur les entreprises africaines.",
-                een="Gemini Ultra 2, Project Astra, Android XR — Google hit hard. Breaking down the announcements with real impact on African businesses.",
+                efr="Gemini Ultra 2, Project Astra, Android XR : Google a frappé fort. Décryptage des annonces avec un impact réel sur les entreprises africaines.",
+                een="Gemini Ultra 2, Project Astra, Android XR: Google hit hard. Breaking down the announcements with real impact on African businesses.",
                 bfr="Le Google I/O 2026 a marqué un tournant avec l'intégration de Gemini directement dans les outils de productivité (Workspace, Android). Pour les entreprises africaines, les implications sont concrètes : automatisation des workflows, génération de documents, traduction multilingue en temps réel.\n\nAndroid XR ouvre également un nouveau terrain pour les applications mobiles immersives.",
                 ben="Google I/O 2026 marked a turning point with Gemini integration directly into productivity tools (Workspace, Android). For African businesses, the implications are tangible: workflow automation, document generation, real-time multilingual translation.\n\nAndroid XR also opens new ground for immersive mobile applications.",
                 tags=["Google", "Gemini", "Android", "IA"], date="2026-05-28",
@@ -352,18 +354,18 @@ class Command(BaseCommand):
         items = [
             dict(
                 title_fr="Afrikamode", title_en="Afrikamode",
-                client_fr="Italie · France · Belgique · Cameroun",
-                client_en="Italy · France · Belgium · Cameroon",
+                client_fr="Italie · Cameroun",
+                client_en="Italy · Cameroon",
                 category_fr="Mode & e-commerce", category_en="Fashion & e-commerce",
-                description_fr="Plateforme e-commerce internationale pour une marque de mode africaine présente en Europe et en Afrique. Catalogue multilingue, fiches produits, panier, paiement sécurisé. Des créateurs de Lagos à Abidjan, une ligne maison, une esthétique contemporaine — portée sur 4 pays.",
-                description_en="International e-commerce platform for an African fashion brand present across Europe and Africa. Multilingual catalogue, product pages, cart, secure checkout. Designers from Lagos to Abidjan, an in-house line — live in 4 countries.",
+                description_fr="Plateforme e-commerce pour une marque de mode africaine présente en Italie et au Cameroun. Catalogue multilingue, fiches produits, panier, paiement sécurisé. Une ligne maison et des créateurs invités, une esthétique contemporaine, disponible dans 2 pays.",
+                description_en="E-commerce platform for an African fashion brand present in Italy and Cameroon. Multilingual catalogue, product pages, cart, secure checkout. An in-house line and guest designers, a contemporary aesthetic, live in 2 countries.",
                 role_fr="Conception & développement", role_en="Design & development",
                 scope_fr="Boutique e-commerce internationale",
                 scope_en="International e-commerce store",
                 tags=["Next.js", "React", "Tailwind", "TypeScript", "e-commerce"],
-                result_fr="Live en Europe & Afrique", result_en="Live in Europe & Africa",
+                result_fr="En ligne en Italie & au Cameroun", result_en="Live in Italy & Cameroon",
                 icon="spark",
-                gradient="from-rose-500 via-orange-500 to-amber-400",
+                gradient="from-sky via-brand-500 to-brand-700",
                 url="https://afrikamode.store",
                 is_featured=True,
             ),
@@ -387,8 +389,8 @@ class Command(BaseCommand):
                 client_fr="Apprenants & professionnels IT",
                 client_en="IT learners & professionals",
                 category_fr="Éducation & EdTech", category_en="Education & EdTech",
-                description_fr="Plateforme de formation aux métiers de l'informatique : développement web, Python, cybersécurité et plus. Parcours structurés, ressources progressives et suivi des apprenants — pour rendre la tech accessible à tous, partout en Afrique.",
-                description_en="Training platform covering IT careers: web development, Python, cybersecurity and more. Structured tracks, progressive resources and learner tracking — built to make tech accessible everywhere across Africa.",
+                description_fr="Plateforme de formation aux métiers de l'informatique : développement web, Python, cybersécurité et plus. Parcours structurés, ressources progressives et suivi des apprenants, pour rendre la tech accessible à tous, partout en Afrique.",
+                description_en="Training platform covering IT careers: web development, Python, cybersecurity and more. Structured tracks, progressive resources and learner tracking, built to make tech accessible everywhere across Africa.",
                 role_fr="Conception & développement", role_en="Design & development",
                 scope_fr="Plateforme de formation IT en ligne",
                 scope_en="Online IT training platform",
@@ -434,9 +436,9 @@ class Command(BaseCommand):
 
     def seed_achievements(self):
         items = [
-            ("8+",   "projets livrés",     "projects delivered"),
-            ("4",    "pays couverts",      "countries covered"),
-            ("11",   "filiales déployées", "subsidiaries deployed"),
+            ("5",    "projets livrés",     "projects delivered"),
+            ("4",    "pôles d'expertise",  "areas of expertise"),
+            ("2",    "pays couverts",      "countries covered"),
             ("24/7", "accompagnement",     "support"),
         ]
         Achievement.objects.all().delete()
@@ -466,8 +468,8 @@ class Command(BaseCommand):
             dict(
                 title_fr="Afrikamode est en ligne sur afrikamode.store",
                 title_en="Afrikamode is live on afrikamode.store",
-                body_fr="La boutique en ligne d'Afrikamode ouvre ses portes : créateurs invités de Lagos à Abidjan et ligne maison. Catalogue, panier et paiement bout-en-bout.",
-                body_en="Afrikamode opens its online store: guest designers from Lagos to Abidjan and the house line. Catalogue, cart and checkout end-to-end.",
+                body_fr="La boutique en ligne d'Afrikamode ouvre ses portes, avec une ligne maison et des créateurs invités. Catalogue, panier et paiement de bout en bout.",
+                body_en="Afrikamode opens its online store, with an in-house line and guest designers. Catalogue, cart and checkout end to end.",
                 tag_fr="Lancement", tag_en="Launch",
                 url="https://afrikamode.store",
                 published_at=date(2026, 5, 12),
@@ -479,14 +481,6 @@ class Command(BaseCommand):
                 body_en="The Cybersecurity track joins web development and Python. Progressive modules, guided exercises and certificates.",
                 tag_fr="Roadmap", tag_en="Roadmap",
                 published_at=date(2026, 4, 10),
-            ),
-            dict(
-                title_fr="SFX Pre-Douane étendu à 2 nouveaux pays",
-                title_en="SFX Pre-Douane extended to 2 new countries",
-                body_fr="Le déploiement multinational atteint désormais 11 filiales à travers l'Afrique. Stabilité et performances confirmées en production.",
-                body_en="The multinational rollout now reaches 11 subsidiaries across Africa. Stability and performance confirmed in production.",
-                tag_fr="Déploiement", tag_en="Rollout",
-                published_at=date(2026, 3, 8),
             ),
         ]
         News.objects.all().delete()

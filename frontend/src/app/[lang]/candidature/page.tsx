@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
+import { WaveDivider } from "@/components/WaveDivider";
 import { CandidatureForm } from "@/components/candidature/CandidatureForm";
 import { CareerBackdrop } from "@/components/candidature/CareerBackdrop";
 import { IconArrowRight, IconCheck, IconCog, IconEye, IconSpark } from "@/components/icons";
@@ -26,11 +27,12 @@ const CONTENT: Record<Lang, {
   formEyebrow: string;
   formTitle: string;
   formSubtitle: string;
+  steps: { title: string; desc: string }[];
 }> = {
   fr: {
     eyebrow: "Rejoignez-nous",
     title: "Construisons l'avenir numérique de l'Afrique, ensemble",
-    intro: "Vous êtes développeur, designer, analyste ou étudiant en quête d'un stage qui compte ? Déposez votre candidature en ligne — emploi ou stage professionnel — et rejoignez une équipe qui livre des produits qui ont du sens.",
+    intro: "Vous êtes développeur, designer, analyste ou étudiant en quête d'un stage qui compte ? Déposez votre candidature en ligne (emploi ou stage professionnel) et rejoignez une équipe qui livre des produits qui ont du sens.",
     scrollCta: "Postuler maintenant",
     perksTitle: "Pourquoi Horus-Lab",
     perksSubtitle: "Une équipe à taille humaine où votre travail a un impact réel.",
@@ -43,11 +45,16 @@ const CONTENT: Record<Lang, {
     formEyebrow: "Candidature en ligne",
     formTitle: "Déposez votre dossier",
     formSubtitle: "Remplissez le formulaire et joignez un seul fichier ZIP contenant tous vos documents (CV, lettre de motivation, diplômes…).",
+    steps: [
+      { title: "Déposez votre dossier", desc: "Un seul fichier ZIP avec CV, lettre et diplômes." },
+      { title: "Nous étudions", desc: "Nous revenons vers vous sous quelques jours." },
+      { title: "On échange", desc: "Entretien, puis démarrage si c'est un match." },
+    ],
   },
   en: {
     eyebrow: "Join us",
     title: "Let's build Africa's digital future, together",
-    intro: "Are you a developer, designer, analyst or a student looking for an internship that matters? Apply online — job or professional internship — and join a team that ships products that count.",
+    intro: "Are you a developer, designer, analyst or a student looking for an internship that matters? Apply online (job or professional internship) and join a team that ships products that count.",
     scrollCta: "Apply now",
     perksTitle: "Why Horus-Lab",
     perksSubtitle: "A human-scale team where your work has real impact.",
@@ -60,6 +67,11 @@ const CONTENT: Record<Lang, {
     formEyebrow: "Online application",
     formTitle: "Submit your documents",
     formSubtitle: "Fill in the form and attach a single ZIP file with all your documents (résumé, cover letter, diplomas…).",
+    steps: [
+      { title: "Submit your file", desc: "A single ZIP with CV, cover letter and diplomas." },
+      { title: "We review", desc: "We get back to you within a few days." },
+      { title: "We talk", desc: "Interview, then onboarding if it's a match." },
+    ],
   },
 };
 
@@ -94,24 +106,13 @@ export default async function CandidaturePage({ params }: { params: Promise<Para
           <div
             aria-hidden
             className="absolute inset-0 -z-20 bg-cover bg-center"
-            style={{ backgroundImage: "url(https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1920&q=80)" }}
+            style={{ backgroundImage: "url(/img/photo-1522071820081-009f0129c71c-w1920.jpg)" }}
           />
           <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-br from-brand-900/85 via-brand-900/70 to-brand-800/80" />
           <div aria-hidden className="absolute inset-0 -z-10 bg-grid opacity-[0.15]" />
-          {/* Orbes */}
-          <div aria-hidden className="pointer-events-none absolute -left-20 top-1/4 h-64 w-64 rounded-full bg-sky/15 blur-3xl animate-float-slow" />
-          <div aria-hidden className="pointer-events-none absolute -right-10 bottom-10 h-56 w-56 rounded-full bg-brand-400/15 blur-3xl animate-drift" />
-          {/* Particules */}
-          {[
-            { x: "10%", y: "22%", d: "0s" },
-            { x: "85%", y: "18%", d: "1.2s" },
-            { x: "24%", y: "72%", d: "0.8s" },
-            { x: "74%", y: "78%", d: "2s" },
-            { x: "52%", y: "28%", d: "1.5s" },
-          ].map((p, i) => (
-            <div key={i} aria-hidden className="absolute size-2 rounded-full bg-white/25 animate-float"
-              style={{ left: p.x, top: p.y, animationDelay: p.d }} />
-          ))}
+          {/* Halos discrets */}
+          <div aria-hidden className="pointer-events-none absolute -left-20 top-1/4 h-64 w-64 rounded-full bg-sky/12 blur-3xl" />
+          <div aria-hidden className="pointer-events-none absolute -right-10 bottom-10 h-56 w-56 rounded-full bg-brand-400/12 blur-3xl" />
 
           <div className="relative mx-auto max-w-4xl px-5 text-center sm:px-8">
             <Reveal>
@@ -139,26 +140,15 @@ export default async function CandidaturePage({ params }: { params: Promise<Para
             </Reveal>
           </div>
 
-          {/* Vague animée bas (comme les autres pages) */}
-          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[90px] text-surface dark:text-[#070e1c]">
-            <svg viewBox="0 0 2880 120" preserveAspectRatio="none"
-              className="absolute bottom-0 left-0 h-full w-[200%] animate-[waveX_16s_linear_infinite]">
-              <path fill="currentColor" opacity="0.45"
-                d="M0,50 C240,90 480,10 720,50 C960,90 1200,10 1440,50 C1680,90 1920,10 2160,50 C2400,90 2640,10 2880,50 L2880,120 L0,120 Z" />
-            </svg>
-            <svg viewBox="0 0 2880 120" preserveAspectRatio="none"
-              className="absolute bottom-0 left-0 h-full w-[200%] animate-[waveX_11s_linear_infinite_reverse]">
-              <path fill="currentColor"
-                d="M0,60 C360,100 720,30 1440,60 C2160,90 2520,30 2880,60 L2880,120 L0,120 Z" />
-            </svg>
-          </div>
+          {/* Séparateur en vague statique vers la section suivante */}
+          <WaveDivider className="text-surface dark:text-[#070e1c]" />
         </section>
 
         {/* ═══════════════════════════════════════════════════════
             POURQUOI NOUS — cartes animées
         ═══════════════════════════════════════════════════════ */}
-        <section className="relative overflow-hidden bg-surface py-20 dark:bg-[#070e1c] sm:py-24">
-          <CareerBackdrop variant="perks" />
+        <section className="relative overflow-hidden bg-surface py-20 dark:bg-[#070e1c] sm:py-28">
+          <CareerBackdrop />
 
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
             <Reveal className="mx-auto max-w-2xl text-center">
@@ -190,15 +180,30 @@ export default async function CandidaturePage({ params }: { params: Promise<Para
         {/* ═══════════════════════════════════════════════════════
             FORMULAIRE DE CANDIDATURE
         ═══════════════════════════════════════════════════════ */}
-        <section id="postuler" className="relative scroll-mt-28 overflow-hidden bg-white py-20 dark:bg-[#070e1c] sm:py-24">
+        <section id="postuler" className="relative scroll-mt-28 overflow-hidden bg-white py-20 dark:bg-[#070e1c] sm:py-28">
           <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-b from-surface to-white dark:from-slate-900/40 dark:to-[#070e1c]" />
-          <CareerBackdrop variant="form" />
+          <CareerBackdrop />
 
           <div className="relative mx-auto max-w-3xl px-5 sm:px-8">
-            <Reveal className="mb-10 text-center">
+            <Reveal className="mb-8 text-center">
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-500">{c.formEyebrow}</span>
               <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-brand-900 dark:text-white sm:text-4xl">{c.formTitle}</h2>
               <p className="mx-auto mt-4 max-w-xl text-muted">{c.formSubtitle}</p>
+            </Reveal>
+
+            {/* Parcours en 3 étapes : rassure le candidat */}
+            <Reveal className="mb-10">
+              <ol className="grid gap-4 sm:grid-cols-3">
+                {c.steps.map((s, i) => (
+                  <li key={s.title} className="relative rounded-2xl border border-brand-100 bg-white/80 p-5 backdrop-blur dark:border-white/10 dark:bg-white/5">
+                    <span className="inline-flex size-8 items-center justify-center rounded-full bg-brand-700 text-sm font-extrabold text-white shadow-md">
+                      {i + 1}
+                    </span>
+                    <h3 className="mt-3 text-sm font-bold text-brand-900 dark:text-white">{s.title}</h3>
+                    <p className="mt-1 text-xs leading-relaxed text-muted">{s.desc}</p>
+                  </li>
+                ))}
+              </ol>
             </Reveal>
 
             <Reveal delay={120}>

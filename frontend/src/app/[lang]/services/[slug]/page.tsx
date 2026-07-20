@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
+import { WaveDivider } from "@/components/WaveDivider";
 import { ServiceContactSection } from "@/components/services/ServiceContactSection";
 import { ServiceProcessSection } from "@/components/services/ServiceProcessSection";
 import {
@@ -32,28 +33,28 @@ export function generateStaticParams() {
 /* ─── Images Unsplash par feature ────────────────────────────── */
 const FEATURE_IMAGES: Record<string, Record<number, string>> = {
   applications: {
-    0: "https://images.unsplash.com/photo-1607706189992-eae578626c86?auto=format&fit=crop&w=600&q=70",
-    1: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=600&q=70",
-    2: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=600&q=70",
-    3: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=70",
+    0: "/img/photo-1607706189992-eae578626c86-w600.jpg",
+    1: "/img/photo-1512941937669-90a1b58e7e9c-w600.jpg",
+    2: "/img/photo-1461749280684-dccba630e2f6-w600.jpg",
+    3: "/img/photo-1558494949-ef010cbdcc31-w600.jpg",
   },
   "systemes-information": {
-    0: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=70",
-    1: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=70",
-    2: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=70",
-    3: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=600&q=70",
+    0: "/img/photo-1518770660439-4636190af475-w600.jpg",
+    1: "/img/photo-1558494949-ef010cbdcc31-w600.jpg",
+    2: "/img/photo-1551288049-bebda4e38f71-w600.jpg",
+    3: "/img/photo-1454165804606-c3d57bc86b40-w600.jpg",
   },
   digitalisation: {
-    0: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=600&q=70",
-    1: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=70",
-    2: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=70",
-    3: "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=600&q=70",
+    0: "/img/photo-1531482615713-2afd69097998-w600.jpg",
+    1: "/img/photo-1518770660439-4636190af475-w600.jpg",
+    2: "/img/photo-1551288049-bebda4e38f71-w600.jpg",
+    3: "/img/photo-1573164713988-8665fc963095-w600.jpg",
   },
   "formation-audit": {
-    0: "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=600&q=70",
-    1: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=600&q=70",
-    2: "https://images.unsplash.com/photo-1607706189992-eae578626c86?auto=format&fit=crop&w=600&q=70",
-    3: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=600&q=70",
+    0: "/img/photo-1573164713988-8665fc963095-w600.jpg",
+    1: "/img/photo-1524178232363-1fb2b075b655-w600.jpg",
+    2: "/img/photo-1607706189992-eae578626c86-w600.jpg",
+    3: "/img/photo-1461749280684-dccba630e2f6-w600.jpg",
   },
 };
 
@@ -79,7 +80,7 @@ const SERVICES_DATA: Record<string, Record<Lang, ServiceContent>> = {
       gradient: "from-brand-700 via-brand-600 to-sky",
       gradientLight: "from-brand-50 via-sky/5 to-white",
       badge: "Développement",
-      heroImage: "https://images.unsplash.com/photo-1607706189992-eae578626c86?auto=format&fit=crop&w=1920&q=85",
+      heroImage: "/img/photo-1607706189992-eae578626c86-w1920.jpg",
       title: "Applications sur mesure",
       subtitle: "Web, mobile & PWA conçus pour vos utilisateurs",
       intro: "Nous concevons des applications web et mobiles performantes, de la maquette au déploiement. Chaque produit est pensé autour de vos utilisateurs réels et de vos contraintes terrain.",
@@ -103,7 +104,7 @@ const SERVICES_DATA: Record<string, Record<Lang, ServiceContent>> = {
       gradient: "from-brand-700 via-brand-600 to-sky",
       gradientLight: "from-brand-50 via-sky/5 to-white",
       badge: "Development",
-      heroImage: "https://images.unsplash.com/photo-1607706189992-eae578626c86?auto=format&fit=crop&w=1920&q=85",
+      heroImage: "/img/photo-1607706189992-eae578626c86-w1920.jpg",
       title: "Custom Applications",
       subtitle: "Web, mobile & PWA built around your users",
       intro: "We design and build high-performance web and mobile applications, from wireframe to production. Every product is shaped around your real users and on-the-ground constraints.",
@@ -129,10 +130,10 @@ const SERVICES_DATA: Record<string, Record<Lang, ServiceContent>> = {
       gradient: "from-slate-800 via-brand-700 to-brand-500",
       gradientLight: "from-slate-50 via-brand-50/30 to-white",
       badge: "Analyse & Conception",
-      heroImage: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1920&q=85",
+      heroImage: "/img/photo-1518770660439-4636190af475-w1920.jpg",
       title: "Systèmes d'information",
       subtitle: "Analyse, conception et architecture SI",
-      intro: "Nous modélisons et architecturons vos systèmes d'information avec rigueur — méthode RUP, UML, audit de l'existant — pour vous livrer une base solide, évolutive et documentée.",
+      intro: "Nous modélisons et architecturons vos systèmes d'information avec rigueur : méthode RUP, UML, audit de l'existant, pour vous livrer une base solide, évolutive et documentée.",
       features: [
         { title: "Audit de l'existant", desc: "Cartographie de votre SI, identification des points de friction et opportunités." },
         { title: "Modélisation UML", desc: "Diagrammes de cas d'usage, classes, séquences, déploiement." },
@@ -153,10 +154,10 @@ const SERVICES_DATA: Record<string, Record<Lang, ServiceContent>> = {
       gradient: "from-slate-800 via-brand-700 to-brand-500",
       gradientLight: "from-slate-50 via-brand-50/30 to-white",
       badge: "Analysis & Design",
-      heroImage: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1920&q=85",
+      heroImage: "/img/photo-1518770660439-4636190af475-w1920.jpg",
       title: "Information Systems",
       subtitle: "Analysis, design and IS architecture",
-      intro: "We model and architect your information systems with rigour — RUP method, UML, existing system audit — delivering a solid, scalable and documented foundation.",
+      intro: "We model and architect your information systems with rigour: RUP method, UML, existing system audit, delivering a solid, scalable and documented foundation.",
       features: [
         { title: "Existing system audit", desc: "Mapping your IS, identifying friction points and opportunities." },
         { title: "UML modelling", desc: "Use case, class, sequence and deployment diagrams." },
@@ -179,7 +180,7 @@ const SERVICES_DATA: Record<string, Record<Lang, ServiceContent>> = {
       gradient: "from-emerald-600 via-teal-600 to-brand-500",
       gradientLight: "from-emerald-50 via-teal-50/30 to-white",
       badge: "Transformation digitale",
-      heroImage: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1920&q=85",
+      heroImage: "/img/photo-1531482615713-2afd69097998-w1920.jpg",
       title: "Digitalisation d'entreprise",
       subtitle: "Transformez vos processus métier en leviers numériques",
       intro: "Nous accompagnons les entreprises africaines dans leur transformation numérique : dématérialisation, automatisation des workflows, déploiement d'outils adaptés à votre contexte.",
@@ -203,7 +204,7 @@ const SERVICES_DATA: Record<string, Record<Lang, ServiceContent>> = {
       gradient: "from-emerald-600 via-teal-600 to-brand-500",
       gradientLight: "from-emerald-50 via-teal-50/30 to-white",
       badge: "Digital transformation",
-      heroImage: "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1920&q=85",
+      heroImage: "/img/photo-1531482615713-2afd69097998-w1920.jpg",
       title: "Business Digitalisation",
       subtitle: "Turn your business processes into digital levers",
       intro: "We guide African businesses through their digital transformation: dematerialisation, workflow automation, deployment of tools adapted to your context.",
@@ -229,12 +230,12 @@ const SERVICES_DATA: Record<string, Record<Lang, ServiceContent>> = {
       gradient: "from-amber-500 via-orange-500 to-brand-600",
       gradientLight: "from-amber-50 via-orange-50/30 to-white",
       badge: "Formation & Audit",
-      heroImage: "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1920&q=85",
+      heroImage: "/img/photo-1573164713988-8665fc963095-w1920.jpg",
       title: "Formation & Audit IT",
       subtitle: "Montez en compétences, sécurisez vos systèmes",
       intro: "Nous formons vos équipes aux technologies modernes et auditons vos systèmes pour identifier les risques, les inefficacités et les opportunités d'amélioration.",
       features: [
-        { title: "Formations techniques", desc: "Développement web, mobile, bases de données, cybersécurité — adaptées à votre niveau." },
+        { title: "Formations techniques", desc: "Développement web, mobile, bases de données, cybersécurité, adaptées à votre niveau." },
         { title: "Ateliers pratiques", desc: "Sessions hands-on sur vos propres outils et projets réels." },
         { title: "Audit de code", desc: "Revue de votre codebase : qualité, sécurité, performances, dette technique." },
         { title: "Audit de sécurité", desc: "Tests de pénétration, analyse des vulnérabilités, recommandations concrètes." },
@@ -253,12 +254,12 @@ const SERVICES_DATA: Record<string, Record<Lang, ServiceContent>> = {
       gradient: "from-amber-500 via-orange-500 to-brand-600",
       gradientLight: "from-amber-50 via-orange-50/30 to-white",
       badge: "Training & Audit",
-      heroImage: "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1920&q=85",
+      heroImage: "/img/photo-1573164713988-8665fc963095-w1920.jpg",
       title: "Training & IT Audit",
       subtitle: "Upskill your teams, secure your systems",
       intro: "We train your teams on modern technologies and audit your systems to identify risks, inefficiencies and improvement opportunities.",
       features: [
-        { title: "Technical training", desc: "Web dev, mobile, databases, cybersecurity — adapted to your level." },
+        { title: "Technical training", desc: "Web dev, mobile, databases, cybersecurity, adapted to your level." },
         { title: "Hands-on workshops", desc: "Practical sessions on your own tools and real projects." },
         { title: "Code audit", desc: "Codebase review: quality, security, performance, technical debt." },
         { title: "Security audit", desc: "Penetration testing, vulnerability analysis, concrete recommendations." },
@@ -326,17 +327,6 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
           />
           {/* Trame discrète */}
           <div aria-hidden className="absolute inset-0 -z-10 bg-grid opacity-[0.12]" />
-          {/* Particules */}
-          {[
-            { x:"8%",  y:"20%", d:"0s"   },
-            { x:"88%", y:"15%", d:"1.2s" },
-            { x:"25%", y:"75%", d:"0.8s" },
-            { x:"72%", y:"80%", d:"2s"   },
-            { x:"50%", y:"30%", d:"1.5s" },
-          ].map((p,i) => (
-            <div key={i} className="absolute size-2 rounded-full bg-white/20 animate-float"
-              style={{ left:p.x, top:p.y, animationDelay:p.d }} />
-          ))}
 
           <div className="relative mx-auto max-w-4xl px-5 text-center sm:px-8">
             <Reveal>
@@ -364,19 +354,8 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
             </Reveal>
           </div>
 
-          {/* ── Vague animée identique à la home ── */}
-          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[90px] text-white dark:text-[#070e1c]">
-            <svg viewBox="0 0 2880 120" preserveAspectRatio="none"
-              className="absolute bottom-0 left-0 h-full w-[200%] animate-[waveX_16s_linear_infinite]">
-              <path fill="currentColor" opacity="0.45"
-                d="M0,50 C240,90 480,10 720,50 C960,90 1200,10 1440,50 C1680,90 1920,10 2160,50 C2400,90 2640,10 2880,50 L2880,120 L0,120 Z" />
-            </svg>
-            <svg viewBox="0 0 2880 120" preserveAspectRatio="none"
-              className="absolute bottom-0 left-0 h-full w-[200%] animate-[waveX_11s_linear_infinite_reverse]">
-              <path fill="currentColor"
-                d="M0,60 C360,100 720,30 1440,60 C2160,90 2520,30 2880,60 L2880,120 L0,120 Z" />
-            </svg>
-          </div>
+          {/* Séparateur en vague statique vers la section suivante (fond blanc) */}
+          <WaveDivider className="text-white dark:text-[#070e1c]" />
         </section>
 
         {/* ═══════════════════════════════════════════════════════
@@ -391,38 +370,12 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
         </section>
 
         {/* ═══════════════════════════════════════════════════════
-            CE QUE NOUS FAISONS — cartes avec image + formes animées
+            CE QUE NOUS FAISONS — cartes avec image
         ═══════════════════════════════════════════════════════ */}
-        <section className="relative overflow-hidden py-20 sm:py-24">
-          {/* Fond dégradé léger propre au service */}
+        <section className="relative overflow-hidden py-20 sm:py-28">
+          {/* Fond sobre propre au service */}
           <div aria-hidden className="absolute inset-0 bg-gradient-to-br from-white via-surface to-white dark:from-[#070e1c] dark:via-slate-900 dark:to-[#070e1c]" />
-          <div aria-hidden className="absolute inset-0 bg-grid-soft opacity-40" />
-
-          {/* Formes géométriques animées dans tout le fond */}
-          {[
-            { shape:"circle",  x:"3%",  y:"8%",  sz:50, d:"0s",   dur:"9s"  },
-            { shape:"square",  x:"90%", y:"5%",  sz:38, d:"1.2s", dur:"10s" },
-            { shape:"hex",     x:"15%", y:"70%", sz:44, d:"0.6s", dur:"8s"  },
-            { shape:"diamond", x:"82%", y:"60%", sz:36, d:"2s",   dur:"11s" },
-            { shape:"circle",  x:"48%", y:"5%",  sz:28, d:"1.5s", dur:"9s"  },
-            { shape:"star",    x:"70%", y:"78%", sz:40, d:"0.3s", dur:"10s" },
-            { shape:"square",  x:"5%",  y:"45%", sz:30, d:"2.5s", dur:"8s"  },
-            { shape:"triangle",x:"92%", y:"40%", sz:34, d:"1s",   dur:"9s"  },
-            { shape:"circle",  x:"55%", y:"88%", sz:24, d:"1.8s", dur:"11s" },
-            { shape:"diamond", x:"28%", y:"12%", sz:32, d:"0.9s", dur:"8s"  },
-          ].map((s2, i) => (
-            <div key={i} aria-hidden
-              className="pointer-events-none absolute animate-float text-brand-400/[0.10] dark:text-brand-300/[0.08]"
-              style={{ left:s2.x, top:s2.y, animationDelay:s2.d, animationDuration:s2.dur }}
-            >
-              {s2.shape === "circle"   && <svg width={s2.sz} height={s2.sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.1"><circle cx="12" cy="12" r="9"/></svg>}
-              {s2.shape === "square"   && <svg width={s2.sz} height={s2.sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.1"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>}
-              {s2.shape === "hex"      && <svg width={s2.sz} height={s2.sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.1"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7"/></svg>}
-              {s2.shape === "diamond"  && <svg width={s2.sz} height={s2.sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.1"><polygon points="12,2 22,12 12,22 2,12"/></svg>}
-              {s2.shape === "star"     && <svg width={s2.sz} height={s2.sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.1"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>}
-              {s2.shape === "triangle" && <svg width={s2.sz} height={s2.sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.1"><polygon points="12,3 22,21 2,21"/></svg>}
-            </div>
-          ))}
+          <div aria-hidden className="absolute inset-0 bg-grid-soft opacity-30 dark:opacity-20" />
 
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
             <Reveal className="text-center mb-14">
@@ -471,7 +424,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
         </section>
 
         {/* ═══════════════════════════════════════════════════════
-            NOTRE DÉMARCHE — carousel RAF + fond émojis animés
+            NOTRE DÉMARCHE (frise statique)
         ═══════════════════════════════════════════════════════ */}
         <ServiceProcessSection
           process={s.process}
@@ -543,7 +496,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
         </section>
 
         {/* ═══════════════════════════════════════════════════════
-            CONTACT — avec formes géométriques supplémentaires
+            CONTACT
         ═══════════════════════════════════════════════════════ */}
         <ServiceContactSection gradient={s.gradient} />
 

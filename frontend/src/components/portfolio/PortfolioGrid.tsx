@@ -8,6 +8,8 @@ import {
   IconEye, IconGlobe, IconLayers, IconSpark,
 } from "@/components/icons";
 import type { Project } from "@/lib/projects";
+import { galleryFor } from "@/lib/projectGalleries";
+import { ProjectGallery } from "./ProjectGallery";
 
 export type { Project };
 
@@ -36,10 +38,12 @@ export function PortfolioGrid({
   projects,
   allLabel,
   resultLabel,
+  lang,
 }: {
   projects: Project[];
   allLabel: string;
   resultLabel: string;
+  lang: string;
 }) {
   /* Détecter la langue à partir de allLabel */
   const isFr = allLabel === "Tous";
@@ -52,6 +56,8 @@ export function PortfolioGrid({
   const filterLabels = [allLabel, ...presentCats];
 
   const [active, setActive] = useState(allLabel);
+  const [openTitle, setOpenTitle] = useState<string | null>(null);
+  const openGroups = openTitle ? galleryFor(openTitle) : null;
 
   const visible =
     active === allLabel
@@ -82,6 +88,7 @@ export function PortfolioGrid({
       <div className="mt-12 grid gap-8 lg:grid-cols-2">
         {visible.map((p, i) => {
           const Icon = ICONS[p.iconKey] ?? IconCode;
+          const gallery = galleryFor(p.title);
           return (
             <Reveal key={p.title} delay={(i % 2) * 80}>
               <article className="group lift-xl flex h-full flex-col overflow-hidden rounded-3xl border border-brand-100 bg-white dark:border-white/10 dark:bg-slate-900">
@@ -189,12 +196,33 @@ export function PortfolioGrid({
                       </span>
                     )}
                   </div>
+
+                  {gallery && (
+                    <button
+                      type="button"
+                      onClick={() => setOpenTitle(p.title)}
+                      className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border border-brand-200 bg-white px-4 py-2.5 text-xs font-bold text-brand-700 transition-all hover:-translate-y-0.5 hover:border-brand-300 hover:bg-brand-50 hover:shadow-md dark:border-white/15 dark:bg-white/5 dark:text-brand-200 dark:hover:bg-white/10"
+                    >
+                      <IconEye className="size-4" />
+                      {isFr ? "Le projet en images : site & back-office" : "Project in pictures: site & back-office"}
+                    </button>
+                  )}
                 </div>
               </article>
             </Reveal>
           );
         })}
       </div>
+
+      {openGroups && openTitle && (
+        <ProjectGallery
+          groups={openGroups}
+          lang={isFr ? "fr" : "en"}
+          projectTitle={openTitle}
+          open
+          onClose={() => setOpenTitle(null)}
+        />
+      )}
 
       {visible.length === 0 && (
         <Reveal>

@@ -19,22 +19,22 @@ export type Project = {
 };
 
 const GRADIENTS = [
-  "from-rose-500 via-orange-500 to-amber-400",  // Afrikamode
-  "from-slate-800 via-brand-700 to-amber-500",  // Gathe Finance
+  "from-sky via-brand-500 to-brand-700",  // Afrikamode (bleu ciel dégradé)
+  "from-slate-800 via-brand-700 to-brand-500",  // Gathe Finance
   "from-emerald-500 via-teal-500 to-sky",       // e-Learning
   "from-brand-700 via-brand-500 to-sky",        // Formation
-  "from-yellow-500 via-orange-400 to-red-500",  // Elec One — énergie
+  "from-brand-600 via-sky to-brand-400",        // Elec One — bleu ciel (charte)
 ];
 
 const PROJECTS: Record<Lang, Project[]> = {
   fr: [
     {
       title: "Afrikamode",
-      client: "Italie · France · Belgique · Cameroun",
+      client: "Italie · Cameroun",
       category: "Mode & e-commerce",
-      desc: "Plateforme e-commerce internationale pour une marque de mode africaine présente en Europe et en Afrique. Catalogue multilingue, fiches produits, panier, paiement sécurisé. Des créateurs de Lagos à Abidjan, une ligne maison, une esthétique contemporaine — portée sur 4 pays.",
+      desc: "Plateforme e-commerce pour une marque de mode africaine présente en Italie et au Cameroun. Catalogue multilingue, fiches produits, panier, paiement sécurisé. Une ligne maison et des créateurs invités, une esthétique contemporaine, disponible dans 2 pays.",
       tags: ["Next.js", "React", "Tailwind", "TypeScript", "e-commerce"],
-      result: "Live en Europe & Afrique",
+      result: "En ligne en Italie & au Cameroun",
       iconKey: "spark",
       gradient: GRADIENTS[0],
       role: "Conception & développement",
@@ -42,10 +42,10 @@ const PROJECTS: Record<Lang, Project[]> = {
       url: "https://afrikamode.store",
       logo: "/logo-Afrikamode.jpeg",
       screenshots: [
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1200&q=80",
+        "/img/photo-1558618666-fcd25c85cd64-w1200.jpg",
+        "/img/photo-1441984904996-e0b6ba687e04-w1200.jpg",
+        "/img/photo-1483985988355-763728e1935b-w1200.jpg",
+        "/img/photo-1445205170230-053b83016050-w1200.jpg",
       ],
     },
     {
@@ -61,10 +61,10 @@ const PROJECTS: Record<Lang, Project[]> = {
       scope: "Gestion financière PME · multi-comptes & reporting",
       logo: "/logo-GATHE FINANCE.jpeg",
       screenshots: [
-        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=1200&q=80",
+        "/img/photo-1551288049-bebda4e38f71-w1200.jpg",
+        "/img/photo-1460925895917-afdab827c52f-w1200.jpg",
+        "/img/photo-1611974789855-9c2a0a7236a3-w1200.jpg",
+        "/img/photo-1579621970563-ebec7560ff3e-w1200.jpg",
       ],
     },
     {
@@ -80,29 +80,30 @@ const PROJECTS: Record<Lang, Project[]> = {
       scope: "Plateforme de formation IT en ligne",
       logo: "/logo-Edlearning.jpeg",
       screenshots: [
-        "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",
+        "/img/photo-1501504905252-473c47e087f8-w1200.jpg",
+        "/img/photo-1588196749597-9ff075ee6b5b-w1200.jpg",
+        "/img/photo-1516321318423-f06f85e504b3-w1200.jpg",
+        "/img/photo-1522202176988-66273c2fd55f-w1200.jpg",
       ],
     },
     {
       title: "Elec One",
-      client: "Secteur Énergie & Industrie",
-      category: "Énergie & Industrie",
-      desc: "Application web de gestion et de supervision pour le secteur électrique et industriel : suivi des équipements, tableaux de bord temps réel, alertes et reporting. Conçue pour les professionnels de l'énergie qui veulent piloter leur infrastructure avec précision.",
-      tags: ["Next.js", "TypeScript", "Dashboard", "IoT", "Cloud"],
-      result: "Supervision en temps réel",
+      client: "2MeTech Sarl · Énergie",
+      category: "Énergie & IoT",
+      desc: "Application mobile de pilotage d'EnMKit, le dispositif intelligent de maîtrise de l'énergie de 2MeTech. Depuis votre téléphone, coupez à distance les équipements restés allumés — fer à repasser, climatiseur, téléviseur — pour supprimer les gaspillages et réduire durablement votre facture d'électricité.",
+      tags: ["Flutter", "Mobile", "IoT", "Temps réel", "Énergie"],
+      result: "En production · consommation maîtrisée à distance",
       iconKey: "cog",
       gradient: GRADIENTS[4],
       role: "Conception & développement",
-      scope: "Application de gestion énergétique",
+      scope: "Application mobile de pilotage énergétique (EnMKit)",
+      url: "https://www.2metechsarl.org",
       logo: "/logo-Elec One.jpeg",
       screenshots: [
-        "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1581092334651-ddf19d571708?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80",
+        "/img/photo-1473341304170-971dccb5ac1e-w1200.jpg",
+        "/img/photo-1518770660439-4636190af475-w1200.jpg",
+        "/img/photo-1518770660439-4636190af475-w1200.jpg",
+        "/img/photo-1451187580459-43490279c0fa-w1200.jpg",
       ],
     },
     {
@@ -118,21 +119,21 @@ const PROJECTS: Record<Lang, Project[]> = {
       scope: "Formation IT sur mesure",
       logo: "/logo-formation.svg",
       screenshots: [
-        "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=1200&q=80",
+        "/img/photo-1573164713988-8665fc963095-w1200.jpg",
+        "/img/photo-1524178232363-1fb2b075b655-w1200.jpg",
+        "/img/photo-1531482615713-2afd69097998-w1200.jpg",
+        "/img/photo-1515187029135-18ee286d815b-w1200.jpg",
       ],
     },
   ],
   en: [
     {
       title: "Afrikamode",
-      client: "Italy · France · Belgium · Cameroon",
+      client: "Italy · Cameroon",
       category: "Fashion & e-commerce",
-      desc: "International e-commerce platform for an African fashion brand present across Europe and Africa. Multilingual catalogue, product pages, cart, secure checkout. Designers from Lagos to Abidjan, an in-house line — live in 4 countries.",
+      desc: "E-commerce platform for an African fashion brand present in Italy and Cameroon. Multilingual catalogue, product pages, cart, secure checkout. An in-house line and guest designers, a contemporary aesthetic, live in 2 countries.",
       tags: ["Next.js", "React", "Tailwind", "TypeScript", "e-commerce"],
-      result: "Live in Europe & Africa",
+      result: "Live in Italy & Cameroon",
       iconKey: "spark",
       gradient: GRADIENTS[0],
       role: "Design & development",
@@ -140,10 +141,10 @@ const PROJECTS: Record<Lang, Project[]> = {
       url: "https://afrikamode.store",
       logo: "/logo-Afrikamode.jpeg",
       screenshots: [
-        "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1200&q=80",
+        "/img/photo-1558618666-fcd25c85cd64-w1200.jpg",
+        "/img/photo-1441984904996-e0b6ba687e04-w1200.jpg",
+        "/img/photo-1483985988355-763728e1935b-w1200.jpg",
+        "/img/photo-1445205170230-053b83016050-w1200.jpg",
       ],
     },
     {
@@ -159,10 +160,10 @@ const PROJECTS: Record<Lang, Project[]> = {
       scope: "SME financial management",
       logo: "/logo-GATHE FINANCE.jpeg",
       screenshots: [
-        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=1200&q=80",
+        "/img/photo-1551288049-bebda4e38f71-w1200.jpg",
+        "/img/photo-1460925895917-afdab827c52f-w1200.jpg",
+        "/img/photo-1611974789855-9c2a0a7236a3-w1200.jpg",
+        "/img/photo-1579621970563-ebec7560ff3e-w1200.jpg",
       ],
     },
     {
@@ -178,29 +179,30 @@ const PROJECTS: Record<Lang, Project[]> = {
       scope: "Online IT training platform",
       logo: "/logo-Edlearning.jpeg",
       screenshots: [
-        "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80",
+        "/img/photo-1501504905252-473c47e087f8-w1200.jpg",
+        "/img/photo-1588196749597-9ff075ee6b5b-w1200.jpg",
+        "/img/photo-1516321318423-f06f85e504b3-w1200.jpg",
+        "/img/photo-1522202176988-66273c2fd55f-w1200.jpg",
       ],
     },
     {
       title: "Elec One",
-      client: "Energy & Industry sector",
-      category: "Energy & Industry",
-      desc: "Web application for management and supervision in the electrical and industrial sector: equipment monitoring, real-time dashboards, alerts and reporting. Built for energy professionals who want to drive their infrastructure with precision.",
-      tags: ["Next.js", "TypeScript", "Dashboard", "IoT", "Cloud"],
-      result: "Real-time supervision",
+      client: "2MeTech Sarl · Energy",
+      category: "Energy & IoT",
+      desc: "Mobile app that drives EnMKit, 2MeTech's smart energy-control device. From your phone, remotely switch off equipment left running — iron, air-conditioner, TV — cutting waste and durably lowering your electricity bill.",
+      tags: ["Flutter", "Mobile", "IoT", "Real-time", "Energy"],
+      result: "Live · consumption controlled remotely",
       iconKey: "cog",
       gradient: GRADIENTS[4],
       role: "Design & development",
-      scope: "Energy management application",
+      scope: "Mobile energy-control app (EnMKit)",
+      url: "https://www.2metechsarl.org",
       logo: "/logo-Elec One.jpeg",
       screenshots: [
-        "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1581092334651-ddf19d571708?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1200&q=80",
+        "/img/photo-1473341304170-971dccb5ac1e-w1200.jpg",
+        "/img/photo-1518770660439-4636190af475-w1200.jpg",
+        "/img/photo-1518770660439-4636190af475-w1200.jpg",
+        "/img/photo-1451187580459-43490279c0fa-w1200.jpg",
       ],
     },
     {
@@ -216,10 +218,10 @@ const PROJECTS: Record<Lang, Project[]> = {
       scope: "Custom IT training",
       logo: "/logo-formation.svg",
       screenshots: [
-        "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80",
-        "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=1200&q=80",
+        "/img/photo-1573164713988-8665fc963095-w1200.jpg",
+        "/img/photo-1524178232363-1fb2b075b655-w1200.jpg",
+        "/img/photo-1531482615713-2afd69097998-w1200.jpg",
+        "/img/photo-1515187029135-18ee286d815b-w1200.jpg",
       ],
     },
   ],

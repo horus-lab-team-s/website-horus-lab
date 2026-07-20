@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Horus-Lab — Solutions technologiques intelligentes",
+    name: "Horus-Lab, solutions technologiques intelligentes",
     short_name: "Horus-Lab",
     description:
       "Entreprise technologique africaine : applications web & mobile sur mesure, systèmes d'information, digitalisation d'entreprise et formation & audit IT.",
@@ -13,9 +13,9 @@ export default function manifest(): MetadataRoute.Manifest {
     lang: "fr",
     icons: [
       {
-        src: "/Logo-HORUS-LAB.jpeg",
+        src: "/logo-HORUS-LAB.png",
         sizes: "512x512",
-        type: "image/jpeg",
+        type: "image/png",
       },
     ],
   };

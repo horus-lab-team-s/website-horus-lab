@@ -1,84 +1,130 @@
 "use client";
 
+import Image from "next/image";
+import { useCallback, useEffect, useState } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
+import { IconArrowRight } from "@/components/icons";
 
-/* ── Émojis style Telegram — fond animé ────────────────────── */
-const EMOJI_BG = [
-  "🌍","🚀","💡","🤖","📱","💻","🌐","⚡","🎯","🏆",
-  "✨","🔥","💎","🌟","🎉","🙌","👏","💪","🤝","🌱",
-  "📊","🔒","⚙️","🎨","🏗️","📡","🔬","💡","🌈","⭐",
-  "🦁","🦅","🐘","🦊","🐬","🦋","🦚","🐆","🦁","🌺",
-];
+type Testi = {
+  quote: string;
+  name: string;
+  role: string;
+  image: string;
+  /** true = logo institutionnel (affiché sur pastille blanche) plutôt qu'une photo */
+  logo?: boolean;
+};
 
-/* Positions pseudo-aléatoires fixes (SSR safe) */
-const EMOJI_POSITIONS = [
-  { x:3,  y:5,  s:1.4, d:0,   rot:-12 }, { x:12, y:18, s:1.1, d:1.2, rot:8  },
-  { x:22, y:3,  s:1.3, d:0.5, rot:-5  }, { x:35, y:12, s:1.0, d:2,   rot:15 },
-  { x:48, y:6,  s:1.5, d:0.3, rot:-20 }, { x:60, y:20, s:1.2, d:1.8, rot:10 },
-  { x:72, y:2,  s:1.1, d:0.7, rot:-8  }, { x:85, y:14, s:1.4, d:2.5, rot:18 },
-  { x:93, y:7,  s:1.0, d:1,   rot:-15 }, { x:5,  y:35, s:1.3, d:1.5, rot:5  },
-  { x:18, y:45, s:1.1, d:0.2, rot:-10 }, { x:30, y:30, s:1.4, d:2.2, rot:12 },
-  { x:45, y:40, s:1.0, d:0.8, rot:-6  }, { x:58, y:32, s:1.2, d:1.6, rot:20 },
-  { x:70, y:48, s:1.3, d:0.4, rot:-18 }, { x:82, y:36, s:1.1, d:2.8, rot:7  },
-  { x:95, y:42, s:1.4, d:1.1, rot:-12 }, { x:8,  y:60, s:1.0, d:0.6, rot:14 },
-  { x:20, y:70, s:1.3, d:2.1, rot:-4  }, { x:33, y:58, s:1.2, d:1.3, rot:16 },
-  { x:48, y:65, s:1.1, d:0.9, rot:-22 }, { x:62, y:72, s:1.4, d:2.4, rot:9  },
-  { x:75, y:62, s:1.0, d:0.1, rot:-7  }, { x:88, y:68, s:1.2, d:1.7, rot:19 },
-  { x:2,  y:80, s:1.3, d:0.4, rot:-11 }, { x:15, y:88, s:1.1, d:2.3, rot:6  },
-  { x:28, y:82, s:1.4, d:0.7, rot:-16 }, { x:42, y:90, s:1.0, d:1.9, rot:13 },
-  { x:56, y:85, s:1.2, d:0.3, rot:-3  }, { x:68, y:92, s:1.3, d:2.6, rot:21 },
-  { x:80, y:80, s:1.1, d:1.0, rot:-9  }, { x:92, y:88, s:1.4, d:0.5, rot:17 },
-];
+/* Témoignages réels — promotrices & partenaires qui utilisent nos solutions.
+   (Contenu ajustable ensuite dans l'admin / ce fichier.) */
+const TESTI: Record<"fr" | "en", Testi[]> = {
+  fr: [
+    {
+      quote:
+        "Horus-Lab a digitalisé notre centre de formation avec un vrai sens du détail. Une plateforme claire, fiable et pensée pour nos apprenants — un partenaire à l'écoute du début à la fin.",
+      name: "Paule Diane Himsta",
+      role: "Promotrice · Broad Range Consulting · CFP-BRC",
+      image: "/Mme-paul-diane-himsta.png",
+    },
+    {
+      quote:
+        "Une équipe sérieuse et disponible. Nos outils de gestion sont enfin à la hauteur de nos ambitions, et l'accompagnement a été impeccable à chaque étape.",
+      name: "Pagop Tchouansi Aurélie",
+      role: "Responsable · CGA Broad Range Consulting",
+      image: "/Mme-pagop-Tchouansi-aurelie.png",
+    },
+    {
+      quote:
+        "Avec Elec One et EnMKit, Horus-Lab a transformé notre vision en une application mobile concrète : nos utilisateurs pilotent et réduisent leur consommation d'électricité à distance. Un travail remarquable.",
+      name: "Dr Agnès Virginie TJAHE",
+      role: "Présidente Directrice · 2MeTech Sarl",
+      image: "/Dr-Agnes-Virgine-TJAHE.png",
+    },
+    {
+      quote:
+        "Un accompagnement technique de qualité pour notre département informatique : rigueur, pédagogie et des solutions adaptées à nos réalités académiques.",
+      name: "Département Informatique",
+      role: "IUT-FV de Bandjoun · Université de Dschang",
+      image: "/iut-fv-university-of-dschang.jpg",
+      logo: true,
+    },
+  ],
+  en: [
+    {
+      quote:
+        "Horus-Lab digitalised our training centre with a real eye for detail. A clear, reliable platform built for our learners — a partner that listens from start to finish.",
+      name: "Paule Diane Himsta",
+      role: "Founder · Broad Range Consulting · CFP-BRC",
+      image: "/Mme-paul-diane-himsta.png",
+    },
+    {
+      quote:
+        "A serious, available team. Our management tools finally match our ambitions, and the support was flawless at every step.",
+      name: "Pagop Tchouansi Aurélie",
+      role: "Manager · CGA Broad Range Consulting",
+      image: "/Mme-pagop-Tchouansi-aurelie.png",
+    },
+    {
+      quote:
+        "With Elec One and EnMKit, Horus-Lab turned our vision into a real mobile app: our users control and reduce their electricity consumption remotely. Remarkable work.",
+      name: "Dr Agnès Virginie TJAHE",
+      role: "Managing Director · 2MeTech Sarl",
+      image: "/Dr-Agnes-Virgine-TJAHE.png",
+    },
+    {
+      quote:
+        "Quality technical support for our computer science department: rigour, teaching skill and solutions tailored to our academic realities.",
+      name: "Computer Science Dept.",
+      role: "IUT-FV Bandjoun · University of Dschang",
+      image: "/iut-fv-university-of-dschang.jpg",
+      logo: true,
+    },
+  ],
+};
 
-const avatarGradients = [
-  "from-brand-700 to-brand-500",
-  "from-rose-500 to-orange-400",
-  "from-emerald-600 to-teal-400",
-];
-const starColors = ["text-amber-400", "text-amber-400", "text-amber-400"];
+export function Testimonials() {
+  const { dict, lang } = useLang();
+  const t = dict.testimonials;
+  const list = TESTI[lang === "en" ? "en" : "fr"];
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
 
-type TestimonialItem = { quote: string; name: string; role: string };
+  const go = useCallback(
+    (dir: number) => setIndex((i) => (i + dir + list.length) % list.length),
+    [list.length],
+  );
 
-export function Testimonials({ items }: { items?: TestimonialItem[] }) {
-  const { dict } = useLang();
-  const t = { ...dict.testimonials, items: items ?? dict.testimonials.items };
+  // Défilement automatique (pause au survol + respect de prefers-reduced-motion).
+  // L'intervalle se relance quand `paused` change : pas de ref lue pendant le rendu.
+  useEffect(() => {
+    if (paused) return;
+    if (typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(() => setIndex((i) => (i + 1) % list.length), 6000);
+    return () => clearInterval(id);
+  }, [paused, list.length]);
+
+  const active = list[index];
 
   return (
     <section
       id="testimonials"
-      className="relative overflow-hidden bg-brand-900 py-20 sm:py-28"
+      className="relative overflow-hidden bg-brand-900 py-16 sm:py-20"
     >
-      {/* ── Fond style Telegram — émojis flottants ── */}
+      {/* Fond sobre : halos + logo Horus en filigrane */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden select-none">
-        {/* Overlay dégradé par-dessus les émojis */}
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-900/92 via-brand-900/85 to-slate-900/90" />
-
-        {/* Émojis */}
-        {EMOJI_POSITIONS.map((pos, i) => (
-          <span
-            key={i}
-            className="absolute animate-float"
-            style={{
-              left:  `${pos.x}%`,
-              top:   `${pos.y}%`,
-              fontSize: `${pos.s * 1.6}rem`,
-              transform: `rotate(${pos.rot}deg)`,
-              animationDelay: `${pos.d}s`,
-              animationDuration: `${6 + pos.d * 2}s`,
-              opacity: 0.18,
-            }}
-          >
-            {EMOJI_BG[i % EMOJI_BG.length]}
-          </span>
-        ))}
-
-        {/* Halos de couleur */}
-        <div className="absolute -left-20 top-1/4 h-80 w-80 rounded-full bg-brand-500/15 blur-3xl animate-float-slow" />
-        <div className="absolute right-0 bottom-1/4 h-72 w-72 rounded-full bg-sky/10 blur-3xl animate-drift" />
+        <div className="absolute -left-20 top-1/4 h-80 w-80 rounded-full bg-brand-500/12 blur-3xl" />
+        <div className="absolute right-0 bottom-1/4 h-72 w-72 rounded-full bg-sky/8 blur-3xl" />
+        <Image
+          src="/logo-HORUS-LAB-white.jpeg"
+          alt=""
+          width={520}
+          height={520}
+          className="absolute -right-16 top-1/2 hidden w-[440px] -translate-y-1/2 opacity-[0.05] mix-blend-screen lg:block"
+        />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+      <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
         {/* En-tête */}
         <Reveal className="max-w-2xl">
           <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-sky">
@@ -90,78 +136,92 @@ export function Testimonials({ items }: { items?: TestimonialItem[] }) {
           </h2>
         </Reveal>
 
-        {/* Layout magazine */}
-        <div className="mt-14 grid gap-7 lg:grid-cols-12">
-
-          {/* Témoignage featured */}
-          <Reveal className="lg:col-span-7">
-            <figure className="relative h-full overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 backdrop-blur-sm sm:p-12">
+        {/* Carrousel */}
+        <Reveal className="mt-10">
+          <div
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+          >
+            <figure className="relative overflow-hidden rounded-lg border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-9">
               {/* Guillemet décoratif */}
               <span aria-hidden
-                className="pointer-events-none absolute -left-2 -top-8 select-none text-[180px] leading-none font-extrabold text-white/8">
-                &ldquo;
+                className="pointer-events-none absolute right-4 top-0 select-none text-[120px] leading-none font-extrabold text-white/[0.06]">
+                &rdquo;
               </span>
 
-              {/* Étoiles */}
-              <div className="flex gap-1 mb-5">
-                {[...Array(5)].map((_, k) => (
-                  <svg key={k} viewBox="0 0 20 20" fill="currentColor"
-                    className="size-5 text-amber-400">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
-              </div>
-
-              <blockquote className="relative text-xl font-medium leading-relaxed text-white sm:text-2xl">
-                {t.items[0]?.quote}
-              </blockquote>
-
-              <figcaption className="relative mt-8 flex items-center gap-4 border-t border-white/10 pt-6">
-                <div className={`grid size-14 place-items-center rounded-full text-base font-bold text-white shadow-lg bg-gradient-to-br ${avatarGradients[0]}`}>
-                  {t.items[0]?.name.split(" ").map(w => w[0]).join("")}
+              <div className="relative grid gap-6 sm:grid-cols-[auto_1fr] sm:items-center sm:gap-8">
+                {/* Média (photo ou logo) — carré, coins légers */}
+                <div className="shrink-0">
+                  <div className={`relative size-24 overflow-hidden rounded-md ring-2 ring-white/15 sm:size-28 ${active.logo ? "bg-white p-2" : ""}`}>
+                    <Image
+                      key={active.image}
+                      src={active.image}
+                      alt={active.name}
+                      fill
+                      sizes="112px"
+                      className={active.logo ? "object-contain" : "object-cover"}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <div className="text-base font-bold text-white">{t.items[0]?.name}</div>
-                  <div className="text-sm text-brand-300">{t.items[0]?.role}</div>
-                </div>
-              </figcaption>
-            </figure>
-          </Reveal>
 
-          {/* Stack secondaire */}
-          <div className="space-y-5 lg:col-span-5">
-            {t.items.slice(1).map((item, i) => (
-              <Reveal key={item.name} delay={(i + 1) * 110}>
-                <figure className="relative h-full overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
-                  <span aria-hidden
-                    className="pointer-events-none absolute -top-2 right-4 select-none text-[80px] leading-none font-extrabold text-white/6">
-                    &ldquo;
-                  </span>
-                  {/* Mini étoiles */}
-                  <div className="flex gap-0.5 mb-3">
+                {/* Texte */}
+                <div className="min-w-0">
+                  {/* Étoiles */}
+                  <div className="flex gap-1">
                     {[...Array(5)].map((_, k) => (
-                      <svg key={k} viewBox="0 0 20 20" fill="currentColor" className="size-3.5 text-amber-400">
+                      <svg key={k} viewBox="0 0 20 20" fill="currentColor" className="size-4 text-amber-400">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                       </svg>
                     ))}
                   </div>
-                  <blockquote className="text-sm leading-relaxed text-brand-100/90">
-                    {item.quote}
+
+                  <blockquote className="mt-4 text-base font-medium leading-relaxed text-white sm:text-lg">
+                    {active.quote}
                   </blockquote>
-                  <figcaption className="mt-5 flex items-center gap-3 border-t border-white/10 pt-4">
-                    <div className={`grid size-10 place-items-center rounded-full text-xs font-bold text-white bg-gradient-to-br ${avatarGradients[(i + 1) % avatarGradients.length]}`}>
-                      {item.name.split(" ").map(w => w[0]).join("")}
-                    </div>
-                    <div>
-                      <div className="text-sm font-bold text-white">{item.name}</div>
-                      <div className="text-xs text-brand-300">{item.role}</div>
-                    </div>
+
+                  <figcaption className="mt-5 border-t border-white/10 pt-4">
+                    <div className="text-base font-bold text-white">{active.name}</div>
+                    <div className="text-sm text-brand-300">{active.role}</div>
                   </figcaption>
-                </figure>
-              </Reveal>
-            ))}
+                </div>
+              </div>
+            </figure>
+
+            {/* Contrôles : miniatures + flèches */}
+            <div className="mt-5 flex items-center justify-between gap-4">
+              {/* Miniatures (photos) qui servent de navigation */}
+              <div className="flex flex-wrap items-center gap-2">
+                {list.map((it, i) => (
+                  <button
+                    key={it.name}
+                    type="button"
+                    onClick={() => setIndex(i)}
+                    aria-label={it.name}
+                    aria-current={i === index}
+                    className={`relative size-10 overflow-hidden rounded-md ring-2 transition-all ${
+                      i === index ? "ring-sky scale-105" : "ring-white/15 opacity-60 hover:opacity-100"
+                    } ${it.logo ? "bg-white p-1" : ""}`}
+                  >
+                    <Image src={it.image} alt="" fill sizes="40px"
+                      className={it.logo ? "object-contain" : "object-cover"} />
+                  </button>
+                ))}
+              </div>
+
+              {/* Flèches carrées */}
+              <div className="flex shrink-0 items-center gap-2">
+                <button type="button" onClick={() => go(-1)} aria-label={lang === "fr" ? "Précédent" : "Previous"}
+                  className="grid size-10 place-items-center rounded-md border border-white/20 text-white transition-colors hover:bg-white/10">
+                  <IconArrowRight className="size-5 rotate-180" />
+                </button>
+                <button type="button" onClick={() => go(1)} aria-label={lang === "fr" ? "Suivant" : "Next"}
+                  className="grid size-10 place-items-center rounded-md border border-white/20 text-white transition-colors hover:bg-white/10">
+                  <IconArrowRight className="size-5" />
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

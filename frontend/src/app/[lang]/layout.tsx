@@ -32,12 +32,12 @@ export async function generateMetadata({
 
   const title =
     lang === "fr"
-      ? "Horus-Lab — Solutions technologiques intelligentes"
-      : "Horus-Lab — Intelligent technology solutions";
+      ? "Horus-Lab · Solutions technologiques intelligentes"
+      : "Horus-Lab · Intelligent technology solutions";
   const description = dict.hero.subtitle;
 
   return {
-    title: { absolute: title, template: "%s — Horus-Lab" },
+    title: { absolute: title, template: "%s | Horus-Lab" },
     description,
     alternates: {
       canonical: `/${lang}`,
@@ -48,7 +48,7 @@ export async function generateMetadata({
       description,
       type: "website",
       locale: lang === "fr" ? "fr_FR" : "en_US",
-      images: ["/Logo-HORUS-LAB.jpeg"],
+      images: ["/logo-HORUS-LAB.png"],
     },
   };
 }

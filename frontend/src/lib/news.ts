@@ -22,30 +22,16 @@ const NEWS: Record<Lang, NewsItem[]> = {
       date: "2026-05-12",
       title: "Afrikamode est en ligne sur afrikamode.store",
       body:
-        "La boutique en ligne d'Afrikamode ouvre ses portes : créateurs invités de Lagos à Abidjan + ligne maison. Catalogue, panier et paiement bout-en-bout.",
+        "La boutique en ligne d'Afrikamode ouvre ses portes, avec une ligne maison et des créateurs invités. Catalogue, panier et paiement de bout en bout.",
       tag: "Lancement",
       url: "https://afrikamode.store",
     },
     {
       date: "2026-04-10",
-      title: "Plateforme e-Learning — nouveau parcours Cybersécurité",
+      title: "Plateforme e-Learning : nouveau parcours Cybersécurité",
       body:
         "Le cycle Cybersécurité rejoint le développement web et Python. Modules progressifs, exercices guidés et certificats à la clé.",
       tag: "Roadmap",
-    },
-    {
-      date: "2026-03-08",
-      title: "SFX Pre-Douane étendu à 2 nouveaux pays",
-      body:
-        "Le déploiement multinational atteint désormais 11 filiales OMA à travers l'Afrique. Stabilité et performances confirmées en production.",
-      tag: "Déploiement",
-    },
-    {
-      date: "2026-02-14",
-      title: "Partenariat renforcé avec SOFTRONIC INNOVING",
-      body:
-        "Aux côtés d'Armel SIME et de son équipe, nous prolongeons notre collaboration autour des produits SFX et de nouveaux projets africains.",
-      tag: "Partenariat",
     },
   ],
   en: [
@@ -60,30 +46,16 @@ const NEWS: Record<Lang, NewsItem[]> = {
       date: "2026-05-12",
       title: "Afrikamode is live on afrikamode.store",
       body:
-        "Afrikamode opens its online store: guest designers from Lagos to Abidjan + the house line. Catalogue, cart and checkout end-to-end.",
+        "Afrikamode opens its online store, with an in-house line and guest designers. Catalogue, cart and checkout end to end.",
       tag: "Launch",
       url: "https://afrikamode.store",
     },
     {
       date: "2026-04-10",
-      title: "e-Learning platform — new Cybersecurity track",
+      title: "e-Learning platform: new Cybersecurity track",
       body:
         "The Cybersecurity track joins web development and Python. Progressive modules, guided exercises and certificates.",
       tag: "Roadmap",
-    },
-    {
-      date: "2026-03-08",
-      title: "SFX Pre-Douane extended to 2 new countries",
-      body:
-        "Multinational rollout now reaches 11 OMA subsidiaries across Africa. Stability and performance confirmed in production.",
-      tag: "Rollout",
-    },
-    {
-      date: "2026-02-14",
-      title: "Deepened partnership with SOFTRONIC INNOVING",
-      body:
-        "Together with Armel SIME and his team, we are extending our collaboration on the SFX products and new African initiatives.",
-      tag: "Partnership",
     },
   ],
 };

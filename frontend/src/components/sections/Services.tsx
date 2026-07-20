@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
 import { IconArrowRight, IconCode, IconCog, IconEye, IconSpark } from "@/components/icons";
-import { Starfield } from "@/components/Starfield";
 import { SectionHeading } from "./SectionHeading";
 
 /* Mapping titre → slug de page service */
@@ -74,10 +73,10 @@ const BENTO = ["lg:col-span-7", "lg:col-span-5", "lg:col-span-5", "lg:col-span-7
 
 /* Image Unsplash par service */
 const SERVICE_IMAGES = [
-  "https://images.unsplash.com/photo-1607706189992-eae578626c86?auto=format&fit=crop&w=600&q=70", // code/IDE
-  "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=70", // circuit board
-  "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=600&q=70", // team meeting
-  "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=600&q=70", // training
+  "/img/photo-1607706189992-eae578626c86-w600.jpg", // code/IDE
+  "/img/photo-1518770660439-4636190af475-w600.jpg", // circuit board
+  "/img/photo-1531482615713-2afd69097998-w600.jpg", // team meeting
+  "/img/photo-1573164713988-8665fc963095-w600.jpg", // training
 ];
 
 type ServiceItem = { title: string; desc: string; tags: string[] };
@@ -89,45 +88,19 @@ export function Services({ items }: { items?: ServiceItem[] }) {
   return (
     <section
       id="services"
-      className="relative overflow-hidden bg-white py-20 dark:bg-[#070e1c] sm:py-28"
+      className="relative overflow-hidden bg-white pb-16 pt-12 dark:bg-[#070e1c] sm:pb-20 sm:pt-16"
     >
-      {/* ── Champ d'étoiles & astres animés (ambiance spatiale) ── */}
-      <Starfield tone="brand" density="light" />
-
-      {/* ── Fond vivant multi-couches ── */}
+      {/* ── Fond sobre : grille fine + halos discrets ── */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Grille fine */}
-        <div className="absolute inset-0 bg-grid-soft opacity-[0.5] dark:opacity-[0.3]" />
-
-        {/* Formes géométriques animées – mode light : teintes pastelles ; dark : teintes profondes */}
-        {/* Cercle grand gauche */}
-        <div className="absolute -left-24 top-1/4 h-96 w-96 rounded-full bg-blue-100/60 blur-3xl animate-float-slow dark:bg-blue-900/20" />
-        {/* Cercle milieu haut */}
-        <div className="absolute left-1/2 -top-20 h-80 w-80 -translate-x-1/2 rounded-full bg-violet-100/50 blur-3xl animate-drift dark:bg-violet-900/15" style={{ animationDelay: "2s" }} />
-        {/* Cercle droite bas */}
-        <div className="absolute -right-16 bottom-0 h-80 w-80 rounded-full bg-emerald-100/50 blur-3xl animate-float dark:bg-emerald-900/15" style={{ animationDelay: "1s" }} />
-        {/* Cercle milieu bas */}
-        <div className="absolute left-1/3 bottom-1/4 h-56 w-56 rounded-full bg-amber-100/40 blur-2xl animate-bob dark:bg-amber-900/10" style={{ animationDelay: "3s" }} />
-
-        {/* Particules (points) flottantes */}
-        {[
-          { x: "15%", y: "20%", c: "bg-blue-400",   d: "0s",   s: "size-2" },
-          { x: "80%", y: "12%", c: "bg-violet-400", d: "1.2s", s: "size-1.5" },
-          { x: "65%", y: "70%", c: "bg-emerald-400",d: "0.8s", s: "size-2.5" },
-          { x: "25%", y: "80%", c: "bg-amber-400",  d: "2s",   s: "size-2" },
-          { x: "48%", y: "38%", c: "bg-sky-400",    d: "1.5s", s: "size-1.5" },
-          { x: "90%", y: "55%", c: "bg-blue-300",   d: "3s",   s: "size-2" },
-        ].map((p, i) => (
-          <div key={i}
-            className={`absolute rounded-full opacity-60 animate-float dark:opacity-40 ${p.c} ${p.s}`}
-            style={{ left: p.x, top: p.y, animationDelay: p.d }} />
-        ))}
+        <div className="absolute inset-0 bg-grid-soft opacity-[0.4] dark:opacity-[0.22]" />
+        <div className="absolute -left-24 top-1/4 h-80 w-80 rounded-full bg-brand-100/40 blur-3xl dark:bg-brand-900/15" />
+        <div className="absolute -right-20 bottom-0 h-80 w-80 rounded-full bg-sky/10 blur-3xl dark:bg-brand-900/10" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading eyebrow={s.eyebrow} title={s.title} subtitle={s.subtitle} />
 
-        <div className="mt-16 grid gap-5 lg:grid-cols-12">
+        <div className="mt-10 grid gap-4 lg:grid-cols-12">
           {s.items.map((item, i) => {
             const Icon    = ICONS[i] ?? IconCode;
             const theme   = CARD_THEMES[i];
@@ -140,7 +113,7 @@ export function Services({ items }: { items?: ServiceItem[] }) {
               <Reveal key={item.title} delay={i * 80} className={span}>
                 <Link
                   href={localePath(`/services/${slug}`)}
-                  className={`group relative flex h-full flex-col overflow-hidden rounded-3xl border transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl ${theme.bg} ${theme.border} ${theme.hover} ${isLarge ? "min-h-[320px]" : "min-h-[280px]"}`}
+                  className={`group relative flex h-full flex-col overflow-hidden rounded-lg border transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl ${theme.bg} ${theme.border} ${theme.hover} ${isLarge ? "min-h-[224px]" : "min-h-[204px]"}`}
                 >
                   {/* Image Unsplash de fond – légèrement visible */}
                   <div
@@ -165,25 +138,25 @@ export function Services({ items }: { items?: ServiceItem[] }) {
 
                   {/* Numéro filigrane */}
                   <span aria-hidden
-                    className={`numeral pointer-events-none absolute right-6 top-2 select-none ${theme.num} ${isLarge ? "text-[120px]" : "text-[100px]"}`}>
+                    className={`numeral pointer-events-none absolute right-5 top-1 select-none ${theme.num} ${isLarge ? "text-[92px]" : "text-[80px]"}`}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
 
-                  <div className="relative flex h-full flex-col p-7 sm:p-9">
+                  <div className="relative flex h-full flex-col p-6 sm:p-7">
                     {/* Icône */}
-                    <div className={`inline-flex size-13 items-center justify-center rounded-2xl shadow-lg transition-transform duration-300 group-hover:scale-110 ${theme.icon}`}>
-                      <Icon className="size-6" />
+                    <div className={`inline-flex size-11 items-center justify-center rounded-md shadow-lg transition-transform duration-300 group-hover:scale-110 ${theme.icon}`}>
+                      <Icon className="size-5" />
                     </div>
 
-                    <h3 className={`mt-6 font-extrabold tracking-tight text-brand-900 dark:text-white ${isLarge ? "text-2xl sm:text-3xl" : "text-xl sm:text-2xl"}`}>
+                    <h3 className={`mt-4 font-extrabold tracking-tight text-brand-900 dark:text-white ${isLarge ? "text-xl sm:text-2xl" : "text-lg sm:text-xl"}`}>
                       {item.title}
                     </h3>
 
-                    <p className="mt-3 max-w-prose text-[15px] leading-relaxed text-muted dark:text-brand-200/70">
+                    <p className="mt-2 max-w-prose text-sm leading-relaxed text-muted dark:text-brand-200/70">
                       {item.desc}
                     </p>
 
-                    <ul className="mt-auto flex flex-wrap gap-2 pt-6">
+                    <ul className="mt-auto flex flex-wrap gap-1.5 pt-4">
                       {item.tags.map((tag) => (
                         <li key={tag}
                           className={`rounded-full px-3 py-1 text-xs font-semibold backdrop-blur ${theme.tag}`}>

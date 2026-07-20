@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
 import {
+  IconArrowRight,
   IconFacebook,
   IconGitHub,
   IconLinkedIn,
@@ -14,6 +16,73 @@ import {
   IconWhatsApp,
   IconX,
 } from "./icons";
+
+const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+type NlStatus = "idle" | "sending" | "success" | "error" | "invalid";
+
+/* Newsletter compacte intégrée au footer (comme inov-consulting). */
+function FooterNewsletter() {
+  const { dict } = useLang();
+  const n = dict.newsletter;
+  const [status, setStatus] = useState<NlStatus>("idle");
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    const email = String(fd.get("email") ?? "");
+    const website = String(fd.get("website") ?? "");
+    if (!emailRe.test(email)) {
+      setStatus("invalid");
+      return;
+    }
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, website }),
+      });
+      if (!res.ok) throw new Error("failed");
+      setStatus("success");
+      form.reset();
+    } catch {
+      setStatus("error");
+    }
+  }
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit} noValidate>
+        {/* Honeypot */}
+        <div aria-hidden className="absolute left-[-9999px] h-0 w-0 overflow-hidden" hidden>
+          <input name="website" type="text" tabIndex={-1} autoComplete="off" />
+        </div>
+        <div className="flex gap-2">
+          <input
+            name="email"
+            type="email"
+            required
+            aria-label="Email"
+            placeholder={n.placeholder}
+            className="min-w-0 flex-1 rounded-md border border-white/15 bg-white/10 px-4 py-2.5 text-sm text-white outline-none transition-colors placeholder:text-brand-300/70 focus:border-brand-400 focus:bg-white/15"
+          />
+          <button
+            type="submit"
+            disabled={status === "sending"}
+            aria-label={n.button}
+            className="grid shrink-0 place-items-center rounded-md bg-brand-500 px-4 text-white transition-colors hover:bg-brand-400 disabled:opacity-60"
+          >
+            <IconArrowRight className="size-5" />
+          </button>
+        </div>
+        {status === "success" && <p className="mt-2 text-xs font-medium text-green-400">{n.success}</p>}
+        {status === "error" && <p className="mt-2 text-xs font-medium text-red-400">{n.error}</p>}
+        {status === "invalid" && <p className="mt-2 text-xs font-medium text-amber-400">{n.invalid}</p>}
+      </form>
+    </div>
+  );
+}
 
 const DEFAULT_SOCIAL = {
   linkedin: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
@@ -71,65 +140,58 @@ export function Footer() {
     { label: dict.nav.portfolio, href: localePath("/portfolio") },
     { label: dict.nav.blog,      href: localePath("/blog") },
     { label: dict.nav.careers,   href: localePath("/candidature") },
-    { label: lang === "fr" ? "Contact" : "Contact", href: localePath("/#contact") },
+    { label: "Contact", href: localePath("/contact") },
   ];
 
   return (
     <footer className="relative overflow-hidden bg-brand-900 text-brand-100">
-      {/* ── Décor animé de fond ── */}
+      {/* ── Décor de fond sobre ── */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         {/* Grille technique */}
-        <div className="absolute inset-0 bg-grid opacity-[0.12]" />
-        {/* Orbes colorées */}
-        <div className="absolute -left-20 bottom-0 h-72 w-72 rounded-full bg-brand-500/15 blur-3xl animate-float-slow" />
-        <div className="absolute right-1/4 top-0 h-64 w-64 rounded-full bg-sky/10 blur-3xl animate-drift" />
-        <div className="absolute right-0 bottom-1/2 h-48 w-48 rounded-full bg-brand-400/10 blur-2xl animate-float" style={{ animationDelay: "2s" }} />
-        {/* Tracé de circuit */}
+        <div className="absolute inset-0 bg-grid opacity-[0.1]" />
+        {/* Halos discrets (statiques) */}
+        <div className="absolute -left-20 bottom-0 h-72 w-72 rounded-full bg-brand-500/12 blur-3xl" />
+        <div className="absolute right-1/4 top-0 h-64 w-64 rounded-full bg-sky/8 blur-3xl" />
+        {/* Tracé de circuit discret */}
         <svg aria-hidden viewBox="0 0 1440 300" preserveAspectRatio="none"
           className="absolute inset-x-0 bottom-0 h-24 w-full text-white/[0.04]">
           <path d="M0 200 H200 L260 150 H500 L560 200 H800 L860 140 H1100 L1160 200 H1440"
             fill="none" stroke="currentColor" strokeWidth="1.5" />
-          <path d="M0 250 H150 L220 200 H400 L470 250 H700 L770 190 H1000 L1070 250 H1440"
-            fill="none" stroke="currentColor" strokeWidth="1" opacity="0.5" />
           {[200, 500, 800, 1100].map((x, i) => (
             <circle key={i} cx={x} cy={i % 2 === 0 ? 150 : 200} r="3" fill="currentColor" />
           ))}
         </svg>
-        {/* Constellation de points */}
-        <svg aria-hidden viewBox="0 0 400 300" className="absolute right-0 top-0 h-64 w-80 text-white/[0.05]">
-          <g fill="currentColor">
-            {[[40,30],[120,60],[200,20],[280,70],[350,40],[80,120],[180,140],[300,110],[360,150],[50,200],[150,180],[260,210],[380,190]].map(([cx,cy],k) => (
-              <circle key={k} cx={cx} cy={cy} r={k%3===0?2:1.2} />
-            ))}
-          </g>
-          <g fill="none" stroke="currentColor" strokeWidth="0.5" opacity="0.4">
-            <line x1="40" y1="30" x2="120" y2="60" /><line x1="120" y1="60" x2="200" y2="20" />
-            <line x1="200" y1="20" x2="280" y2="70" /><line x1="80" y1="120" x2="180" y2="140" />
-            <line x1="180" y1="140" x2="300" y2="110" /><line x1="120" y1="60" x2="80" y2="120" />
-          </g>
-        </svg>
       </div>
 
       {/* ── Contenu principal ── */}
-      <div className="relative mx-auto max-w-7xl px-5 pt-16 pb-0 sm:px-8">
+      <div className="relative mx-auto max-w-7xl px-5 pt-14 pb-0 sm:px-8">
+
+        {/* Bandeau newsletter (intégré au footer) */}
+        <div className="mb-12 grid items-center gap-8 border-b border-white/10 pb-12 lg:grid-cols-2">
+          <div>
+            <h2 className="text-2xl font-extrabold tracking-tight text-white sm:text-3xl">
+              {dict.newsletter.title}
+            </h2>
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-brand-300">
+              {dict.newsletter.subtitle}
+            </p>
+          </div>
+          <FooterNewsletter />
+        </div>
+
         <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr_1fr_1.3fr]">
 
           {/* Colonne marque */}
           <div>
-            <Link href={localePath("/")} className="inline-flex items-center gap-3 group">
-              <div className="relative">
-                <div className="absolute inset-0 rounded-full bg-brand-500/30 blur-md group-hover:blur-lg transition-all duration-500" />
-                <Image
-                  src="/Logo-HORUS-LAB.jpeg"
-                  alt="Horus-Lab"
-                  width={48}
-                  height={48}
-                  className="relative rounded-full ring-2 ring-white/20 group-hover:ring-white/40 transition-all duration-300"
-                />
-              </div>
-              <span className="text-xl font-bold tracking-tight text-white">
-                horus<span className="text-sky">-lab</span>
-              </span>
+            <Link href={localePath("/")} className="inline-flex items-center group" aria-label="Horus-Lab">
+              {/* Fond navy → on utilise la variante blanche du logo pour qu'il reste visible */}
+              <Image
+                src="/logo-HORUS-LAB-white.jpeg"
+                alt="Horus-Lab"
+                width={240}
+                height={80}
+                className="h-16 w-auto rounded-sm object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+              />
             </Link>
 
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-brand-300">
@@ -207,14 +269,14 @@ export function Footer() {
               <li>
                 <a href={`mailto:${email}`}
                   className="group flex items-start gap-3 text-sm text-brand-300 transition-colors hover:text-white">
-                  <span className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-xl bg-white/8 ring-1 ring-white/10 transition-colors group-hover:bg-brand-500">
+                  <span className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-md bg-white/8 ring-1 ring-white/10 transition-colors group-hover:bg-brand-500">
                     <IconMail className="size-4" />
                   </span>
                   <span className="leading-relaxed">{email}</span>
                 </a>
               </li>
               <li className="flex items-start gap-3 text-sm text-brand-300">
-                <span className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-xl bg-white/8 ring-1 ring-white/10">
+                <span className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-md bg-white/8 ring-1 ring-white/10">
                   <IconPhone className="size-4" />
                 </span>
                 <span className="flex flex-col gap-0.5">
@@ -225,7 +287,7 @@ export function Footer() {
                 </span>
               </li>
               <li className="flex items-center gap-3 text-sm text-brand-300">
-                <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-white/8 ring-1 ring-white/10">
+                <span className="grid size-8 shrink-0 place-items-center rounded-md bg-white/8 ring-1 ring-white/10">
                   <IconPin className="size-4" />
                 </span>
                 {location}

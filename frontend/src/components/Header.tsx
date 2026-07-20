@@ -34,7 +34,7 @@ const SERVICE_SUBMENU: Record<LangCode, { slug: string; label: string }[]> = {
 };
 
 export function Header() {
-  const { dict, lang, switchHref, localePath } = useLang();
+  const { dict, lang, localePath } = useLang();
   const pathname  = usePathname();
   const router    = useRouter();
 
@@ -87,6 +87,7 @@ export function Header() {
     { href: localePath("/blog"),        label: dict.nav.blog },
     { href: localePath("/about"),       label: dict.nav.about },
     { href: localePath("/candidature"), label: dict.nav.careers },
+    { href: localePath("/contact"),     label: dict.nav.contact },
   ];
 
   const isActive = (href: string) =>
@@ -107,19 +108,18 @@ export function Header() {
     <header className="fixed inset-x-0 top-3 z-50 px-3 sm:top-4 sm:px-4">
       <div className="mx-auto max-w-6xl">
 
-        {/* ── Pilule principale ── */}
-        <nav className={`flex h-16 items-center justify-between gap-3 rounded-full border border-brand-100 px-3 backdrop-blur-md transition-all duration-300 dark:border-white/10 sm:px-5 ${
+        {/* ── Barre principale (coins carrés / rayon léger, look pro) ── */}
+        <nav className={`flex h-16 items-center justify-between gap-3 rounded-md border border-brand-100 px-3 backdrop-blur-md transition-all duration-300 dark:border-white/10 sm:px-5 ${
           scrolled ? "bg-white/90 shadow-xl shadow-brand-900/10 dark:bg-slate-900/90"
-                   : "bg-white/75 shadow-lg shadow-brand-900/5  dark:bg-slate-900/70"
+                   : "bg-white/80 shadow-lg shadow-brand-900/5  dark:bg-slate-900/70"
         }`}>
 
-          {/* Logo */}
-          <Link href={localePath("/")} className="flex shrink-0 items-center gap-2.5">
-            <Image src="/Logo-HORUS-LAB.jpeg" alt="Horus-Lab" width={40} height={40} priority
-              className="rounded-full ring-1 ring-brand-100 dark:ring-white/10" />
-            <span className="text-lg font-bold tracking-tight text-brand-900 dark:text-white">
-              horus<span className="text-brand-500">-lab</span>
-            </span>
+          {/* Logo — noir (transparent) sur fond clair, blanc sur fond sombre : toujours lisible */}
+          <Link href={localePath("/")} className="flex shrink-0 items-center" aria-label="Horus-Lab">
+            <Image src="/logo-HORUS-LAB-black.png" alt="Horus-Lab" width={200} height={64} priority
+              className="h-14 w-auto object-contain dark:hidden" />
+            <Image src="/logo-HORUS-LAB-white.jpeg" alt="Horus-Lab" width={200} height={64} priority
+              className="hidden h-14 w-auto rounded-sm object-contain dark:block" />
           </Link>
 
           {/* Liens desktop */}
@@ -129,7 +129,7 @@ export function Header() {
             <li ref={servicesRef} className="relative" onMouseEnter={openSvc} onMouseLeave={closeSvc}>
               <button type="button" aria-haspopup="true" aria-expanded={servicesOpen}
                 onClick={() => setServicesOpen(v => !v)}
-                className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                className={`flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
                   isServicesActive
                     ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
                     : "text-ink/75 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
@@ -142,17 +142,20 @@ export function Header() {
                 </svg>
               </button>
 
-              {/* Dropdown services */}
+              {/* Dropdown services — coins carrés + tirets de séparation */}
               <div onMouseEnter={openSvc} onMouseLeave={closeSvc}
-                className={`absolute left-0 top-full mt-2 w-58 origin-top-left rounded-2xl border border-brand-100 bg-white/95 shadow-xl shadow-brand-900/10 backdrop-blur transition-all duration-200 dark:border-white/10 dark:bg-slate-900/95 ${
+                className={`absolute left-0 top-full mt-2 w-64 origin-top-left rounded-md border border-brand-100 bg-white/97 shadow-xl shadow-brand-900/10 backdrop-blur transition-all duration-200 dark:border-white/10 dark:bg-slate-900/97 ${
                   servicesOpen ? "scale-100 opacity-100 pointer-events-auto" : "scale-95 opacity-0 pointer-events-none"
                 }`}>
-                <ul className="p-2">
+                <p className="px-4 pt-3 pb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
+                  {dict.nav.services}
+                </p>
+                <ul className="px-1.5 pb-1.5">
                   {submenus.map(s => (
-                    <li key={s.slug}>
+                    <li key={s.slug} className="border-t border-dashed border-brand-100 first:border-t-0 dark:border-white/10">
                       <Link href={localePath(`/services/${s.slug}`)} onClick={() => setServicesOpen(false)}
-                        className="flex items-center gap-2.5 rounded-xl px-4 py-2.5 text-sm font-medium text-ink/80 transition-colors hover:bg-brand-50 hover:text-brand-700 dark:text-brand-100/80 dark:hover:bg-white/5 dark:hover:text-brand-200">
-                        <span className="size-1.5 rounded-full bg-brand-500/60" />
+                        className="group/svc flex items-center gap-2.5 rounded-md px-3.5 py-2.5 text-sm font-medium text-ink/80 transition-colors hover:bg-brand-50 hover:text-brand-700 dark:text-brand-100/80 dark:hover:bg-white/5 dark:hover:text-brand-200">
+                        <span className="h-px w-3 shrink-0 bg-brand-400 transition-all group-hover/svc:w-4" />
                         {s.label}
                       </Link>
                     </li>
@@ -167,7 +170,7 @@ export function Header() {
               return (
                 <li key={link.href}>
                   <Link href={link.href} aria-current={active ? "page" : undefined}
-                    className={`flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
                       active ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
                              : "text-ink/75 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
                     }`}>
@@ -190,7 +193,7 @@ export function Header() {
                 onClick={() => setLangOpen(v => !v)}
                 aria-label="Changer de langue"
                 aria-expanded={langOpen}
-                className="flex items-center gap-1.5 rounded-full border border-brand-200 px-3 py-1.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:text-brand-200 dark:hover:bg-white/5"
+                className="flex items-center gap-1.5 rounded-md border border-brand-200 px-2.5 py-1.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:text-brand-200 dark:hover:bg-white/5"
               >
                 <FlagIcon code={currentLang.code} className="h-4 w-6 shrink-0 shadow-sm ring-1 ring-black/5" />
                 <span>{currentLang.code.toUpperCase()}</span>
@@ -201,7 +204,7 @@ export function Header() {
               </button>
 
               {/* Dropdown langues */}
-              <div className={`absolute right-0 top-full mt-2 w-40 origin-top-right rounded-2xl border border-brand-100 bg-white/95 shadow-xl shadow-brand-900/10 backdrop-blur transition-all duration-200 dark:border-white/10 dark:bg-slate-900/95 ${
+              <div className={`absolute right-0 top-full mt-2 w-40 origin-top-right rounded-md border border-brand-100 bg-white/97 shadow-xl shadow-brand-900/10 backdrop-blur transition-all duration-200 dark:border-white/10 dark:bg-slate-900/97 ${
                 langOpen ? "scale-100 opacity-100 pointer-events-auto" : "scale-95 opacity-0 pointer-events-none"
               }`}>
                 <ul className="p-1.5">
@@ -212,7 +215,7 @@ export function Header() {
                         <button
                           type="button"
                           onClick={() => switchLang(l.code)}
-                          className={`flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors ${
+                          className={`flex w-full items-center gap-3 rounded-md px-4 py-2.5 text-sm font-medium transition-colors ${
                             isCurrentLang
                               ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
                               : "text-ink/80 hover:bg-brand-50 hover:text-brand-700 dark:text-brand-100/80 dark:hover:bg-white/5 dark:hover:text-brand-200"
@@ -232,14 +235,14 @@ export function Header() {
             </div>
 
             {/* CTA */}
-            <Link href={localePath("#contact")}
-              className="hidden rounded-full bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-700/25 transition-all hover:bg-brand-800 sm:inline-flex">
+            <Link href={localePath("/contact")}
+              className="hidden rounded-md bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-700/25 transition-all hover:bg-brand-800 sm:inline-flex">
               {dict.nav.cta}
             </Link>
 
             {/* Burger mobile */}
             <button type="button" onClick={() => setMenuOpen(v => !v)} aria-label="Menu" aria-expanded={menuOpen}
-              className="flex size-10 items-center justify-center rounded-full border border-brand-200 text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:text-brand-200 lg:hidden">
+              className="flex size-10 items-center justify-center rounded-md border border-brand-200 text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:text-brand-200 lg:hidden">
               {menuOpen ? <IconClose className="size-5" /> : <IconMenu className="size-5" />}
             </button>
           </div>
@@ -249,12 +252,12 @@ export function Header() {
         <div className={`overflow-hidden transition-[max-height,opacity] duration-300 lg:hidden ${
           menuOpen ? "mt-2 max-h-[36rem] opacity-100" : "max-h-0 opacity-0"
         }`}>
-          <ul className="flex flex-col gap-1 rounded-2xl border border-brand-100 bg-white/95 p-3 shadow-xl backdrop-blur dark:border-white/10 dark:bg-slate-900/95">
+          <ul className="flex flex-col gap-1 rounded-md border border-brand-100 bg-white/97 p-3 shadow-xl backdrop-blur dark:border-white/10 dark:bg-slate-900/97">
 
             {/* Services accordion */}
             <li>
               <button type="button" onClick={() => setMobileServicesOpen(v => !v)}
-                className={`flex w-full items-center justify-between gap-2 rounded-xl px-4 py-3 text-base font-medium transition-colors ${
+                className={`flex w-full items-center justify-between gap-2 rounded-md px-4 py-3 text-base font-medium transition-colors ${
                   isServicesActive ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
                                    : "text-ink/80 hover:bg-brand-50 hover:text-brand-700"
                 }`}>
@@ -270,7 +273,7 @@ export function Header() {
                     <li key={s.slug}>
                       <Link href={localePath(`/services/${s.slug}`)}
                         onClick={() => { setMenuOpen(false); setMobileServicesOpen(false); }}
-                        className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-ink/70 hover:bg-brand-50 hover:text-brand-700">
+                        className="flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium text-ink/70 hover:bg-brand-50 hover:text-brand-700">
                         <span className="size-1.5 rounded-full bg-brand-500/60" />
                         {s.label}
                       </Link>
@@ -287,7 +290,7 @@ export function Header() {
                 <li key={link.href}>
                   <Link href={link.href} aria-current={active ? "page" : undefined}
                     onClick={() => setMenuOpen(false)}
-                    className={`flex items-center gap-2 rounded-xl px-4 py-3 text-base font-medium transition-colors ${
+                    className={`flex items-center gap-2 rounded-md px-4 py-3 text-base font-medium transition-colors ${
                       active ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
                              : "text-ink/80 hover:bg-brand-50 hover:text-brand-700"
                     }`}>
@@ -306,7 +309,7 @@ export function Header() {
               <div className="flex gap-2 px-2">
                 {LANGS.map(l => (
                   <button key={l.code} type="button" onClick={() => switchLang(l.code)}
-                    className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors ${
+                    className={`flex flex-1 items-center justify-center gap-2 rounded-md px-3 py-2.5 text-sm font-semibold transition-colors ${
                       l.code === lang
                         ? "bg-brand-700 text-white"
                         : "border border-brand-200 text-brand-700 hover:bg-brand-50 dark:border-white/15 dark:text-brand-200"
@@ -320,8 +323,8 @@ export function Header() {
 
             {/* CTA */}
             <li>
-              <Link href={localePath("#contact")} onClick={() => setMenuOpen(false)}
-                className="mt-1 block rounded-xl bg-brand-700 px-4 py-3 text-center text-base font-semibold text-white">
+              <Link href={localePath("/contact")} onClick={() => setMenuOpen(false)}
+                className="mt-1 block rounded-md bg-brand-700 px-4 py-3 text-center text-base font-semibold text-white">
                 {dict.nav.cta}
               </Link>
             </li>
