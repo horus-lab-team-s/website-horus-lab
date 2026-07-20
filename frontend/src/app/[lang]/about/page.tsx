@@ -279,7 +279,7 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
               <div className="grid grid-cols-1 gap-4">
                 {c.stats.map((s, i) => (
                   <div key={s.label}
-                    className="group relative overflow-hidden rounded-2xl border border-white/15 bg-white/10 p-5 backdrop-blur transition-all hover:-translate-x-1 hover:bg-white/15"
+                    className="group relative overflow-hidden rounded-lg border border-white/15 bg-white/10 p-5 backdrop-blur transition-all hover:-translate-x-1 hover:bg-white/15"
                     style={{ animationDelay: `${i * 100}ms` }}>
                     <div aria-hidden className="absolute inset-0 bg-gradient-to-r from-brand-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <div className="relative flex items-center gap-4">
@@ -301,7 +301,7 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
           <div className="mx-auto grid max-w-7xl gap-6 px-5 sm:px-8 md:grid-cols-2">
             {c.pillars.map((pl, i) => (
               <Reveal key={pl.h} delay={i * 100}>
-                <article className="group relative h-full overflow-hidden rounded-3xl border border-brand-100 bg-gradient-to-br from-brand-50/60 to-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:from-slate-900 dark:to-slate-900">
+                <article className="group relative h-full overflow-hidden rounded-lg border border-brand-100 bg-gradient-to-br from-brand-50/60 to-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:from-slate-900 dark:to-slate-900">
                   <div aria-hidden className="pointer-events-none absolute -right-6 -top-6 size-28 rounded-full bg-brand-400/8 blur-2xl group-hover:bg-brand-400/15 transition-all" />
                   <span className={`mb-4 inline-block rounded-full bg-gradient-to-r ${VALUE_COLORS[i]} px-3 py-1 text-xs font-bold text-white uppercase tracking-wide`}>
                     {String(i + 1).padStart(2, "0")}
@@ -331,9 +331,9 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
                 const Icon = VALUE_ICONS[i] ?? IconCheck;
                 return (
                   <Reveal key={v.title} delay={i * 90}>
-                    <article className="group relative h-full overflow-hidden rounded-3xl border border-brand-100 bg-white p-7 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-brand-900/10 dark:border-white/10 dark:bg-slate-900">
+                    <article className="group relative h-full overflow-hidden rounded-lg border border-brand-100 bg-white p-7 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-brand-900/10 dark:border-white/10 dark:bg-slate-900">
                       <div aria-hidden className={`absolute inset-0 bg-gradient-to-br ${VALUE_COLORS[i]} opacity-0 group-hover:opacity-5 transition-opacity`} />
-                      <div className={`relative grid size-14 place-items-center rounded-2xl bg-gradient-to-br ${VALUE_COLORS[i]} text-white shadow-lg transition-transform group-hover:scale-110`}>
+                      <div className={`relative grid size-14 place-items-center rounded-lg bg-gradient-to-br ${VALUE_COLORS[i]} text-white shadow-lg transition-transform group-hover:scale-110`}>
                         <Icon className="size-7" />
                       </div>
                       <h3 className="mt-5 text-lg font-bold text-brand-900 dark:text-white">{v.title}</h3>
@@ -357,7 +357,7 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
               </div>
             </Reveal>
             <Reveal delay={120}>
-              <div className="relative rounded-3xl border border-brand-100 bg-gradient-to-br from-brand-50 to-white p-8 dark:border-white/10 dark:from-slate-900 dark:to-slate-900">
+              <div className="relative rounded-lg border border-brand-100 bg-gradient-to-br from-brand-50 to-white p-8 dark:border-white/10 dark:from-slate-900 dark:to-slate-900">
                 <div aria-hidden className="absolute -right-4 -top-4 size-24 rounded-full bg-sky/15 blur-2xl" />
                 <dl className="grid gap-6 sm:grid-cols-3">
                   {c.stats.map((s) => (
@@ -388,7 +388,7 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
 
             {/* ── Les deux fondateurs, ensemble ── */}
             <Reveal className="mx-auto mt-14 max-w-4xl">
-              <div className="group relative overflow-hidden rounded-3xl border border-white/15 shadow-2xl shadow-black/40">
+              <div className="group relative overflow-hidden rounded-lg border border-white/15 shadow-2xl shadow-black/40">
                 <div className="relative h-72 w-full sm:h-96">
                   <Image
                     src="/photo-the-co-founders-together.png"
@@ -421,7 +421,7 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
             <div className="mx-auto mt-10 grid max-w-4xl gap-8 sm:grid-cols-2">
               {team.map((m, i) => (
                 <Reveal key={m.name} delay={i * 120}>
-                  <article className="group relative h-full overflow-hidden rounded-3xl border border-white/12 bg-white/[0.04] backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:border-white/25 hover:shadow-2xl hover:shadow-black/50">
+                  <article className="group relative h-full overflow-hidden rounded-lg border border-white/12 bg-white/[0.04] backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:border-white/25 hover:shadow-2xl hover:shadow-black/50">
                     {/* En-tête : photo réelle si disponible, sinon dégradé + initiales */}
                     <div className={`relative h-72 overflow-hidden ${m.photo ? "" : `bg-gradient-to-br ${m.gradient}`}`}>
                       {m.photo ? (
@@ -494,7 +494,7 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
         {/* ── CTA ── */}
         <section className="bg-surface px-5 pb-24 sm:px-8">
           <Reveal className="mx-auto max-w-5xl">
-            <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-800 via-brand-700 to-brand-900 px-7 py-14 text-center shadow-2xl shadow-brand-900/30 sm:px-16">
+            <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-brand-800 via-brand-700 to-brand-900 px-7 py-14 text-center shadow-2xl shadow-brand-900/30 sm:px-16">
               <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid opacity-[0.12]" />
               <div aria-hidden className="pointer-events-none absolute -left-10 -top-10 size-60 rounded-full bg-brand-500/25 blur-3xl" />
               <div aria-hidden className="pointer-events-none absolute -right-10 bottom-0 size-48 rounded-full bg-sky/15 blur-3xl" />

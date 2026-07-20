@@ -62,7 +62,7 @@ export function BlogIndex({ posts }: { posts: PostMeta[] }) {
 
         {filtered.length === 0 ? (
           <Reveal className="mt-16">
-            <p className="rounded-2xl border border-brand-100 bg-white/70 p-10 text-center text-muted backdrop-blur dark:border-white/10 dark:bg-slate-900/70">
+            <p className="rounded-lg border border-brand-100 bg-white/70 p-10 text-center text-muted backdrop-blur dark:border-white/10 dark:bg-slate-900/70">
               {dict.blog.empty}
             </p>
           </Reveal>
@@ -73,7 +73,7 @@ export function BlogIndex({ posts }: { posts: PostMeta[] }) {
               <Reveal className="mt-10">
                 <Link
                   href={localePath(`/blog/${featured.slug}`)}
-                  className="group grid overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-sm transition-all hover:shadow-2xl hover:shadow-brand-900/10 dark:border-white/10 dark:bg-slate-900 lg:grid-cols-2"
+                  className="group grid overflow-hidden rounded-lg border border-brand-100 bg-white shadow-sm transition-all hover:shadow-2xl hover:shadow-brand-900/10 dark:border-white/10 dark:bg-slate-900 lg:grid-cols-2"
                 >
                   <div className="relative aspect-[16/10] overflow-hidden lg:aspect-auto lg:min-h-[320px]">
                     <Image

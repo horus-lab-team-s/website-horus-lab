@@ -141,7 +141,7 @@ export function CandidatureForm({ lang }: { lang: Lang }) {
 
   if (status === "success") {
     return (
-      <div className="rounded-3xl border border-brand-100 bg-white p-10 text-center shadow-xl dark:border-white/10 dark:bg-slate-900">
+      <div className="rounded-lg border border-brand-100 bg-white p-10 text-center shadow-xl dark:border-white/10 dark:bg-slate-900">
         <div className="mx-auto grid size-16 place-items-center rounded-full bg-gradient-to-br from-emerald-500 to-teal-400 text-white shadow-lg">
           <IconCheck className="size-8" />
         </div>
@@ -162,7 +162,7 @@ export function CandidatureForm({ lang }: { lang: Lang }) {
     <form
       ref={formRef}
       onSubmit={onSubmit}
-      className="rounded-3xl border border-brand-100 bg-white p-6 shadow-xl dark:border-white/10 dark:bg-slate-900 sm:p-9"
+      className="rounded-lg border border-brand-100 bg-white p-6 shadow-xl dark:border-white/10 dark:bg-slate-900 sm:p-9"
     >
       {/* Honeypot */}
       <input tabIndex={-1} autoComplete="off" aria-hidden name="website" className="hidden"
@@ -188,7 +188,7 @@ export function CandidatureForm({ lang }: { lang: Lang }) {
               type="button"
               onClick={() => setType(opt.v)}
               aria-pressed={type === opt.v}
-              className={`rounded-2xl border px-4 py-3 text-sm font-semibold transition-all ${
+              className={`rounded-lg border px-4 py-3 text-sm font-semibold transition-all ${
                 type === opt.v
                   ? "border-brand-500 bg-brand-50 text-brand-700 shadow-sm dark:bg-white/10 dark:text-brand-200"
                   : "border-brand-100 text-ink/70 hover:border-brand-300 hover:bg-brand-50/50 dark:border-white/10 dark:text-brand-100/70 dark:hover:bg-white/5"
@@ -213,7 +213,7 @@ export function CandidatureForm({ lang }: { lang: Lang }) {
           name="message"
           rows={4}
           placeholder={t.messagePh}
-          className="w-full resize-y rounded-2xl border border-brand-100 bg-surface/60 px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 dark:border-white/10 dark:bg-white/5 dark:text-white"
+          className="w-full resize-y rounded-lg border border-brand-100 bg-surface/60 px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 dark:border-white/10 dark:bg-white/5 dark:text-white"
         />
       </div>
 
@@ -233,13 +233,13 @@ export function CandidatureForm({ lang }: { lang: Lang }) {
               setDragging(false);
               pickFile(e.dataTransfer.files?.[0] ?? null);
             }}
-            className={`flex w-full flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed px-6 py-10 text-center transition-all ${
+            className={`flex w-full flex-col items-center justify-center gap-3 rounded-lg border-2 border-dashed px-6 py-10 text-center transition-all ${
               dragging
                 ? "border-brand-500 bg-brand-50 dark:bg-white/10"
                 : "border-brand-200 hover:border-brand-400 hover:bg-brand-50/40 dark:border-white/15 dark:hover:bg-white/5"
             }`}
           >
-            <span className="grid size-12 place-items-center rounded-2xl bg-gradient-to-br from-brand-700 to-brand-500 text-white shadow-lg">
+            <span className="grid size-12 place-items-center rounded-lg bg-gradient-to-br from-brand-700 to-brand-500 text-white shadow-lg">
               <IconUpload className="size-6" />
             </span>
             <span className="text-sm font-medium text-ink/80 dark:text-brand-100/80">{t.fileCta}</span>
@@ -248,8 +248,8 @@ export function CandidatureForm({ lang }: { lang: Lang }) {
             </span>
           </button>
         ) : (
-          <div className="flex items-center gap-3 rounded-2xl border border-brand-100 bg-surface/50 p-4 dark:border-white/10 dark:bg-white/5">
-            <span className="grid size-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-brand-700 to-brand-500 text-white shadow">
+          <div className="flex items-center gap-3 rounded-lg border border-brand-100 bg-surface/50 p-4 dark:border-white/10 dark:bg-white/5">
+            <span className="grid size-11 shrink-0 place-items-center rounded-md bg-gradient-to-br from-brand-700 to-brand-500 text-white shadow">
               <IconZip className="size-5" />
             </span>
             <div className="min-w-0 flex-1">
@@ -277,7 +277,7 @@ export function CandidatureForm({ lang }: { lang: Lang }) {
       </div>
 
       {error && (
-        <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-600 dark:bg-red-500/10 dark:text-red-300">
+        <p className="mt-4 rounded-md bg-red-50 px-4 py-3 text-sm font-medium text-red-600 dark:bg-red-500/10 dark:text-red-300">
           {error}
         </p>
       )}
@@ -321,7 +321,7 @@ function Field({
         type={type}
         required={required}
         placeholder={placeholder}
-        className="w-full rounded-2xl border border-brand-100 bg-surface/60 px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 dark:border-white/10 dark:bg-white/5 dark:text-white"
+        className="w-full rounded-lg border border-brand-100 bg-surface/60 px-4 py-3 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 dark:border-white/10 dark:bg-white/5 dark:text-white"
       />
     </div>
   );

@@ -229,7 +229,7 @@ export function HorusAI() {
                 </span>
               )}
               <div
-                className={`max-w-[80%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                className={`max-w-[80%] whitespace-pre-wrap rounded-lg px-4 py-2.5 text-sm leading-relaxed ${
                   m.role === "user"
                     ? "rounded-br-md bg-brand-700 text-white"
                     : "rounded-bl-md bg-white text-ink shadow-sm ring-1 ring-brand-100 dark:bg-slate-800 dark:text-brand-50 dark:ring-white/10"
@@ -245,7 +245,7 @@ export function HorusAI() {
               <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-700 to-brand-500">
                 <IconAIBot className="size-5 text-white" />
               </span>
-              <div className="flex gap-1.5 rounded-2xl rounded-bl-md bg-white px-4 py-3 shadow-sm ring-1 ring-brand-100 dark:bg-slate-800 dark:ring-white/10">
+              <div className="flex gap-1.5 rounded-lg rounded-bl-md bg-white px-4 py-3 shadow-sm ring-1 ring-brand-100 dark:bg-slate-800 dark:ring-white/10">
                 {[0, 1, 2].map((d) => (
                   <span
                     key={d}

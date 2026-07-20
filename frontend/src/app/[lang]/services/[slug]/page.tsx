@@ -386,7 +386,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
             <div className="grid gap-6 sm:grid-cols-2">
               {s.features.map((f, i) => (
                 <Reveal key={f.title} delay={i * 80}>
-                  <article className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-sm transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl dark:border-white/10 dark:bg-slate-900">
+                  <article className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-brand-100 bg-white shadow-sm transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl dark:border-white/10 dark:bg-slate-900">
                     {/* Image Unsplash en fond de carte */}
                     <div className="relative h-44 overflow-hidden">
                       <div className={`absolute inset-0 bg-gradient-to-br ${s.gradient}`} />
@@ -399,7 +399,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
                       <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                       {/* Icône + numéro sur l'image */}
                       <div className="absolute inset-0 flex items-end justify-between p-5">
-                        <div className="flex size-12 items-center justify-center rounded-2xl bg-white/15 backdrop-blur ring-1 ring-white/30">
+                        <div className="flex size-12 items-center justify-center rounded-lg bg-white/15 backdrop-blur ring-1 ring-white/30">
                           <Icon className="size-6 text-white" />
                         </div>
                         <span className="text-5xl font-extrabold text-white/20 select-none leading-none">
@@ -440,8 +440,8 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
         <section className="relative bg-white py-16 dark:bg-[#070e1c] sm:py-20 overflow-hidden">
           <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-soft opacity-30" />
           <div className="relative mx-auto max-w-4xl px-5 sm:px-8">
-            <Reveal className="rounded-3xl border border-brand-100 bg-gradient-to-br from-white to-brand-50/30 p-8 shadow-xl dark:border-white/10 dark:bg-slate-900 dark:from-slate-900 dark:to-slate-900 sm:p-10">
-              <div className={`inline-flex size-12 items-center justify-center rounded-2xl bg-gradient-to-br ${s.gradient} text-white shadow-lg mb-5`}>
+            <Reveal className="rounded-lg border border-brand-100 bg-gradient-to-br from-white to-brand-50/30 p-8 shadow-xl dark:border-white/10 dark:bg-slate-900 dark:from-slate-900 dark:to-slate-900 sm:p-10">
+              <div className={`inline-flex size-12 items-center justify-center rounded-lg bg-gradient-to-br ${s.gradient} text-white shadow-lg mb-5`}>
                 <Icon className="size-6" />
               </div>
               <h2 className="text-xl font-bold text-brand-900 dark:text-white">{receivesLabel}</h2>
@@ -478,8 +478,8 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
                   return (
                     <Reveal key={k} delay={i * 80}>
                       <Link href={`/${lang}/services/${k}`}
-                        className={`group flex items-center gap-4 rounded-2xl bg-gradient-to-br ${d.gradient} p-5 transition-all hover:-translate-y-1 hover:shadow-xl`}>
-                        <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-white/15 backdrop-blur ring-1 ring-white/25">
+                        className={`group flex items-center gap-4 rounded-lg bg-gradient-to-br ${d.gradient} p-5 transition-all hover:-translate-y-1 hover:shadow-xl`}>
+                        <div className="flex size-11 shrink-0 items-center justify-center rounded-md bg-white/15 backdrop-blur ring-1 ring-white/25">
                           <OtherIcon className="size-6 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">

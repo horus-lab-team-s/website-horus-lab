@@ -42,7 +42,7 @@ export function BlogPostHeader({ post }: { post: PostMeta }) {
 
         {/* Bannière de couverture immersive */}
         {post.cover && (
-          <div className="relative mt-10 aspect-[21/9] overflow-hidden rounded-3xl border border-brand-100 bg-gradient-to-br from-brand-700 via-brand-500 to-sky shadow-2xl shadow-brand-900/15 dark:border-white/10">
+          <div className="relative mt-10 aspect-[21/9] overflow-hidden rounded-lg border border-brand-100 bg-gradient-to-br from-brand-700 via-brand-500 to-sky shadow-2xl shadow-brand-900/15 dark:border-white/10">
             <Image
               src={post.cover}
               alt=""

@@ -42,7 +42,7 @@ export function Newsletter() {
   return (
     <section className="bg-surface px-5 pb-20 sm:px-8 sm:pb-28">
       <Reveal className="mx-auto max-w-5xl">
-        <div className="relative overflow-hidden rounded-[2rem] border border-brand-100 bg-gradient-to-br from-brand-50 via-white to-brand-50 p-8 dark:border-white/10 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 sm:p-12">
+        <div className="relative overflow-hidden rounded-lg border border-brand-100 bg-gradient-to-br from-brand-50 via-white to-brand-50 p-8 dark:border-white/10 dark:from-slate-900 dark:via-slate-900 dark:to-slate-900 sm:p-12">
           {/* Décor animé */}
           <div
             aria-hidden
@@ -73,7 +73,7 @@ export function Newsletter() {
 
           <div className="relative grid items-center gap-8 lg:grid-cols-[1fr_1fr]">
             <div>
-              <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-brand-700 text-white shadow-lg shadow-brand-700/25">
+              <span className="inline-flex size-12 items-center justify-center rounded-lg bg-brand-700 text-white shadow-lg shadow-brand-700/25">
                 <IconMail className="size-6" />
               </span>
               <h2 className="mt-5 text-2xl font-extrabold leading-tight tracking-tight text-brand-900 dark:text-white sm:text-3xl">
