@@ -151,7 +151,7 @@ export default async function PortfolioPage({ params }: { params: Promise<Params
         {/* ── CTA ── */}
         <section className="bg-surface px-5 pb-24 sm:px-8 dark:bg-[#070e1c]">
           <Reveal className="mx-auto max-w-5xl">
-            <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-800 via-brand-700 to-brand-900 px-7 py-14 text-center shadow-2xl shadow-brand-900/30 sm:px-16">
+            <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-brand-800 via-brand-700 to-brand-900 px-7 py-14 text-center shadow-2xl shadow-brand-900/30 sm:px-16">
               <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid opacity-[0.15]" />
               <div aria-hidden className="pointer-events-none absolute -left-10 -top-10 size-60 rounded-full bg-brand-500/30 blur-3xl animate-float-slow" />
               <div aria-hidden className="pointer-events-none absolute -right-8 bottom-0 size-48 rounded-full bg-sky/20 blur-3xl animate-drift" />

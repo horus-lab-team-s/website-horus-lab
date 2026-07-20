@@ -42,9 +42,9 @@ export function Process({ steps }: { steps?: ProcessItem[] }) {
             const isLast = i === p.steps.length - 1;
             return (
               <Reveal key={step.title} delay={i * 90}>
-                <div className="relative flex h-full flex-col rounded-2xl border border-brand-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-900/8 dark:border-white/10 dark:bg-slate-900">
+                <div className="relative flex h-full flex-col rounded-lg border border-brand-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-900/8 dark:border-white/10 dark:bg-slate-900">
                   <div className="flex items-center gap-3">
-                    <div className={`inline-flex size-11 shrink-0 items-center justify-center rounded-xl text-base font-extrabold text-white shadow-md bg-gradient-to-br ${c.grad}`}>
+                    <div className={`inline-flex size-11 shrink-0 items-center justify-center rounded-md text-base font-extrabold text-white shadow-md bg-gradient-to-br ${c.grad}`}>
                       {String(i + 1).padStart(2, "0")}
                     </div>
                     {!isLast && (

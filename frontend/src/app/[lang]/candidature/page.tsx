@@ -161,9 +161,9 @@ export default async function CandidaturePage({ params }: { params: Promise<Para
                 const Icon = PERK_ICONS[i] ?? IconCheck;
                 return (
                   <Reveal key={p.title} delay={i * 90}>
-                    <article className="group relative h-full overflow-hidden rounded-3xl border border-brand-100 bg-white p-7 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-brand-900/10 dark:border-white/10 dark:bg-slate-900">
+                    <article className="group relative h-full overflow-hidden rounded-lg border border-brand-100 bg-white p-7 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-brand-900/10 dark:border-white/10 dark:bg-slate-900">
                       <div aria-hidden className={`absolute inset-0 bg-gradient-to-br ${PERK_COLORS[i]} opacity-0 group-hover:opacity-5 transition-opacity`} />
-                      <div className={`relative grid size-14 place-items-center rounded-2xl bg-gradient-to-br ${PERK_COLORS[i]} text-white shadow-lg transition-transform group-hover:scale-110`}>
+                      <div className={`relative grid size-14 place-items-center rounded-lg bg-gradient-to-br ${PERK_COLORS[i]} text-white shadow-lg transition-transform group-hover:scale-110`}>
                         <Icon className="size-7" />
                       </div>
                       <h3 className="mt-5 text-lg font-bold text-brand-900 dark:text-white">{p.title}</h3>
@@ -195,7 +195,7 @@ export default async function CandidaturePage({ params }: { params: Promise<Para
             <Reveal className="mb-10">
               <ol className="grid gap-4 sm:grid-cols-3">
                 {c.steps.map((s, i) => (
-                  <li key={s.title} className="relative rounded-2xl border border-brand-100 bg-white/80 p-5 backdrop-blur dark:border-white/10 dark:bg-white/5">
+                  <li key={s.title} className="relative rounded-lg border border-brand-100 bg-white/80 p-5 backdrop-blur dark:border-white/10 dark:bg-white/5">
                     <span className="inline-flex size-8 items-center justify-center rounded-full bg-brand-700 text-sm font-extrabold text-white shadow-md">
                       {i + 1}
                     </span>

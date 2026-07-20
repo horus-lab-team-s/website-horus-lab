@@ -117,7 +117,7 @@ export function Realisations({ projects }: { projects: Project[] }) {
                 {/* Logo du projet phare — occupe tout l'espace de la couverture */}
                 {featured.logo ? (
                   <div className="absolute inset-0 flex items-center justify-center p-8" style={{ zIndex: 2 }}>
-                    <div className="relative h-36 w-[78%] max-w-sm overflow-hidden rounded-2xl bg-white/92 p-5 shadow-2xl ring-1 ring-white/50 backdrop-blur sm:h-40">
+                    <div className="relative h-36 w-[78%] max-w-sm overflow-hidden rounded-lg bg-white/92 p-5 shadow-2xl ring-1 ring-white/50 backdrop-blur sm:h-40">
                       <Image
                         src={featured.logo}
                         alt={`Logo ${featured.title}`}
@@ -134,7 +134,7 @@ export function Realisations({ projects }: { projects: Project[] }) {
                     <span className="size-2 rounded-full bg-brand-500 glow-pulse" />
                     {r.featuredLabel}
                   </span>
-                  <span className="inline-flex size-12 items-center justify-center rounded-2xl bg-white/15 backdrop-blur ring-1 ring-white/30">
+                  <span className="inline-flex size-12 items-center justify-center rounded-lg bg-white/15 backdrop-blur ring-1 ring-white/30">
                     <Featured className="size-7 text-white drop-shadow" />
                   </span>
                 </div>
@@ -202,7 +202,7 @@ export function Realisations({ projects }: { projects: Project[] }) {
                           )}
                           <div aria-hidden className="absolute inset-0 bg-black/25" style={{ zIndex: 2 }} />
                           <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 3 }}>
-                            <div className="flex size-13 items-center justify-center rounded-xl bg-white/20 backdrop-blur ring-1 ring-white/30 shadow-md">
+                            <div className="flex size-13 items-center justify-center rounded-md bg-white/20 backdrop-blur ring-1 ring-white/30 shadow-md">
                               <Icon className="size-7 text-white drop-shadow-md" />
                             </div>
                           </div>

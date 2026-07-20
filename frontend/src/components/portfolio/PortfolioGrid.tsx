@@ -91,7 +91,7 @@ export function PortfolioGrid({
           const gallery = galleryFor(p.title);
           return (
             <Reveal key={p.title} delay={(i % 2) * 80}>
-              <article className="group lift-xl flex h-full flex-col overflow-hidden rounded-3xl border border-brand-100 bg-white dark:border-white/10 dark:bg-slate-900">
+              <article className="group lift-xl flex h-full flex-col overflow-hidden rounded-lg border border-brand-100 bg-white dark:border-white/10 dark:bg-slate-900">
 
                 {/* ── Couverture : logo qui occupe tout l'espace supérieur ── */}
                 <div className={`relative h-60 overflow-hidden ${p.logo ? "bg-white dark:bg-slate-800" : `bg-gradient-to-br ${p.gradient}`}`}>
@@ -134,7 +134,7 @@ export function PortfolioGrid({
                         <circle cx="460" cy="140" r="3" fill="currentColor" />
                       </svg>
                       <div className="relative flex h-full items-center justify-between px-8">
-                        <div className="flex size-20 items-center justify-center rounded-2xl bg-white/15 backdrop-blur ring-2 ring-white/30 shadow-xl">
+                        <div className="flex size-20 items-center justify-center rounded-lg bg-white/15 backdrop-blur ring-2 ring-white/30 shadow-xl">
                           <Icon className="size-10 text-white drop-shadow-lg" />
                         </div>
                         <span className="numeral select-none text-[110px] text-white/20">
@@ -226,7 +226,7 @@ export function PortfolioGrid({
 
       {visible.length === 0 && (
         <Reveal>
-          <p className="mt-16 rounded-2xl border border-brand-100 bg-white p-10 text-center text-muted dark:border-white/10 dark:bg-slate-900">
+          <p className="mt-16 rounded-lg border border-brand-100 bg-white p-10 text-center text-muted dark:border-white/10 dark:bg-slate-900">
             Aucun projet dans cette catégorie.
           </p>
         </Reveal>

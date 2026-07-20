@@ -48,9 +48,9 @@ export function ServiceProcessSection({
             const isLast = i === process.length - 1;
             return (
               <Reveal key={step.step} delay={i * 90}>
-                <div className={`flex h-full flex-col rounded-2xl border bg-white/8 p-6 backdrop-blur ${c.border}`}>
+                <div className={`flex h-full flex-col rounded-lg border bg-white/8 p-6 backdrop-blur ${c.border}`}>
                   <div className="flex items-center gap-3">
-                    <div className={`inline-flex size-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br ${c.grad} text-sm font-extrabold text-white shadow-lg`}>
+                    <div className={`inline-flex size-11 shrink-0 items-center justify-center rounded-md bg-gradient-to-br ${c.grad} text-sm font-extrabold text-white shadow-lg`}>
                       {step.step}
                     </div>
                     {!isLast && (

@@ -88,7 +88,7 @@ export function ProjectGallery({
       />
 
       {/* Panneau */}
-      <div className="relative flex h-full w-full max-w-6xl flex-col overflow-hidden bg-white shadow-2xl dark:bg-slate-900 sm:rounded-3xl">
+      <div className="relative flex h-full w-full max-w-6xl flex-col overflow-hidden bg-white shadow-2xl dark:bg-slate-900 sm:rounded-lg">
         {/* En-tête */}
         <div className="flex items-start justify-between gap-4 border-b border-brand-100 px-5 py-4 dark:border-white/10 sm:px-7">
           <div>
@@ -146,7 +146,7 @@ export function ProjectGallery({
                 key={sh.src}
                 type="button"
                 onClick={() => setShot(i)}
-                className="group/th flex flex-col overflow-hidden rounded-2xl border border-brand-100 bg-surface text-left transition-all hover:-translate-y-1 hover:border-brand-300 hover:shadow-xl dark:border-white/10 dark:bg-white/5"
+                className="group/th flex flex-col overflow-hidden rounded-lg border border-brand-100 bg-surface text-left transition-all hover:-translate-y-1 hover:border-brand-300 hover:shadow-xl dark:border-white/10 dark:bg-white/5"
               >
                 <div className={`relative overflow-hidden ${group.portrait ? "aspect-[3/4]" : "aspect-[16/10]"}`}>
                   <Image
@@ -193,7 +193,7 @@ export function ProjectGallery({
             <img
               src={shots[shot].src}
               alt={isFr ? shots[shot].fr : shots[shot].en}
-              className="mx-auto h-auto w-full max-w-5xl rounded-xl ring-1 ring-white/15"
+              className="mx-auto h-auto w-full max-w-5xl rounded-md ring-1 ring-white/15"
             />
           </div>
 

@@ -50,7 +50,7 @@ export function PostCard({ post }: { post: PostMeta }) {
   return (
     <Link
       href={localePath(`/blog/${post.slug}`)}
-      className="group lift-xl relative flex h-full flex-col overflow-hidden rounded-3xl border border-brand-100 bg-white dark:border-white/10 dark:bg-slate-900"
+      className="group lift-xl relative flex h-full flex-col overflow-hidden rounded-lg border border-brand-100 bg-white dark:border-white/10 dark:bg-slate-900"
     >
       {/* ── Couverture avec image réelle ── */}
       <div className={`relative h-52 overflow-hidden bg-gradient-to-br ${grad}`}>

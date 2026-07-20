@@ -166,7 +166,7 @@ export function BlogForum({ slug, title }: { slug: string; title?: string }) {
   return (
     <section aria-label={t.heading} className="bg-surface pb-20">
       <div className="mx-auto max-w-3xl px-5 sm:px-8">
-        <div className="rounded-3xl border border-brand-100 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-900 sm:p-8">
+        <div className="rounded-lg border border-brand-100 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-slate-900 sm:p-8">
           <div className="mb-1 flex items-center gap-2">
             <h2 className="text-xl font-bold text-ink dark:text-brand-50">
               {t.heading}
@@ -178,13 +178,13 @@ export function BlogForum({ slug, title }: { slug: string; title?: string }) {
           {/* Fil des messages */}
           <div ref={listRef} className="space-y-4">
             {posts.length === 0 && (
-              <p className="rounded-2xl bg-surface/60 px-4 py-6 text-center text-sm text-muted dark:bg-white/5">
+              <p className="rounded-lg bg-surface/60 px-4 py-6 text-center text-sm text-muted dark:bg-white/5">
                 {t.empty}
               </p>
             )}
             {posts.map((p) => (
               <div key={p.key} className={`flex ${p.is_staff ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[85%] rounded-2xl px-4 py-3 ${
+                <div className={`max-w-[85%] rounded-lg px-4 py-3 ${
                   p.is_staff
                     ? "rounded-br-md bg-brand-50 ring-1 ring-brand-200 dark:bg-brand-500/10 dark:ring-brand-400/20"
                     : "rounded-bl-md bg-surface/70 ring-1 ring-brand-100 dark:bg-white/5 dark:ring-white/10"
@@ -215,7 +215,7 @@ export function BlogForum({ slug, title }: { slug: string; title?: string }) {
               placeholder={t.name}
               aria-label={t.name}
               maxLength={120}
-              className="w-full rounded-xl border border-brand-100 bg-surface/60 px-4 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 dark:border-white/10 dark:bg-white/5 dark:text-white"
+              className="w-full rounded-md border border-brand-100 bg-surface/60 px-4 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 dark:border-white/10 dark:bg-white/5 dark:text-white"
             />
             {/* Honeypot anti-bot */}
             <input
@@ -233,12 +233,12 @@ export function BlogForum({ slug, title }: { slug: string; title?: string }) {
                 aria-label={t.message}
                 rows={2}
                 maxLength={5000}
-                className="min-h-[46px] flex-1 resize-y rounded-xl border border-brand-100 bg-surface/60 px-4 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 dark:border-white/10 dark:bg-white/5 dark:text-white"
+                className="min-h-[46px] flex-1 resize-y rounded-md border border-brand-100 bg-surface/60 px-4 py-2.5 text-sm text-ink outline-none transition-colors placeholder:text-muted/60 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10 dark:border-white/10 dark:bg-white/5 dark:text-white"
               />
               <button
                 type="submit"
                 disabled={sending || !input.trim()}
-                className="shrink-0 rounded-xl bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-800 disabled:opacity-50"
+                className="shrink-0 rounded-md bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-800 disabled:opacity-50"
               >
                 {sending ? t.publishing : t.publish}
               </button>
