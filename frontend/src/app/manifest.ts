@@ -13,9 +13,10 @@ export default function manifest(): MetadataRoute.Manifest {
     lang: "fr",
     icons: [
       {
-        src: "/logo-HORUS-LAB.png",
-        sizes: "512x512",
-        type: "image/png",
+        src: "/logo-HORUS-LAB-white.jpeg",
+        sizes: "1254x1254",
+        type: "image/jpeg",
+        purpose: "any",
       },
     ],
   };

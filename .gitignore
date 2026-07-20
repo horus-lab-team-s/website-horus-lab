@@ -15,3 +15,6 @@ venv/
 
 # Variables docker-compose (contiennent des secrets)
 .env
+
+# Etat local de l'agent Claude Code (ne pas versionner)
+.claude/

@@ -48,7 +48,7 @@ export async function generateMetadata({
       description,
       type: "website",
       locale: lang === "fr" ? "fr_FR" : "en_US",
-      images: ["/logo-HORUS-LAB.png"],
+      images: ["/logo-HORUS-LAB-white.jpeg"],
     },
   };
 }

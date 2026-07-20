@@ -14,7 +14,9 @@ export const metadata: Metadata = {
     default: "Horus-Lab",
     template: "%s | Horus-Lab",
   },
-  icons: { icon: "/logo-HORUS-LAB.png" },
+  // Pas de `icons` explicite : Next génère le favicon depuis `src/app/icon.jpeg`
+  // (logo Horus-Lab carré 1254x1254). Une valeur explicite écraserait cette
+  // détection automatique — c'est ce qui cassait le favicon (fichier inexistant).
 };
 
 export const viewport: Viewport = {
