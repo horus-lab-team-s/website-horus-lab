@@ -1,13 +1,17 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
-import { PostCard } from "./PostCard";
+import { IconArrowRight } from "@/components/icons";
+import { coverFor } from "@/lib/blogImages";
+import { PostCard, formatDate } from "./PostCard";
 import type { PostMeta } from "@/lib/blog";
 
 export function BlogIndex({ posts }: { posts: PostMeta[] }) {
-  const { dict, lang } = useLang();
+  const { dict, lang, localePath } = useLang();
   const allLabel = lang === "fr" ? "Tous" : "All";
   const [activeCategory, setActiveCategory] = useState(allLabel);
 
@@ -20,49 +24,21 @@ export function BlogIndex({ posts }: { posts: PostMeta[] }) {
     ? posts
     : posts.filter((p) => p.category === activeCategory);
 
+  const [featured, ...rest] = filtered;
+
   return (
     <section className="relative overflow-hidden bg-surface py-16 pb-20 sm:pb-28 dark:bg-[#070e1c]">
 
-      {/* ── Fond animé : formes géométriques (comme Réalisations) ── */}
+      {/* ── Fond sobre : dégradé + grille + halos discrets ── */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-white via-surface to-brand-50/20 dark:from-[#070e1c] dark:via-slate-900 dark:to-[#0a1326]" />
-        <div className="absolute inset-0 bg-grid-soft opacity-40" />
-        {/* Halos */}
-        <div className="absolute -left-20 top-1/4 h-80 w-80 rounded-full bg-brand-200/10 blur-3xl animate-float-slow dark:bg-brand-500/6" />
-        <div className="absolute right-0 bottom-1/4 h-72 w-72 rounded-full bg-sky/8 blur-3xl animate-drift dark:bg-sky/5" />
-        <div className="absolute left-1/2 top-0 h-60 w-60 rounded-full bg-violet-100/8 blur-3xl animate-float dark:bg-violet-500/4" style={{ animationDelay: "2s" }} />
-        {/* Formes géométriques */}
-        {[
-          { sh: "circle", x: "2%", y: "5%", sz: 52, d: "0s", dur: "10s" },
-          { sh: "square", x: "92%", y: "3%", sz: 40, d: "1.3s", dur: "9s" },
-          { sh: "triangle", x: "12%", y: "72%", sz: 44, d: "0.6s", dur: "11s" },
-          { sh: "trapeze", x: "84%", y: "68%", sz: 48, d: "2.0s", dur: "8s" },
-          { sh: "diamond", x: "46%", y: "4%", sz: 34, d: "1.6s", dur: "10s" },
-          { sh: "hex", x: "66%", y: "82%", sz: 42, d: "0.3s", dur: "9s" },
-          { sh: "circle", x: "28%", y: "40%", sz: 28, d: "2.8s", dur: "8s" },
-          { sh: "square", x: "76%", y: "30%", sz: 30, d: "0.9s", dur: "11s" },
-          { sh: "octo", x: "38%", y: "88%", sz: 36, d: "1.4s", dur: "9s" },
-          { sh: "diamond", x: "58%", y: "55%", sz: 26, d: "2.2s", dur: "10s" },
-          { sh: "triangle", x: "90%", y: "48%", sz: 32, d: "0.5s", dur: "8s" },
-          { sh: "hex", x: "8%", y: "52%", sz: 38, d: "1.9s", dur: "11s" },
-        ].map((s, i) => (
-          <div key={i} aria-hidden
-            className="pointer-events-none absolute animate-float text-brand-400/[0.10] dark:text-brand-300/[0.08]"
-            style={{ left: s.x, top: s.y, animationDelay: s.d, animationDuration: s.dur }}
-          >
-            {s.sh === "circle" && <svg width={s.sz} height={s.sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><circle cx="12" cy="12" r="9" /></svg>}
-            {s.sh === "square" && <svg width={s.sz} height={s.sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><rect x="3" y="3" width="18" height="18" rx="2" /></svg>}
-            {s.sh === "triangle" && <svg width={s.sz} height={s.sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><polygon points="12,3 22,21 2,21" /></svg>}
-            {s.sh === "trapeze" && <svg width={s.sz} height={s.sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><polygon points="5,18 19,18 22,6 2,6" /></svg>}
-            {s.sh === "diamond" && <svg width={s.sz} height={s.sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><polygon points="12,2 22,12 12,22 2,12" /></svg>}
-            {s.sh === "hex" && <svg width={s.sz} height={s.sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><polygon points="12,2 20,7 20,17 12,22 4,17 4,7" /></svg>}
-            {s.sh === "octo" && <svg width={s.sz} height={s.sz} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><polygon points="7,2 17,2 22,7 22,17 17,22 7,22 2,17 2,7" /></svg>}
-          </div>
-        ))}
+        <div className="absolute inset-0 bg-grid-soft opacity-30 dark:opacity-20" />
+        <div className="absolute -left-20 top-1/4 h-80 w-80 rounded-full bg-brand-200/10 blur-3xl dark:bg-brand-500/6" />
+        <div className="absolute right-0 bottom-1/4 h-72 w-72 rounded-full bg-sky/8 blur-3xl dark:bg-sky/5" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-        {/* Filtres catégories — centrés (comme Réalisations) */}
+        {/* Filtres catégories — centrés */}
         {categories.length > 1 && (
           <Reveal>
             <div className="flex flex-wrap justify-center gap-2.5 pb-2">
@@ -84,7 +60,6 @@ export function BlogIndex({ posts }: { posts: PostMeta[] }) {
           </Reveal>
         )}
 
-        {/* Grille d'articles */}
         {filtered.length === 0 ? (
           <Reveal className="mt-16">
             <p className="rounded-2xl border border-brand-100 bg-white/70 p-10 text-center text-muted backdrop-blur dark:border-white/10 dark:bg-slate-900/70">
@@ -92,13 +67,74 @@ export function BlogIndex({ posts }: { posts: PostMeta[] }) {
             </p>
           </Reveal>
         ) : (
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {filtered.map((post, i) => (
-              <Reveal key={post.slug} delay={i * 70}>
-                <PostCard post={post} />
+          <>
+            {/* ── Article à la une (le plus récent) ── */}
+            {featured && (
+              <Reveal className="mt-10">
+                <Link
+                  href={localePath(`/blog/${featured.slug}`)}
+                  className="group grid overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-sm transition-all hover:shadow-2xl hover:shadow-brand-900/10 dark:border-white/10 dark:bg-slate-900 lg:grid-cols-2"
+                >
+                  <div className="relative aspect-[16/10] overflow-hidden lg:aspect-auto lg:min-h-[320px]">
+                    <Image
+                      src={coverFor(featured)}
+                      alt={featured.title}
+                      fill
+                      sizes="(max-width:1024px) 100vw, 640px"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                    <span className="absolute left-4 top-4 inline-flex items-center gap-1.5 rounded-full bg-brand-700 px-3 py-1 text-xs font-bold text-white shadow-lg">
+                      <span className="size-1.5 rounded-full bg-white/80" />
+                      {lang === "fr" ? "À la une" : "Featured"}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col justify-center gap-3 p-7 sm:p-9">
+                    <div className="flex items-center gap-2 text-xs font-medium text-muted">
+                      <span className="rounded-full bg-brand-50 px-2.5 py-0.5 font-semibold text-brand-700 dark:bg-white/5 dark:text-brand-200">
+                        {featured.category}
+                      </span>
+                      <time dateTime={featured.date}>{formatDate(featured.date, lang)}</time>
+                      <span aria-hidden>·</span>
+                      <span>{featured.readingMinutes} {dict.blog.readTime}</span>
+                    </div>
+
+                    <h2 className="text-2xl font-extrabold leading-tight tracking-tight text-brand-900 transition-colors group-hover:text-brand-600 dark:text-white dark:group-hover:text-brand-300 sm:text-3xl">
+                      {featured.title}
+                    </h2>
+
+                    <p className="line-clamp-3 text-[15px] leading-relaxed text-muted">
+                      {featured.excerpt}
+                    </p>
+
+                    <span className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-brand-600 dark:text-brand-300">
+                      {dict.blog.readMore}
+                      <IconArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </div>
+                </Link>
               </Reveal>
-            ))}
-          </div>
+            )}
+
+            {/* ── Les autres articles ── */}
+            {rest.length > 0 && (
+              <>
+                <Reveal className="mt-14 mb-6">
+                  <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-brand-500">
+                    {lang === "fr" ? "Derniers articles" : "Latest articles"}
+                  </h2>
+                </Reveal>
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {rest.map((post, i) => (
+                    <Reveal key={post.slug} delay={i * 70}>
+                      <PostCard post={post} />
+                    </Reveal>
+                  ))}
+                </div>
+              </>
+            )}
+          </>
         )}
       </div>
     </section>

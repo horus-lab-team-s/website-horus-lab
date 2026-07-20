@@ -21,11 +21,11 @@ const fr = {
     titleLead: "Nous transformons vos idées en",
     titleHighlight: "solutions numériques durables",
     subtitle:
-      "Vos idées, nos solutions — du concept au déploiement.",
+      "Vos idées, nos solutions, du concept au déploiement.",
     ctaPrimary: "Démarrer un projet",
     ctaSecondary: "Découvrir nos services",
     stats: [
-      { value: "8+", label: "projets livrés" },
+      { value: "5", label: "projets livrés" },
       { value: "4", label: "pôles d'expertise" },
       { value: "24/7", label: "accompagnement" },
     ],
@@ -43,7 +43,7 @@ const fr = {
       },
       {
         title: "Systèmes d'information",
-        desc: "Analyse, conception et architecture de vos SI avec rigueur — méthode RUP, UML, audit de l'existant.",
+        desc: "Analyse, conception et architecture de vos SI avec rigueur : méthode RUP, UML, audit de l'existant.",
         tags: ["UML", "RUP", "Architecture", "API"],
       },
       {
@@ -108,9 +108,9 @@ const fr = {
   },
   sectors: {
     eyebrow: "Secteurs",
-    title: "Nous accompagnons tous les secteurs",
+    title: "Quel que soit votre secteur",
     subtitle:
-      "De la fintech à l'agriculture, nous adaptons nos solutions à votre domaine d'activité.",
+      "Nous concevons la solution adaptée à votre métier. Ces domaines ne sont que des exemples : votre besoin définit le projet, sans aucune limite de secteur.",
     items: [
       "Fintech & Paiement",
       "Santé & e-Santé",
@@ -126,7 +126,7 @@ const fr = {
     eyebrow: "Réalisations",
     title: "Des produits déjà en production",
     subtitle:
-      "Des applications conçues et livrées pour des clients africains — du concept au déploiement.",
+      "Des applications conçues et livrées pour des clients africains, du concept au déploiement.",
     featuredLabel: "Projet phare",
     viewAll: "Voir toutes les réalisations",
     detailsLabel: "Détails",
@@ -144,7 +144,7 @@ const fr = {
     eyebrow: "Actualités",
     title: "Les nouvelles du studio",
     subtitle:
-      "Lancements, mises à jour, partenariats — les actualités fraîches de Horus-Lab et de nos produits.",
+      "Lancements, mises à jour, partenariats : les actualités fraîches de Horus-Lab et de nos produits.",
     viewAll: "Voir toutes les actualités",
     readMore: "En savoir plus",
     backToNews: "Retour aux actualités",
@@ -295,11 +295,11 @@ const en: Dict = {
     titleLead: "We turn your ideas into",
     titleHighlight: "lasting digital solutions",
     subtitle:
-      "Your ideas, our solutions — from concept to deployment.",
+      "Your ideas, our solutions, from concept to deployment.",
     ctaPrimary: "Start a project",
     ctaSecondary: "Explore our services",
     stats: [
-      { value: "8+", label: "projects delivered" },
+      { value: "5", label: "projects delivered" },
       { value: "4", label: "areas of expertise" },
       { value: "24/7", label: "support" },
     ],
@@ -317,7 +317,7 @@ const en: Dict = {
       },
       {
         title: "Information Systems",
-        desc: "Analysis, design and IS architecture with rigour — RUP method, UML, existing system audit.",
+        desc: "Analysis, design and IS architecture with rigour: RUP method, UML, existing system audit.",
         tags: ["UML", "RUP", "Architecture", "API"],
       },
       {
@@ -382,9 +382,9 @@ const en: Dict = {
   },
   sectors: {
     eyebrow: "Industries",
-    title: "We serve every industry",
+    title: "Whatever your industry",
     subtitle:
-      "From fintech to agriculture, we adapt our solutions to your field.",
+      "We build the solution that fits your business. These fields are only examples: your need defines the project, with no industry limits.",
     items: [
       "Fintech & Payments",
       "Health & e-Health",
@@ -400,7 +400,7 @@ const en: Dict = {
     eyebrow: "Work",
     title: "Products already live in production",
     subtitle:
-      "Applications designed and delivered for African clients — concept to deployment.",
+      "Applications designed and delivered for African clients, from concept to deployment.",
     featuredLabel: "Featured project",
     viewAll: "See all our work",
     detailsLabel: "Details",
@@ -418,7 +418,7 @@ const en: Dict = {
     eyebrow: "News",
     title: "What's happening at the studio",
     subtitle:
-      "Launches, updates, partnerships — fresh news from Horus-Lab and our products.",
+      "Launches, updates, partnerships: fresh news from Horus-Lab and our products.",
     viewAll: "See all news",
     readMore: "Read more",
     backToNews: "Back to news",
@@ -443,7 +443,7 @@ const en: Dict = {
       },
       {
         quote:
-          "Digitalising our processes saves us precious time every single week. Automated workflows, paperless approvals — the paper has all but disappeared.",
+          "Digitalising our processes saves us precious time every single week. Automated workflows, paperless approvals, the paper has all but disappeared.",
         name: "Sandrine M.",
         role: "Operations Lead, MediCare",
       },

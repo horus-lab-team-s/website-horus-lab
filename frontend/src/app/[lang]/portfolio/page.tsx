@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
+import { WaveDivider } from "@/components/WaveDivider";
 import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { IconArrowRight } from "@/components/icons";
 import { isLocale, locales, type Lang } from "@/i18n/dictionaries";
@@ -67,7 +68,7 @@ export default async function PortfolioPage({ params }: { params: Promise<Params
         <section className="relative isolate flex min-h-[72vh] items-center overflow-hidden pt-28 pb-32">
           {/* Image fond */}
           <div aria-hidden className="absolute inset-0 -z-20 bg-cover bg-center"
-            style={{ backgroundImage: `url(https://images.unsplash.com/photo-1607706189992-eae578626c86?auto=format&fit=crop&w=1920&q=85)` }} />
+            style={{ backgroundImage: `url(/img/photo-1607706189992-eae578626c86-w1920.jpg)` }} />
           <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-br from-brand-900/72 via-brand-900/55 to-slate-900/65" />
           <div aria-hidden className="absolute inset-0 -z-10 bg-grid opacity-[0.14]" />
           {/* Particules */}
@@ -97,19 +98,8 @@ export default async function PortfolioPage({ params }: { params: Promise<Params
             </Reveal>
           </div>
 
-          {/* ── Vague animée identique à la home ── */}
-          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[90px] text-white dark:text-[#070e1c]">
-            <svg viewBox="0 0 2880 120" preserveAspectRatio="none"
-              className="absolute bottom-0 left-0 h-full w-[200%] animate-[waveX_16s_linear_infinite]">
-              <path fill="currentColor" opacity="0.45"
-                d="M0,50 C240,90 480,10 720,50 C960,90 1200,10 1440,50 C1680,90 1920,10 2160,50 C2400,90 2640,10 2880,50 L2880,120 L0,120 Z" />
-            </svg>
-            <svg viewBox="0 0 2880 120" preserveAspectRatio="none"
-              className="absolute bottom-0 left-0 h-full w-[200%] animate-[waveX_11s_linear_infinite_reverse]">
-              <path fill="currentColor"
-                d="M0,60 C360,100 720,30 1440,60 C2160,90 2520,30 2880,60 L2880,120 L0,120 Z" />
-            </svg>
-          </div>
+          {/* ── Vague statique vers la section suivante ── */}
+          <WaveDivider className="text-white dark:text-[#070e1c]" />
         </section>
 
         {/* ── Section grille des projets — filtres + formes animées ── */}
@@ -154,7 +144,7 @@ export default async function PortfolioPage({ params }: { params: Promise<Params
           </div>
 
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-            <PortfolioGrid projects={projects} allLabel={c.allLabel} resultLabel={c.resultLabel} />
+            <PortfolioGrid projects={projects} allLabel={c.allLabel} resultLabel={c.resultLabel} lang={lang} />
           </div>
         </section>
 
@@ -167,7 +157,7 @@ export default async function PortfolioPage({ params }: { params: Promise<Params
               <div aria-hidden className="pointer-events-none absolute -right-8 bottom-0 size-48 rounded-full bg-sky/20 blur-3xl animate-drift" />
               <h2 className="relative mx-auto max-w-2xl text-2xl font-extrabold text-white sm:text-3xl">{c.ctaTitle}</h2>
               <div className="relative mt-8 flex justify-center">
-                <Link href={`/${lang}#contact`}
+                <Link href={`/${lang}/contact`}
                   className="group inline-flex items-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold text-brand-700 shadow-lg transition-transform hover:scale-[1.03]">
                   {c.ctaButton}
                   <IconArrowRight className="size-5 transition-transform group-hover:translate-x-1" />

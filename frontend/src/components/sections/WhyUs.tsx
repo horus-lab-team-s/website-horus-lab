@@ -5,44 +5,7 @@ import { Reveal } from "@/components/Reveal";
 
 type ValueItem = { title: string; desc: string };
 
-/* Pièces de puzzle animées en arrière-plan */
-function PuzzlePiece({ x, y, rotate, delay, size }: { x: number; y: number; rotate: number; delay: number; size: number }) {
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 60 60"
-      width={size}
-      height={size}
-      className="pointer-events-none absolute text-brand-400/15 dark:text-brand-300/10 animate-float"
-      style={{
-        left: `${x}%`,
-        top: `${y}%`,
-        transform: `rotate(${rotate}deg)`,
-        animationDelay: `${delay}s`,
-        animationDuration: `${7 + delay}s`,
-      }}
-    >
-      {/* Forme puzzle stylisée */}
-      <path
-        fill="currentColor"
-        d="M10 10 h15 c0-4 5-4 5 0 h15 v15 c4 0 4 5 0 5 v15 h-15 c0 4-5 4-5 0 h-15 v-15 c-4 0-4-5 0-5 z"
-      />
-    </svg>
-  );
-}
-
-const PUZZLE_PIECES = [
-  { x: 5, y: 10, rotate: 15, delay: 0, size: 48 },
-  { x: 82, y: 8, rotate: -20, delay: 1.5, size: 36 },
-  { x: 92, y: 55, rotate: 35, delay: 0.8, size: 52 },
-  { x: 3, y: 70, rotate: -10, delay: 2.2, size: 40 },
-  { x: 45, y: 5, rotate: 25, delay: 1.2, size: 30 },
-  { x: 70, y: 80, rotate: -30, delay: 3, size: 44 },
-  { x: 20, y: 88, rotate: 45, delay: 1.8, size: 34 },
-  { x: 58, y: 92, rotate: -15, delay: 0.5, size: 38 },
-];
-
-/* Connexions entre items (lignes SVG) */
+/* Dégradés d'accent par valeur */
 const VALUE_COLORS = [
   "from-brand-700 to-brand-500",
   "from-sky to-brand-400",
@@ -57,14 +20,10 @@ export function WhyUs({ items }: { items?: ValueItem[] }) {
   return (
     <section
       id="why"
-      className="relative overflow-hidden bg-white py-20 dark:bg-[#070e1c] sm:py-28"
+      className="relative overflow-hidden bg-white py-16 dark:bg-[#070e1c] sm:py-20"
     >
-      {/* Pièces de puzzle flottantes en fond */}
+      {/* Fond sobre : grille hexagonale légère + halos discrets */}
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        {PUZZLE_PIECES.map((p, i) => (
-          <PuzzlePiece key={i} {...p} />
-        ))}
-
         {/* Grille hexagonale légère */}
         <svg
           aria-hidden
@@ -91,7 +50,7 @@ export function WhyUs({ items }: { items?: ValueItem[] }) {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="grid gap-14 lg:grid-cols-12 lg:gap-20">
+        <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
           {/* Colonne gauche : manifeste */}
           <div className="relative lg:col-span-4">
             <Reveal>
@@ -109,7 +68,7 @@ export function WhyUs({ items }: { items?: ValueItem[] }) {
 
             {/* Compteur animé */}
             <Reveal delay={120} className="mt-10">
-              <div className="inline-flex items-center gap-3 rounded-2xl border border-brand-100 bg-brand-50 px-5 py-3 dark:border-white/10 dark:bg-white/5">
+              <div className="inline-flex items-center gap-3 rounded-md border border-brand-100 bg-brand-50 px-5 py-3 dark:border-white/10 dark:bg-white/5">
                 <span className="text-3xl font-extrabold text-brand-700 dark:text-brand-300">
                   {String(w.items.length).padStart(2, "0")}
                 </span>
@@ -126,9 +85,7 @@ export function WhyUs({ items }: { items?: ValueItem[] }) {
               {w.items.map((item, i) => (
                 <Reveal key={item.title} delay={i * 100}>
                   <article
-                    className={`group relative h-full overflow-hidden rounded-3xl border border-brand-100 bg-white p-7 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-brand-900/10 dark:border-white/10 dark:bg-slate-900 ${
-                      i % 2 === 0 ? "lg:mt-6" : ""
-                    }`}
+                    className="group relative h-full overflow-hidden rounded-lg border border-brand-100 bg-white p-6 transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand-900/10 dark:border-white/10 dark:bg-slate-900"
                   >
                     {/* Fond dégradé dynamique au survol */}
                     <div
@@ -136,25 +93,13 @@ export function WhyUs({ items }: { items?: ValueItem[] }) {
                       className={`absolute inset-0 bg-gradient-to-br ${VALUE_COLORS[i]} opacity-0 transition-opacity duration-500 group-hover:opacity-5`}
                     />
 
-                    {/* Numéro puzzle en filigrane */}
+                    {/* Numéro en filigrane */}
                     <span
                       aria-hidden
-                      className="numeral pointer-events-none absolute -right-2 -top-4 select-none text-[80px] text-brand-100 dark:text-white/5"
+                      className="numeral pointer-events-none absolute -right-2 -top-3 select-none text-[64px] text-brand-100 dark:text-white/5"
                     >
                       {String(i + 1).padStart(2, "0")}
                     </span>
-
-                    {/* Pièce de puzzle décorative (coin) */}
-                    <svg
-                      aria-hidden
-                      viewBox="0 0 40 40"
-                      width="32"
-                      height="32"
-                      className={`absolute right-5 top-5 transition-all duration-500 group-hover:scale-110 bg-gradient-to-br ${VALUE_COLORS[i]} text-transparent`}
-                      style={{ opacity: 0.15 }}
-                    >
-                      <path fill="currentColor" d="M8 8 h10 c0-3 4-3 4 0 h10 v10 c3 0 3 4 0 4 v10 h-10 c0 3-4 3-4 0 h-10 v-10 c-3 0-3-4 0-4 z" />
-                    </svg>
 
                     <div className="relative">
                       {/* Badge coloré */}

@@ -16,16 +16,16 @@ import type { PostMeta } from "@/lib/blog";
 // site (hero, services, catégories) — donc garantis valides. Évite les 404 qui
 // faisaient « disparaître » certaines images de cartes.
 const CODE_IMAGES = [
-  "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=700&q=75", // circuit board
-  "https://images.unsplash.com/photo-1607706189992-eae578626c86?auto=format&fit=crop&w=700&q=75", // laptop + code
-  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=700&q=75", // code à l'écran
-  "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=700&q=75", // dev au clavier
-  "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=700&q=75", // serveurs / data
-  "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=700&q=75", // dashboard
-  "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=700&q=75", // équipe / desk
-  "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=700&q=75", // transformation digitale
-  "https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=700&q=75", // tech
-  "https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&w=700&q=75", // workspace
+  "/img/photo-1518770660439-4636190af475-w700.jpg", // circuit board
+  "/img/photo-1607706189992-eae578626c86-w700.jpg", // laptop + code
+  "/img/photo-1461749280684-dccba630e2f6-w700.jpg", // code à l'écran
+  "/img/photo-1512941937669-90a1b58e7e9c-w700.jpg", // dev au clavier
+  "/img/photo-1558494949-ef010cbdcc31-w700.jpg", // serveurs / data
+  "/img/photo-1551288049-bebda4e38f71-w700.jpg", // dashboard
+  "/img/photo-1454165804606-c3d57bc86b40-w700.jpg", // équipe / desk
+  "/img/photo-1531482615713-2afd69097998-w700.jpg", // transformation digitale
+  "/img/photo-1573164713988-8665fc963095-w700.jpg", // tech
+  "/img/photo-1501504905252-473c47e087f8-w700.jpg", // workspace
 ];
 
 /** Hash déterministe simple (djb2) → même image pour un slug donné. */

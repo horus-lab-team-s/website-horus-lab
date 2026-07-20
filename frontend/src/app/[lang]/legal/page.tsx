@@ -25,16 +25,16 @@ const CONTENT: Record<Lang, Content> = {
         h: "Éditeur du site",
         body: [
           "Le site horus-lab.com est édité par Horus-Lab, entreprise technologique africaine.",
-          "Forme juridique : [à compléter] — Immatriculation (RCCM / NIU) : [à compléter].",
+          "Forme juridique : [à compléter]. Immatriculation (RCCM / NIU) : [à compléter].",
           "Siège : Douala, Cameroun.",
-          "E-mail : contact@horus-lab.com — Téléphone : +237 673398046 / +237 699173771.",
+          "E-mail : contact@horus-lab.com · Téléphone : +237 673398046 / +237 699173771.",
           "Directeur de la publication : [à compléter].",
         ],
       },
       {
         h: "Hébergement",
         body: [
-          "Le site est hébergé par Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis — vercel.com.",
+          "Le site est hébergé par Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis (vercel.com).",
         ],
       },
       {
@@ -61,8 +61,8 @@ const CONTENT: Record<Lang, Content> = {
       {
         h: "Sous-traitants",
         body: [
-          "Brevo (Sendinblue) — envoi d'e-mails et gestion des contacts : brevo.com.",
-          "Vercel — hébergement du site.",
+          "Brevo (Sendinblue), envoi d'e-mails et gestion des contacts : brevo.com.",
+          "Vercel : hébergement du site.",
         ],
       },
       {
@@ -100,16 +100,16 @@ const CONTENT: Record<Lang, Content> = {
         h: "Site publisher",
         body: [
           "The website horus-lab.com is published by Horus-Lab, an African technology company.",
-          "Legal form: [to be completed] — Registration (RCCM / NIU): [to be completed].",
+          "Legal form: [to be completed]. Registration (RCCM / NIU): [to be completed].",
           "Head office: Douala, Cameroon.",
-          "Email: contact@horus-lab.com — Phone: +237 673398046 / +237 699173771.",
+          "Email: contact@horus-lab.com · Phone: +237 673398046 / +237 699173771.",
           "Publication director: [to be completed].",
         ],
       },
       {
         h: "Hosting",
         body: [
-          "The website is hosted by Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, USA — vercel.com.",
+          "The website is hosted by Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, USA (vercel.com).",
         ],
       },
       {
@@ -136,8 +136,8 @@ const CONTENT: Record<Lang, Content> = {
       {
         h: "Processors",
         body: [
-          "Brevo (Sendinblue) — email delivery and contact management: brevo.com.",
-          "Vercel — website hosting.",
+          "Brevo (Sendinblue), email delivery and contact management: brevo.com.",
+          "Vercel: website hosting.",
         ],
       },
       {
@@ -210,7 +210,7 @@ export default async function LegalPage({
           <p className="mt-3 text-sm text-muted">{c.updated}</p>
 
           <p className="mt-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
-            ⚠️ {c.note}
+            {c.note}
           </p>
 
           <div className="mt-10 space-y-10">

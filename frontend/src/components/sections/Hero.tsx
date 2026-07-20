@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
 import { HeroBackground } from "./HeroBackground";
+import { WaveDivider } from "@/components/WaveDivider";
 import { IconArrowRight, IconEye } from "@/components/icons";
 import type { CmsHero } from "@/lib/cms";
 
@@ -33,14 +35,14 @@ const SERVICES = {
 };
 
 export function Hero({ content }: { content?: CmsHero }) {
-  const { dict, lang } = useLang();
+  const { dict, lang, localePath } = useLang();
   const h = content ?? dict.hero;
   const services = SERVICES[lang] ?? SERVICES.fr;
 
   return (
     <section
       id="top"
-      className="relative isolate flex min-h-[88vh] items-center overflow-hidden pt-32 pb-28"
+      className="relative isolate flex min-h-[86vh] items-center overflow-hidden pt-32 pb-20 sm:pb-24"
     >
       <HeroBackground images={HERO_IMAGES} />
 
@@ -84,16 +86,16 @@ export function Hero({ content }: { content?: CmsHero }) {
 
         <Reveal delay={280}>
           <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <a
-              href="#contact"
+            <Link
+              href={localePath("/contact")}
               className="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-base font-semibold text-brand-700 shadow-xl shadow-brand-900/30 transition-transform hover:scale-[1.03]"
             >
               {h.ctaPrimary}
               <IconArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
-            </a>
+            </Link>
             <a
               href="#services"
-              className="inline-flex items-center justify-center rounded-full border border-white/30 bg-white/5 px-7 py-3.5 text-base font-semibold text-white backdrop-blur transition-colors hover:bg-white/15"
+              className="inline-flex items-center justify-center rounded-md border border-white/35 bg-white/5 px-7 py-3.5 text-base font-semibold text-white backdrop-blur transition-colors hover:bg-white/15"
             >
               {h.ctaSecondary}
             </a>
@@ -116,26 +118,15 @@ export function Hero({ content }: { content?: CmsHero }) {
       <a
         href="#services"
         aria-label={h.ctaSecondary}
-        className="absolute bottom-28 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1 text-white/70 transition-colors hover:text-white md:flex"
+        className="absolute bottom-24 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-1 text-white/70 transition-colors hover:text-white md:flex"
       >
         <span className="animate-bob">
           <IconArrowRight className="size-5 rotate-90" />
         </span>
       </a>
 
-      {/* Vague animée bas */}
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-[90px] text-white dark:text-[#070e1c]">
-        <svg viewBox="0 0 2880 120" preserveAspectRatio="none"
-          className="absolute bottom-0 left-0 h-full w-[200%] animate-[waveX_16s_linear_infinite]">
-          <path fill="currentColor" opacity="0.45"
-            d="M0,50 C240,90 480,10 720,50 C960,90 1200,10 1440,50 C1680,90 1920,10 2160,50 C2400,90 2640,10 2880,50 L2880,120 L0,120 Z" />
-        </svg>
-        <svg viewBox="0 0 2880 120" preserveAspectRatio="none"
-          className="absolute bottom-0 left-0 h-full w-[200%] animate-[waveX_11s_linear_infinite_reverse]">
-          <path fill="currentColor"
-            d="M0,60 C360,100 720,30 1440,60 C2160,90 2520,30 2880,60 L2880,120 L0,120 Z" />
-        </svg>
-      </div>
+      {/* Séparateur en vague STATIQUE vers « Nos services » (fond blanc) */}
+      <WaveDivider className="text-white dark:text-[#070e1c]" />
     </section>
   );
 }

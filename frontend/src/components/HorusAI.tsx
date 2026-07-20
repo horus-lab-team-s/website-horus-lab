@@ -72,7 +72,7 @@ function ChannelLink({
       {pulse && (
         <span className="absolute inset-0 rounded-full bg-current opacity-60 animate-pulse-ring" />
       )}
-      <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-lg bg-brand-900 px-2.5 py-1 text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
+      <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-md bg-brand-900 px-2.5 py-1 text-xs font-medium text-white opacity-0 transition-opacity group-hover:opacity-100">
         {label}
       </span>
       <span className="relative">{children}</span>
@@ -102,6 +102,11 @@ export function HorusAI() {
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading, open]);
+
+  // Signale l'ouverture/fermeture du chat (le bouton « haut de page » s'efface alors).
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("horusai:toggle", { detail: open }));
+  }, [open]);
 
   async function send(text: string) {
     const content = text.trim();
@@ -134,37 +139,45 @@ export function HorusAI() {
 
   return (
     <>
-      {/* Cluster bas-droite : Support + Telegram + WhatsApp + Horus AI */}
+      {/* Cluster bas-droite : UNE seule icône. Les canaux (Support / Telegram /
+          WhatsApp) se déplient au survol ou au focus, et se replient en quittant. */}
       <div
-        className={`fixed bottom-6 right-6 z-40 flex flex-col items-center gap-3 transition-all duration-300 ${
+        className={`group fixed bottom-6 right-6 z-40 flex flex-col items-center gap-3 transition-all duration-300 ${
           open ? "pointer-events-none translate-y-2 opacity-0" : "opacity-100"
         }`}
       >
-        {/* Support email */}
-        <ChannelLink href={SUPPORT} label={supportLabel} className="bg-brand-600">
-          <IconHeadset className="size-6" />
-        </ChannelLink>
+        {/* Canaux repliés par défaut — révélés au survol/focus de l'icône */}
+        <div className="flex flex-col items-center gap-3 translate-y-3 opacity-0 pointer-events-none transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-hover:pointer-events-auto group-focus-within:translate-y-0 group-focus-within:opacity-100 group-focus-within:pointer-events-auto">
+          {/* Support email */}
+          <ChannelLink href={SUPPORT} label={supportLabel} className="bg-brand-600">
+            <IconHeadset className="size-6" />
+          </ChannelLink>
 
-        {/* Telegram */}
-        <ChannelLink href={TELEGRAM} label="Telegram" className="bg-[#229ED9]">
-          <IconTelegram className="size-6" />
-        </ChannelLink>
+          {/* Telegram */}
+          <ChannelLink href={TELEGRAM} label="Telegram" className="bg-[#229ED9]">
+            <IconTelegram className="size-6" />
+          </ChannelLink>
 
-        {/* WhatsApp */}
-        <ChannelLink href={WHATSAPP} label="WhatsApp" className="bg-[#25D366]" pulse>
-          <IconWhatsApp className="size-6" />
-        </ChannelLink>
+          {/* WhatsApp */}
+          <ChannelLink href={WHATSAPP} label="WhatsApp" className="bg-[#25D366]">
+            <IconWhatsApp className="size-6" />
+          </ChannelLink>
+        </div>
 
-        {/* Horus AI — dans le même cluster, juste au-dessus */}
+        {/* Icône principale — Horus AI (ouvre le chat au clic, déplie les canaux au survol) */}
         <button
           type="button"
           onClick={() => setOpen(true)}
           aria-label={ai.open}
           aria-expanded={open}
-          className="group relative grid size-14 place-items-center rounded-full bg-gradient-to-br from-brand-700 to-brand-500 text-white shadow-xl shadow-brand-900/30 transition-transform hover:scale-105 animate-bob ring-2 ring-white/20"
+          className="relative grid size-14 place-items-center rounded-full bg-gradient-to-br from-brand-700 to-brand-500 text-white shadow-xl shadow-brand-900/30 ring-2 ring-white/20 transition-transform hover:scale-105"
         >
-          <span className="absolute inset-0 rounded-full bg-brand-500/50 animate-pulse-ring" />
-          <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-lg bg-brand-900 px-2.5 py-1 text-xs font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100">
+          <span className="absolute inset-0 rounded-full bg-brand-500/40 animate-pulse-ring" />
+          {/* Petit indicateur « + » qui invite à survoler */}
+          <span aria-hidden className="absolute -right-0.5 -top-0.5 grid size-5 place-items-center rounded-full bg-sky text-[13px] font-bold leading-none text-white ring-2 ring-white/70 transition-transform group-hover:rotate-45">
+            +
+          </span>
+          <span className="pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-md bg-brand-900 px-2.5 py-1 text-xs font-semibold text-white opacity-0 transition-opacity group-hover:opacity-100">
             {ai.title}
           </span>
           <IconAIBot className="relative size-9 text-white" />
@@ -175,7 +188,7 @@ export function HorusAI() {
       <div
         role="dialog"
         aria-label={ai.title}
-        className={`fixed bottom-6 right-6 z-50 flex w-[min(380px,calc(100vw-2rem))] origin-bottom-right flex-col overflow-hidden rounded-3xl border border-brand-100 bg-white shadow-2xl shadow-brand-900/25 transition-[transform,opacity] duration-300 dark:border-white/10 dark:bg-slate-900 ${
+        className={`fixed bottom-6 right-6 z-50 flex w-[min(380px,calc(100vw-2rem))] origin-bottom-right flex-col overflow-hidden rounded-lg border border-brand-100 bg-white shadow-2xl shadow-brand-900/25 transition-[transform,opacity] duration-300 dark:border-white/10 dark:bg-slate-900 ${
           open
             ? "pointer-events-auto scale-100 opacity-100"
             : "pointer-events-none scale-90 opacity-0"

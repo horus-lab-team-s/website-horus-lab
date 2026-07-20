@@ -6,6 +6,60 @@
 
 ---
 
+## 2026-07-20 — 🎨 Refonte « carré & pro » + cohérence multi-pages (NON commité)
+
+Grosse passe design sur le site vitrine (frontend). **⚠️ Tout est en modifications
+LOCALES non commitées** — rien n'est poussé ni en ligne (la PR #4 de la branche
+`chore/local-run-and-github-guide` est déjà mergée ; il faut une **nouvelle branche + PR**
+pour livrer ce qui suit).
+
+**Direction validée** : petit rayon `rounded-md` partout (cartes/navbar/contact/inputs),
+CTA principaux gardés en pilule, boutons secondaires carrés. Inspirations : cadyst.com,
+inov-consulting.com/fr, 2metechsarl.org.
+
+**Navbar / Footer**
+- 🐞 **Bug logo corrigé** : les 2 variantes étaient inversées → le logo `-white`
+  s'affichait sur fond blanc (invisible) et `-black` sur fond sombre. Remis dans le bon
+  sens (noir en clair, blanc en sombre) + agrandi. Footer (fond navy) : passé en `-white`.
+- Sous-menu Services : tirets de séparation. Navbar en coins carrés.
+- **Newsletter déplacée DANS le footer** (bandeau) ; `sections/Newsletter.tsx` inutilisé.
+
+**Accueil**
+- Hero : vague **statique** (fin de l'anim `waveX`) ; espaces hero→Services et
+  Services→Réalisations réduits ; Services & WhyUs compactés.
+- Secteurs : puces uniformes (fin des couleurs/tailles aléatoires).
+- Réalisations : **Afrikamode + Elec One = projets phares** ; Elec One **passé de
+  l'orange au bleu ciel** (charte) + desc réécrite (**appli MOBILE EnMKit**, 2MeTech).
+- **Témoignages** → carrousel auto-défilant avec **photos** (Paule Diane Himsta,
+  Pagop Tchouansi Aurélie, Dr Agnès Virginie TJAHE / 2MeTech, dépt info IUT-FV Bandjoun).
+- **Nouvelle section Partenaires** (`sections/Partners.tsx`) : logos **défilants +
+  cliquables** vers cfp-brcgroup / cga-brcgroup / 2metechsarl / afrikamode.store /
+  univ-dschang.org/iutfv.
+- **Blog** : suppression du carrousel défilant (doublon) + filigrane défilant.
+- **Section formulaire Contact SUPPRIMÉE de l'accueil** → la section CTA « Prêt à lancer
+  votre projet » redirige vers la page `/contact` (source unique).
+
+**Multi-pages**
+- Composant réutilisable **`components/WaveDivider.tsx`** : vague statique appliquée aux
+  héros de blog/about/candidature/services/portfolio (remplace l'« effet blanc » et la
+  vague animée du portfolio).
+- **Pages Services** : `ServiceContactSection` ne duplique plus le formulaire → bande CTA
+  vers `/contact` (garde `id="contact"`). Ancres `#contact` de l'accueil (Hero, CTA,
+  Footer, About, Portfolio) redirigées vers la page `/contact`.
+
+**Boutons flottants** : les 4 icônes de droite regroupées en **1 seule** (Horus AI) qui
+déplie support/telegram/whatsapp au survol/focus ; **BackToTop passé à droite**, s'efface
+quand le chat est ouvert. Filigrane logo en fond (Témoignages + CTA).
+
+**Qualité** : `tsc --noEmit` OK · `next build` OK (exit 0). NB : le build exige le réseau
+(police Google Geist) — un sandbox hors-ligne échoue uniquement sur la police.
+
+**Reste à faire** : assainir le fond animé de la **grille Portfolio** (formes+particules) ;
+valider les **citations témoignages** (provisoires) ; les logos `-white.jpeg` sont des JPEG
+(sans transparence) → fournir un PNG blanc transparent si un liseré apparaît sur fond sombre.
+
+---
+
 ## 2026-07-13 — 🚀 MISE EN LIGNE PROD réussie (horus-lab.com en HTTPS) ✅
 
 Le site est **officiellement en ligne** sur le VPS Contabo, en **mode manuel/root**
