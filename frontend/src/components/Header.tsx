@@ -76,6 +76,19 @@ export function Header() {
     return () => document.removeEventListener("mousedown", fn);
   }, []);
 
+  /* Panneau mobile ouvert : on verrouille le défilement du fond et on ferme sur Échap */
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setMenuOpen(false); };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [menuOpen]);
+
   const openSvc  = () => { if (svcTimer.current) clearTimeout(svcTimer.current); setServicesOpen(true); };
   const closeSvc = () => { svcTimer.current = setTimeout(() => setServicesOpen(false), 180); };
 
@@ -248,11 +261,43 @@ export function Header() {
           </div>
         </nav>
 
-        {/* ── Menu mobile ── */}
-        <div className={`overflow-hidden transition-[max-height,opacity] duration-300 lg:hidden ${
-          menuOpen ? "mt-2 max-h-[36rem] opacity-100" : "max-h-0 opacity-0"
-        }`}>
-          <ul className="flex flex-col gap-1 rounded-md border border-brand-100 bg-white/97 p-3 shadow-xl backdrop-blur dark:border-white/10 dark:bg-slate-900/97">
+      </div>
+
+      {/* ══ Menu mobile : panneau latéral qui glisse de la DROITE, pleine hauteur ══ */}
+
+      {/* Voile — assombrit le site derrière et ferme au clic */}
+      <div
+        aria-hidden
+        onClick={() => setMenuOpen(false)}
+        className={`fixed inset-0 z-[60] bg-brand-900/50 backdrop-blur-[2px] transition-opacity duration-300 lg:hidden ${
+          menuOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      />
+
+      {/* Panneau — occupe la moitié de l'écran (jamais sous 17.5rem pour rester lisible) */}
+      <aside
+        role="dialog"
+        aria-modal="true"
+        aria-label={dict.nav.services}
+        className={`fixed right-0 top-0 z-[70] flex h-dvh w-1/2 min-w-[17.5rem] max-w-md flex-col border-l border-brand-100 bg-white shadow-2xl transition-[transform,visibility] duration-300 ease-out dark:border-white/10 dark:bg-slate-900 lg:hidden ${
+          menuOpen ? "visible translate-x-0" : "invisible translate-x-full"
+        }`}
+      >
+        {/* En-tête du panneau : logo + fermeture */}
+        <div className="flex h-16 shrink-0 items-center justify-between border-b border-brand-100 px-4 dark:border-white/10">
+          <Image src="/logo-HORUS-LAB-black.png" alt="Horus-Lab" width={140} height={44}
+            className="h-9 w-auto object-contain dark:hidden" />
+          <Image src="/logo-HORUS-LAB-white.jpeg" alt="Horus-Lab" width={140} height={44}
+            className="hidden h-9 w-auto rounded-sm object-contain dark:block" />
+          <button type="button" onClick={() => setMenuOpen(false)} aria-label="Fermer le menu"
+            className="grid size-10 place-items-center rounded-md border border-brand-200 text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:text-brand-200 dark:hover:bg-white/5">
+            <IconClose className="size-5" />
+          </button>
+        </div>
+
+        {/* Corps défilant */}
+        <div className="flex-1 overflow-y-auto overscroll-contain p-3">
+          <ul className="flex flex-col gap-1">
 
             {/* Services accordion */}
             <li>
@@ -321,16 +366,17 @@ export function Header() {
               </div>
             </li>
 
-            {/* CTA */}
-            <li>
-              <Link href={localePath("/contact")} onClick={() => setMenuOpen(false)}
-                className="mt-1 block rounded-md bg-brand-700 px-4 py-3 text-center text-base font-semibold text-white">
-                {dict.nav.cta}
-              </Link>
-            </li>
           </ul>
         </div>
-      </div>
+
+        {/* Pied du panneau : appel à l'action */}
+        <div className="shrink-0 border-t border-brand-100 p-3 dark:border-white/10">
+          <Link href={localePath("/contact")} onClick={() => setMenuOpen(false)}
+            className="block rounded-md bg-brand-700 px-4 py-3 text-center text-base font-semibold text-white transition-colors hover:bg-brand-800">
+            {dict.nav.cta}
+          </Link>
+        </div>
+      </aside>
     </header>
   );
 }

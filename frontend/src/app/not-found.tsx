@@ -9,7 +9,7 @@ export default function NotFound() {
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-grid opacity-50" />
 
         <Image
-          src="/logo-HORUS-LAB.png"
+          src="/logo-HORUS-LAB-white.jpeg"
           alt="Horus-Lab"
           width={72}
           height={72}

@@ -318,10 +318,7 @@ export function Footer() {
             <Link href={localePath("/legal")} className="transition-colors hover:text-white">
               {f.legal}
             </Link>
-            <span aria-hidden className="flex items-center gap-1.5">
-              <span>Made in Africa</span>
-              <span className="text-base">🌍</span>
-            </span>
+            <span>Made in Africa</span>
           </div>
         </div>
       </div>
