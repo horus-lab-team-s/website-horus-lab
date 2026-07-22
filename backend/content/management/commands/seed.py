@@ -414,21 +414,6 @@ class Command(BaseCommand):
                 icon="cog",
                 gradient="from-yellow-500 via-orange-400 to-red-500",
             ),
-            dict(
-                title_fr="Programme Formation IT", title_en="IT Training Programme",
-                client_fr="Professionnels & entreprises",
-                client_en="Professionals & businesses",
-                category_fr="Formation", category_en="Training",
-                description_fr="Programme de formation aux technologies modernes : développement web, mobile, cybersécurité, gestion de projet IT. Sessions pratiques adaptées au niveau des équipes et aux outils de l'entreprise.",
-                description_en="Training programme on modern technologies: web & mobile development, cybersecurity, IT project management. Hands-on sessions adapted to team levels and company tools.",
-                role_fr="Formation & accompagnement", role_en="Training & coaching",
-                scope_fr="Formation IT sur mesure",
-                scope_en="Custom IT training",
-                tags=["Formation", "Cybersécurité", "Développement", "Certification"],
-                result_fr="Équipes opérationnelles", result_en="Operational teams",
-                icon="spark",
-                gradient="from-brand-700 via-brand-500 to-sky",
-            ),
         ]
         Project.objects.all().delete()
         for i, p in enumerate(items):

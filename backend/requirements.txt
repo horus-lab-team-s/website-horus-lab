@@ -4,6 +4,10 @@ django-cors-headers>=4.4
 python-dotenv>=1.0
 Pillow>=10.0
 
+# Authentification par JWT (comptes apprenants) + vérification des tokens Google
+djangorestframework-simplejwt>=5.3
+google-auth>=2.30
+
 # Base de données PostgreSQL (prod) — SQLite reste le repli local
 dj-database-url>=2.2
 psycopg[binary]>=3.1
