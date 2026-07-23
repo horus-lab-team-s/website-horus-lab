@@ -67,8 +67,3 @@ class AuthFlowTests(TestCase):
             format="json",
         )
         self.assertEqual(r.status_code, 400)
-
-    def test_google_credential_handled(self):
-        # Sans GOOGLE_CLIENT_ID configuré → 503 ; si configuré, jeton "x" → 401.
-        r = self.client.post("/api/auth/google/", {"credential": "x"}, format="json")
-        self.assertIn(r.status_code, (401, 503))

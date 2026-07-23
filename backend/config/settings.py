@@ -163,10 +163,6 @@ SIMPLE_JWT = {
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
 }
 
-# Connexion Google : identifiant client OAuth (créé dans Google Cloud Console).
-# Laissé vide tant que non configuré → l'endpoint /api/auth/google/ renvoie 503.
-GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID", "").strip()
-
 # --- CORS : autorise le frontend Next.js à appeler l'API ---
 CORS_ALLOWED_ORIGINS = env_list(
     "CORS_ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:3001"
