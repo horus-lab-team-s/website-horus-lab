@@ -73,14 +73,14 @@ class TestimonialSerializer(serializers.ModelSerializer):
         model = Testimonial
         fields = [
             "id", "quote_fr", "quote_en", "name", "role_fr", "role_en",
-            "avatar", "is_featured", "order",
+            "avatar", "image_path", "is_logo", "is_featured", "order",
         ]
 
 
 class PartnerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Partner
-        fields = ["id", "name", "logo", "url", "order"]
+        fields = ["id", "name", "logo", "logo_path", "url", "order"]
 
 
 class AchievementSerializer(serializers.ModelSerializer):
@@ -100,6 +100,6 @@ class TeamMemberSerializer(serializers.ModelSerializer):
         model = TeamMember
         fields = [
             "id", "name", "role_fr", "role_en", "bio_fr", "bio_en",
-            "photo", "linkedin_url", "github_url", "email",
-            "is_lead", "order",
+            "photo", "photo_path", "linkedin_url", "github_url", "whatsapp_url",
+            "email", "badge_fr", "badge_en", "gradient", "is_lead", "order",
         ]

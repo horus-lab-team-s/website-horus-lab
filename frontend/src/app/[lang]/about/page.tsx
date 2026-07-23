@@ -18,6 +18,7 @@ import {
   IconWhatsApp,
 } from "@/components/icons";
 import { isLocale, locales, type Lang } from "@/i18n/dictionaries";
+import { getCmsTeam } from "@/lib/cms";
 
 type Params = { lang: string };
 
@@ -189,11 +190,27 @@ type TeamCard = {
  * existent, sinon repli sur l'équipe statique. La photo (/public) et le dégradé
  * sont ré-associés par nom ; initiales et badge sont dérivés.
  */
-function resolveTeam(lang: Lang): TeamCard[] {
-  // Les deux co-fondateurs sont fixes : on utilise l'équipe statique (noms, bios
-  // et PHOTOS à jour dans /public/A-propos). Éviter le CMS ici garantit que la
-  // photo s'affiche (l'association par nom cassait quand le nom changeait).
-  return TEAM_MEMBERS[lang];
+async function resolveTeam(lang: Lang): Promise<TeamCard[]> {
+  // Piloté par l'admin (`/admin/` → Équipe) si des membres existent, sinon repli
+  // statique. Le CMS porte désormais photo (photo_path), badge et dégradé → plus
+  // besoin de ré-associer par nom (l'ancienne cause du bug de photo).
+  const staticTeam = TEAM_MEMBERS[lang];
+  const cms = await getCmsTeam(lang);
+  if (!cms.length) return staticTeam;
+  return cms.map((m, i) => ({
+    name: m.name,
+    role: m.role,
+    bio: m.bio,
+    initials: initialsOf(m.name),
+    photo: m.photo,
+    linkedin: m.linkedin,
+    github: m.github,
+    email: m.email,
+    whatsapp: m.whatsapp,
+    isLead: m.isLead,
+    gradient: m.gradient || TEAM_GRADIENTS[i % TEAM_GRADIENTS.length],
+    badge: m.badge || (m.isLead ? (lang === "fr" ? "Co-fondateur" : "Co-founder") : m.role),
+  }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -211,7 +228,7 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const c = CONTENT[lang];
-  const team = resolveTeam(lang);
+  const team = await resolveTeam(lang);
 
   return (
     <>

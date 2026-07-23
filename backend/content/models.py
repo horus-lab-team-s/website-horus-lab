@@ -183,6 +183,14 @@ class Testimonial(models.Model):
     role_fr = models.CharField(max_length=120, blank=True)
     role_en = models.CharField(max_length=120, blank=True)
     avatar = models.ImageField(upload_to="testimonials/", blank=True, null=True)
+    image_path = models.CharField(
+        "Image (chemin statique)", max_length=300, blank=True,
+        help_text="Chemin /public (ex. /Temoignages/xxx.png). Utilisé si aucun avatar uploadé.",
+    )
+    is_logo = models.BooleanField(
+        "Logo institutionnel", default=False,
+        help_text="Affiche l'image comme logo (pastille blanche) au lieu d'une photo.",
+    )
     is_featured = models.BooleanField(
         default=False,
         help_text="Affiche en grand sur la home (1 seul attendu).",
@@ -202,6 +210,10 @@ class Partner(models.Model):
 
     name = models.CharField(max_length=120)
     logo = models.ImageField(upload_to="partners/", blank=True, null=True)
+    logo_path = models.CharField(
+        "Logo (chemin statique)", max_length=300, blank=True,
+        help_text="Chemin /public (ex. /Nos-partenaires/xxx.png). Utilisé si aucun logo uploadé.",
+    )
     url = models.URLField(blank=True)
     order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
@@ -257,9 +269,20 @@ class TeamMember(models.Model):
     bio_fr = models.TextField(blank=True)
     bio_en = models.TextField(blank=True)
     photo = models.ImageField(upload_to="team/", blank=True, null=True)
+    photo_path = models.CharField(
+        "Photo (chemin statique)", max_length=300, blank=True,
+        help_text="Chemin /public (ex. /A-propos/xxx.png). Utilisé si aucune photo uploadée.",
+    )
     linkedin_url = models.URLField(blank=True)
     github_url = models.URLField(blank=True)
+    whatsapp_url = models.URLField(blank=True)
     email = models.EmailField(blank=True)
+    badge_fr = models.CharField(max_length=40, blank=True, help_text="Ex. Co-fondateur")
+    badge_en = models.CharField(max_length=40, blank=True)
+    gradient = models.CharField(
+        max_length=200, blank=True,
+        help_text="Classes Tailwind du dégradé (repli d'avatar si pas de photo).",
+    )
     is_lead = models.BooleanField(
         default=False,
         help_text="Mettez en avant ce profil (PDG, fondateur, lead).",

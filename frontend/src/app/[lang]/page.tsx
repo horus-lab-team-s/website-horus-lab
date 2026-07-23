@@ -15,11 +15,13 @@ import { isLocale } from "@/i18n/dictionaries";
 import { SITE_URL } from "@/lib/site";
 import {
   getCmsHero,
+  getCmsPartners,
   getCmsPosts,
   getCmsProcessSteps,
   getCmsProjects,
   getCmsSectors,
   getCmsServices,
+  getCmsTestimonials,
   getCmsValues,
 } from "@/lib/cms";
 
@@ -56,6 +58,8 @@ export default async function Home({ params }: { params: Promise<Params> }) {
     sectors,
     projects,
     latestPosts,
+    testimonials,
+    partners,
   ] = await Promise.all([
     getCmsHero(lang),
     getCmsServices(lang),
@@ -64,6 +68,8 @@ export default async function Home({ params }: { params: Promise<Params> }) {
     getCmsSectors(lang),
     getCmsProjects(lang),
     getCmsPosts(lang).then((p) => p.slice(0, 3)),
+    getCmsTestimonials(lang),
+    getCmsPartners(),
   ]);
 
   return (
@@ -80,8 +86,8 @@ export default async function Home({ params }: { params: Promise<Params> }) {
         <Process steps={process} />
         <WhyUs items={values} />
         <Sectors items={sectors} />
-        <Testimonials />
-        <Partners />
+        <Testimonials items={testimonials} />
+        <Partners partners={partners} />
         <BlogPreview posts={latestPosts} />
         <CTA />
       </main>

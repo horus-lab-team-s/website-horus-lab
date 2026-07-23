@@ -15,11 +15,12 @@ const PARTNERS = [
   { name: "IUT-FV de Bandjoun · Université de Dschang", src: "/Nos-partenaires/iut-fv-university-of-dschang.jpg", href: "https://www.univ-dschang.org/iutfv/" },
 ];
 
-/* Doublé pour un défilement en boucle continue (translateX 0 → -50%). */
-const TRACK = [...PARTNERS, ...PARTNERS];
-
-export function Partners() {
+export function Partners({ partners }: { partners?: { name: string; src: string; href: string }[] }) {
   const { lang } = useLang();
+  // Piloté par l'admin (CMS) si des partenaires existent ; sinon repli statique.
+  const list = partners && partners.length ? partners : PARTNERS;
+  /* Doublé pour un défilement en boucle continue (translateX 0 → -50%). */
+  const TRACK = [...list, ...list];
   const eyebrow = lang === "fr" ? "Partenaires" : "Partners";
   const title = lang === "fr" ? "Ils nous font confiance" : "Trusted by";
 

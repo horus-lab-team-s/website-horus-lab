@@ -172,9 +172,13 @@ type ApiTeamMember = {
   role_fr: string; role_en: string;
   bio_fr: string; bio_en: string;
   photo: string | null;
+  photo_path: string;
   linkedin_url: string;
   github_url: string;
+  whatsapp_url: string;
   email: string;
+  badge_fr: string; badge_en: string;
+  gradient: string;
   is_lead: boolean;
   order: number;
 };
@@ -186,7 +190,10 @@ export type CmsTeamMember = {
   photo: string | null;
   linkedin: string;
   github: string;
+  whatsapp: string;
   email: string;
+  badge: string;
+  gradient: string;
   isLead: boolean;
 };
 
@@ -202,10 +209,13 @@ export async function getCmsTeam(lang: Lang): Promise<CmsTeamMember[]> {
         name: m.name,
         role: t(m.role_fr, m.role_en),
         bio: t(m.bio_fr, m.bio_en),
-        photo: m.photo,
+        photo: m.photo || m.photo_path || null,
         linkedin: m.linkedin_url,
         github: m.github_url,
+        whatsapp: m.whatsapp_url,
         email: m.email,
+        badge: t(m.badge_fr, m.badge_en),
+        gradient: m.gradient,
         isLead: m.is_lead,
       }));
   } catch {
@@ -560,20 +570,25 @@ type ApiTestimonial = {
   name: string;
   role_fr: string; role_en: string;
   avatar: string | null;
+  image_path: string;
+  is_logo: boolean;
   is_featured: boolean;
   order: number;
 };
 
-export type CmsTestimonials = Dict["testimonials"]["items"];
+export type CmsTestimonial = {
+  quote: string; name: string; role: string;
+  image: string; logo: boolean;
+};
 
-export async function getCmsTestimonials(lang: Lang): Promise<CmsTestimonials> {
-  // Piloté par l'admin (`/admin/` → Témoignages). La section home affiche le
-  // 1er élément en grand : on trie donc « mis en avant » d'abord, puis par
-  // ordre. Repli sur le dictionnaire local si l'API est vide/indisponible.
-  const fallback = getDictionary(lang).testimonials.items;
+/**
+ * Témoignages (avec photo/logo), pilotés par l'admin (`/admin/` → Témoignages).
+ * Tri : « mis en avant » d'abord, puis par ordre. Renvoie [] si vide/indisponible
+ * → le composant `Testimonials` retombe sur sa liste statique.
+ */
+export async function getCmsTestimonials(lang: Lang): Promise<CmsTestimonial[]> {
   try {
     const data = await fetchList<ApiTestimonial>("/api/testimonials/");
-    if (!data.length) return fallback;
     const t = pick(lang);
     return data
       .slice()
@@ -582,9 +597,33 @@ export async function getCmsTestimonials(lang: Lang): Promise<CmsTestimonials> {
         quote: t(it.quote_fr, it.quote_en),
         name: it.name,
         role: t(it.role_fr, it.role_en),
+        image: it.avatar || it.image_path || "",
+        logo: it.is_logo,
       }));
   } catch {
-    return fallback;
+    return [];
+  }
+}
+
+/* ============================================================
+   Partenaires (logos défilants)
+   ============================================================ */
+type ApiPartner = {
+  id: number; name: string; logo: string | null; logo_path: string; url: string; order: number;
+};
+export type CmsPartner = { name: string; src: string; href: string };
+
+/** Partenaires depuis l'admin. Vide si aucun → repli statique côté composant. */
+export async function getCmsPartners(): Promise<CmsPartner[]> {
+  try {
+    const data = await fetchList<ApiPartner>("/api/partners/");
+    return data
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .map((p) => ({ name: p.name, src: p.logo || p.logo_path || "", href: p.url }))
+      .filter((p) => p.src);
+  } catch {
+    return [];
   }
 }
 

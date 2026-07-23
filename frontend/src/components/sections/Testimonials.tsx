@@ -97,10 +97,11 @@ const TESTI: Record<"fr" | "en", Testi[]> = {
   ],
 };
 
-export function Testimonials() {
+export function Testimonials({ items }: { items?: Testi[] }) {
   const { dict, lang } = useLang();
   const t = dict.testimonials;
-  const list = TESTI[lang === "en" ? "en" : "fr"];
+  // Piloté par l'admin (CMS) si des témoignages existent ; sinon repli statique.
+  const list = items && items.length ? items : TESTI[lang === "en" ? "en" : "fr"];
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
 

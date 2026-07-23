@@ -6,6 +6,40 @@
 
 ---
 
+## 2026-07-23 — 🔌 Alignement CMS Phase 1 + retrait Google OAuth (NON commité)
+
+Audit frontend↔backend (via sous-agent) : le backend est plus complet que ce que
+le frontend consommait. **Témoignages, Partenaires, Équipe** avaient des modèles
+mais n'étaient PAS câblés (codés en dur). 3 zones n'ont aucun modèle (pages
+Services détail, contenu À propos, annonce Formations) = Phase 2.
+
+**Retrait Google OAuth** (plus nécessaire) : endpoint `/api/auth/google/`, réglage
+`GOOGLE_CLIENT_ID`, dépendance `google-auth`, test et guide supprimés. Reste
+l'auth e-mail + JWT. `manage.py check` 0, tests accounts 4/4.
+
+**Phase 1 — câblage CMS (fait, vérifié) :**
+- **Modèles `content`** (+ migration `0003`) : `Testimonial.image_path`+`is_logo` ;
+  `Partner.logo_path` ; `TeamMember.photo_path`+`whatsapp_url`+`badge_fr/_en`+`gradient`.
+  Pattern `*_path` = chemin `/public` (comme `courses.image`), l'upload admin reste
+  prioritaire.
+- **Serializers** : nouveaux champs exposés.
+- **seed** : 5 témoignages réels (photos `/Temoignages`, 1 featured), 5 partenaires
+  (logos `/Nos-partenaires` + URLs), équipe Edwin & Loïc DJIMGOU TONBA (photos
+  `/A-propos`, badges, WhatsApp, gradients, bios réécrites).
+- **`cms.ts`** : `getCmsTestimonials` (→ image+logo, repli []), **nouveau
+  `getCmsPartners`**, `getCmsTeam` enrichi (photo_path/badge/gradient/whatsapp).
+- **Front câblé** : `page.tsx` fetch témoignages+partenaires → props ;
+  `Testimonials`/`Partners` acceptent une prop (repli statique si vide) ;
+  `about/page.tsx` réactive `getCmsTeam` (repli statique). tsc OK.
+- **Vérifié** : `/api/testimonials/`=5, `/api/partners/`=5, `/api/team/`=2 avec les
+  bons champs.
+
+**Reste (Phase 2 — nouveaux modèles)** : `CoursesPageSettings` (annonce Formations
+« 100% gratuit · 1er sept 2026 » + note Edlearning + hero), `AboutPage` (mission/
+vision/valeurs/approche), `ServiceDetail`+sous-modèles (pages Services détail).
+
+---
+
 ## 2026-07-23 — 🎨 Vidéos héros (africaines) + Blog (sous-menus, logos) + slides (NON commité)
 
 - **6 vidéos** téléchargées (Pexels, libres) : **4 services** re-téléchargées avec des
