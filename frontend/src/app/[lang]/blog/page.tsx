@@ -35,19 +35,23 @@ export async function generateMetadata({
 
 export default async function BlogPage({
   params,
+  searchParams,
 }: {
   params: Promise<Params>;
+  searchParams: Promise<{ cat?: string }>;
 }) {
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
 
+  const { cat } = await searchParams;
   const posts = await getCmsPosts(lang);
+  const initialCategory = cat && posts.some((p) => p.category === cat) ? cat : undefined;
   return (
     <>
       <Header />
       <main id="main" tabIndex={-1}>
         <BlogHero />
-        <BlogIndex posts={posts} />
+        <BlogIndex posts={posts} initialCategory={initialCategory} />
       </main>
       <Footer />
     </>

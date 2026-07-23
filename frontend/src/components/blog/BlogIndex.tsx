@@ -2,18 +2,24 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
 import { IconArrowRight } from "@/components/icons";
 import { coverFor } from "@/lib/blogImages";
+import { companyLogosFor } from "@/lib/blogCompanies";
 import { PostCard, formatDate } from "./PostCard";
 import type { PostMeta } from "@/lib/blog";
 
-export function BlogIndex({ posts }: { posts: PostMeta[] }) {
+export function BlogIndex({ posts, initialCategory }: { posts: PostMeta[]; initialCategory?: string }) {
   const { dict, lang, localePath } = useLang();
   const allLabel = lang === "fr" ? "Tous" : "All";
-  const [activeCategory, setActiveCategory] = useState(allLabel);
+  const [activeCategory, setActiveCategory] = useState(initialCategory || allLabel);
+
+  // Synchronise le filtre quand on arrive via un sous-menu Blog (?cat=...).
+  useEffect(() => {
+    if (initialCategory) setActiveCategory(initialCategory);
+  }, [initialCategory]);
 
   const categories = useMemo(() => {
     const cats = new Set(posts.map((p) => p.category).filter(Boolean));
@@ -62,7 +68,7 @@ export function BlogIndex({ posts }: { posts: PostMeta[] }) {
 
         {filtered.length === 0 ? (
           <Reveal className="mt-16">
-            <p className="rounded-lg border border-brand-100 bg-white/70 p-10 text-center text-muted backdrop-blur dark:border-white/10 dark:bg-slate-900/70">
+            <p className="rounded-lg bg-white/70 p-10 text-center text-muted backdrop-blur dark:bg-slate-900/70">
               {dict.blog.empty}
             </p>
           </Reveal>
@@ -73,7 +79,7 @@ export function BlogIndex({ posts }: { posts: PostMeta[] }) {
               <Reveal className="mt-10">
                 <Link
                   href={localePath(`/blog/${featured.slug}`)}
-                  className="group grid overflow-hidden rounded-lg border border-brand-100 bg-white shadow-sm transition-all hover:shadow-2xl hover:shadow-brand-900/10 dark:border-white/10 dark:bg-slate-900 lg:grid-cols-2"
+                  className="group grid overflow-hidden bg-white shadow-sm transition-all hover:shadow-2xl hover:shadow-brand-900/10 dark:bg-slate-900 lg:grid-cols-2"
                 >
                   <div className="relative aspect-[16/10] overflow-hidden lg:aspect-auto lg:min-h-[320px]">
                     <Image
@@ -107,6 +113,21 @@ export function BlogIndex({ posts }: { posts: PostMeta[] }) {
                     <p className="line-clamp-3 text-[15px] leading-relaxed text-muted">
                       {featured.excerpt}
                     </p>
+
+                    {(() => {
+                      const logos = companyLogosFor(`${featured.title} ${featured.excerpt} ${featured.tags?.join(" ") ?? ""}`);
+                      return logos.length > 0 ? (
+                        <ul className="flex items-center gap-3" aria-label="Entreprises citées">
+                          {logos.map((l) => (
+                            <li key={l.name} title={l.name}>
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={l.src} alt={l.name} width={20} height={20} loading="lazy"
+                                className="size-5 object-contain opacity-60 dark:opacity-80 dark:invert" />
+                            </li>
+                          ))}
+                        </ul>
+                      ) : null;
+                    })()}
 
                     <span className="mt-2 inline-flex items-center gap-1.5 text-sm font-bold text-brand-600 dark:text-brand-300">
                       {dict.blog.readMore}

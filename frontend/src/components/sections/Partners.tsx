@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
+import { SectionHeading } from "./SectionHeading";
 
 /* Logos des partenaires — la plupart sont aussi nos clients/témoignages.
    Chaque logo est cliquable et ouvre le site du partenaire. */
@@ -25,16 +26,7 @@ export function Partners() {
   return (
     <section id="partners" className="relative overflow-hidden bg-surface py-14 sm:py-16">
       <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
-        <Reveal className="text-center">
-          <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-500">
-            <span className="h-px w-6 bg-brand-400/60" />
-            {eyebrow}
-            <span className="h-px w-6 bg-brand-400/60" />
-          </span>
-          <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-brand-900 dark:text-white sm:text-3xl">
-            {title}
-          </h2>
-        </Reveal>
+        <SectionHeading eyebrow={eyebrow} title={title} />
       </div>
 
       {/* Bandeau défilant (pause au survol) */}

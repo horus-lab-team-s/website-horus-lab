@@ -26,6 +26,13 @@ import {
   type PostMeta,
   type Post,
 } from "@/lib/blog";
+import {
+  getFormations as getStaticFormations,
+  getCourse as getStaticCourse,
+  getCourseSlugs as getStaticCourseSlugs,
+  type Course,
+  type CourseCategory,
+} from "@/lib/courses";
 
 export const CMS_REVALIDATE = 60;
 const API_BASE = (process.env.BACKEND_API_URL ?? "http://localhost:8000").replace(/\/$/, "");
@@ -98,6 +105,7 @@ function mapProject(
     gradient: p.gradient,
     url: p.url || undefined,
     logo: p.logo ?? local?.logo,
+    cover: p.cover ?? local?.cover,
     screenshots: p.screenshots?.length ? p.screenshots : local?.screenshots,
   };
 }
@@ -577,5 +585,166 @@ export async function getCmsTestimonials(lang: Lang): Promise<CmsTestimonials> {
       }));
   } catch {
     return fallback;
+  }
+}
+
+/* ============================================================
+   Formations (page /formations — app Django `courses`)
+   ============================================================ */
+type ApiCourseCategory = {
+  slug: string;
+  name_fr: string; name_en: string;
+  tagline_fr: string; tagline_en: string;
+  icon_key: string;
+  order: number;
+};
+
+// Liste = version légère (catalogue) ; le programme n'y est pas.
+type ApiCourseListItem = {
+  slug: string;
+  category: string; // slug de la catégorie
+  title_fr: string; title_en: string;
+  subtitle_fr: string; subtitle_en: string;
+  level_fr: string; level_en: string;
+  duration_hours: number;
+  lessons_count: number;
+  price_fr: string; price_en: string;
+  is_free: boolean;
+  tags: string[];
+  image: string;
+  video_url_fr: string;
+  video_url_en: string;
+  instructor_name: string;
+  instructor_role_fr: string; instructor_role_en: string;
+  order: number;
+};
+
+type ApiCourseModule = {
+  title_fr: string; title_en: string;
+  lessons_fr: string[]; lessons_en: string[];
+  order: number;
+};
+
+// Détail = liste + intro/objectifs/programme.
+type ApiCourseDetail = ApiCourseListItem & {
+  intro_fr: string; intro_en: string;
+  learn_fr: string[]; learn_en: string[];
+  curriculum: ApiCourseModule[];
+};
+
+export type CmsCatalog = { categories: CourseCategory[]; courses: Course[] };
+
+const ICON_KEYS = ["code", "layers", "spark", "eye", "cog"] as const;
+function toIconKey(value: string): CourseCategory["iconKey"] {
+  return (ICON_KEYS as readonly string[]).includes(value)
+    ? (value as CourseCategory["iconKey"])
+    : "code";
+}
+
+function mapCourseCategory(c: ApiCourseCategory, lang: Lang): CourseCategory {
+  const t = pick(lang);
+  return {
+    slug: c.slug,
+    name: t(c.name_fr, c.name_en),
+    tagline: t(c.tagline_fr, c.tagline_en),
+    iconKey: toIconKey(c.icon_key),
+  };
+}
+
+// Élément de catalogue : le programme (intro/learn/curriculum) n'est pas chargé
+// en liste → valeurs neutres ; il l'est sur la page détail via getCmsCourse().
+function mapCourseListItem(c: ApiCourseListItem, lang: Lang): Course {
+  const t = pick(lang);
+  return {
+    slug: c.slug,
+    category: c.category,
+    title: t(c.title_fr, c.title_en),
+    subtitle: t(c.subtitle_fr, c.subtitle_en),
+    level: t(c.level_fr, c.level_en),
+    durationHours: c.duration_hours,
+    lessonsCount: c.lessons_count,
+    price: t(c.price_fr, c.price_en),
+    free: c.is_free,
+    tags: c.tags ?? [],
+    image: c.image,
+    videoUrl: (lang === "fr" ? c.video_url_fr : c.video_url_en) || undefined,
+    instructor: { name: c.instructor_name, role: t(c.instructor_role_fr, c.instructor_role_en) },
+    intro: "",
+    learn: [],
+    curriculum: [],
+  };
+}
+
+function mapCourseDetail(c: ApiCourseDetail, lang: Lang): Course {
+  const t = pick(lang);
+  const isFr = lang === "fr";
+  return {
+    ...mapCourseListItem(c, lang),
+    intro: t(c.intro_fr, c.intro_en),
+    learn: (isFr ? c.learn_fr : c.learn_en) ?? [],
+    curriculum: (c.curriculum ?? [])
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .map((m) => ({
+        title: t(m.title_fr, m.title_en),
+        lessons: (isFr ? m.lessons_fr : m.lessons_en) ?? [],
+      })),
+  };
+}
+
+/**
+ * Catalogue complet (domaines + cours légers) pour la page /formations.
+ * Piloté par l'admin Django (`/admin/` → Formations). Repli TOTAL sur le
+ * catalogue statique `lib/courses.ts` si l'API est vide ou indisponible.
+ * NB : la liste des cours suit la pagination DRF (PAGE_SIZE=20) ; au-delà,
+ * prévoir un paramètre de page — aujourd'hui 10 cours, une seule page.
+ */
+export async function getCmsFormations(lang: Lang): Promise<CmsCatalog> {
+  const fallback = getStaticFormations(lang);
+  try {
+    const [cats, courses] = await Promise.all([
+      fetchList<ApiCourseCategory>("/api/courses/categories/"),
+      fetchList<ApiCourseListItem>("/api/courses/"),
+    ]);
+    if (!cats.length || !courses.length) return fallback;
+    return {
+      categories: cats
+        .slice()
+        .sort((a, b) => a.order - b.order)
+        .map((c) => mapCourseCategory(c, lang)),
+      courses: courses
+        .slice()
+        .sort((a, b) => a.order - b.order)
+        .map((c) => mapCourseListItem(c, lang)),
+    };
+  } catch {
+    return fallback;
+  }
+}
+
+/** Cours unique (avec programme) : CMS si trouvé, sinon catalogue statique. */
+export async function getCmsCourse(lang: Lang, slug: string): Promise<Course | undefined> {
+  try {
+    const c = await fetchJson<ApiCourseDetail>(`/api/courses/${slug}/`);
+    return mapCourseDetail(c, lang);
+  } catch {
+    return getStaticCourse(lang, slug);
+  }
+}
+
+/**
+ * Slugs pour generateStaticParams : union des slugs CMS et statiques pour
+ * qu'aucun lien ne tombe en 404. Repli total sur les slugs statiques si l'API
+ * est indisponible.
+ */
+export async function getCmsCourseSlugs(): Promise<string[]> {
+  const staticSlugs = getStaticCourseSlugs();
+  try {
+    const data = await fetchList<ApiCourseListItem>("/api/courses/");
+    const slugs = new Set<string>(staticSlugs);
+    for (const c of data) slugs.add(c.slug);
+    return [...slugs];
+  } catch {
+    return staticSlugs;
   }
 }

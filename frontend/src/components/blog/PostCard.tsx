@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useLang } from "@/i18n/LanguageProvider";
 import { IconArrowRight } from "@/components/icons";
 import { coverFor } from "@/lib/blogImages";
+import { companyLogosFor } from "@/lib/blogCompanies";
 import type { PostMeta } from "@/lib/blog";
 
 export function formatDate(date: string, lang: string) {
@@ -46,11 +47,12 @@ export function PostCard({ post }: { post: PostMeta }) {
   const img  = coverFor(post);
   const grad = CAT_GRADIENTS[post.category] ?? "from-brand-700 to-brand-500";
   const badge = CAT_BADGE[post.category] ?? "bg-brand-600 text-white";
+  const logos = companyLogosFor(`${post.title} ${post.excerpt} ${post.tags?.join(" ") ?? ""}`);
 
   return (
     <Link
       href={localePath(`/blog/${post.slug}`)}
-      className="group lift-xl relative flex h-full flex-col overflow-hidden rounded-lg border border-brand-100 bg-white dark:border-white/10 dark:bg-slate-900"
+      className="group lift-xl relative flex h-full flex-col overflow-hidden bg-white shadow-sm dark:bg-slate-900"
     >
       {/* ── Couverture avec image réelle ── */}
       <div className={`relative h-52 overflow-hidden bg-gradient-to-br ${grad}`}>
@@ -96,6 +98,19 @@ export function PostCard({ post }: { post: PostMeta }) {
             {post.tags.slice(0, 3).map(tag => (
               <li key={tag} className="rounded-full bg-brand-50 px-2.5 py-0.5 text-[11px] font-semibold text-brand-600 dark:bg-white/5 dark:text-brand-300">
                 #{tag}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {/* Logos des entreprises citées (miniatures) */}
+        {logos.length > 0 && (
+          <ul className="mt-3 flex items-center gap-2.5" aria-label="Entreprises citées">
+            {logos.map((l) => (
+              <li key={l.name} title={l.name}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={l.src} alt={l.name} width={18} height={18} loading="lazy"
+                  className="size-[18px] object-contain opacity-60 dark:opacity-80 dark:invert" />
               </li>
             ))}
           </ul>

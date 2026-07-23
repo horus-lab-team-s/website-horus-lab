@@ -9,12 +9,20 @@ export default function NotFound() {
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-grid opacity-50" />
 
         <Image
-          src="/logo-HORUS-LAB-white.jpeg"
+          src="/logo/logo-light-bg-full.png"
           alt="Horus-Lab"
-          width={72}
-          height={72}
+          width={160}
+          height={116}
           priority
-          className="mx-auto rounded-full ring-1 ring-brand-100"
+          className="mx-auto h-auto w-32 object-contain dark:hidden"
+        />
+        <Image
+          src="/logo/logo-dark-bg-full.png"
+          alt="Horus-Lab"
+          width={160}
+          height={116}
+          priority
+          className="mx-auto hidden h-auto w-32 object-contain dark:block"
         />
 
         <p className="mt-8 text-7xl font-extrabold tracking-tight text-gradient">404</p>

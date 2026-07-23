@@ -65,7 +65,7 @@ export default async function BlogPostPage({
       name: "Horus-Lab",
       logo: {
         "@type": "ImageObject",
-        url: `${SITE_URL}/logo-HORUS-LAB-white.jpeg`,
+        url: `${SITE_URL}/logo/logo-light-bg-full.png`,
       },
     },
     inLanguage: lang,

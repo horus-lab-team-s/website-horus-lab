@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
+import { SectionHeading } from "./SectionHeading";
 import { IconArrowRight } from "@/components/icons";
 
 type Testi = {
@@ -21,62 +22,76 @@ const TESTI: Record<"fr" | "en", Testi[]> = {
   fr: [
     {
       quote:
-        "Horus-Lab a digitalisé notre centre de formation avec un vrai sens du détail. Une plateforme claire, fiable et pensée pour nos apprenants — un partenaire à l'écoute du début à la fin.",
+        "Horus-Lab a digitalisé notre centre de formation avec un vrai sens du détail. Une plateforme claire, fiable et pensée pour nos apprenants, du début à la fin.",
       name: "Paule Diane Himsta",
-      role: "Promotrice · Broad Range Consulting · CFP-BRC",
-      image: "/Mme-paul-diane-himsta.png",
+      role: "Présidente Directrice · Broad Range Consulting (CFP-BRC)",
+      image: "/Temoignages/Mme-paul-diane-himsta.png",
     },
     {
       quote:
-        "Une équipe sérieuse et disponible. Nos outils de gestion sont enfin à la hauteur de nos ambitions, et l'accompagnement a été impeccable à chaque étape.",
+        "Nos outils de gestion sont enfin à la hauteur de nos ambitions. Une équipe sérieuse, disponible, et un accompagnement impeccable à chaque étape.",
+      name: "Paule Diane Himsta",
+      role: "Présidente Directrice · CGA Broad Range Consulting",
+      image: "/Temoignages/Mme-paul-diane-himsta.png",
+    },
+    {
+      quote:
+        "Notre boutique en ligne Afrikamode est fluide, rapide et fidèle à notre image. Horus-Lab a traduit notre univers mode en une vraie expérience e-commerce africaine.",
       name: "Pagop Tchouansi Aurélie",
-      role: "Responsable · CGA Broad Range Consulting",
-      image: "/Mme-pagop-Tchouansi-aurelie.png",
+      role: "Responsable · AfrikaMode",
+      image: "/Temoignages/Mme-pagop-Tchouansi-aurelie.png",
     },
     {
       quote:
         "Avec Elec One et EnMKit, Horus-Lab a transformé notre vision en une application mobile concrète : nos utilisateurs pilotent et réduisent leur consommation d'électricité à distance. Un travail remarquable.",
       name: "Dr Agnès Virginie TJAHE",
       role: "Présidente Directrice · 2MeTech Sarl",
-      image: "/Dr-Agnes-Virgine-TJAHE.png",
+      image: "/Temoignages/Dr-Agnes-Virgine-TJAHE.png",
     },
     {
       quote:
         "Un accompagnement technique de qualité pour notre département informatique : rigueur, pédagogie et des solutions adaptées à nos réalités académiques.",
       name: "Département Informatique",
       role: "IUT-FV de Bandjoun · Université de Dschang",
-      image: "/iut-fv-university-of-dschang.jpg",
+      image: "/Temoignages/iut-fv-university-of-dschang.jpg",
       logo: true,
     },
   ],
   en: [
     {
       quote:
-        "Horus-Lab digitalised our training centre with a real eye for detail. A clear, reliable platform built for our learners — a partner that listens from start to finish.",
+        "Horus-Lab digitalised our training centre with a real eye for detail. A clear, reliable platform built for our learners, from start to finish.",
       name: "Paule Diane Himsta",
-      role: "Founder · Broad Range Consulting · CFP-BRC",
-      image: "/Mme-paul-diane-himsta.png",
+      role: "Managing Director · Broad Range Consulting (CFP-BRC)",
+      image: "/Temoignages/Mme-paul-diane-himsta.png",
     },
     {
       quote:
-        "A serious, available team. Our management tools finally match our ambitions, and the support was flawless at every step.",
+        "Our management tools finally match our ambitions. A serious, available team, with flawless support at every step.",
+      name: "Paule Diane Himsta",
+      role: "Managing Director · CGA Broad Range Consulting",
+      image: "/Temoignages/Mme-paul-diane-himsta.png",
+    },
+    {
+      quote:
+        "Our Afrikamode online store is smooth, fast and true to our brand. Horus-Lab turned our fashion universe into a real African e-commerce experience.",
       name: "Pagop Tchouansi Aurélie",
-      role: "Manager · CGA Broad Range Consulting",
-      image: "/Mme-pagop-Tchouansi-aurelie.png",
+      role: "Manager · AfrikaMode",
+      image: "/Temoignages/Mme-pagop-Tchouansi-aurelie.png",
     },
     {
       quote:
         "With Elec One and EnMKit, Horus-Lab turned our vision into a real mobile app: our users control and reduce their electricity consumption remotely. Remarkable work.",
       name: "Dr Agnès Virginie TJAHE",
       role: "Managing Director · 2MeTech Sarl",
-      image: "/Dr-Agnes-Virgine-TJAHE.png",
+      image: "/Temoignages/Dr-Agnes-Virgine-TJAHE.png",
     },
     {
       quote:
         "Quality technical support for our computer science department: rigour, teaching skill and solutions tailored to our academic realities.",
       name: "Computer Science Dept.",
       role: "IUT-FV Bandjoun · University of Dschang",
-      image: "/iut-fv-university-of-dschang.jpg",
+      image: "/Temoignages/iut-fv-university-of-dschang.jpg",
       logo: true,
     },
   ],
@@ -109,32 +124,24 @@ export function Testimonials() {
   return (
     <section
       id="testimonials"
-      className="relative overflow-hidden bg-brand-900 py-16 sm:py-20"
+      className="relative overflow-hidden bg-brand-900 py-14 sm:py-16"
     >
       {/* Fond sobre : halos + logo Horus en filigrane */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden select-none">
         <div className="absolute -left-20 top-1/4 h-80 w-80 rounded-full bg-brand-500/12 blur-3xl" />
         <div className="absolute right-0 bottom-1/4 h-72 w-72 rounded-full bg-sky/8 blur-3xl" />
         <Image
-          src="/logo-HORUS-LAB-white.jpeg"
+          src="/logo/logo-dark-bg-full.png"
           alt=""
           width={520}
           height={520}
-          className="absolute -right-16 top-1/2 hidden w-[440px] -translate-y-1/2 opacity-[0.05] mix-blend-screen lg:block"
+          className="absolute -right-10 top-1/2 hidden w-[460px] -translate-y-1/2 opacity-[0.10] lg:block"
         />
       </div>
 
       <div className="relative mx-auto max-w-6xl px-5 sm:px-8">
-        {/* En-tête */}
-        <Reveal className="max-w-2xl">
-          <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-sky">
-            <span className="h-px w-6 bg-sky/60" />
-            {t.eyebrow}
-          </span>
-          <h2 className="mt-4 text-3xl font-extrabold leading-[1.1] tracking-tight text-white sm:text-4xl lg:text-5xl">
-            {t.title}
-          </h2>
-        </Reveal>
+        {/* En-tête centré unifié */}
+        <SectionHeading eyebrow={t.eyebrow} title={t.title} light />
 
         {/* Carrousel */}
         <Reveal className="mt-10">
@@ -142,7 +149,7 @@ export function Testimonials() {
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}
           >
-            <figure className="relative overflow-hidden rounded-lg border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-9">
+            <figure className="relative overflow-hidden bg-white/5 p-6 backdrop-blur-sm sm:p-9">
               {/* Guillemet décoratif */}
               <span aria-hidden
                 className="pointer-events-none absolute right-4 top-0 select-none text-[120px] leading-none font-extrabold text-white/[0.06]">
@@ -193,7 +200,7 @@ export function Testimonials() {
               <div className="flex flex-wrap items-center gap-2">
                 {list.map((it, i) => (
                   <button
-                    key={it.name}
+                    key={`${it.name}-${i}`}
                     type="button"
                     onClick={() => setIndex(i)}
                     aria-label={it.name}

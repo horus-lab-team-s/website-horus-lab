@@ -30,7 +30,7 @@ const organizationLd = {
   "@type": "Organization",
   name: "Horus-Lab",
   url: SITE_URL,
-  logo: `${SITE_URL}/logo-HORUS-LAB-white.jpeg`,
+  logo: `${SITE_URL}/logo/logo-light-bg-full.png`,
   description:
     "Entreprise technologique africaine : applications web & mobile sur mesure, systèmes d'information, digitalisation d'entreprise et formation & audit IT.",
   email: "contact@horus-lab.com",

@@ -8,89 +8,57 @@ import { SectionHeading } from "./SectionHeading";
 
 /* Mapping titre → slug de page service */
 const SLUG_MAP: Record<string, string> = {
-  "Applications sur mesure":   "applications",
-  "Custom Applications":       "applications",
-  "Systèmes d'information":    "systemes-information",
-  "Information Systems":       "information-systems",
+  "Applications sur mesure": "applications",
+  "Custom Applications": "applications",
+  "Systèmes d'information": "systemes-information",
+  "Information Systems": "information-systems",
   "Digitalisation d'entreprise": "digitalisation",
-  "Business Digitalisation":   "digitalisation",
-  "Formation & Audit IT":      "formation-audit",
-  "Training & IT Audit":       "formation-audit",
+  "Business Digitalisation": "digitalisation",
+  "Formation & Audit IT": "formation-audit",
+  "Training & IT Audit": "formation-audit",
 };
 
 const ICONS = [IconCode, IconEye, IconCog, IconSpark];
 
-/* Couleurs dominantes par service — light + dark compatibles */
-const CARD_THEMES = [
-  {
-    bg:      "bg-blue-50   dark:bg-blue-950/40",
-    border:  "border-blue-200  dark:border-blue-800/50",
-    hover:   "hover:border-blue-400 dark:hover:border-blue-600",
-    icon:    "bg-blue-600   text-white",
-    accent:  "from-blue-600 to-sky-500",
-    num:     "text-blue-600/10 dark:text-blue-400/10",
-    tag:     "bg-blue-100  text-blue-700  dark:bg-blue-900/50  dark:text-blue-300",
-    cta:     "text-blue-600 dark:text-blue-300",
-    glow:    "bg-blue-400/20",
-  },
-  {
-    bg:      "bg-violet-50  dark:bg-violet-950/40",
-    border:  "border-violet-200 dark:border-violet-800/50",
-    hover:   "hover:border-violet-400 dark:hover:border-violet-600",
-    icon:    "bg-violet-600  text-white",
-    accent:  "from-violet-600 to-purple-500",
-    num:     "text-violet-600/10 dark:text-violet-400/10",
-    tag:     "bg-violet-100 text-violet-700 dark:bg-violet-900/50 dark:text-violet-300",
-    cta:     "text-violet-600 dark:text-violet-300",
-    glow:    "bg-violet-400/20",
-  },
-  {
-    bg:      "bg-emerald-50  dark:bg-emerald-950/40",
-    border:  "border-emerald-200 dark:border-emerald-800/50",
-    hover:   "hover:border-emerald-400 dark:hover:border-emerald-600",
-    icon:    "bg-emerald-600  text-white",
-    accent:  "from-emerald-600 to-teal-500",
-    num:     "text-emerald-600/10 dark:text-emerald-400/10",
-    tag:     "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300",
-    cta:     "text-emerald-600 dark:text-emerald-300",
-    glow:    "bg-emerald-400/20",
-  },
-  {
-    bg:      "bg-amber-50   dark:bg-amber-950/40",
-    border:  "border-amber-200  dark:border-amber-800/50",
-    hover:   "hover:border-amber-400 dark:hover:border-amber-600",
-    icon:    "bg-amber-500   text-white",
-    accent:  "from-amber-500 to-orange-400",
-    num:     "text-amber-500/10 dark:text-amber-400/10",
-    tag:     "bg-amber-100  text-amber-700  dark:bg-amber-900/50  dark:text-amber-300",
-    cta:     "text-amber-600 dark:text-amber-300",
-    glow:    "bg-amber-400/20",
-  },
+/* Accent de couleur par service (icône) — light + dark */
+const ICON_BG = [
+  "bg-blue-600",
+  "bg-violet-600",
+  "bg-emerald-600",
+  "bg-amber-500",
 ];
 
-/* Spans bento : 1=large gauche, 2=étroit droit, 3=étroit gauche, 4=large droit */
-const BENTO = ["lg:col-span-7", "lg:col-span-5", "lg:col-span-5", "lg:col-span-7"];
-
-/* Image Unsplash par service */
-const SERVICE_IMAGES = [
-  "/img/photo-1607706189992-eae578626c86-w600.jpg", // code/IDE
-  "/img/photo-1518770660439-4636190af475-w600.jpg", // circuit board
-  "/img/photo-1531482615713-2afd69097998-w600.jpg", // team meeting
-  "/img/photo-1573164713988-8665fc963095-w600.jpg", // training
+/* Technologies que nous utilisons — logos qui défilent sous les services. */
+const STACK = [
+  { name: "React", src: "/tech/react.svg" },
+  { name: "Next.js", src: "/tech/nextjs.svg" },
+  { name: "TypeScript", src: "/tech/typescript.svg" },
+  { name: "JavaScript", src: "/tech/javascript.svg" },
+  { name: "Python", src: "/tech/python.svg" },
+  { name: "Django", src: "/tech/django.svg" },
+  { name: "FastAPI", src: "/tech/fastapi.svg" },
+  { name: "Flutter", src: "/tech/flutter.svg" },
+  { name: "PostgreSQL", src: "/tech/postgresql.svg" },
+  { name: "Node.js", src: "/tech/nodejs.svg" },
+  { name: "Docker", src: "/tech/docker.svg" },
+  { name: "Tailwind", src: "/tech/tailwindcss.svg" },
 ];
+/* Doublé pour une boucle continue (translateX 0 → -50%). */
+const STACK_TRACK = [...STACK, ...STACK];
 
 type ServiceItem = { title: string; desc: string; tags: string[] };
 
 export function Services({ items }: { items?: ServiceItem[] }) {
   const { dict, lang, localePath } = useLang();
   const s = { ...dict.services, items: items ?? dict.services.items };
+  const stackLabel = lang === "fr" ? "Les technologies que nous utilisons" : "The technologies we build with";
 
   return (
     <section
       id="services"
-      className="relative overflow-hidden bg-white pb-16 pt-12 dark:bg-[#070e1c] sm:pb-20 sm:pt-16"
+      className="relative overflow-hidden bg-white pb-12 pt-12 dark:bg-[#070e1c] sm:pb-16 sm:pt-14"
     >
-      {/* ── Fond sobre : grille fine + halos discrets ── */}
+      {/* Fond sobre : grille fine + halos discrets */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-grid-soft opacity-[0.4] dark:opacity-[0.22]" />
         <div className="absolute -left-24 top-1/4 h-80 w-80 rounded-full bg-brand-100/40 blur-3xl dark:bg-brand-900/15" />
@@ -100,85 +68,52 @@ export function Services({ items }: { items?: ServiceItem[] }) {
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
         <SectionHeading eyebrow={s.eyebrow} title={s.title} subtitle={s.subtitle} />
 
-        <div className="mt-10 grid gap-4 lg:grid-cols-12">
+        {/* 4 services sur une seule ligne (desktop) */}
+        <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {s.items.map((item, i) => {
-            const Icon    = ICONS[i] ?? IconCode;
-            const theme   = CARD_THEMES[i];
-            const slug    = SLUG_MAP[item.title] ?? "applications";
-            const span    = BENTO[i] ?? "lg:col-span-6";
-            const isLarge = span.includes("7");
-            const img     = SERVICE_IMAGES[i];
-
+            const Icon = ICONS[i] ?? IconCode;
+            const slug = SLUG_MAP[item.title] ?? "applications";
             return (
-              <Reveal key={item.title} delay={i * 80} className={span}>
+              <Reveal key={item.title} delay={i * 70}>
                 <Link
                   href={localePath(`/services/${slug}`)}
-                  className={`group relative flex h-full flex-col overflow-hidden rounded-lg border transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl ${theme.bg} ${theme.border} ${theme.hover} ${isLarge ? "min-h-[224px]" : "min-h-[204px]"}`}
+                  className="group flex h-full flex-col bg-surface p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:bg-white/5"
                 >
-                  {/* Image Unsplash de fond – légèrement visible */}
-                  <div
-                    aria-hidden
-                    className="absolute inset-0 bg-cover bg-center opacity-[0.07] group-hover:opacity-[0.12] transition-opacity duration-700 dark:opacity-[0.05] dark:group-hover:opacity-[0.09]"
-                    style={{ backgroundImage: `url(${img})` }}
-                  />
-
-                  {/* Glow au survol */}
-                  <div aria-hidden
-                    className={`absolute -right-8 -top-8 size-40 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 ${theme.glow}`} />
-
-                  {/* Tracé de circuit */}
-                  <svg aria-hidden viewBox="0 0 220 80"
-                    className="pointer-events-none absolute right-0 top-0 h-20 w-56 text-current opacity-[0.12] group-hover:opacity-[0.25] transition-opacity duration-500">
-                    <path d="M0 40 H60 L80 20 H140 L160 40 H220"
-                      fill="none" stroke="currentColor" strokeWidth="1.2" />
-                    <circle cx="60"  cy="40" r="2.5" fill="currentColor" />
-                    <circle cx="140" cy="20" r="2.5" fill="currentColor" />
-                    <circle cx="220" cy="40" r="2.5" fill="currentColor" />
-                  </svg>
-
-                  {/* Numéro filigrane */}
-                  <span aria-hidden
-                    className={`numeral pointer-events-none absolute right-5 top-1 select-none ${theme.num} ${isLarge ? "text-[92px]" : "text-[80px]"}`}>
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-
-                  <div className="relative flex h-full flex-col p-6 sm:p-7">
-                    {/* Icône */}
-                    <div className={`inline-flex size-11 items-center justify-center rounded-md shadow-lg transition-transform duration-300 group-hover:scale-110 ${theme.icon}`}>
-                      <Icon className="size-5" />
-                    </div>
-
-                    <h3 className={`mt-4 font-extrabold tracking-tight text-brand-900 dark:text-white ${isLarge ? "text-xl sm:text-2xl" : "text-lg sm:text-xl"}`}>
-                      {item.title}
-                    </h3>
-
-                    <p className="mt-2 max-w-prose text-sm leading-relaxed text-muted dark:text-brand-200/70">
-                      {item.desc}
-                    </p>
-
-                    <ul className="mt-auto flex flex-wrap gap-1.5 pt-4">
-                      {item.tags.map((tag) => (
-                        <li key={tag}
-                          className={`rounded-full px-3 py-1 text-xs font-semibold backdrop-blur ${theme.tag}`}>
-                          {tag}
-                        </li>
-                      ))}
-                    </ul>
-
-                    <div className={`mt-4 flex items-center gap-1.5 text-sm font-bold opacity-0 transition-all duration-300 group-hover:opacity-100 ${theme.cta}`}>
-                      {lang === "fr" ? "Découvrir ce service" : "Explore this service"}
-                      <IconArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-                    </div>
+                  <div className={`inline-flex size-11 items-center justify-center text-white shadow-md transition-transform duration-300 group-hover:scale-110 ${ICON_BG[i]}`}>
+                    <Icon className="size-5" />
                   </div>
-
-                  {/* Liseré animé bas */}
-                  <span aria-hidden
-                    className={`pointer-events-none absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-gradient-to-r ${theme.accent} to-transparent transition-transform duration-700 group-hover:scale-x-100`} />
+                  <h3 className="mt-4 text-base font-extrabold tracking-tight text-brand-900 dark:text-white">
+                    {item.title}
+                  </h3>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-muted dark:text-brand-200/70 line-clamp-3">
+                    {item.desc}
+                  </p>
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-brand-600 opacity-0 transition-all duration-300 group-hover:opacity-100 dark:text-brand-300">
+                    {lang === "fr" ? "Découvrir" : "Explore"}
+                    <IconArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+                  </span>
                 </Link>
               </Reveal>
             );
           })}
         </div>
+
+        {/* Bandeau des technologies (logos qui défilent) */}
+        <Reveal delay={120} className="mt-10">
+          <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-muted">{stackLabel}</p>
+          <div className="marquee-mask group relative mt-5 overflow-hidden">
+            <ul className="flex w-max items-center gap-10 animate-[marquee_30s_linear_infinite] group-hover:[animation-play-state:paused]">
+              {STACK_TRACK.map((tech, i) => (
+                <li key={`${tech.name}-${i}`} className="flex shrink-0 items-center gap-2.5">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={tech.src} alt={tech.name} width={36} height={36} loading="lazy"
+                    className="size-9 object-contain" />
+                  <span className="text-sm font-semibold text-brand-800 dark:text-brand-100">{tech.name}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

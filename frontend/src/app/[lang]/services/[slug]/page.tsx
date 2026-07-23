@@ -4,7 +4,8 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
-import { WaveDivider } from "@/components/WaveDivider";
+import { HeroBackground } from "@/components/sections/HeroBackground";
+import { SectionHeading } from "@/components/sections/SectionHeading";
 import { ServiceContactSection } from "@/components/services/ServiceContactSection";
 import { ServiceProcessSection } from "@/components/services/ServiceProcessSection";
 import {
@@ -311,60 +312,45 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
       <main id="main" tabIndex={-1}>
 
         {/* ═══════════════════════════════════════════════════════
-            HERO — image très visible, overlay léger, vague en bas
+            HERO — vidéo en boucle, même style que l'accueil (rectangle net)
         ═══════════════════════════════════════════════════════ */}
-        <section className="relative isolate flex min-h-[82vh] items-center overflow-hidden pt-28 pb-32">
-          {/* Image plein fond — z-index négatif, aucun filtre */}
-          <div
-            aria-hidden
-            className="absolute inset-0 -z-20 bg-cover bg-center"
-            style={{ backgroundImage: `url(${s.heroImage})` }}
-          />
-          {/* Overlay très léger — juste pour lisibilité du texte blanc */}
-          <div
-            aria-hidden
-            className={`absolute inset-0 -z-10 bg-gradient-to-br ${s.gradient} opacity-60`}
-          />
-          {/* Trame discrète */}
-          <div aria-hidden className="absolute inset-0 -z-10 bg-grid opacity-[0.12]" />
+        <section className="relative isolate flex min-h-[54vh] items-center overflow-hidden pt-24 pb-12 sm:pb-14">
+          <HeroBackground videoSrc={`/services/${slug}.mp4`} poster={s.heroImage} />
 
           <div className="relative mx-auto max-w-4xl px-5 text-center sm:px-8">
             <Reveal>
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white backdrop-blur">
-                <Icon className="size-4 text-white" />
+              <span className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white backdrop-blur">
+                <Icon className="size-4 text-sky" />
                 {s.badge}
               </span>
             </Reveal>
             <Reveal delay={80}>
-              <h1 className="mt-6 text-4xl font-extrabold leading-[1.05] tracking-tight text-white [text-shadow:0_2px_20px_rgba(0,0,0,0.35)] sm:text-5xl lg:text-6xl">
+              <h1 className="mt-5 text-3xl font-extrabold leading-[1.08] tracking-tight text-white [text-shadow:0_2px_20px_rgba(0,0,0,0.4)] sm:text-4xl lg:text-5xl">
                 {s.title}
               </h1>
             </Reveal>
             <Reveal delay={160}>
-              <p className="mx-auto mt-5 max-w-2xl text-lg text-white/90 [text-shadow:0_1px_10px_rgba(0,0,0,0.3)]">
+              <p className="mx-auto mt-4 max-w-xl text-base text-white/90 [text-shadow:0_1px_10px_rgba(0,0,0,0.35)]">
                 {s.subtitle}
               </p>
             </Reveal>
             <Reveal delay={240}>
               <a href="#contact"
-                className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-base font-bold text-brand-700 shadow-xl shadow-black/20 transition-transform hover:scale-[1.04]">
+                className="mt-7 inline-flex items-center gap-2 bg-white px-7 py-3.5 text-base font-bold text-brand-700 shadow-xl shadow-black/20 transition-transform hover:scale-[1.03]">
                 {s.ctaTitle}
                 <IconArrowRight className="size-5" />
               </a>
             </Reveal>
           </div>
-
-          {/* Séparateur en vague statique vers la section suivante (fond blanc) */}
-          <WaveDivider className="text-white dark:text-[#070e1c]" />
         </section>
 
         {/* ═══════════════════════════════════════════════════════
-            INTRO
+            INTRO (compacte, ~2 lignes)
         ═══════════════════════════════════════════════════════ */}
-        <section className="bg-white py-14 dark:bg-[#070e1c] sm:py-18">
-          <div className="mx-auto max-w-4xl px-5 sm:px-8">
+        <section className="bg-white pt-10 pb-8 dark:bg-[#070e1c] sm:pt-12 sm:pb-10">
+          <div className="mx-auto max-w-3xl px-5 sm:px-8">
             <Reveal>
-              <p className="text-xl leading-relaxed text-muted text-center">{s.intro}</p>
+              <p className="text-center text-base leading-relaxed text-muted sm:text-lg">{s.intro}</p>
             </Reveal>
           </div>
         </section>
@@ -372,23 +358,20 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
         {/* ═══════════════════════════════════════════════════════
             CE QUE NOUS FAISONS — cartes avec image
         ═══════════════════════════════════════════════════════ */}
-        <section className="relative overflow-hidden py-20 sm:py-28">
+        <section className="relative overflow-hidden py-14 sm:py-16">
           {/* Fond sobre propre au service */}
           <div aria-hidden className="absolute inset-0 bg-gradient-to-br from-white via-surface to-white dark:from-[#070e1c] dark:via-slate-900 dark:to-[#070e1c]" />
           <div aria-hidden className="absolute inset-0 bg-grid-soft opacity-30 dark:opacity-20" />
 
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-            <Reveal className="text-center mb-14">
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-500">{featuresLabel}</span>
-              <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-brand-900 dark:text-white sm:text-4xl">{domainLabel}</h2>
-            </Reveal>
+            <SectionHeading eyebrow={featuresLabel} title={domainLabel} />
 
-            <div className="grid gap-6 sm:grid-cols-2">
+            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {s.features.map((f, i) => (
-                <Reveal key={f.title} delay={i * 80}>
-                  <article className="group relative flex h-full flex-col overflow-hidden rounded-lg border border-brand-100 bg-white shadow-sm transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl dark:border-white/10 dark:bg-slate-900">
-                    {/* Image Unsplash en fond de carte */}
-                    <div className="relative h-44 overflow-hidden">
+                <Reveal key={f.title} delay={i * 70}>
+                  <article className="group relative flex h-full flex-col overflow-hidden bg-white shadow-sm transition-all duration-500 hover:-translate-y-1.5 hover:shadow-2xl dark:bg-slate-900">
+                    {/* Image de fond de carte */}
+                    <div className="relative h-28 overflow-hidden">
                       <div className={`absolute inset-0 bg-gradient-to-br ${s.gradient}`} />
                       {featureImgs[i] && (
                         <div
@@ -397,21 +380,20 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
                         />
                       )}
                       <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                      {/* Icône + numéro sur l'image */}
-                      <div className="absolute inset-0 flex items-end justify-between p-5">
-                        <div className="flex size-12 items-center justify-center rounded-lg bg-white/15 backdrop-blur ring-1 ring-white/30">
-                          <Icon className="size-6 text-white" />
+                      <div className="absolute inset-0 flex items-end justify-between p-4">
+                        <div className="flex size-10 items-center justify-center bg-white/15 backdrop-blur ring-1 ring-white/30">
+                          <Icon className="size-5 text-white" />
                         </div>
-                        <span className="text-5xl font-extrabold text-white/20 select-none leading-none">
+                        <span className="text-4xl font-extrabold leading-none text-white/25 select-none">
                           {String(i + 1).padStart(2, "0")}
                         </span>
                       </div>
                     </div>
 
                     {/* Contenu texte */}
-                    <div className="flex flex-1 flex-col p-6">
-                      <h3 className="text-lg font-bold text-brand-900 dark:text-white">{f.title}</h3>
-                      <p className="mt-2 flex-1 text-[15px] leading-relaxed text-muted">{f.desc}</p>
+                    <div className="flex flex-1 flex-col p-5">
+                      <h3 className="text-base font-bold text-brand-900 dark:text-white">{f.title}</h3>
+                      <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{f.desc}</p>
                     </div>
 
                     {/* Liseré coloré en bas */}
@@ -437,18 +419,18 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
         {/* ═══════════════════════════════════════════════════════
             LIVRABLES
         ═══════════════════════════════════════════════════════ */}
-        <section className="relative bg-white py-16 dark:bg-[#070e1c] sm:py-20 overflow-hidden">
+        <section className="relative bg-white py-12 dark:bg-[#070e1c] sm:py-14 overflow-hidden">
           <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-soft opacity-30" />
-          <div className="relative mx-auto max-w-4xl px-5 sm:px-8">
-            <Reveal className="rounded-lg border border-brand-100 bg-gradient-to-br from-white to-brand-50/30 p-8 shadow-xl dark:border-white/10 dark:bg-slate-900 dark:from-slate-900 dark:to-slate-900 sm:p-10">
-              <div className={`inline-flex size-12 items-center justify-center rounded-lg bg-gradient-to-br ${s.gradient} text-white shadow-lg mb-5`}>
+          <div className="relative mx-auto max-w-3xl px-5 text-center sm:px-8">
+            <Reveal>
+              <div className={`mx-auto inline-flex size-12 items-center justify-center bg-gradient-to-br ${s.gradient} text-white shadow-lg`}>
                 <Icon className="size-6" />
               </div>
-              <h2 className="text-xl font-bold text-brand-900 dark:text-white">{receivesLabel}</h2>
-              <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+              <h2 className="mt-4 text-2xl font-extrabold tracking-tight text-brand-900 dark:text-white">{receivesLabel}</h2>
+              <ul className="mx-auto mt-6 grid max-w-xl gap-3 text-left sm:grid-cols-2">
                 {s.deliverables.map((d) => (
                   <li key={d} className="flex items-center gap-3 text-sm text-muted">
-                    <span className={`inline-flex size-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${s.gradient} text-white shadow`}>
+                    <span className={`inline-flex size-6 shrink-0 items-center justify-center bg-gradient-to-br ${s.gradient} text-white shadow`}>
                       <IconCheck className="size-3.5" />
                     </span>
                     {d}
@@ -462,10 +444,10 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
         {/* ═══════════════════════════════════════════════════════
             AUTRES SERVICES
         ═══════════════════════════════════════════════════════ */}
-        <section className="relative bg-surface py-14 dark:bg-slate-900/50 overflow-hidden">
+        <section className="relative bg-surface py-12 dark:bg-slate-900/50 overflow-hidden">
           <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid-soft opacity-30" />
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-            <Reveal className="mb-8">
+            <Reveal className="mb-8 text-center">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-500">{othersLabel}</p>
             </Reveal>
             <div className="grid gap-4 sm:grid-cols-3">
