@@ -6,6 +6,23 @@
 
 ---
 
+## 2026-07-24 — 🚀 Déploiement prod (images + Nginx) + docs
+
+Mise en prod sur le VPS Contabo des évolutions du jour, **commande par commande**
+(exécutées par l'admin) : update des 2 conteneurs `horus_web`/`horus_frontend`
+(repointage `.env` sur les nouveaux digests GHCR, migrations bannière `0004→0006`,
+seed), puis **branchement du site dans le proxy Nginx partagé** (`horus.conf` copié
+dans `backend-nginx-1` → `nginx -t` → reload gracieux) — le site n'était pas
+découvert (cert présent mais bloc jamais chargé). Aucun impact sur `backend-db-1`
+ni les autres projets. Résultat : `horus-lab.com`/`www`/`api` servis en HTTPS,
+bannière + compte à rebours live.
+- 📄 **Rapport** : [docs/deploiement-2026-07-24-rapport.md](docs/deploiement-2026-07-24-rapport.md)
+- 📘 **Runbook réutilisable** : [docs/deploiement-horus-vps-runbook.md](docs/deploiement-horus-vps-runbook.md)
+- ⚠️ Dette : `horus.conf` est éphémère dans le proxy (copié, non monté) → à recopier
+  si `backend-nginx-1` est un jour recréé. `RUN_SEED` à laisser à `0` hors 1er déploiement.
+
+---
+
 ## 2026-07-24 — 📣 Bannière Edlearning + anonymisation formateurs + retrait tirets (NON commité)
 
 Demande client : rendre l'annonce « ce site n'est qu'un aperçu, la vraie
