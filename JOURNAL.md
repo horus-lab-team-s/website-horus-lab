@@ -94,8 +94,9 @@ décoratifs `── ──`, migrations Django, prompts système / e-mails sorta
   « Période (compte à rebours & expiration) » avec la date de fin affichée en
   lecture seule. Seed = **1er sept 2026 + 1 mois** → fin **1er oct 2026**.
   **Migration `0006_formationspromo_schedule`**.
-- **Compte à rebours en direct** sur la bannière (variante « autres pages ») :
-  composant `Countdown` (ticke chaque seconde, `j/h/min/s`). Avant le début →
+- **Compte à rebours en direct** sur la bannière (**toutes les pages**, aperçu
+  Formations comprise) : composant `Countdown` (ticke chaque seconde,
+  `j/h/min/s`). Avant le début →
   « Démarre dans … » (cas actuel, formation pas commencée) ; pendant → « Se
   termine dans … ». Rend `null` au SSR (pas d'écart d'hydratation).
 - **Auto-expiration** : passé `end_date`, la bannière ne s'affiche plus

@@ -247,8 +247,9 @@ function PromoCard({ promo, pathname }: { promo: CmsPromo | null; pathname: stri
 
           <p className="mt-3 text-[13px] leading-relaxed text-muted">{body}</p>
 
-          {/* Compte à rebours en direct (variante « autres pages »). */}
-          {!onFormations && <Countdown startISO={c.startDate} endISO={c.endDate} lang={key} />}
+          {/* Compte à rebours en direct, sur TOUTES les pages (aperçu Formations
+              comme autres pages). */}
+          <Countdown startISO={c.startDate} endISO={c.endDate} lang={key} />
 
           {onFormations
             ? c.playUrl && (
