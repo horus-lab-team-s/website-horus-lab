@@ -42,9 +42,22 @@ class SiteSettingsAdmin(admin.ModelAdmin):
 
 @admin.register(FormationsPromo)
 class FormationsPromoAdmin(admin.ModelAdmin):
-    list_display = ["__str__", "is_active"]
+    list_display = ["__str__", "is_active", "start_date", "computed_end_date"]
+    readonly_fields = ("computed_end_date",)
+
+    @admin.display(description="Date de fin (calculée)")
+    def computed_end_date(self, obj):
+        return obj.end_date or "—"
+
     fieldsets = (
         ("Affichage", {"fields": ("is_active",)}),
+        (
+            "Période (compte à rebours & expiration)",
+            {
+                "fields": ("start_date", "duration_value", "duration_unit", "computed_end_date"),
+                "description": "Date de début + durée ⇒ date de fin. Le site affiche un compte à rebours et masque la bannière après la fin.",
+            },
+        ),
         (
             "Pages Formations — aperçu Edlearning (FR)",
             {"fields": ("badge_fr", "title_fr", "body_fr", "store_label_fr")},

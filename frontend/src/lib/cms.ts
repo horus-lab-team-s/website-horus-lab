@@ -295,6 +295,8 @@ type ApiFormationsPromo = {
   teaser_title_fr: string; teaser_title_en: string;
   teaser_body_fr: string; teaser_body_en: string;
   teaser_cta_fr: string; teaser_cta_en: string;
+  start_date: string | null;
+  end_date: string | null;
 };
 
 export type CmsPromo = {
@@ -306,6 +308,10 @@ export type CmsPromo = {
   preview: { badge: string; title: string; body: string };
   /** Variante affichée sur les autres pages (date de démarrage → /formations). */
   teaser: { badge: string; title: string; body: string; cta: string };
+  /** Début de la formation (ISO `YYYY-MM-DD`) ou `null` → compte à rebours. */
+  startDate: string | null;
+  /** Fin calculée (début + durée) ou `null` → auto-expiration de la bannière. */
+  endDate: string | null;
 };
 
 /**
@@ -334,6 +340,8 @@ export async function getCmsFormationsPromo(lang: Lang): Promise<CmsPromo | null
         body: t(p.teaser_body_fr, p.teaser_body_en),
         cta: t(p.teaser_cta_fr, p.teaser_cta_en),
       },
+      startDate: p.start_date ?? null,
+      endDate: p.end_date ?? null,
     };
   } catch {
     return null;

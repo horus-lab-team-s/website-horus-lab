@@ -48,6 +48,8 @@ const FALLBACK: Record<"fr" | "en", CmsPromo> = {
       body: "Développement web & mobile, génie logiciel et IA. Rejoignez le bootcamp Horus-Lab et montez en compétences.",
       cta: "Voir les formations",
     },
+    startDate: "2026-09-01",
+    endDate: "2026-10-01",
   },
   en: {
     active: true,
@@ -65,8 +67,70 @@ const FALLBACK: Record<"fr" | "en", CmsPromo> = {
       body: "Web & mobile development, software engineering and AI. Join the Horus-Lab bootcamp and level up your skills.",
       cta: "See the courses",
     },
+    startDate: "2026-09-01",
+    endDate: "2026-10-01",
   },
 };
+
+const CD_LABELS = {
+  fr: { before: "Démarre dans", during: "Se termine dans", d: "j", h: "h", m: "min", s: "s" },
+  en: { before: "Starts in", during: "Ends in", d: "d", h: "h", m: "min", s: "s" },
+} as const;
+
+/**
+ * Compte à rebours en direct (ticke chaque seconde). Avant le début : temps
+ * restant jusqu'au démarrage ; pendant : temps restant jusqu'à la fin. Ne rend
+ * rien au SSR (état `null`) pour éviter tout écart d'hydratation.
+ */
+function Countdown({ startISO, endISO, lang }: { startISO: string | null; endISO: string | null; lang: "fr" | "en" }) {
+  const [now, setNow] = useState<number | null>(null);
+
+  useEffect(() => {
+    const tick = () => setNow(Date.now());
+    // 1er tick hors du corps de l'effet (règle react-hooks/set-state-in-effect),
+    // puis mise à jour chaque seconde.
+    const raf = requestAnimationFrame(tick);
+    const id = setInterval(tick, 1000);
+    return () => {
+      cancelAnimationFrame(raf);
+      clearInterval(id);
+    };
+  }, []);
+
+  if (!startISO || now == null) return null;
+  const start = new Date(`${startISO}T00:00:00`).getTime();
+  const end = endISO ? new Date(`${endISO}T00:00:00`).getTime() : null;
+  const before = now < start;
+  const target = before ? start : end ?? start;
+  const diff = target - now;
+  if (diff <= 0) return null;
+
+  const L = CD_LABELS[lang];
+  const cells: [number, string][] = [
+    [Math.floor(diff / 86400000), L.d],
+    [Math.floor((diff % 86400000) / 3600000), L.h],
+    [Math.floor((diff % 3600000) / 60000), L.m],
+    [Math.floor((diff % 60000) / 1000), L.s],
+  ];
+
+  return (
+    <div className="mt-3">
+      <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-brand-600 dark:text-brand-300">
+        {before ? L.before : L.during}
+      </p>
+      <div className="mt-1.5 flex gap-1.5" aria-live="off">
+        {cells.map(([v, lbl], i) => (
+          <span key={i} className="flex min-w-[2.6rem] flex-col items-center rounded-md bg-brand-50 px-1.5 py-1 dark:bg-white/10">
+            <b className="text-base font-extrabold leading-none tabular-nums text-brand-900 dark:text-white">
+              {String(v).padStart(2, "0")}
+            </b>
+            <span className="mt-0.5 text-[9px] font-medium uppercase text-muted">{lbl}</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const CLOSE_LABEL = { fr: "Fermer", en: "Close" } as const;
 
@@ -112,6 +176,8 @@ function PromoCard({ promo, pathname }: { promo: CmsPromo | null; pathname: stri
 
   useEffect(() => {
     if (!active) return; // masquée depuis l'admin : rien à faire
+    // Auto-expiration : passé la date de fin (début + durée), on n'affiche plus.
+    if (c.endDate && Date.now() >= new Date(`${c.endDate}T00:00:00`).getTime()) return;
     let raf = 0;
     // Petite temporisation : la carte apparaît puis glisse doucement (frame
     // suivante), sans agresser à l'arrivée. Pas de persistance : elle réapparaît
@@ -124,7 +190,7 @@ function PromoCard({ promo, pathname }: { promo: CmsPromo | null; pathname: stri
       clearTimeout(id);
       if (raf) cancelAnimationFrame(raf);
     };
-  }, [active]);
+  }, [active, c.endDate]);
 
   function dismiss() {
     setShown(false);
@@ -180,6 +246,9 @@ function PromoCard({ promo, pathname }: { promo: CmsPromo | null; pathname: stri
           </div>
 
           <p className="mt-3 text-[13px] leading-relaxed text-muted">{body}</p>
+
+          {/* Compte à rebours en direct (variante « autres pages »). */}
+          {!onFormations && <Countdown startISO={c.startDate} endISO={c.endDate} lang={key} />}
 
           {onFormations
             ? c.playUrl && (

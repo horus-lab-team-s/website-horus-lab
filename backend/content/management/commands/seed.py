@@ -112,6 +112,9 @@ class Command(BaseCommand):
                 ),
                 teaser_cta_fr="Voir les formations",
                 teaser_cta_en="See the courses",
+                start_date=date(2026, 9, 1),
+                duration_value=1,
+                duration_unit="months",
             ),
         )
 

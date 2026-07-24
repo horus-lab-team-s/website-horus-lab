@@ -4,6 +4,9 @@ Modèles de contenu éditable du site.
 Convention bilingue : chaque texte traduisible existe en `_fr` et `_en`
 (comme le dictionnaire du frontend). Le frontend choisit selon la langue.
 """
+import calendar
+from datetime import date, timedelta
+
 from django.db import models
 
 
@@ -130,6 +133,35 @@ class FormationsPromo(SingletonModel):
     )
     teaser_cta_fr = models.CharField(max_length=60, blank=True, default="Voir les formations")
     teaser_cta_en = models.CharField(max_length=60, blank=True, default="See the courses")
+
+    # Période de l'annonce : date de début + durée → date de fin calculée.
+    # Le frontend affiche un compte à rebours (temps restant avant le début, puis
+    # avant la fin) et masque la bannière une fois la date de fin dépassée.
+    DURATION_UNITS = [("days", "Jours"), ("weeks", "Semaines"), ("months", "Mois")]
+    start_date = models.DateField(
+        "Date de début", null=True, blank=True,
+        help_text="Début de la formation (ex. 2026-09-01). Vide = ni compte à rebours, ni expiration.",
+    )
+    duration_value = models.PositiveIntegerField("Durée", default=1)
+    duration_unit = models.CharField(
+        "Unité de durée", max_length=10, choices=DURATION_UNITS, default="months",
+    )
+
+    @property
+    def end_date(self):
+        """Date de fin calculée (début + durée). None si pas de date de début."""
+        if not self.start_date:
+            return None
+        if self.duration_unit == "days":
+            return self.start_date + timedelta(days=self.duration_value)
+        if self.duration_unit == "weeks":
+            return self.start_date + timedelta(weeks=self.duration_value)
+        # Mois : arithmétique calendaire (borne le jour au dernier jour du mois).
+        month_index = self.start_date.month - 1 + self.duration_value
+        year = self.start_date.year + month_index // 12
+        month = month_index % 12 + 1
+        day = min(self.start_date.day, calendar.monthrange(year, month)[1])
+        return date(year, month, day)
 
     class Meta:
         verbose_name = "Bannière Formations (Edlearning)"

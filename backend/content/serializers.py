@@ -25,6 +25,10 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
 
 
 class FormationsPromoSerializer(serializers.ModelSerializer):
+    # Date de fin calculée (début + durée), exposée au frontend pour le compte
+    # à rebours et l'auto-expiration de la bannière.
+    end_date = serializers.DateField(read_only=True)
+
     class Meta:
         model = FormationsPromo
         exclude = ["id"]
