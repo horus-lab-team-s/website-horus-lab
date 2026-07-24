@@ -12,11 +12,11 @@ from django.db import transaction
 
 from courses.models import Category, Course, Module
 
-TEAM = {
-    "loic": ("Loïc DJIMGOU TONBA", "Mentor du parcours", "Course mentor"),
-    "edwin": ("Edwin TCHAMBA", "Mentor du parcours", "Course mentor"),
-    "team": ("Équipe Horus-Lab", "Mentors Horus-Lab", "Horus-Lab mentors"),
-}
+# Aucun formateur nommé n'est mis en avant : c'est l'équipe qui forme, et les
+# apprenants découvrent leurs formateurs pendant la formation. Les trois clés
+# pointent volontairement vers la même entité, sans rôle affiché.
+_HORUS = ("Formateurs Horus-Lab", "", "")
+TEAM = {"loic": _HORUS, "edwin": _HORUS, "team": _HORUS}
 
 IMG = {
     "react": "/img/photo-1607706189992-eae578626c86-w700.jpg",
@@ -71,7 +71,7 @@ CATEGORIES = [
 COURSES = [
     {
         "slug": "html-css-fondations", "category": "web", "instructor": "team",
-        "title_fr": "HTML5 & CSS3 — les fondations du web", "title_en": "HTML5 & CSS3 — web foundations",
+        "title_fr": "HTML5 & CSS3 : les fondations du web", "title_en": "HTML5 & CSS3: web foundations",
         "subtitle_fr": "Structurer et styliser vos premières pages", "subtitle_en": "Structure and style your first pages",
         "level_fr": "Débutant", "level_en": "Beginner", "duration_hours": 10, "lessons_count": 28,
         "price_fr": "Gratuit", "price_en": "Free", "is_free": True,
@@ -161,8 +161,8 @@ COURSES = [
         "level_fr": "Intermédiaire", "level_en": "Intermediate", "duration_hours": 16, "lessons_count": 36,
         "price_fr": "Premium", "price_en": "Premium", "is_free": False,
         "tags": ["FastAPI", "Python", "PostgreSQL", "API REST"], "image": IMG["fastapi"], "video_url_fr": VIDEO_FR["fastapi"], "video_url_en": VIDEO_EN["fastapi"],
-        "intro_fr": "Construisez le backend de vos applications avec FastAPI et PostgreSQL : routes, validation, base de données, authentification et tests — la stack de nos projets clients.",
-        "intro_en": "Build the backend of your applications with FastAPI and PostgreSQL: routes, validation, database, authentication and tests — the stack of our client projects.",
+        "intro_fr": "Construisez le backend de vos applications avec FastAPI et PostgreSQL : routes, validation, base de données, authentification et tests, la stack de nos projets clients.",
+        "intro_en": "Build the backend of your applications with FastAPI and PostgreSQL: routes, validation, database, authentication and tests, the stack of our client projects.",
         "learn_fr": ["Créer une API REST avec FastAPI", "Valider les données avec Pydantic", "Connecter et interroger PostgreSQL", "Sécuriser et tester votre API"],
         "learn_en": ["Create a REST API with FastAPI", "Validate data with Pydantic", "Connect and query PostgreSQL", "Secure and test your API"],
         "curriculum": [
@@ -258,13 +258,13 @@ COURSES = [
     },
     {
         "slug": "developper-avec-ia-claude", "category": "ia", "instructor": "loic",
-        "title_fr": "Développer avec l'IA — Claude & Claude Code", "title_en": "Develop with AI — Claude & Claude Code",
+        "title_fr": "Développer avec l'IA : Claude & Claude Code", "title_en": "Develop with AI: Claude & Claude Code",
         "subtitle_fr": "L'IA comme accélérateur, en toute maîtrise", "subtitle_en": "AI as an accelerator, fully in control",
         "level_fr": "Débutant", "level_en": "Beginner", "duration_hours": 8, "lessons_count": 22,
         "price_fr": "Gratuit", "price_en": "Free", "is_free": True,
         "tags": ["Claude", "Claude Code", "LLM", "Prompt engineering"], "image": IMG["ia"], "video_url_fr": VIDEO_FR["claude"], "video_url_en": VIDEO_EN["claude"],
-        "intro_fr": "Les fondamentaux acquis, l'IA devient un accélérateur : comprendre les LLM, écrire de bons prompts et coder, déboguer et refactorer avec Claude & Claude Code — les workflows que nous utilisons chez Horus-Lab.",
-        "intro_en": "With the fundamentals in hand, AI becomes an accelerator: understand LLMs, write good prompts, and code, debug and refactor with Claude & Claude Code — the workflows we use at Horus-Lab.",
+        "intro_fr": "Les fondamentaux acquis, l'IA devient un accélérateur : comprendre les LLM, écrire de bons prompts et coder, déboguer et refactorer avec Claude & Claude Code, les workflows que nous utilisons chez Horus-Lab.",
+        "intro_en": "With the fundamentals in hand, AI becomes an accelerator: understand LLMs, write good prompts, and code, debug and refactor with Claude & Claude Code, the workflows we use at Horus-Lab.",
         "learn_fr": ["Comprendre les forces et limites des LLM", "Écrire des prompts précis et fiables", "Coder, déboguer et refactorer avec Claude Code", "Mener un projet de bout en bout avec l'IA"],
         "learn_en": ["Understand the strengths and limits of LLMs", "Write precise, reliable prompts", "Code, debug and refactor with Claude Code", "Run a project end to end with AI"],
         "curriculum": [

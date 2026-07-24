@@ -198,7 +198,7 @@ export default async function CoursePage({ params }: { params: Promise<Params> }
                   </span>
                   <div className="min-w-0">
                     <div className="font-bold text-brand-900 dark:text-white">{course.instructor.name}</div>
-                    <div className="text-xs text-muted">{course.instructor.role}</div>
+                    {course.instructor.role && <div className="text-xs text-muted">{course.instructor.role}</div>}
                   </div>
                 </div>
 

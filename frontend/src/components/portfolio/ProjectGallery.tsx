@@ -76,7 +76,7 @@ export function ProjectGallery({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={`${projectTitle} — ${isFr ? "aperçu du produit" : "product preview"}`}
+      aria-label={`${projectTitle} : ${isFr ? "aperçu du produit" : "product preview"}`}
       className="fixed inset-0 z-[100] flex items-stretch justify-center p-0 sm:p-4"
     >
       {/* Fond */}
@@ -173,7 +173,7 @@ export function ProjectGallery({
           <div className="flex items-center justify-between gap-4 px-5 py-4 text-white sm:px-8">
             <p className="min-w-0 flex-1 truncate text-sm font-semibold">
               <span className="text-white/50">
-                {shot + 1}/{shots.length} · {label(group)} —{" "}
+                {shot + 1}/{shots.length} · {label(group)} :{" "}
               </span>
               {isFr ? shots[shot].fr : shots[shot].en}
             </p>

@@ -33,7 +33,7 @@ const TEAM_MEMBERS = {
     {
       name: "Edwin TCHAMBA TCHAKOUNTE",
       role: "Architecte logiciel · Co-fondateur",
-      bio: "Architecte logiciel et ingénieur senior. J'assemble des applications web et mobiles robustes — APIs REST, cloud, méthodes RUP & UML — pensées pour durer et passer à l'échelle. Lauréat du Prix du Meilleur Projet de Fin d'Études, IUT-FV Bandjoun (2024).",
+      bio: "Architecte logiciel et ingénieur senior. J'assemble des applications web et mobiles robustes, APIs REST, cloud, méthodes RUP & UML, pensées pour durer et passer à l'échelle. Lauréat du Prix du Meilleur Projet de Fin d'Études, IUT-FV Bandjoun (2024).",
       initials: "ET",
       photo: "/A-propos/photo-Edwin-co-founder.png",
       linkedin: "",
@@ -47,7 +47,7 @@ const TEAM_MEMBERS = {
     {
       name: "Loïc DJIMGOU TONBA",
       role: "Ingénieur logiciel · Co-fondateur",
-      bio: "Ingénieur full-stack et entrepreneur, je transforme des idées en produits numériques qui marchent — du web au mobile, du concept au déploiement. Je pilote la vision produit de Horus-Lab pour des clients africains et internationaux, convaincu que la tech est un vrai levier de croissance pour le continent.",
+      bio: "Ingénieur full-stack et entrepreneur, je transforme des idées en produits numériques qui marchent, du web au mobile, du concept au déploiement. Je pilote la vision produit de Horus-Lab pour des clients africains et internationaux, convaincu que la tech est un vrai levier de croissance pour le continent.",
       initials: "LT",
       photo: "/A-propos/photo-loic-tonba-cofounder.png",
       linkedin: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
@@ -63,7 +63,7 @@ const TEAM_MEMBERS = {
     {
       name: "Edwin TCHAMBA TCHAKOUNTE",
       role: "Software architect · Co-founder",
-      bio: "Software architect and senior engineer. I build robust web and mobile applications — REST APIs, cloud, RUP & UML methods — designed to last and scale. Winner of the Best Final Year Project Award, IUT-FV Bandjoun (2024).",
+      bio: "Software architect and senior engineer. I build robust web and mobile applications, REST APIs, cloud, RUP & UML methods, designed to last and scale. Winner of the Best Final Year Project Award, IUT-FV Bandjoun (2024).",
       initials: "ET",
       photo: "/A-propos/photo-Edwin-co-founder.png",
       linkedin: "",
@@ -77,7 +77,7 @@ const TEAM_MEMBERS = {
     {
       name: "Loïc DJIMGOU TONBA",
       role: "Software engineer · Co-founder",
-      bio: "Full-stack engineer and entrepreneur, I turn ideas into digital products that ship — web and mobile, from concept to deployment. I lead Horus-Lab's product vision for African and international clients, convinced that technology is a real growth engine for the continent.",
+      bio: "Full-stack engineer and entrepreneur, I turn ideas into digital products that ship, web and mobile, from concept to deployment. I lead Horus-Lab's product vision for African and international clients, convinced that technology is a real growth engine for the continent.",
       initials: "LT",
       photo: "/A-propos/photo-loic-tonba-cofounder.png",
       linkedin: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",

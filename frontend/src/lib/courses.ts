@@ -41,11 +41,11 @@ export type Course = {
 
 type Catalog = { categories: CourseCategory[]; courses: Course[] };
 
-const TEAM = {
-  loic: { name: "Loïc DJIMGOU TONBA", roleFr: "Mentor du parcours", roleEn: "Course mentor" },
-  edwin: { name: "Edwin TCHAMBA", roleFr: "Mentor du parcours", roleEn: "Course mentor" },
-  team: { name: "Équipe Horus-Lab", roleFr: "Mentors Horus-Lab", roleEn: "Horus-Lab mentors" },
-};
+// Aucun formateur nommé n'est mis en avant : c'est l'équipe qui forme, et les
+// apprenants découvrent leurs formateurs pendant la formation. Les trois clés
+// pointent volontairement vers la même entité, sans rôle affiché.
+const HORUS = { name: "Formateurs Horus-Lab", roleFr: "", roleEn: "" };
+const TEAM = { loic: HORUS, edwin: HORUS, team: HORUS };
 
 const IMG = {
   react: "/img/photo-1607706189992-eae578626c86-w700.jpg",
@@ -101,7 +101,7 @@ const CATALOG: Record<Lang, Catalog> = {
     courses: [
       {
         slug: "html-css-fondations", category: "web",
-        title: "HTML5 & CSS3 — les fondations du web", subtitle: "Structurer et styliser vos premières pages",
+        title: "HTML5 & CSS3 : les fondations du web", subtitle: "Structurer et styliser vos premières pages",
         level: "Débutant", durationHours: 10, lessonsCount: 28, price: "Gratuit", free: true,
         tags: ["HTML5", "CSS3", "Web", "Responsive"], image: IMG.js, videoUrl: VIDEO_FR.htmlcss,
         instructor: { name: TEAM.team.name, role: TEAM.team.roleFr },
@@ -200,7 +200,7 @@ const CATALOG: Record<Lang, Catalog> = {
         level: "Intermédiaire", durationHours: 16, lessonsCount: 36, price: "Premium", free: false,
         tags: ["FastAPI", "Python", "PostgreSQL", "API REST"], image: IMG.fastapi, videoUrl: VIDEO_FR.fastapi,
         instructor: { name: TEAM.edwin.name, role: TEAM.edwin.roleFr },
-        intro: "Construisez le backend de vos applications avec FastAPI et PostgreSQL : routes, validation, base de données, authentification et tests — la stack de nos projets clients.",
+        intro: "Construisez le backend de vos applications avec FastAPI et PostgreSQL : routes, validation, base de données, authentification et tests, la stack de nos projets clients.",
         learn: [
           "Créer une API REST avec FastAPI",
           "Valider les données avec Pydantic",
@@ -310,11 +310,11 @@ const CATALOG: Record<Lang, Catalog> = {
       },
       {
         slug: "developper-avec-ia-claude", category: "ia",
-        title: "Développer avec l'IA — Claude & Claude Code", subtitle: "L'IA comme accélérateur, en toute maîtrise",
+        title: "Développer avec l'IA : Claude & Claude Code", subtitle: "L'IA comme accélérateur, en toute maîtrise",
         level: "Débutant", durationHours: 8, lessonsCount: 22, price: "Gratuit", free: true,
         tags: ["Claude", "Claude Code", "LLM", "Prompt engineering"], image: IMG.ia, videoUrl: VIDEO_FR.claude,
         instructor: { name: TEAM.loic.name, role: TEAM.loic.roleFr },
-        intro: "Les fondamentaux acquis, l'IA devient un accélérateur : comprendre les LLM, écrire de bons prompts et coder, déboguer et refactorer avec Claude & Claude Code — les workflows que nous utilisons chez Horus-Lab.",
+        intro: "Les fondamentaux acquis, l'IA devient un accélérateur : comprendre les LLM, écrire de bons prompts et coder, déboguer et refactorer avec Claude & Claude Code, les workflows que nous utilisons chez Horus-Lab.",
         learn: [
           "Comprendre les forces et limites des LLM",
           "Écrire des prompts précis et fiables",
@@ -339,7 +339,7 @@ const CATALOG: Record<Lang, Catalog> = {
     courses: [
       {
         slug: "html-css-fondations", category: "web",
-        title: "HTML5 & CSS3 — web foundations", subtitle: "Structure and style your first pages",
+        title: "HTML5 & CSS3: web foundations", subtitle: "Structure and style your first pages",
         level: "Beginner", durationHours: 10, lessonsCount: 28, price: "Free", free: true,
         tags: ["HTML5", "CSS3", "Web", "Responsive"], image: IMG.js, videoUrl: VIDEO_EN.htmlcss,
         instructor: { name: TEAM.team.name, role: TEAM.team.roleEn },
@@ -438,7 +438,7 @@ const CATALOG: Record<Lang, Catalog> = {
         level: "Intermediate", durationHours: 16, lessonsCount: 36, price: "Premium", free: false,
         tags: ["FastAPI", "Python", "PostgreSQL", "REST API"], image: IMG.fastapi, videoUrl: VIDEO_EN.fastapi,
         instructor: { name: TEAM.edwin.name, role: TEAM.edwin.roleEn },
-        intro: "Build the backend of your applications with FastAPI and PostgreSQL: routes, validation, database, authentication and tests — the stack of our client projects.",
+        intro: "Build the backend of your applications with FastAPI and PostgreSQL: routes, validation, database, authentication and tests, the stack of our client projects.",
         learn: [
           "Create a REST API with FastAPI",
           "Validate data with Pydantic",
@@ -548,11 +548,11 @@ const CATALOG: Record<Lang, Catalog> = {
       },
       {
         slug: "developper-avec-ia-claude", category: "ia",
-        title: "Develop with AI — Claude & Claude Code", subtitle: "AI as an accelerator, fully in control",
+        title: "Develop with AI: Claude & Claude Code", subtitle: "AI as an accelerator, fully in control",
         level: "Beginner", durationHours: 8, lessonsCount: 22, price: "Free", free: true,
         tags: ["Claude", "Claude Code", "LLM", "Prompt engineering"], image: IMG.ia, videoUrl: VIDEO_EN.claude,
         instructor: { name: TEAM.loic.name, role: TEAM.loic.roleEn },
-        intro: "With the fundamentals in hand, AI becomes an accelerator: understand LLMs, write good prompts, and code, debug and refactor with Claude & Claude Code — the workflows we use at Horus-Lab.",
+        intro: "With the fundamentals in hand, AI becomes an accelerator: understand LLMs, write good prompts, and code, debug and refactor with Claude & Claude Code, the workflows we use at Horus-Lab.",
         learn: [
           "Understand the strengths and limits of LLMs",
           "Write precise, reliable prompts",
