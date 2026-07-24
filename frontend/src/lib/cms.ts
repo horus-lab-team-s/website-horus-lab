@@ -281,6 +281,66 @@ export async function getCmsSiteSettings(lang: Lang): Promise<CmsSiteSettings | 
 }
 
 /* ============================================================
+   Bannière « aperçu » Edlearning (site entier)
+   ============================================================ */
+type ApiFormationsPromo = {
+  is_active: boolean;
+  badge_fr: string; badge_en: string;
+  title_fr: string; title_en: string;
+  body_fr: string; body_en: string;
+  store_label_fr: string; store_label_en: string;
+  play_url: string;
+  logo_path: string;
+  teaser_badge_fr: string; teaser_badge_en: string;
+  teaser_title_fr: string; teaser_title_en: string;
+  teaser_body_fr: string; teaser_body_en: string;
+  teaser_cta_fr: string; teaser_cta_en: string;
+};
+
+export type CmsPromo = {
+  active: boolean;
+  logoPath: string;
+  playUrl: string;
+  storeLabel: string;
+  /** Variante affichée sur les pages Formations (aperçu Edlearning → Play Store). */
+  preview: { badge: string; title: string; body: string };
+  /** Variante affichée sur les autres pages (date de démarrage → /formations). */
+  teaser: { badge: string; title: string; body: string; cta: string };
+};
+
+/**
+ * Bannière Edlearning pilotée depuis l'admin (`/admin/` → Bannière Formations).
+ * Renvoie `null` si l'API est indisponible → le composant retombe alors sur ses
+ * textes intégrés (le site continue d'afficher la bannière). Un `active: false`
+ * renvoyé par l'admin masque explicitement la bannière.
+ */
+export async function getCmsFormationsPromo(lang: Lang): Promise<CmsPromo | null> {
+  try {
+    const p = await fetchJson<ApiFormationsPromo>("/api/formations-promo/");
+    const t = pick(lang);
+    return {
+      active: p.is_active,
+      logoPath: p.logo_path,
+      playUrl: p.play_url,
+      storeLabel: t(p.store_label_fr, p.store_label_en),
+      preview: {
+        badge: t(p.badge_fr, p.badge_en),
+        title: t(p.title_fr, p.title_en),
+        body: t(p.body_fr, p.body_en),
+      },
+      teaser: {
+        badge: t(p.teaser_badge_fr, p.teaser_badge_en),
+        title: t(p.teaser_title_fr, p.teaser_title_en),
+        body: t(p.teaser_body_fr, p.teaser_body_en),
+        cta: t(p.teaser_cta_fr, p.teaser_cta_en),
+      },
+    };
+  } catch {
+    return null;
+  }
+}
+
+/* ============================================================
    Blog — articles (CMS Django, repli sur les fichiers Markdown)
    ============================================================ */
 type ApiCategory = { fr: string; en: string } | null;

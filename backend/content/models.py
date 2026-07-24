@@ -53,6 +53,92 @@ class SiteSettings(SingletonModel):
         return "Réglages du site"
 
 
+class FormationsPromo(SingletonModel):
+    """Bannière « aperçu » Edlearning affichée sur tout le site.
+
+    Non bloquante (ce n'est pas un modal) : le visiteur peut la fermer quand il
+    veut. Éditable ici pour piloter le message accrocheur et le lien Play Store
+    sans toucher au code. Décochez « Afficher la bannière » pour la masquer.
+    """
+
+    is_active = models.BooleanField(
+        "Afficher la bannière", default=True,
+        help_text="Décochez pour masquer la bannière Edlearning sur tout le site.",
+    )
+    badge_fr = models.CharField(max_length=40, blank=True, default="Aperçu")
+    badge_en = models.CharField(max_length=40, blank=True, default="Preview")
+    title_fr = models.CharField(
+        max_length=120, blank=True,
+        default="La formation continue sur l'app Edlearning",
+    )
+    title_en = models.CharField(
+        max_length=120, blank=True,
+        default="The full training lives on the Edlearning app",
+    )
+    body_fr = models.TextField(
+        blank=True,
+        default=(
+            "Ce site n'est qu'un aperçu. La formation complète et le suivi des "
+            "apprenants se déroulent sur notre application mobile Edlearning."
+        ),
+    )
+    body_en = models.TextField(
+        blank=True,
+        default=(
+            "This site is only a preview. The complete training and learner "
+            "tracking happen on our Edlearning mobile app."
+        ),
+    )
+    store_label_fr = models.CharField(max_length=40, blank=True, default="Disponible sur")
+    store_label_en = models.CharField(max_length=40, blank=True, default="Get it on")
+    play_url = models.URLField(
+        "Lien Play Store", blank=True,
+        default="https://play.google.com/store/search?q=Edlearning&c=apps",
+        help_text="URL de la fiche Play Store de l'application Edlearning.",
+    )
+    logo_path = models.CharField(
+        "Logo (chemin statique)", max_length=300, blank=True,
+        default="/logo/logo-Edlearning.png",
+        help_text="Chemin /public du logo affiché dans la bannière.",
+    )
+
+    # Variante « teaser » affichée sur les pages HORS Formations : annonce la
+    # date de démarrage et renvoie vers le catalogue (CTA interne /formations).
+    teaser_badge_fr = models.CharField(max_length=40, blank=True, default="Formations")
+    teaser_badge_en = models.CharField(max_length=40, blank=True, default="Courses")
+    teaser_title_fr = models.CharField(
+        max_length=140, blank=True,
+        default="Nos formations gratuites démarrent le mardi 1er septembre 2026",
+    )
+    teaser_title_en = models.CharField(
+        max_length=140, blank=True,
+        default="Our free courses start on Tuesday 1 September 2026",
+    )
+    teaser_body_fr = models.TextField(
+        blank=True,
+        default=(
+            "Développement web & mobile, génie logiciel et IA. Rejoignez le "
+            "bootcamp Horus-Lab et montez en compétences."
+        ),
+    )
+    teaser_body_en = models.TextField(
+        blank=True,
+        default=(
+            "Web & mobile development, software engineering and AI. Join the "
+            "Horus-Lab bootcamp and level up your skills."
+        ),
+    )
+    teaser_cta_fr = models.CharField(max_length=60, blank=True, default="Voir les formations")
+    teaser_cta_en = models.CharField(max_length=60, blank=True, default="See the courses")
+
+    class Meta:
+        verbose_name = "Bannière Formations (Edlearning)"
+        verbose_name_plural = "Bannière Formations (Edlearning)"
+
+    def __str__(self):
+        return "Bannière Formations (Edlearning)"
+
+
 class HeroContent(SingletonModel):
     """Textes de la section hero."""
 

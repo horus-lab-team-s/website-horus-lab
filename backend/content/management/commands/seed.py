@@ -12,6 +12,7 @@ from django.core.management.base import BaseCommand
 from blog.models import Category, Post
 from content.models import (
     Achievement,
+    FormationsPromo,
     HeroContent,
     HeroStat,
     Partner,
@@ -33,6 +34,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.seed_site_settings()
+        self.seed_formations_promo()
         self.seed_hero()
         self.seed_services()
         self.seed_process()
@@ -70,6 +72,46 @@ class Command(BaseCommand):
                 github_url="https://github.com/horus-lab-team-s",
                 whatsapp_url="https://wa.me/237699173771",
                 telegram_url="https://t.me/tonbacm",
+            ),
+        )
+
+    def seed_formations_promo(self):
+        # Bannière « aperçu » Edlearning (site entier). Les défauts du modèle
+        # suffisent ; on force pk=1 pour la rendre éditable dès l'admin.
+        FormationsPromo.objects.update_or_create(
+            pk=1,
+            defaults=dict(
+                is_active=True,
+                badge_fr="Aperçu",
+                badge_en="Preview",
+                title_fr="La formation continue sur l'app Edlearning",
+                title_en="The full training lives on the Edlearning app",
+                body_fr=(
+                    "Ce site n'est qu'un aperçu. La formation complète et le suivi "
+                    "des apprenants se déroulent sur notre application mobile Edlearning."
+                ),
+                body_en=(
+                    "This site is only a preview. The complete training and learner "
+                    "tracking happen on our Edlearning mobile app."
+                ),
+                store_label_fr="Disponible sur",
+                store_label_en="Get it on",
+                play_url="https://play.google.com/store/search?q=Edlearning&c=apps",
+                logo_path="/logo/logo-Edlearning.png",
+                teaser_badge_fr="Formations",
+                teaser_badge_en="Courses",
+                teaser_title_fr="Nos formations gratuites démarrent le mardi 1er septembre 2026",
+                teaser_title_en="Our free courses start on Tuesday 1 September 2026",
+                teaser_body_fr=(
+                    "Développement web & mobile, génie logiciel et IA. Rejoignez le "
+                    "bootcamp Horus-Lab et montez en compétences."
+                ),
+                teaser_body_en=(
+                    "Web & mobile development, software engineering and AI. Join the "
+                    "Horus-Lab bootcamp and level up your skills."
+                ),
+                teaser_cta_fr="Voir les formations",
+                teaser_cta_en="See the courses",
             ),
         )
 
@@ -242,8 +284,8 @@ class Command(BaseCommand):
                 name="Edwin TCHAMBA TCHAKOUNTE",
                 role_fr="Architecte logiciel · Co-fondateur",
                 role_en="Software architect · Co-founder",
-                bio_fr="Architecte logiciel et ingénieur senior. J'assemble des applications web et mobiles robustes — APIs REST, cloud, méthodes RUP & UML — pensées pour durer et passer à l'échelle. Lauréat du Prix du Meilleur Projet de Fin d'Études, IUT-FV Bandjoun (2024).",
-                bio_en="Software architect and senior engineer. I build robust web and mobile applications — REST APIs, cloud, RUP & UML methods — designed to last and scale. Winner of the Best Final Year Project Award, IUT-FV Bandjoun (2024).",
+                bio_fr="Architecte logiciel et ingénieur senior. J'assemble des applications web et mobiles robustes, APIs REST, cloud, méthodes RUP & UML, pensées pour durer et passer à l'échelle. Lauréat du Prix du Meilleur Projet de Fin d'Études, IUT-FV Bandjoun (2024).",
+                bio_en="Software architect and senior engineer. I build robust web and mobile applications, REST APIs, cloud, RUP & UML methods, designed to last and scale. Winner of the Best Final Year Project Award, IUT-FV Bandjoun (2024).",
                 photo_path="/A-propos/photo-Edwin-co-founder.png",
                 github_url="https://github.com/EdwinTchakounte",
                 whatsapp_url="https://wa.me/237673398046",
@@ -256,8 +298,8 @@ class Command(BaseCommand):
                 name="Loïc DJIMGOU TONBA",
                 role_fr="Ingénieur logiciel · Co-fondateur",
                 role_en="Software engineer · Co-founder",
-                bio_fr="Ingénieur full-stack et entrepreneur, je transforme des idées en produits numériques qui marchent — du web au mobile, du concept au déploiement. Je pilote la vision produit de Horus-Lab pour des clients africains et internationaux, convaincu que la tech est un vrai levier de croissance pour le continent.",
-                bio_en="Full-stack engineer and entrepreneur, I turn ideas into digital products that ship — web and mobile, from concept to deployment. I lead Horus-Lab's product vision for African and international clients, convinced that technology is a real growth engine for the continent.",
+                bio_fr="Ingénieur full-stack et entrepreneur, je transforme des idées en produits numériques qui marchent, du web au mobile, du concept au déploiement. Je pilote la vision produit de Horus-Lab pour des clients africains et internationaux, convaincu que la tech est un vrai levier de croissance pour le continent.",
+                bio_en="Full-stack engineer and entrepreneur, I turn ideas into digital products that ship, web and mobile, from concept to deployment. I lead Horus-Lab's product vision for African and international clients, convinced that technology is a real growth engine for the continent.",
                 photo_path="/A-propos/photo-loic-tonba-cofounder.png",
                 linkedin_url="https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
                 github_url="https://github.com/LoicTonba",

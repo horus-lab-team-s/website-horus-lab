@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from .models import (
     Achievement,
+    FormationsPromo,
     HeroContent,
     HeroSlide,
     HeroStat,
@@ -20,6 +21,12 @@ from .models import (
 class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteSettings
+        exclude = ["id"]
+
+
+class FormationsPromoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FormationsPromo
         exclude = ["id"]
 
 

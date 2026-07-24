@@ -122,13 +122,6 @@ export default async function FormationsPage({
               <p className="mx-auto mt-4 max-w-xl text-base text-white/88">{c.subtitle}</p>
             </Reveal>
             <Reveal delay={200}>
-              <p className="mx-auto mt-3 max-w-xl text-sm text-brand-100/80">
-                {lang === "fr"
-                  ? "Cette page est un aperçu. La formation complète et le suivi des apprenants se déroulent sur notre application mobile Edlearning (disponible sur Play Store)."
-                  : "This page is a preview. The full training and learner tracking happen on our Edlearning mobile app (available on Play Store)."}
-              </p>
-            </Reveal>
-            <Reveal delay={240}>
               <dl className="mx-auto mt-8 grid max-w-lg grid-cols-3 gap-4 border-t border-white/15 pt-6">
                 <div><dt className="text-3xl font-extrabold text-white">{courses.length}</dt><dd className="mt-1 text-sm text-brand-100">{c.coursesLabel}</dd></div>
                 <div><dt className="text-3xl font-extrabold text-white">{categories.length}</dt><dd className="mt-1 text-sm text-brand-100">{c.catsLabel}</dd></div>

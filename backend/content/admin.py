@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from .models import (
     Achievement,
+    FormationsPromo,
     HeroContent,
     HeroSlide,
     HeroStat,
@@ -35,6 +36,31 @@ class SiteSettingsAdmin(admin.ModelAdmin):
                     "telegram_url",
                 )
             },
+        ),
+    )
+
+
+@admin.register(FormationsPromo)
+class FormationsPromoAdmin(admin.ModelAdmin):
+    list_display = ["__str__", "is_active"]
+    fieldsets = (
+        ("Affichage", {"fields": ("is_active",)}),
+        (
+            "Pages Formations — aperçu Edlearning (FR)",
+            {"fields": ("badge_fr", "title_fr", "body_fr", "store_label_fr")},
+        ),
+        (
+            "Pages Formations — aperçu Edlearning (EN)",
+            {"fields": ("badge_en", "title_en", "body_en", "store_label_en")},
+        ),
+        ("Lien & logo", {"fields": ("play_url", "logo_path")}),
+        (
+            "Autres pages — annonce date (FR)",
+            {"fields": ("teaser_badge_fr", "teaser_title_fr", "teaser_body_fr", "teaser_cta_fr")},
+        ),
+        (
+            "Autres pages — annonce date (EN)",
+            {"fields": ("teaser_badge_en", "teaser_title_en", "teaser_body_en", "teaser_cta_en")},
         ),
     )
 

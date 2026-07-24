@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { LanguageProvider } from "@/i18n/LanguageProvider";
-import { getCmsSiteSettings } from "@/lib/cms";
+import { getCmsSiteSettings, getCmsFormationsPromo } from "@/lib/cms";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { BackToTop } from "@/components/BackToTop";
 import { HorusAI } from "@/components/HorusAI";
+import { EdlearningPromo } from "@/components/EdlearningPromo";
 import {
   getDictionary,
   isLocale,
@@ -63,7 +64,10 @@ export default async function LangLayout({
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
 
-  const settings = await getCmsSiteSettings(lang);
+  const [settings, promo] = await Promise.all([
+    getCmsSiteSettings(lang),
+    getCmsFormationsPromo(lang),
+  ]);
 
   return (
     <LanguageProvider lang={lang} settings={settings}>
@@ -71,6 +75,7 @@ export default async function LangLayout({
       {children}
       <BackToTop />
       <HorusAI />
+      <EdlearningPromo promo={promo} />
     </LanguageProvider>
   );
 }

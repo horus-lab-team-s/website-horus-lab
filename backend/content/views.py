@@ -4,6 +4,7 @@ from rest_framework.response import Response
 
 from .models import (
     Achievement,
+    FormationsPromo,
     HeroContent,
     HeroSlide,
     HeroStat,
@@ -19,6 +20,7 @@ from .models import (
 )
 from .serializers import (
     AchievementSerializer,
+    FormationsPromoSerializer,
     HeroContentSerializer,
     HeroSlideSerializer,
     HeroStatSerializer,
@@ -39,6 +41,13 @@ class SiteSettingsView(APIView):
 
     def get(self, request):
         return Response(SiteSettingsSerializer(SiteSettings.load()).data)
+
+
+class FormationsPromoView(APIView):
+    """Renvoie l'unique bannière « aperçu » Edlearning (site entier)."""
+
+    def get(self, request):
+        return Response(FormationsPromoSerializer(FormationsPromo.load()).data)
 
 
 class HeroView(APIView):
