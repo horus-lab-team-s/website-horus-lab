@@ -188,8 +188,8 @@ export function Footer() {
               <Image
                 src="/logo/logo-dark-bg-horizontal.png"
                 alt="Horus-Lab"
-                width={480}
-                height={55}
+                width={757}
+                height={147}
                 className="h-auto w-full max-w-[230px] object-contain transition-transform duration-300 group-hover:scale-[1.03]"
               />
             </Link>
