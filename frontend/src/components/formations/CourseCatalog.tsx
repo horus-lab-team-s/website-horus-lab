@@ -107,7 +107,7 @@ export function CourseCatalog({
                 <div className="mt-4 flex items-center justify-between border-t border-brand-100 pt-3 dark:border-white/10">
                   <div className="min-w-0">
                     <div className="truncate text-xs font-bold text-brand-900 dark:text-white">{course.instructor.name}</div>
-                    <div className="truncate text-[11px] text-muted">{course.instructor.role}</div>
+                    {course.instructor.role && <div className="truncate text-[11px] text-muted">{course.instructor.role}</div>}
                   </div>
                   <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-md bg-brand-50 text-brand-700 transition-colors group-hover:bg-brand-700 group-hover:text-white dark:bg-white/5 dark:text-brand-200">
                     <IconArrowRight className="size-4" />

@@ -15,9 +15,9 @@ import { IconArrowRight, IconClose } from "./icons";
  *     bouton Play Store) ;
  *   • autres pages      → annonce la date de démarrage et renvoie vers le
  *     catalogue (/formations).
- * Le visiteur peut la fermer quand il veut. La fermeture vaut pour la session de
- * navigation (elle reste masquée quand on navigue dans le site) mais la bannière
- * RÉAPPARAÎT au rechargement de la page — volontaire, pour ne pas « perdre »
+ * Le visiteur peut la fermer quand il veut. La fermeture ne vaut que pour la vue
+ * courante : la bannière RÉAPPARAÎT au rechargement ET à chaque changement de
+ * page (remontage via `key={pathname}`) — volontaire, pour ne pas « perdre »
  * l'annonce. Placée en bas à gauche pour ne pas gêner le chat / le bouton
  * « haut de page » (bas à droite).
  *
@@ -90,8 +90,15 @@ function GooglePlayMark({ className }: { className?: string }) {
 }
 
 export function EdlearningPromo({ promo = null }: { promo?: CmsPromo | null }) {
-  const { lang, localePath } = useLang();
   const pathname = usePathname() || "";
+  // La clé = chemin de la page → le composant se REMONTE à chaque navigation,
+  // ce qui relance l'animation d'entrée : la bannière réapparaît même si elle
+  // avait été fermée sur la page précédente (comme au rechargement).
+  return <PromoCard key={pathname} promo={promo} pathname={pathname} />;
+}
+
+function PromoCard({ promo, pathname }: { promo: CmsPromo | null; pathname: string }) {
+  const { lang, localePath } = useLang();
   const key = lang === "en" ? "en" : "fr";
   const c = promo ?? FALLBACK[key];
   const active = c.active;

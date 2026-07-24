@@ -767,7 +767,10 @@ function mapCourseListItem(c: ApiCourseListItem, lang: Lang): Course {
     tags: c.tags ?? [],
     image: c.image,
     videoUrl: (lang === "fr" ? c.video_url_fr : c.video_url_en) || undefined,
-    instructor: { name: c.instructor_name, role: t(c.instructor_role_fr, c.instructor_role_en) },
+    // Le catalogue ne met en avant AUCUN formateur nommé : on force l'entité
+    // « Formateurs Horus-Lab », quelles que soient les valeurs encore en base
+    // (le CMS peut contenir d'anciens noms tant qu'il n'est pas re-seedé).
+    instructor: { name: "Formateurs Horus-Lab", role: "" },
     intro: "",
     learn: [],
     curriculum: [],
