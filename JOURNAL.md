@@ -87,13 +87,26 @@ décoratifs `── ──`, migrations Django, prompts système / e-mails sorta
   `key={pathname}`** → remontage à chaque navigation → l'animation d'entrée se
   rejoue même si la bannière avait été fermée sur la page précédente.
 
+**Ajustements (suite 3) — compte à rebours + période CMS :**
+- **Période paramétrable au CMS** : `FormationsPromo` gagne `start_date` +
+  `duration_value` + `duration_unit` (jours/semaines/mois) → **`end_date`
+  calculée** (propriété modèle, exposée par le serializer). Admin : section
+  « Période (compte à rebours & expiration) » avec la date de fin affichée en
+  lecture seule. Seed = **1er sept 2026 + 1 mois** → fin **1er oct 2026**.
+  **Migration `0006_formationspromo_schedule`**.
+- **Compte à rebours en direct** sur la bannière (variante « autres pages ») :
+  composant `Countdown` (ticke chaque seconde, `j/h/min/s`). Avant le début →
+  « Démarre dans … » (cas actuel, formation pas commencée) ; pendant → « Se
+  termine dans … ». Rend `null` au SSR (pas d'écart d'hydratation).
+- **Auto-expiration** : passé `end_date`, la bannière ne s'affiche plus
+  (contrôle au montage, revérifié à chaque navigation via `key={pathname}`).
+- `cms.ts` : `CmsPromo` gagne `startDate`/`endDate` ; repli intégré = 1 sept →
+  1 oct 2026 (compte à rebours fonctionnel même API down).
+
 **Vérifs** : `tsc --noEmit` OK, ESLint OK, `py_compile` OK, `next build` OK (75 pages).
-⚠️ Prod : appliquer `migrate content` (migrations **0004 + 0005**) ; le re-seed
+⚠️ Prod : appliquer `migrate content` (migrations **0004 → 0006**) ; le re-seed
 `seed_courses` reste conseillé pour nettoyer la base, mais **n'est plus requis**
 pour masquer les noms (le frontend les force).
-⏳ **Pas encore fait** (demande à venir) : rendre la **durée/période de l'annonce
-paramétrable au CMS** (date de début + durée → fin, ex. 1 sept + 1 mois = 1 oct,
-avec auto-expiration de la bannière).
 
 ---
 
