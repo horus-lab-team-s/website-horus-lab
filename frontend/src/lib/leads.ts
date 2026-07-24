@@ -19,20 +19,6 @@ export type ContactPayload = {
   message: string;
 };
 
-export type ApplicationPayload = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  /** "emploi" (poste) ou "stage" (stage professionnel). */
-  type: "emploi" | "stage";
-  /** Poste ou domaine visé. */
-  position: string;
-  message: string;
-  fileName: string;
-  fileSize: number;
-};
-
 function escapeHtml(value: string): string {
   return value.replace(
     /[&<>"']/g,
@@ -56,10 +42,11 @@ async function safeText(res: Response): Promise<string> {
 /* ------------------------------------------------------------------ */
 
 /** Ajoute/maj un contact, optionnellement dans une liste (newsletter). */
-async function brevoAddContact(email: string): Promise<boolean> {
+async function brevoAddContact(email: string, name?: string): Promise<boolean> {
   const key = process.env.BREVO_API_KEY;
   if (!key) return false;
   const listId = process.env.BREVO_NEWSLETTER_LIST_ID;
+  const firstName = name?.trim();
   try {
     const res = await fetch(`${BREVO_API}/contacts`, {
       method: "POST",
@@ -71,6 +58,7 @@ async function brevoAddContact(email: string): Promise<boolean> {
       body: JSON.stringify({
         email,
         updateEnabled: true,
+        ...(firstName ? { attributes: { FIRSTNAME: firstName } } : {}),
         ...(listId ? { listIds: [Number(listId)] } : {}),
       }),
     });
@@ -121,53 +109,6 @@ async function brevoSendContactEmail(p: ContactPayload): Promise<boolean> {
   }
 }
 
-/** Envoie un e-mail à l'équipe pour une candidature, avec le ZIP en pièce jointe. */
-async function brevoSendApplicationEmail(
-  p: ApplicationPayload,
-  attachment?: { name: string; base64: string },
-): Promise<boolean> {
-  const key = process.env.BREVO_API_KEY;
-  if (!key) return false;
-  const to = process.env.BREVO_CONTACT_TO || "contact@horus-lab.com";
-  const senderEmail = process.env.BREVO_SENDER_EMAIL || "noreply@horus-lab.com";
-  const senderName = process.env.BREVO_SENDER_NAME || "Horus-Lab";
-  const fullName = `${p.firstName} ${p.lastName}`.trim();
-  const kindLabel = p.type === "stage" ? "Stage" : "Emploi";
-
-  try {
-    const res = await fetch(`${BREVO_API}/smtp/email`, {
-      method: "POST",
-      headers: {
-        "api-key": key,
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        sender: { email: senderEmail, name: senderName },
-        to: [{ email: to }],
-        replyTo: { email: p.email, name: fullName },
-        subject: `[Candidature · ${kindLabel}] ${p.position || "Spontanée"} — ${fullName}`,
-        htmlContent: `<h2>Nouvelle candidature via le site Horus-Lab</h2>
-          <p><strong>Nom :</strong> ${escapeHtml(fullName)}</p>
-          <p><strong>E-mail :</strong> ${escapeHtml(p.email)}</p>
-          <p><strong>Téléphone :</strong> ${escapeHtml(p.phone) || "—"}</p>
-          <p><strong>Type :</strong> ${escapeHtml(kindLabel)}</p>
-          <p><strong>Poste / domaine :</strong> ${escapeHtml(p.position) || "—"}</p>
-          <p><strong>Message :</strong></p>
-          <p>${escapeHtml(p.message).replace(/\n/g, "<br>") || "—"}</p>
-          <p><strong>Dossier :</strong> ${escapeHtml(p.fileName)} (${Math.round(p.fileSize / 1024)} Ko)</p>`,
-        ...(attachment ? { attachment: [{ name: attachment.name, content: attachment.base64 }] } : {}),
-      }),
-    });
-    if (res.ok) return true;
-    console.warn("[brevo] sendApplication failed", res.status, await safeText(res));
-    return false;
-  } catch (err) {
-    console.warn("[brevo] sendApplication error", err);
-    return false;
-  }
-}
-
 /* ------------------------------------------------------------------ */
 
 /** Journalise localement (audit / repli dev), au mieux. */
@@ -205,57 +146,11 @@ export async function saveLead(
   if (process.env.BREVO_API_KEY) {
     providerOk =
       kind === "newsletter"
-        ? await brevoAddContact(String(payload.email))
+        ? await brevoAddContact(
+            String(payload.email),
+            typeof payload.name === "string" ? payload.name : undefined
+          )
         : await brevoSendContactEmail(payload as unknown as ContactPayload);
-  }
-
-  return { ok: localOk || providerOk };
-}
-
-/* ------------------------------------------------------------------ */
-/* Candidatures (page Candidature) — dépôt d'un dossier ZIP            */
-/* ------------------------------------------------------------------ */
-
-const APPLICATIONS_DIR = path.join(DATA_DIR, "applications");
-
-/** Brevo limite les pièces jointes : on n'attache que les dossiers raisonnables. */
-const MAX_EMAIL_ATTACHMENT = 8 * 1024 * 1024; // 8 Mo
-
-/**
- * Enregistre une candidature :
- *  1. sauvegarde locale du ZIP + métadonnées (audit / repli dev) ;
- *  2. e-mail à l'équipe via Brevo (ZIP joint si < 8 Mo), si configuré.
- *
- * `ok: true` si la candidature a été captée quelque part (local OU Brevo).
- */
-export async function saveApplication(
-  payload: ApplicationPayload,
-  file: Buffer,
-): Promise<{ ok: boolean }> {
-  const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const safeName = `${stamp}-${payload.lastName || "candidat"}`.replace(/[^a-zA-Z0-9._-]/g, "_");
-
-  let localOk = false;
-  try {
-    fs.mkdirSync(APPLICATIONS_DIR, { recursive: true });
-    fs.writeFileSync(path.join(APPLICATIONS_DIR, `${safeName}.zip`), file);
-    fs.writeFileSync(
-      path.join(APPLICATIONS_DIR, `${safeName}.json`),
-      JSON.stringify({ ...payload, createdAt: new Date().toISOString() }, null, 2),
-      "utf8",
-    );
-    localOk = true;
-  } catch (err) {
-    console.warn("[applications] écriture locale impossible :", err);
-  }
-
-  let providerOk = false;
-  if (process.env.BREVO_API_KEY) {
-    const attachment =
-      file.length <= MAX_EMAIL_ATTACHMENT
-        ? { name: payload.fileName, base64: file.toString("base64") }
-        : undefined;
-    providerOk = await brevoSendApplicationEmail(payload, attachment);
   }
 
   return { ok: localOk || providerOk };

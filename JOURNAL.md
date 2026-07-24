@@ -6,6 +6,489 @@
 
 ---
 
+## 2026-07-24 — 📣 Bannière Edlearning + anonymisation formateurs + retrait tirets (NON commité)
+
+Demande client : rendre l'annonce « ce site n'est qu'un aperçu, la vraie
+formation est sur l'app Edlearning » **accrochante mais non agressive**, masquer
+l'identité des formateurs dans le catalogue, et retirer les tirets cadratins (—)
+du site (tell d'écriture IA).
+
+**1. Bannière Edlearning (nouveau `components/EdlearningPromo.tsx`)** — carte
+flottante **bas-gauche** (le bas-droite est pris par le chat + back-to-top),
+**non bloquante** (pas un modal). Logo Edlearning, titre accrochant, message
+d'aperçu, **badge « Google Play »** (SVG inline, triangle dégradé
+bleu→vert→jaune→rouge). Fermable (× ), choix **mémorisé**
+(`localStorage: edlearning-promo-dismissed`) → ne réapparaît pas. Slide-in doux
+après 700 ms. Bilingue FR/EN. Montée **site entier** dans `app/[lang]/layout.tsx`.
+Le paragraphe « aperçu » a été **retiré du hero** de `formations/page.tsx` (il
+vit désormais dans la bannière).
+
+**1bis. Bannière pilotée par le CMS (comme le reste du contenu).** Nouveau modèle
+singleton **`content.FormationsPromo`** (badge/titre/corps FR+EN, label store,
+`play_url`, `logo_path`, **`is_active` = interrupteur d'affichage**). Chaîne
+complète alignée sur le pattern existant : serializer + **endpoint
+`/api/formations-promo/`** (APIView) + admin (`Bannière Formations (Edlearning)`)
++ **migration `content/0004_formationspromo.py`** (écrite à la main, Django tourne
+via Docker) + seed. Côté front : **`getCmsFormationsPromo(lang)`** dans `cms.ts`
+(repli `null` → textes intégrés au composant), fetch dans le layout (parallélisé
+avec `getCmsSiteSettings`) → passé en prop. L'admin peut **modifier le texte, le
+lien Play Store, et masquer la bannière** sans toucher au code.
+- ⚠️ **Lien Play Store = placeholder par défaut** (`play.google.com/store/search?q=Edlearning`),
+  désormais **modifiable dans l'admin** → Bannière Formations. À remplacer par
+  l'URL exacte `.../details?id=<package>` quand connue.
+- ⚠️ **Prod** : appliquer la **migration** (`manage.py migrate content`) puis
+  re-seed si voulu (`manage.py seed`).
+
+**2. Formateurs anonymisés (catalogue)** — dans `lib/courses.ts` **et**
+`courses/management/commands/seed_courses.py`, les 3 entrées `TEAM`
+(Loïc DJIMGOU TONBA, Edwin TCHAMBA, « Mentors Horus-Lab ») pointent maintenant
+toutes vers **« Équipe Horus-Lab »**, **sans rôle** (choix client : nom seul).
+Fiche cours (`formations/[slug]/page.tsx`) : la ligne du rôle ne s'affiche plus
+si vide. → Les apprenants découvriront leurs formateurs pendant la formation.
+- ⚠️ **Re-seed requis** côté serveur pour la prod (CMS) : `python manage.py seed_courses`.
+- Note : la page **À propos** garde Edwin & Loïc (équipe réelle de l'entreprise,
+  hors périmètre de la demande qui visait le catalogue).
+
+**3. Tirets cadratins (—) retirés du texte visible** (17 remplacements via
+sous-agent + fichiers catalogue faits à la main) : titres `A — B` → `A : B`,
+incises → virgules. Fichiers : `courses.ts`, `seed_courses.py`, `projects.ts`,
+`about/page.tsx`, `content/.../seed.py`, `portfolio/page.tsx`, `ProjectGallery.tsx`,
+`api/chat/route.ts`. **Non touchés** : commentaires de code, séparateurs
+décoratifs `── ──`, migrations Django, prompts système / e-mails sortants (non affichés).
+
+**Ajustements (suite retours client) :**
+- **La bannière réapparaît au rechargement** : retrait de la persistance
+  `localStorage` (elle ne « disparaissait » plus jamais après une fermeture).
+  Désormais fermeture = masquée pendant la navigation SPA, mais **réaffichée au
+  refresh** (état React en mémoire, pas de storage).
+- **Deux messages selon la page** (détection via `usePathname`) : pages
+  **/formations** → aperçu Edlearning + Play Store ; **autres pages** → annonce
+  « Nos formations gratuites démarrent le **mardi 1er septembre 2026** » + CTA
+  interne vers `/formations`. Les DEUX variantes sont **éditables au CMS** :
+  8 nouveaux champs `teaser_*` sur `FormationsPromo` (+ **migration
+  `0005_formationspromo_teaser`**, admin, seed) ; `CmsPromo` restructuré en
+  `{ preview, teaser }`.
+- **Libellé formateur = « Formateurs Horus-Lab »** (au lieu de « Équipe
+  Horus-Lab »), toujours **sans rôle**, dans `courses.ts` **et** `seed_courses.py`.
+  Tous les cours (Dart, Flutter, Python, etc.) pointent vers cette unique entrée →
+  aucun nom individuel. ⚠️ Rappel : re-seed (`seed_courses`) requis pour que la
+  base CMS reflète le changement (la donnée live vient de Django).
+
+**Ajustements (suite 2) :**
+- **Noms formateurs vraiment retirés du catalogue, sans dépendre du re-seed** :
+  le catalogue affichait le formateur **directement depuis la base CMS**
+  (`cms.ts mapCourseListItem` → cartes `CourseCatalog` + fiche cours), donc les
+  anciens noms restaient tant que la base n'était pas re-seedée. Désormais le
+  frontend **force** `instructor = { name: "Formateurs Horus-Lab", role: "" }`
+  quelles que soient les valeurs en base → plus aucun nom individuel, base à jour
+  ou non. Ligne du rôle masquée si vide sur les cartes (`CourseCatalog`).
+- **Bannière : réapparition aussi au changement de page** (pas seulement au
+  refresh). `EdlearningPromo` enveloppe désormais un `PromoCard` **monté avec
+  `key={pathname}`** → remontage à chaque navigation → l'animation d'entrée se
+  rejoue même si la bannière avait été fermée sur la page précédente.
+
+**Ajustements (suite 3) — compte à rebours + période CMS :**
+- **Période paramétrable au CMS** : `FormationsPromo` gagne `start_date` +
+  `duration_value` + `duration_unit` (jours/semaines/mois) → **`end_date`
+  calculée** (propriété modèle, exposée par le serializer). Admin : section
+  « Période (compte à rebours & expiration) » avec la date de fin affichée en
+  lecture seule. Seed = **1er sept 2026 + 1 mois** → fin **1er oct 2026**.
+  **Migration `0006_formationspromo_schedule`**.
+- **Compte à rebours en direct** sur la bannière (**toutes les pages**, aperçu
+  Formations comprise) : composant `Countdown` (ticke chaque seconde,
+  `j/h/min/s`). Avant le début →
+  « Démarre dans … » (cas actuel, formation pas commencée) ; pendant → « Se
+  termine dans … ». Rend `null` au SSR (pas d'écart d'hydratation).
+- **Auto-expiration** : passé `end_date`, la bannière ne s'affiche plus
+  (contrôle au montage, revérifié à chaque navigation via `key={pathname}`).
+- `cms.ts` : `CmsPromo` gagne `startDate`/`endDate` ; repli intégré = 1 sept →
+  1 oct 2026 (compte à rebours fonctionnel même API down).
+
+**Vérifs** : `tsc --noEmit` OK, ESLint OK, `py_compile` OK, `next build` OK (75 pages).
+⚠️ Prod : appliquer `migrate content` (migrations **0004 → 0006**) ; le re-seed
+`seed_courses` reste conseillé pour nettoyer la base, mais **n'est plus requis**
+pour masquer les noms (le frontend les force).
+
+---
+
+## 2026-07-23 — 🔌 Alignement CMS Phase 1 + retrait Google OAuth (NON commité)
+
+Audit frontend↔backend (via sous-agent) : le backend est plus complet que ce que
+le frontend consommait. **Témoignages, Partenaires, Équipe** avaient des modèles
+mais n'étaient PAS câblés (codés en dur). 3 zones n'ont aucun modèle (pages
+Services détail, contenu À propos, annonce Formations) = Phase 2.
+
+**Retrait Google OAuth** (plus nécessaire) : endpoint `/api/auth/google/`, réglage
+`GOOGLE_CLIENT_ID`, dépendance `google-auth`, test et guide supprimés. Reste
+l'auth e-mail + JWT. `manage.py check` 0, tests accounts 4/4.
+
+**Phase 1 — câblage CMS (fait, vérifié) :**
+- **Modèles `content`** (+ migration `0003`) : `Testimonial.image_path`+`is_logo` ;
+  `Partner.logo_path` ; `TeamMember.photo_path`+`whatsapp_url`+`badge_fr/_en`+`gradient`.
+  Pattern `*_path` = chemin `/public` (comme `courses.image`), l'upload admin reste
+  prioritaire.
+- **Serializers** : nouveaux champs exposés.
+- **seed** : 5 témoignages réels (photos `/Temoignages`, 1 featured), 5 partenaires
+  (logos `/Nos-partenaires` + URLs), équipe Edwin & Loïc DJIMGOU TONBA (photos
+  `/A-propos`, badges, WhatsApp, gradients, bios réécrites).
+- **`cms.ts`** : `getCmsTestimonials` (→ image+logo, repli []), **nouveau
+  `getCmsPartners`**, `getCmsTeam` enrichi (photo_path/badge/gradient/whatsapp).
+- **Front câblé** : `page.tsx` fetch témoignages+partenaires → props ;
+  `Testimonials`/`Partners` acceptent une prop (repli statique si vide) ;
+  `about/page.tsx` réactive `getCmsTeam` (repli statique). tsc OK.
+- **Vérifié** : `/api/testimonials/`=5, `/api/partners/`=5, `/api/team/`=2 avec les
+  bons champs.
+
+**Reste (Phase 2 — nouveaux modèles)** : `CoursesPageSettings` (annonce Formations
+« 100% gratuit · 1er sept 2026 » + note Edlearning + hero), `AboutPage` (mission/
+vision/valeurs/approche), `ServiceDetail`+sous-modèles (pages Services détail).
+
+---
+
+## 2026-07-23 — 🎨 Vidéos héros (africaines) + Blog (sous-menus, logos) + slides (NON commité)
+
+- **6 vidéos** téléchargées (Pexels, libres) : **4 services** re-téléchargées avec des
+  **personnes africaines** (dev, ingénieurs data, équipe bureau, formateur) →
+  `public/services/*.mp4` (déjà câblées) ; **About** hero = vidéo jeunesse tech
+  africaine (`public/A-propos/about-hero.mp4`) ; **Blog** hero = vidéo actu/data
+  (`public/blog/blog-hero.mp4`). Heros About & Blog passés en `HeroBackground`
+  (vidéo + poster de repli), vague retirée.
+- **Blog — sous-menus navbar par catégorie** : `Header` a désormais un **dropdown
+  Blog** (desktop + mobile) → `/blog?cat=<catégorie>`. `BlogIndex` filtre via
+  `initialCategory` (lu depuis `searchParams` dans `blog/page.tsx`).
+- **Blog — logos des boîtes citées** : détecteur `lib/blogCompanies.ts` (Google,
+  Gemini, NVIDIA, Meta/Facebook, Apple, Anthropic/Claude, Orange — SVG simple-icons
+  dans `public/logo/companies/`, casse-sensible pour éviter les faux positifs) ;
+  **miniatures** (18-20px) affichées sur les cartes (`PostCard` + article à la une).
+  Cartes blog sans bordure.
+- **Formations — hero en slides d'images par domaine** : nouveau composant
+  `DomainSlides` (fondu enchaîné web/mobile/génie-logiciel/IA, repli statique).
+  Plus de vidéo sur ce hero (un aperçu vidéo est déjà sur chaque cours).
+
+tsc OK. **⚠️ Logos manquants** : amazon/openai/microsoft absents de simple-icons
+(develop) → non inclus (ajoutables si besoin).
+
+---
+
+## 2026-07-22 — 🎨 Réalisations (logos tech) + 3 nouveaux cours (NON commité)
+
+- **Logos tech** téléchargés (devicon, dans `public/tech/`) : firebase, nginx, dart,
+  html5, css3 (+ les 12 déjà présents).
+- **Réalisations (PortfolioGrid)** : tags texte → **logos tech compacts** (24px,
+  gris→couleur au survol) par projet — Web : Next/Tailwind/FastAPI/Django/Postgres/
+  Docker/nginx ; Mobile : Dart/Flutter/Firebase. **Afrikamode** : vidéo
+  `Realisations/Afrikamode-realisations.mp4` en couverture (boucle). Cartes sans
+  bordure. Espaces grille + CTA réduits.
+- **3 nouveaux cours** (courses.ts + seed, FR/EN, vidéos vérifiées oEmbed) :
+  **HTML5 & CSS3** (web, Grafikart/freeCodeCamp), **Python : les bases** (web,
+  CodeAvecJonathan/Mosh), **Dart : les bases** (mobile, Alex Mercier/freeCodeCamp).
+  Placés comme fondations (avant React / avant Flutter). Seed OK = **12 formations**.
+  tsc OK.
+
+**⏳ Encore en cours** : agent vidéo (services africains + About + Blog). **Reste** :
+Formations hero en slides d'images par domaine ; Blog (hero vidéo, sous-menus navbar
+par catégorie, logos boîtes citées).
+
+---
+
+## 2026-07-22 — 🎨 Sweep multi-pages (Formations/About/Contact/Réalisations) (NON commité)
+
+Grande passe multi-pages (tsc OK). Dossiers réorganisés par l'utilisateur :
+logos → `public/logo/`, photos équipe → `public/A-propos/`, témoins → `public/Temoignages/`,
+vidéo Afrikamode → `public/Realisations/Afrikamode-realisations.mp4`.
+
+**Fait cette session**
+- **Footer** : mention légale **retirée** (pas encore de forme juridique).
+- **Formations** : **mur e-mail SUPPRIMÉ** (CoursePlayer = accès libre/gratuit) ;
+  **note « aperçu → formation complète sur l'app Edlearning (Play Store) »** dans le
+  hero ; titres unifiés centrés (Explorez par domaine, Notre catalogue) sans tirets ;
+  **4 domaines sur une ligne** (`lg:grid-cols-4`) ; espacements réduits ; cartes sans
+  bordure ; hero aligné sur l'accueil (titre/sous-titre réduits, chip sans bordure).
+- **Catalogue cours** (courses.ts + seed) : rôle formateur **« Co-fondateur » →
+  « Mentor du parcours »** ; **« Loïc TONBA » → « Loïc DJIMGOU TONBA »**.
+- **À propos** : nom **« Brailain Loïc TONBA » → « Loïc DJIMGOU TONBA »** partout ;
+  **ordre inversé** (Edwin à gauche, Loïc à droite) + titre commun ; **bios réécrites**
+  (plus vendeuses) ; photos → `/A-propos/` ; « Notre approche » centré ; « Nos valeurs »
+  réduit (taille+espacement) ; sections resserrées ; cartes sans bordure.
+- **Contact** : titre **centré** (SectionHeading, sans tiret), « Démarrons la
+  conversation » + sous-titre réduits/sur une ligne, **colonnes de même hauteur**
+  (`items-stretch`), cartes sans bordure, espacement réduit.
+- **Réalisations** (projects.ts) : projet **« Formation IT » supprimé** ; chemins
+  logo corrigés → `/logo/*.png`.
+
+**⚠️ Reste à faire (media/contenu — à enchaîner)**
+- **Vidéos à télécharger** (2 agents ont échoué sur ECONNRESET, à relancer) :
+  vidéos services avec **personnes noires/africaines** (alternance) ; **vidéo vision
+  Afrique** pour hero About ; **vidéo actu tech** pour hero Blog (+ image de repli).
+- **Formations** : hero en **slides d'images par domaine** (au lieu d'une vidéo) —
+  besoin d'un petit composant client + images.
+- **Nouveaux cours** : HTML5 & CSS3 (web) ; bases **Dart/Flutter** (mobile) ; bases
+  **Python** (avant Django) — à ajouter dans courses.ts + seed + vidéos.
+- **Réalisations** : intégrer la vidéo Afrikamode ; remplacer les tags texte par des
+  **logos tech** (Next/Tailwind/FastAPI/Django/Postgres/Docker/nginx ; Dart/Flutter/
+  Firebase) sans épaissir les cartes (manque logos firebase/nginx) ; réduire l'écart
+  « Votre projet sera le prochain ? ».
+- **Blog** : hero vidéo actu ; **sous-menus navbar par catégorie** ; logos miniatures
+  des boîtes citées (Google, Orange, Gemini, NVIDIA…) dans les cartes.
+
+---
+
+## 2026-07-22 — 🎨 Pages Services + héros autres pages harmonisés (NON commité)
+
+Report des critères de l'accueil sur les **4 pages Services** (composant partagé
+`services/[slug]/page.tsx` → un seul fix couvre les 4 sous-menus) :
+- **Hero** façon accueil : **vidéo en boucle par service** (`HeroBackground`),
+  hauteur `54vh`, titre/sous-titre plus petits, **vague retirée**, chip sans
+  bordure, rectangle net. 4 vidéos Pexels (libres, sans attribution) dans
+  `public/services/{applications,systemes-information,digitalisation,formation-audit}.mp4`
+  (720p, 2.6–8.3 Mo). Poster = image du service en repli.
+- **Intro** compacte (~2 lignes, police réduite) ; écart réduit avec la suite.
+- **« Nos domaines d'intervention »** : `SectionHeading` unifié centré ; **4 cartes
+  sur une ligne** (`lg:grid-cols-4`), images réduites, sans bordures.
+- **« Notre démarche »** (`ServiceProcessSection`) : titre unifié centré (light),
+  compact, cartes sans bordure.
+- **« Ce que vous recevez »** : **centré, icône au-dessus** du titre, sans encadré.
+- **« Nos autres services »** : titre centré, compact.
+- **« Prêt à lancer votre projet ? »** (`ServiceContactSection`) : titre plus
+  petit, sous-titre sur une ligne, rectangle et espacements réduits.
+- Espacements inter-sections resserrés partout ; bordures retirées des cartes.
+
+**Héros harmonisés aussi** (vague retirée, hauteur `52-54vh`, titres réduits,
+chips/cartes sans bordure) sur : **About**, **Portfolio**, **Formations**.
+
+tsc OK. **Reste (autres pages)** : unifier les titres internes (mission/vision
+d'About, sections Portfolio) encore en ancien style à tirets, et héros Blog/Contact
+— à faire au prochain passage.
+
+---
+
+## 2026-07-22 — 🎨 Accueil (itération 2) : logos, vidéo, témoignages, navbar (NON commité)
+
+- **Nouveaux logos** (l'utilisateur a remplacé les fichiers dans `public/`) :
+  `logo-light-bg-full.png` (fond clair), `logo-dark-bg-full.png` (fond sombre),
+  `logo-dark-bg-horizontal.png` (horizontal, fond sombre). Anciens `logo-HORUS-LAB-*`
+  **supprimés** → **toutes** les refs corrigées (Header light/dark, Footer =
+  horizontal, watermarks CTA/Témoignages = dark-bg-full, not-found swap light/dark,
+  manifest/layout/JSON-LD/blog = light-bg-full).
+- **Hero** : hauteur encore réduite (`min-h-[54vh]`), titre/sous-titre plus petits,
+  **chips services retirés** (désencombrement). **Vidéo remplacée** : homme **noir
+  qui code** (Pexels #6330773, libre, sans attribution).
+- **Bandeau tech** : label « Technologies que nous maîtrisons » → **« Les
+  technologies que nous utilisons »** (affirmatif) ; badges texte → **vrais logos
+  qui défilent** (12 SVG devicon dans `public/tech/`, marquee).
+- **Témoignages : 5** (au lieu de 4), attributions corrigées : **Paule Diane
+  Himsta = PD de CFP-BRC ET de CGA** (2 témoignages), **Pagop Tchouansi Aurélie =
+  Responsable AfrikaMode** (plus CGA). Photos déplacées → chemins `/Temoignages/`.
+- **Navbar réordonnée** (logique de vente) : Services → Formations → Réalisations →
+  À propos → Blog → Contact.
+
+tsc OK · aucune référence d'image cassée.
+
+---
+
+## 2026-07-22 — 🎨 Refonte page d'Accueil (sérieux & compact) (NON commité)
+
+Grosse passe design sur l'accueil (inspiration humanbcorp.com), tsc OK.
+
+- **Hero** : hauteur réduite (`min-h-[66vh]`), **vague supprimée**, **fond VIDÉO
+  en boucle** (`/hero-video.mp4`, Mixkit « ingénieur qui programme », libre de
+  droits, 4,6 Mo, muette/autoplay/loop, poster `hero-1.jpg`) à la place du
+  diaporama d'images. Particules/formes retirées → **rectangle net**. Chips sans
+  bordure. `HeroBackground` réécrit (vidéo + voile de marque).
+- **Logos** : refs `logo-HORUS-LAB-white.jpeg` → **`.png` transparent** (Header,
+  Testimonials, CTA) ; JSON-LD → `-black.png`. Noir en clair / blanc en sombre
+  (visible partout). Filigranes Horus rendus **plus visibles** (opacity 0.10-0.12,
+  sans mix-blend).
+- **Titres de section** : `SectionHeading` unifié, **tous centrés**, même forme,
+  **suppression des tirets décoratifs** (« tirets IA »), sous-titre compact (15px,
+  tient sur une ligne en desktop). Appliqué à Services/Process/WhyUs/Sectors/
+  Realisations/Testimonials/Partners/Blog.
+- **Services** : bento volumineux → **4 services sur une ligne** (compact) +
+  **bandeau des technologies** en dessous (badges texte React/Next/Django/Flutter…
+  faute d'assets logos — à remplacer par de vrais logos si fournis).
+- **Réalisations** : image de la carte phare = **vraie capture Afrikamode**
+  (`/afrikamode-realisations/01-site-accueil.png`) + logo par-dessus (comme la
+  page Portfolio). Titre centré + bouton dessous. Cartes **sans bordure**.
+- **Pourquoi Horus-Lab** & **Secteurs** : refonte en **une ligne** (4 valeurs /
+  chips pleine largeur), colonnes latérales + gros chiffres supprimés → **moins de
+  hauteur**, sans bordures.
+- **Témoignages** / **CTA** : fond Horus (filigrane logo transparent) plus visible ;
+  encadré témoignage sans bordure.
+- **Espacements inter-sections réduits** partout (py resserrés).
+- **Bordures** : retirées de toutes les cartes de l'accueil ; **conservées
+  uniquement sur les boutons** d'action/redirection (règle demandée). Coins carrés
+  déjà globaux.
+
+**Reste / à valider visuellement** : vérifier le rendu (vidéo hero, « une ligne »
+selon largeur), fournir de vrais **logos de technologies** si souhaité, confirmer
+l'interprétation du fond Afrikamode (carte phare vs fond de section).
+
+---
+
+## 2026-07-21 — 🎓 LMS Formations : bugs corrigés + Phase 1 auth (NON commité)
+
+Passage d'un simple mur e-mail à une vraie **plateforme de formation (LMS)** :
+comptes, progression, quiz, certificat. **Décisions utilisateur** : connexion
+**e-mail + Google** (Facebook/Apple plus tard) ; pilote complet d'abord sur les
+**3 cours gratuits** (React, UML, IA) ; **certificat PDF à la marque + page de
+vérification publique**. Feuille de route : (1) auth, (2) modèles LMS, (3) pages
+front, (4) certificat PDF, (5) contenu quiz.
+
+**Bugs corrigés cette session (frontend, tsc OK)**
+- **Sous-menu Formations « ne renvoyait pas »** : `CourseCatalog` synchronise
+  désormais le filtre quand la catégorie change via l'URL alors qu'on est déjà sur
+  la page (`useEffect` sur `initialCategory`). Le libellé **Formations** du menu
+  mène à `/formations` (survol = sous-menu), + entrée **« Toutes les formations »**
+  en tête des sous-menus desktop & mobile.
+- **Formulaire vidéo « figé/écrasé »** : `CoursePlayer` passe l'overlay en
+  **modale plein écran** (`fixed inset-0`, fermeture au clic extérieur) au lieu
+  d'être confiné dans la petite fenêtre vidéo. (Deviendra la vraie page
+  d'inscription en Phase 3.)
+
+**Phase 1 — Fondation auth (backend, ✅ testée)**
+- Nouvelle app Django **`accounts`** (pas de modèle User custom — trop intrusif
+  sur base existante ; on aligne `username = email`).
+- Endpoints `/api/auth/` : **register** (email+nom+mdp), **login** (par e-mail),
+  **me** (jeton requis), **google** (vérifie l'ID token via `google-auth` +
+  `GOOGLE_CLIENT_ID`), **refresh**. Jetons **JWT** (`djangorestframework-simplejwt`,
+  access 12 h / refresh 30 j).
+- `settings.py` : `DEFAULT_AUTHENTICATION_CLASSES` = JWT + session ; `SIMPLE_JWT` ;
+  throttles `auth_register` 10/h, `auth_login` 40/h ; `GOOGLE_CLIENT_ID` (env).
+- `requirements.txt` : + `djangorestframework-simplejwt`, `google-auth` (installés
+  dans `.venv`).
+- **Tests** `accounts/tests.py` : **5/5 OK** (register/login/me, doublon refusé,
+  mdp faible refusé, /me exige un jeton, google 401/503). `manage.py check` 0.
+
+**⚠️ Prérequis Google (utilisateur)** : créer un **OAuth Client ID** (Google Cloud
+Console) et poser `GOOGLE_CLIENT_ID` dans `backend/.env` + le même côté frontend
+pour le bouton « Continuer avec Google ». Tant que vide → `/api/auth/google/` = 503.
+
+**Reste (prochaines phases)** : modèles LMS (enrollment, progression, quiz,
+certificat) ; pages front `/inscription` `/connexion` `/mon-compte` + bouton Google
++ garde vidéo branchée sur les comptes ; certificat PDF + `/verifier/<id>` ;
+rédaction des quiz (React/UML/IA). + retouche design : **légères bordures sur les
+boutons** (demandée, à faire).
+
+---
+
+## 2026-07-21 — 🔐 Formations : mur e-mail + vidéos FR/EN + tout carré (NON commité)
+
+Trois demandes utilisateur sur les Formations (branche `feat/refonte-site-pro`,
+**modifications LOCALES non commitées**, à livrer avec la refonte + Formations) :
+
+**1. Vidéos aussi en FRANÇAIS (avant : seulement anglais/freeCodeCamp)**
+- Vidéo désormais **bilingue** : URL séparée par langue. FR = chaînes francophones
+  (Grafikart : React/Next/React-Native ; Comment Coder : JS ; YoungDevps : FastAPI ;
+  Ralph Développeur : Flutter ; Julien Code : UML ; HectorCure : Merise/BDD ;
+  Ludo Salenne : IA/prompt). EN = les freeCodeCamp existantes. **8 vidéos FR
+  vérifiées via oEmbed** (existent + publiques).
+- Frontend statique `lib/courses.ts` : `VIDEO_FR` + `VIDEO_EN`, `videoUrl` par langue.
+- Backend `courses` : champ `video_url` → **`video_url_fr` + `video_url_en`**
+  (modèle, migration **`0004_course_video_bilingue`** = rename + add, serializer,
+  admin, `seed_courses` FR/EN). `cms.ts` : mapper choisit la vidéo selon `lang`.
+
+**2. Mur d'accès e-mail avant lecture (façon OpenClassrooms)**
+- `components/formations/CoursePlayer.tsx` : au clic « lecture », si le visiteur n'a
+  pas encore donné son e-mail → **formulaire (nom + e-mail + honeypot)**. À la
+  soumission → enregistré comme **lead newsletter** (Brevo, liste 5, attribut
+  FIRSTNAME) → **accès mémorisé en `localStorage`** (`horus:formations-access`) →
+  la vraie vidéo YouTube (nocookie) se charge. Plus de re-saisie ensuite. Bilingue.
+- Nouvelle route `app/api/formations-access/route.ts` (email valide + honeypot →
+  `saveLead("newsletter", {email, name, source:"formations"})`).
+- `lib/leads.ts` : `brevoAddContact` accepte un **prénom** (attribut FIRSTNAME).
+
+**3. « Tout carré, pas d'arrondis » sur tout le site**
+- `globals.css` : **règle globale unique** `*,*::before,*::after{border-radius:0!important}`
+  → neutralise TOUS les arrondis (utilitaires `rounded-*`, pilules `rounded-full`,
+  valeurs inline) sur toutes les pages. Réversible (retirer le bloc).
+
+**Vérifs (tout ✅)** : `tsc --noEmit` **0 erreur** · `manage.py check` **0** ·
+`makemigrations --check` = *No changes detected* · `migrate` + `seed_courses` OK
+(4 domaines, 9 formations) · base : `video_url_fr` (Grafikart) ≠ `video_url_en`
+(freeCodeCamp) confirmé sur `debuter-avec-react`.
+
+**Reste à faire** : commit + PR (avec la refonte + Formations). ⚠️ En prod, `migrate`
+appliquera `0004` (rename `video_url`→`video_url_fr` + add `video_url_en`) ; re-`seed_courses`
+pour remplir les vidéos FR/EN. Piège cache `.next` en dev si contenu figé.
+
+---
+
+## 2026-07-21 — 🎓 Page Formations + retrait Candidature (frontend & backend) (NON commité)
+
+Remplacement de la page **Candidature** (retirée) par une page **Formations** façon
+OpenClassrooms / Udemy, avec **synchronisation frontend ↔ backend ↔ BD**.
+**⚠️ Modifications LOCALES non commitées** (branche `feat/refonte-site-pro`).
+
+**Frontend — Formations (fait avant cette session, vérifié OK)**
+- `src/app/[lang]/formations/page.tsx` : hero + stats, **grille de domaines** (sous-parcours),
+  **catalogue filtrable** (`components/formations/CourseCatalog.tsx`, client), CTA sur-mesure.
+- `src/app/[lang]/formations/[slug]/page.tsx` : page cours détaillée (aperçu vidéo,
+  « Ce que vous allez apprendre », **programme modules/leçons**, formateur, autres cours).
+- `src/lib/courses.ts` : catalogue statique **bilingue FR/EN** — 5 domaines, 10 cours
+  (Web, Mobile, Data & IA, Cybersécurité, Cloud & DevOps). `getFormations/getCourse/getCourseSlugs`.
+- Header/Footer/sitemap/dictionaries/icons mis à jour (lien Formations, icônes Book/Play/Clock…).
+- Page **Candidature supprimée** : `app/[lang]/candidature/`, `app/api/applications/`,
+  `components/candidature/*`.
+
+**Frontend — nettoyage fait cette session**
+- `src/lib/leads.ts` : suppression du **code candidature orphelin** (type `ApplicationPayload`,
+  `brevoSendApplicationEmail`, `saveApplication`, `APPLICATIONS_DIR`) — son consommateur
+  (`api/applications`) n'existait plus. `saveLead` (newsletter/contact) intact.
+- ✅ `npx tsc --noEmit` : **aucune erreur**.
+
+**Backend — synchronisation faite cette session**
+- ❌ App **`applications` supprimée** (modèle `Application`/candidature, views, serializers,
+  notifications, urls). Retirée de `INSTALLED_APPS`, de `config/urls.py`, et du throttle
+  `application` (settings).
+- ✅ Nouvelle app **`courses`** (mirroir du catalogue frontend, éditable en admin = CMS) :
+  - Modèles : `Category` (domaine), `Course`, `Module` (programme). Bilingue FR/EN.
+  - Admin : `CategoryAdmin`, `CourseAdmin` (+ `ModuleInline`), slugs prépeuplés.
+  - API REST **lecture seule** sous `/api/courses/` : `CourseViewSet` (list léger /
+    detail complet avec programme, filtre `?category=<slug>`) + `CategoryViewSet`
+    (`/api/courses/categories/`). Lookup par `slug`.
+  - Commande **`seed_courses`** (idempotente) reproduisant le catalogue frontend :
+    **5 domaines, 10 formations, 30 modules**.
+- **BD adaptée** : migrations `courses/0001_initial` + `0002_drop_legacy_applications`
+  (DROP TABLE `applications_application` + purge des lignes `django_migrations` orphelines,
+  portable SQLite/PostgreSQL). ⚠️ **En prod** (Postgres `horuslab`) : appliquer `migrate`
+  pour que le drop de la table héritée s'exécute aussi.
+
+**Vérifications de fin de session (tout ✅)**
+- `manage.py check` : 0 issue. Table `applications_application` **absente**, tables
+  `courses_*` créées. API `/api/courses/` = 200 (catalogue 10), detail avec 3 modules.
+- Serveurs lancés : **Django :8000** OK, **Next :3001** (3000 occupé) OK.
+  `/fr/formations` = 200, `/fr/formations/debuter-avec-react` = 200,
+  `/fr/candidature` = **404** (retirée), `/api/applications/` = **404**.
+
+**Branchement CMS du frontend Formations (fait cette session, vérifié end-to-end)**
+- `src/lib/cms.ts` : nouvelle section **Formations** suivant le patron existant
+  (types `ApiCourseCategory`/`ApiCourseListItem`/`ApiCourseDetail`/`ApiCourseModule`,
+  mappers, **ISR 60s + repli total** sur `lib/courses.ts`). Getters :
+  `getCmsFormations(lang)` (catalogue : domaines + cours légers),
+  `getCmsCourse(lang, slug)` (cours + programme), `getCmsCourseSlugs()`
+  (union CMS + statique pour `generateStaticParams`).
+- Pages branchées : `formations/page.tsx` → `getCmsFormations` ;
+  `formations/[slug]/page.tsx` → `getCmsCourse` + `getCmsFormations`, et
+  `generateStaticParams` désormais **async** via `getCmsCourseSlugs()`.
+  `lib/courses.ts` reste le **fallback** (repli si API vide/indispo). tsc OK.
+- **Preuve end-to-end** : insertion d'un cours sentinelle en base (absent du
+  statique) → après purge du cache, il apparaît dans le catalogue FR/EN et sa
+  page détail répond 200 ; puis retiré. Le programme détaillé (curriculum +
+  objectifs), qui ne vient QUE de l'endpoint detail, s'affiche bien.
+- ⚠️ **Piège cache** : le **Data Cache persistant de Next** (`.next/cache`,
+  `revalidate=60`) masque les changements récents après un rebranchement — si le
+  contenu semble figé, **purger `.next`** (dev) et recharger. En prod, l'ISR se
+  rafraîchit tout seul à la minute (ou re-seed / édition admin).
+- Endpoints consommés : `GET /api/courses/`, `/api/courses/categories/`,
+  `/api/courses/<slug>/` (+ filtre `?category=`). Requiert `BACKEND_API_URL`
+  (déjà dans `.env.local` = http://127.0.0.1:8000).
+
+**Reste à faire** : **commit + nouvelle PR** pour livrer refonte + Formations
+(frontend, backend, migrations). Optionnel : uploader les images de cours via
+l'admin (aujourd'hui `image` = chemin statique frontend).
+
+---
+
 ## 2026-07-20 — 🎨 Refonte « carré & pro » + cohérence multi-pages (NON commité)
 
 Grosse passe design sur le site vitrine (frontend). **⚠️ Tout est en modifications

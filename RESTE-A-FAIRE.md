@@ -179,7 +179,24 @@ adduser --disabled-password --gecos "" horus
 usermod -aG docker horus
 mkdir -p /opt/horus-lab && chown -R horus:horus /opt/horus-lab
 
-# Clé SSH dédiée au CI (générée ICI, sur ton VPS)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ssh-keygen -t ed25519 -C "ci-horus" -f /tmp/horus_ci -N ""
 mkdir -p /home/horus/.ssh && chmod 700 /home/horus/.ssh
 cat /tmp/horus_ci.pub >> /home/horus/.ssh/authorized_keys

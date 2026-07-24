@@ -139,7 +139,7 @@ export function Footer() {
     { label: dict.nav.about,     href: localePath("/about") },
     { label: dict.nav.portfolio, href: localePath("/portfolio") },
     { label: dict.nav.blog,      href: localePath("/blog") },
-    { label: dict.nav.careers,   href: localePath("/candidature") },
+    { label: dict.nav.formations, href: localePath("/formations") },
     { label: "Contact", href: localePath("/contact") },
   ];
 
@@ -186,11 +186,11 @@ export function Footer() {
             <Link href={localePath("/")} className="inline-flex items-center group" aria-label="Horus-Lab">
               {/* Fond navy → on utilise la variante blanche du logo pour qu'il reste visible */}
               <Image
-                src="/logo-HORUS-LAB-white.jpeg"
+                src="/logo/logo-dark-bg-horizontal.png"
                 alt="Horus-Lab"
-                width={240}
-                height={80}
-                className="h-16 w-auto rounded-sm object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+                width={757}
+                height={147}
+                className="h-auto w-full max-w-[230px] object-contain transition-transform duration-300 group-hover:scale-[1.03]"
               />
             </Link>
 
@@ -315,9 +315,6 @@ export function Footer() {
         <div className="flex flex-col items-center justify-between gap-3 py-7 text-xs text-brand-400 sm:flex-row">
           <p>© {year} Horus-Lab. {f.rights}</p>
           <div className="flex items-center gap-5">
-            <Link href={localePath("/legal")} className="transition-colors hover:text-white">
-              {f.legal}
-            </Link>
             <span>Made in Africa</span>
           </div>
         </div>

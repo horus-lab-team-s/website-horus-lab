@@ -40,7 +40,7 @@ function faqFallback(message: string, lang: string): string {
   if (has("démarrer", "commencer", "projet", "start", "begin", "project", "devis", "quote"))
     return fr
       ? "Avec plaisir ! Décrivez votre besoin via le formulaire de contact ou écrivez à contact@horus-lab.com : nous répondons sous 24h."
-      : "Glad to help! Describe your need via the contact form or email contact@horus-lab.com — we reply within 24h.";
+      : "Glad to help! Describe your need via the contact form or email contact@horus-lab.com: we reply within 24h.";
   if (has("bonjour", "salut", "hello", "hi", "hey", "coucou"))
     return fr
       ? "Bonjour 👋 Comment puis-je vous aider à propos de Horus-Lab ?"

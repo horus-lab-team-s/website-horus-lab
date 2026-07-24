@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
+import { SectionHeading } from "./SectionHeading";
 import { IconArrowRight } from "@/components/icons";
 import { coverFor } from "@/lib/blogImages";
 import type { PostMeta } from "@/lib/blog";
@@ -47,7 +48,7 @@ export function BlogPreview({ posts }: { posts: PostMeta[] }) {
   const featured = posts.slice(0, 3);
 
   return (
-    <section id="blog" className="relative overflow-hidden bg-surface py-16 dark:bg-[#070e1c] sm:py-20">
+    <section id="blog" className="relative overflow-hidden bg-surface pb-14 pt-10 dark:bg-[#070e1c] sm:pb-16 sm:pt-12">
 
       {/* ── Fond sobre : grille fine + halos discrets ── */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -58,29 +59,18 @@ export function BlogPreview({ posts }: { posts: PostMeta[] }) {
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
 
-        {/* En-tête */}
-        <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
-          <Reveal className="max-w-2xl">
-            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-500">
-              <span className="h-px w-6 bg-brand-400/60" />
-              {dict.blog.eyebrow}
-            </span>
-            <h2 className="mt-4 text-3xl font-extrabold leading-[1.1] tracking-tight text-brand-900 dark:text-white sm:text-4xl lg:text-5xl">
-              {dict.blog.title}
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-muted">{dict.blog.subtitle}</p>
-          </Reveal>
-          <Reveal>
-            <Link href={localePath("/blog")}
-              className="group inline-flex items-center gap-2 rounded-md border border-brand-200 px-5 py-2.5 text-sm font-semibold text-brand-700 transition-all hover:bg-brand-50 hover:border-brand-300 dark:border-white/15 dark:text-brand-200 dark:hover:bg-white/5">
-              {dict.blog.allArticles}
-              <IconArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </Reveal>
-        </div>
+        {/* En-tête centré */}
+        <SectionHeading eyebrow={dict.blog.eyebrow} title={dict.blog.title} subtitle={dict.blog.subtitle} />
+        <Reveal className="mt-6 flex justify-center">
+          <Link href={localePath("/blog")}
+            className="group inline-flex items-center gap-2 border border-brand-200 px-5 py-2.5 text-sm font-semibold text-brand-700 transition-all hover:bg-brand-50 hover:border-brand-300 dark:border-white/15 dark:text-brand-200 dark:hover:bg-white/5">
+            {dict.blog.allArticles}
+            <IconArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </Reveal>
 
         {/* ── Cartes vedettes (pas de défilage : évite la répétition) ── */}
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {featured.map((post, i) => {
             const img    = coverFor(post);
             const grad   = getGrad(post);
@@ -89,7 +79,7 @@ export function BlogPreview({ posts }: { posts: PostMeta[] }) {
               <Reveal key={post.slug} delay={i * 90}>
                 <Link
                   href={localePath(`/blog/${post.slug}`)}
-                  className={`group lift-xl flex h-full flex-col overflow-hidden rounded-lg border bg-white dark:bg-slate-900 ${accent.border}`}
+                  className="group lift-xl flex h-full flex-col overflow-hidden bg-white shadow-sm dark:bg-slate-900"
                 >
                   <div className={`relative h-44 overflow-hidden bg-gradient-to-br ${grad}`}>
                     <Image

@@ -14,6 +14,10 @@ export type Project = {
   url?: string;
   /** Logo local dans /public (prioritaire) */
   logo?: string;
+  /** Capture RÉELLE de la solution, utilisée en fond de couverture (logo par-dessus). */
+  cover?: string;
+  /** Vidéo de couverture (boucle muette) — prioritaire sur cover/logo. */
+  video?: string;
   /** Screenshots Unsplash simulant l'app */
   screenshots?: string[];
 };
@@ -40,8 +44,9 @@ const PROJECTS: Record<Lang, Project[]> = {
       role: "Conception & développement",
       scope: "Boutique e-commerce internationale",
       url: "https://afrikamode.store",
-      logo: "/logo-Afrikamode.jpeg",
-      screenshots: [
+      logo: "/logo/logo-Afrikamode.png",
+      cover: "/afrikamode-realisations/01-site-accueil.png",
+      video: "/Realisations/projet-Afrikamode-realisation.mp4",      screenshots: [
         "/img/photo-1558618666-fcd25c85cd64-w1200.jpg",
         "/img/photo-1441984904996-e0b6ba687e04-w1200.jpg",
         "/img/photo-1483985988355-763728e1935b-w1200.jpg",
@@ -59,7 +64,7 @@ const PROJECTS: Record<Lang, Project[]> = {
       gradient: GRADIENTS[1],
       role: "Conception & développement",
       scope: "Gestion financière PME · multi-comptes & reporting",
-      logo: "/logo-GATHE FINANCE.jpeg",
+      logo: "/logo/logo-GATHE_FINANCE.png",
       screenshots: [
         "/img/photo-1551288049-bebda4e38f71-w1200.jpg",
         "/img/photo-1460925895917-afdab827c52f-w1200.jpg",
@@ -71,14 +76,14 @@ const PROJECTS: Record<Lang, Project[]> = {
       title: "Plateforme e-Learning",
       client: "Apprenants & professionnels IT",
       category: "Éducation & EdTech",
-      desc: "Plateforme de formation aux métiers de l'informatique : développement web, Python, cybersécurité et plus. Parcours structurés, ressources progressives et suivi des apprenants — pour rendre la tech accessible à tous, partout en Afrique.",
+      desc: "Plateforme de formation aux métiers de l'informatique : développement web, Python, cybersécurité et plus. Parcours structurés, ressources progressives et suivi des apprenants, pour rendre la tech accessible à tous, partout en Afrique.",
       tags: ["Next.js", "TypeScript", "Tailwind", "Vidéo", "PWA"],
       result: "Catalogue tech complet",
       iconKey: "eye",
       gradient: GRADIENTS[2],
       role: "Conception & développement",
       scope: "Plateforme de formation IT en ligne",
-      logo: "/logo-Edlearning.jpeg",
+      logo: "/logo/logo-Edlearning.png",
       screenshots: [
         "/img/photo-1501504905252-473c47e087f8-w1200.jpg",
         "/img/photo-1588196749597-9ff075ee6b5b-w1200.jpg",
@@ -90,7 +95,7 @@ const PROJECTS: Record<Lang, Project[]> = {
       title: "Elec One",
       client: "2MeTech Sarl · Énergie",
       category: "Énergie & IoT",
-      desc: "Application mobile de pilotage d'EnMKit, le dispositif intelligent de maîtrise de l'énergie de 2MeTech. Depuis votre téléphone, coupez à distance les équipements restés allumés — fer à repasser, climatiseur, téléviseur — pour supprimer les gaspillages et réduire durablement votre facture d'électricité.",
+      desc: "Application mobile de pilotage d'EnMKit, le dispositif intelligent de maîtrise de l'énergie de 2MeTech. Depuis votre téléphone, coupez à distance les équipements restés allumés, fer à repasser, climatiseur, téléviseur, pour supprimer les gaspillages et réduire durablement votre facture d'électricité.",
       tags: ["Flutter", "Mobile", "IoT", "Temps réel", "Énergie"],
       result: "En production · consommation maîtrisée à distance",
       iconKey: "cog",
@@ -98,31 +103,12 @@ const PROJECTS: Record<Lang, Project[]> = {
       role: "Conception & développement",
       scope: "Application mobile de pilotage énergétique (EnMKit)",
       url: "https://www.2metechsarl.org",
-      logo: "/logo-Elec One.jpeg",
+      logo: "/logo/logo-Elec_One.png",
       screenshots: [
         "/img/photo-1473341304170-971dccb5ac1e-w1200.jpg",
         "/img/photo-1518770660439-4636190af475-w1200.jpg",
         "/img/photo-1518770660439-4636190af475-w1200.jpg",
         "/img/photo-1451187580459-43490279c0fa-w1200.jpg",
-      ],
-    },
-    {
-      title: "Programme Formation IT",
-      client: "Professionnels & entreprises",
-      category: "Formation",
-      desc: "Programme de formation aux technologies modernes : développement web, mobile, cybersécurité, gestion de projet IT. Sessions pratiques adaptées au niveau des équipes et aux outils de l'entreprise.",
-      tags: ["Formation", "Cybersécurité", "Développement", "Certification"],
-      result: "Équipes opérationnelles",
-      iconKey: "spark",
-      gradient: GRADIENTS[3],
-      role: "Formation & accompagnement",
-      scope: "Formation IT sur mesure",
-      logo: "/logo-formation.svg",
-      screenshots: [
-        "/img/photo-1573164713988-8665fc963095-w1200.jpg",
-        "/img/photo-1524178232363-1fb2b075b655-w1200.jpg",
-        "/img/photo-1531482615713-2afd69097998-w1200.jpg",
-        "/img/photo-1515187029135-18ee286d815b-w1200.jpg",
       ],
     },
   ],
@@ -139,8 +125,9 @@ const PROJECTS: Record<Lang, Project[]> = {
       role: "Design & development",
       scope: "International e-commerce store",
       url: "https://afrikamode.store",
-      logo: "/logo-Afrikamode.jpeg",
-      screenshots: [
+      logo: "/logo/logo-Afrikamode.png",
+      cover: "/afrikamode-realisations/01-site-accueil.png",
+      video: "/Realisations/projet-Afrikamode-realisation.mp4",      screenshots: [
         "/img/photo-1558618666-fcd25c85cd64-w1200.jpg",
         "/img/photo-1441984904996-e0b6ba687e04-w1200.jpg",
         "/img/photo-1483985988355-763728e1935b-w1200.jpg",
@@ -158,7 +145,7 @@ const PROJECTS: Record<Lang, Project[]> = {
       gradient: GRADIENTS[1],
       role: "Design & development",
       scope: "SME financial management",
-      logo: "/logo-GATHE FINANCE.jpeg",
+      logo: "/logo/logo-GATHE_FINANCE.png",
       screenshots: [
         "/img/photo-1551288049-bebda4e38f71-w1200.jpg",
         "/img/photo-1460925895917-afdab827c52f-w1200.jpg",
@@ -170,14 +157,14 @@ const PROJECTS: Record<Lang, Project[]> = {
       title: "e-Learning platform",
       client: "IT learners & professionals",
       category: "Education & EdTech",
-      desc: "Training platform covering IT careers: web development, Python, cybersecurity and more. Structured tracks, progressive resources and learner tracking — built to make tech accessible everywhere across Africa.",
+      desc: "Training platform covering IT careers: web development, Python, cybersecurity and more. Structured tracks, progressive resources and learner tracking, built to make tech accessible everywhere across Africa.",
       tags: ["Next.js", "TypeScript", "Tailwind", "Video", "PWA"],
       result: "Full tech catalogue",
       iconKey: "eye",
       gradient: GRADIENTS[2],
       role: "Design & development",
       scope: "Online IT training platform",
-      logo: "/logo-Edlearning.jpeg",
+      logo: "/logo/logo-Edlearning.png",
       screenshots: [
         "/img/photo-1501504905252-473c47e087f8-w1200.jpg",
         "/img/photo-1588196749597-9ff075ee6b5b-w1200.jpg",
@@ -189,7 +176,7 @@ const PROJECTS: Record<Lang, Project[]> = {
       title: "Elec One",
       client: "2MeTech Sarl · Energy",
       category: "Energy & IoT",
-      desc: "Mobile app that drives EnMKit, 2MeTech's smart energy-control device. From your phone, remotely switch off equipment left running — iron, air-conditioner, TV — cutting waste and durably lowering your electricity bill.",
+      desc: "Mobile app that drives EnMKit, 2MeTech's smart energy-control device. From your phone, remotely switch off equipment left running, iron, air-conditioner, TV, cutting waste and durably lowering your electricity bill.",
       tags: ["Flutter", "Mobile", "IoT", "Real-time", "Energy"],
       result: "Live · consumption controlled remotely",
       iconKey: "cog",
@@ -197,31 +184,12 @@ const PROJECTS: Record<Lang, Project[]> = {
       role: "Design & development",
       scope: "Mobile energy-control app (EnMKit)",
       url: "https://www.2metechsarl.org",
-      logo: "/logo-Elec One.jpeg",
+      logo: "/logo/logo-Elec_One.png",
       screenshots: [
         "/img/photo-1473341304170-971dccb5ac1e-w1200.jpg",
         "/img/photo-1518770660439-4636190af475-w1200.jpg",
         "/img/photo-1518770660439-4636190af475-w1200.jpg",
         "/img/photo-1451187580459-43490279c0fa-w1200.jpg",
-      ],
-    },
-    {
-      title: "IT Training Programme",
-      client: "Professionals & businesses",
-      category: "Training",
-      desc: "Training programme on modern technologies: web & mobile development, cybersecurity, IT project management. Hands-on sessions adapted to team levels and company tools.",
-      tags: ["Training", "Cybersecurity", "Development", "Certification"],
-      result: "Operational teams",
-      iconKey: "spark",
-      gradient: GRADIENTS[3],
-      role: "Training & coaching",
-      scope: "Custom IT training",
-      logo: "/logo-formation.svg",
-      screenshots: [
-        "/img/photo-1573164713988-8665fc963095-w1200.jpg",
-        "/img/photo-1524178232363-1fb2b075b655-w1200.jpg",
-        "/img/photo-1531482615713-2afd69097998-w1200.jpg",
-        "/img/photo-1515187029135-18ee286d815b-w1200.jpg",
       ],
     },
   ],

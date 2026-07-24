@@ -83,6 +83,18 @@ body {
 }
 
 /* ============================================================
+   Design "carré & pro" — AUCUN arrondi sur tout le site.
+   Règle unique qui neutralise tous les border-radius (utilitaires
+   Tailwind `rounded-*`, pilules `rounded-full`, valeurs inline).
+   Pour revenir à des coins arrondis : retirer ce bloc.
+   ============================================================ */
+*,
+*::before,
+*::after {
+  border-radius: 0 !important;
+}
+
+/* ============================================================
    Reveal on scroll (piloté par <Reveal/>)
    ============================================================ */
 .reveal {

@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
-import { WaveDivider } from "@/components/WaveDivider";
+import { HeroBackground } from "@/components/sections/HeroBackground";
 import {
   IconArrowRight,
   IconCheck,
@@ -31,61 +31,61 @@ export function generateStaticParams(): { lang: Lang }[] {
 const TEAM_MEMBERS = {
   fr: [
     {
-      name: "Brailain Loïc TONBA",
-      role: "Ingénieur logiciel · Co-fondateur",
-      bio: "Développeur full-stack et entrepreneur tech, je pilote la vision produit de Horus-Lab et conçois des solutions numériques de bout en bout pour des entreprises africaines et internationales. Passionné par l'impact de la technologie sur le continent.",
-      initials: "BT",
-      photo: "/photo-loic-tonba-cofounder.png",
-      linkedin: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
-      github: "https://github.com/LoicTonba",
-      email: "tonbaloic@gmail.com",
-      whatsapp: "https://wa.me/237699173771",
-      isLead: true,
-      gradient: "from-brand-700 via-brand-500 to-sky",
-      badge: "Co-fondateur",
-    },
-    {
       name: "Edwin TCHAMBA TCHAKOUNTE",
       role: "Architecte logiciel · Co-fondateur",
-      bio: "Ingénieur logiciel senior & architecte. Plus de 3 ans en full-stack (web & mobile), APIs REST et déploiement cloud, avec la rigueur des méthodes RUP et UML. Lauréat du Prix du Meilleur Projet de Fin d'Études, IUT-FV Bandjoun (2024).",
+      bio: "Architecte logiciel et ingénieur senior. J'assemble des applications web et mobiles robustes, APIs REST, cloud, méthodes RUP & UML, pensées pour durer et passer à l'échelle. Lauréat du Prix du Meilleur Projet de Fin d'Études, IUT-FV Bandjoun (2024).",
       initials: "ET",
-      photo: "/photo-Edwin-co-founder.png",
+      photo: "/A-propos/photo-Edwin-co-founder.png",
       linkedin: "",
       github: "https://github.com/EdwinTchakounte",
       email: "tchambaedwin@gmail.com",
       whatsapp: "https://wa.me/237673398046",
       isLead: true,
       gradient: "from-slate-800 via-brand-700 to-amber-500",
+      badge: "Co-fondateur",
+    },
+    {
+      name: "Loïc DJIMGOU TONBA",
+      role: "Ingénieur logiciel · Co-fondateur",
+      bio: "Ingénieur full-stack et entrepreneur, je transforme des idées en produits numériques qui marchent, du web au mobile, du concept au déploiement. Je pilote la vision produit de Horus-Lab pour des clients africains et internationaux, convaincu que la tech est un vrai levier de croissance pour le continent.",
+      initials: "LT",
+      photo: "/A-propos/photo-loic-tonba-cofounder.png",
+      linkedin: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
+      github: "https://github.com/LoicTonba",
+      email: "tonbaloic@gmail.com",
+      whatsapp: "https://wa.me/237699173771",
+      isLead: true,
+      gradient: "from-brand-700 via-brand-500 to-sky",
       badge: "Co-fondateur",
     },
   ],
   en: [
     {
-      name: "Brailain Loïc TONBA",
-      role: "Software engineer · Co-founder",
-      bio: "Full-stack developer and tech entrepreneur, I drive the product vision at Horus-Lab and build end-to-end digital solutions for African and international businesses. Passionate about technology's impact across the continent.",
-      initials: "BT",
-      photo: "/photo-loic-tonba-cofounder.png",
-      linkedin: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
-      github: "https://github.com/LoicTonba",
-      email: "tonbaloic@gmail.com",
-      whatsapp: "https://wa.me/237699173771",
-      isLead: true,
-      gradient: "from-brand-700 via-brand-500 to-sky",
-      badge: "Co-founder",
-    },
-    {
       name: "Edwin TCHAMBA TCHAKOUNTE",
       role: "Software architect · Co-founder",
-      bio: "Senior software engineer & architect. 3+ years in full-stack (web & mobile) development, REST APIs and cloud deployment, with the rigour of RUP and UML methods. Winner of the Best Final Year Project Award, IUT-FV Bandjoun (2024).",
+      bio: "Software architect and senior engineer. I build robust web and mobile applications, REST APIs, cloud, RUP & UML methods, designed to last and scale. Winner of the Best Final Year Project Award, IUT-FV Bandjoun (2024).",
       initials: "ET",
-      photo: "/photo-Edwin-co-founder.png",
+      photo: "/A-propos/photo-Edwin-co-founder.png",
       linkedin: "",
       github: "https://github.com/EdwinTchakounte",
       email: "tchambaedwin@gmail.com",
       whatsapp: "https://wa.me/237673398046",
       isLead: true,
       gradient: "from-slate-800 via-brand-700 to-amber-500",
+      badge: "Co-founder",
+    },
+    {
+      name: "Loïc DJIMGOU TONBA",
+      role: "Software engineer · Co-founder",
+      bio: "Full-stack engineer and entrepreneur, I turn ideas into digital products that ship, web and mobile, from concept to deployment. I lead Horus-Lab's product vision for African and international clients, convinced that technology is a real growth engine for the continent.",
+      initials: "LT",
+      photo: "/A-propos/photo-loic-tonba-cofounder.png",
+      linkedin: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
+      github: "https://github.com/LoicTonba",
+      email: "tonbaloic@gmail.com",
+      whatsapp: "https://wa.me/237699173771",
+      isLead: true,
+      gradient: "from-brand-700 via-brand-500 to-sky",
       badge: "Co-founder",
     },
   ],
@@ -191,27 +191,26 @@ type TeamCard = {
  * sont ré-associés par nom ; initiales et badge sont dérivés.
  */
 async function resolveTeam(lang: Lang): Promise<TeamCard[]> {
+  // Piloté par l'admin (`/admin/` → Équipe) si des membres existent, sinon repli
+  // statique. Le CMS porte désormais photo (photo_path), badge et dégradé → plus
+  // besoin de ré-associer par nom (l'ancienne cause du bug de photo).
   const staticTeam = TEAM_MEMBERS[lang];
   const cms = await getCmsTeam(lang);
   if (!cms.length) return staticTeam;
-  const byName = new Map(staticTeam.map((m) => [m.name, m]));
-  return cms.map((m, i) => {
-    const local = byName.get(m.name);
-    return {
-      name: m.name,
-      role: m.role,
-      bio: m.bio,
-      initials: initialsOf(m.name),
-      photo: m.photo ?? local?.photo ?? null,
-      linkedin: m.linkedin || local?.linkedin || "",
-      github: m.github || local?.github || "",
-      email: m.email || local?.email || "",
-      whatsapp: local?.whatsapp ?? "",
-      isLead: m.isLead,
-      gradient: local?.gradient ?? TEAM_GRADIENTS[i % TEAM_GRADIENTS.length],
-      badge: m.isLead ? (lang === "fr" ? "Co-fondateur" : "Co-founder") : m.role,
-    };
-  });
+  return cms.map((m, i) => ({
+    name: m.name,
+    role: m.role,
+    bio: m.bio,
+    initials: initialsOf(m.name),
+    photo: m.photo,
+    linkedin: m.linkedin,
+    github: m.github,
+    email: m.email,
+    whatsapp: m.whatsapp,
+    isLead: m.isLead,
+    gradient: m.gradient || TEAM_GRADIENTS[i % TEAM_GRADIENTS.length],
+    badge: m.badge || (m.isLead ? (lang === "fr" ? "Co-fondateur" : "Co-founder") : m.role),
+  }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -237,28 +236,20 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
       <main id="main" tabIndex={-1}>
 
         {/* ── Hero about ── */}
-        <section className="relative isolate overflow-hidden pt-32 pb-20 sm:pt-40 sm:pb-24">
-          {/* Image fond */}
-          <div aria-hidden
-            className="absolute inset-0 -z-10 bg-cover bg-center"
-            style={{ backgroundImage: `url(/img/photo-1531482615713-2afd69097998-w1740.jpg)` }}
-          />
-          <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-br from-brand-900/80 via-brand-900/60 to-brand-800/70" />
-          <div aria-hidden className="absolute inset-0 -z-10 bg-grid opacity-[0.15]" />
-          {/* Halos discrets */}
-          <div aria-hidden className="pointer-events-none absolute -left-20 top-1/4 h-64 w-64 rounded-full bg-sky/12 blur-3xl" />
-          <div aria-hidden className="pointer-events-none absolute -right-10 bottom-0 h-56 w-56 rounded-full bg-brand-400/12 blur-3xl" />
+        <section className="relative isolate overflow-hidden pt-24 pb-12 sm:pt-28 sm:pb-14">
+          {/* Fond vidéo : vision & jeunesse tech africaine */}
+          <HeroBackground videoSrc="/A-propos/about-hero.mp4" poster="/img/photo-1531482615713-2afd69097998-w1740.jpg" />
 
           <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 sm:px-8 lg:grid-cols-[1.2fr_0.8fr]">
             <div>
               <Reveal>
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur">
+                <span className="inline-flex items-center gap-2 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-white/90 backdrop-blur">
                   <IconEye className="size-4 text-sky" />
                   {c.eyebrow}
                 </span>
               </Reveal>
               <Reveal delay={80}>
-                <h1 className="mt-6 text-4xl font-extrabold leading-[1.05] tracking-tight text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.4)] sm:text-5xl lg:text-6xl">
+                <h1 className="mt-5 text-3xl font-extrabold leading-[1.08] tracking-tight text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.4)] sm:text-4xl lg:text-5xl">
                   {c.title}
                 </h1>
               </Reveal>
@@ -279,7 +270,7 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
               <div className="grid grid-cols-1 gap-4">
                 {c.stats.map((s, i) => (
                   <div key={s.label}
-                    className="group relative overflow-hidden rounded-lg border border-white/15 bg-white/10 p-5 backdrop-blur transition-all hover:-translate-x-1 hover:bg-white/15"
+                    className="group relative overflow-hidden bg-white/10 p-5 backdrop-blur transition-all hover:-translate-x-1 hover:bg-white/15"
                     style={{ animationDelay: `${i * 100}ms` }}>
                     <div aria-hidden className="absolute inset-0 bg-gradient-to-r from-brand-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <div className="relative flex items-center gap-4">
@@ -292,16 +283,14 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
             </Reveal>
           </div>
 
-          {/* Séparateur en vague statique vers la section suivante */}
-          <WaveDivider className="text-surface dark:text-[#070e1c]" />
         </section>
 
         {/* ── Mission & Vision ── */}
-        <section className="bg-gradient-to-b from-surface via-white to-brand-50/40 py-16 dark:from-[#070e1c] dark:via-slate-900/40 dark:to-[#070e1c] sm:py-20">
+        <section className="bg-gradient-to-b from-surface via-white to-brand-50/40 py-14 dark:from-[#070e1c] dark:via-slate-900/40 dark:to-[#070e1c] sm:py-16">
           <div className="mx-auto grid max-w-7xl gap-6 px-5 sm:px-8 md:grid-cols-2">
             {c.pillars.map((pl, i) => (
               <Reveal key={pl.h} delay={i * 100}>
-                <article className="group relative h-full overflow-hidden rounded-lg border border-brand-100 bg-gradient-to-br from-brand-50/60 to-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl dark:border-white/10 dark:from-slate-900 dark:to-slate-900">
+                <article className="group relative h-full overflow-hidden bg-gradient-to-br from-brand-50/60 to-white p-8 transition-all hover:-translate-y-1 hover:shadow-xl dark:from-slate-900 dark:to-slate-900">
                   <div aria-hidden className="pointer-events-none absolute -right-6 -top-6 size-28 rounded-full bg-brand-400/8 blur-2xl group-hover:bg-brand-400/15 transition-all" />
                   <span className={`mb-4 inline-block rounded-full bg-gradient-to-r ${VALUE_COLORS[i]} px-3 py-1 text-xs font-bold text-white uppercase tracking-wide`}>
                     {String(i + 1).padStart(2, "0")}
@@ -315,7 +304,7 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
         </section>
 
         {/* ── Valeurs ── */}
-        <section className="relative bg-surface py-20 sm:py-28 overflow-hidden">
+        <section className="relative bg-surface py-14 sm:py-16 overflow-hidden">
           <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
             <div className="bg-grid-soft absolute inset-0 opacity-40 dark:opacity-20" />
             <div className="absolute right-1/4 top-0 h-72 w-72 rounded-full bg-brand-400/8 blur-3xl" />
@@ -323,15 +312,15 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
           </div>
           <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
             <Reveal className="mx-auto max-w-2xl text-center">
-              <span className="text-xs font-bold uppercase tracking-[0.2em] text-brand-500">{c.valuesTitle}</span>
-              <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-brand-900 dark:text-white sm:text-4xl">{c.valuesSubtitle}</h2>
+              <span className="text-xs font-bold uppercase tracking-[0.24em] text-brand-500">{c.valuesTitle}</span>
+              <h2 className="mt-3 text-2xl font-extrabold tracking-tight text-brand-900 dark:text-white sm:text-3xl">{c.valuesSubtitle}</h2>
             </Reveal>
-            <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {c.values.map((v, i) => {
                 const Icon = VALUE_ICONS[i] ?? IconCheck;
                 return (
                   <Reveal key={v.title} delay={i * 90}>
-                    <article className="group relative h-full overflow-hidden rounded-lg border border-brand-100 bg-white p-7 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-brand-900/10 dark:border-white/10 dark:bg-slate-900">
+                    <article className="group relative h-full overflow-hidden bg-white p-7 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-brand-900/10 dark:bg-slate-900">
                       <div aria-hidden className={`absolute inset-0 bg-gradient-to-br ${VALUE_COLORS[i]} opacity-0 group-hover:opacity-5 transition-opacity`} />
                       <div className={`relative grid size-14 place-items-center rounded-lg bg-gradient-to-br ${VALUE_COLORS[i]} text-white shadow-lg transition-transform group-hover:scale-110`}>
                         <Icon className="size-7" />
@@ -347,33 +336,37 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
           </div>
         </section>
 
-        {/* ── Histoire ── */}
-        <section className="bg-white py-20 dark:bg-[#070e1c] sm:py-24">
-          <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:items-center">
-            <Reveal>
-              <h2 className="text-3xl font-extrabold tracking-tight text-brand-900 dark:text-white sm:text-4xl">{c.storyTitle}</h2>
-              <div className="mt-6 space-y-4 text-lg leading-relaxed text-muted">
-                {c.story.map((para, i) => <p key={i}>{para}</p>)}
-              </div>
+        {/* ── Notre approche (histoire) — titre centré ── */}
+        <section className="bg-white py-14 dark:bg-[#070e1c] sm:py-16">
+          <div className="mx-auto max-w-7xl px-5 sm:px-8">
+            <Reveal className="mx-auto max-w-3xl text-center">
+              <h2 className="text-2xl font-extrabold tracking-tight text-brand-900 dark:text-white sm:text-3xl">{c.storyTitle}</h2>
             </Reveal>
-            <Reveal delay={120}>
-              <div className="relative rounded-lg border border-brand-100 bg-gradient-to-br from-brand-50 to-white p-8 dark:border-white/10 dark:from-slate-900 dark:to-slate-900">
-                <div aria-hidden className="absolute -right-4 -top-4 size-24 rounded-full bg-sky/15 blur-2xl" />
-                <dl className="grid gap-6 sm:grid-cols-3">
-                  {c.stats.map((s) => (
-                    <div key={s.label} className="text-center">
-                      <dt className="text-4xl font-extrabold text-brand-700 dark:text-brand-300">{s.value}</dt>
-                      <dd className="mt-1 text-sm text-muted">{s.label}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </div>
-            </Reveal>
+            <div className="mt-10 grid gap-12 lg:grid-cols-2 lg:items-center">
+              <Reveal>
+                <div className="space-y-4 text-base leading-relaxed text-muted sm:text-lg">
+                  {c.story.map((para, i) => <p key={i}>{para}</p>)}
+                </div>
+              </Reveal>
+              <Reveal delay={120}>
+                <div className="relative bg-gradient-to-br from-brand-50 to-white p-8 dark:from-slate-900 dark:to-slate-900">
+                  <div aria-hidden className="absolute -right-4 -top-4 size-24 rounded-full bg-sky/15 blur-2xl" />
+                  <dl className="grid gap-6 sm:grid-cols-3">
+                    {c.stats.map((s) => (
+                      <div key={s.label} className="text-center">
+                        <dt className="text-4xl font-extrabold text-brand-700 dark:text-brand-300">{s.value}</dt>
+                        <dd className="mt-1 text-sm text-muted">{s.label}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              </Reveal>
+            </div>
           </div>
         </section>
 
         {/* ── Équipe — fond sombre sobre ── */}
-        <section className="relative overflow-hidden bg-brand-900 py-20 sm:py-28">
+        <section className="relative overflow-hidden bg-brand-900 py-14 sm:py-16">
           {/* Halos discrets */}
           <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
             <div className="absolute -left-20 top-1/4 h-80 w-80 rounded-full bg-brand-500/12 blur-3xl" />
@@ -387,11 +380,11 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
             </Reveal>
 
             {/* ── Les deux fondateurs, ensemble ── */}
-            <Reveal className="mx-auto mt-14 max-w-4xl">
-              <div className="group relative overflow-hidden rounded-lg border border-white/15 shadow-2xl shadow-black/40">
+            <Reveal className="mx-auto mt-10 max-w-4xl">
+              <div className="group relative overflow-hidden shadow-2xl shadow-black/40">
                 <div className="relative h-72 w-full sm:h-96">
                   <Image
-                    src="/photo-the-co-founders-together.png"
+                    src="/A-propos/photo-the-co-founders-together.png"
                     alt={lang === "fr" ? "Les co-fondateurs de Horus-Lab" : "Horus-Lab co-founders"}
                     fill
                     priority
@@ -405,7 +398,7 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
                       {lang === "fr" ? "Co-fondateurs" : "Co-founders"}
                     </span>
                     <h3 className="mt-3 text-2xl font-extrabold text-white sm:text-3xl">
-                      Brailain Loïc TONBA <span className="text-sky">&amp;</span> Edwin TCHAMBA TCHAKOUNTE
+                      Edwin TCHAMBA TCHAKOUNTE <span className="text-sky">&amp;</span> Loïc DJIMGOU TONBA
                     </h3>
                     <p className="mt-1 text-sm text-white/80">
                       {lang === "fr"

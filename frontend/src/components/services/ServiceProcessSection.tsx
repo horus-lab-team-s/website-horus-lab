@@ -1,6 +1,7 @@
 "use client";
 
 import { Reveal } from "@/components/Reveal";
+import { SectionHeading } from "@/components/sections/SectionHeading";
 
 type ProcessStep = { step: string; title: string; desc: string };
 
@@ -23,7 +24,7 @@ export function ServiceProcessSection({
   howLabel: string;
 }) {
   return (
-    <section className="relative overflow-hidden bg-brand-900 py-20 sm:py-28">
+    <section className="relative overflow-hidden bg-brand-900 py-14 sm:py-16">
       {/* Fond sobre : grille + halos discrets */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-grid opacity-[0.08]" />
@@ -32,23 +33,16 @@ export function ServiceProcessSection({
       </div>
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-        {/* En-tête */}
-        <Reveal className="text-center mb-12">
-          <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.2em] text-sky">
-            <span className="h-px w-6 bg-sky/60" />
-            {processLabel}
-          </span>
-          <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">{howLabel}</h2>
-        </Reveal>
+        <SectionHeading eyebrow={processLabel} title={howLabel} light />
 
         {/* Frise statique : 4 étapes claires */}
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {process.map((step, i) => {
             const c = STEP_COLORS[i % STEP_COLORS.length];
             const isLast = i === process.length - 1;
             return (
               <Reveal key={step.step} delay={i * 90}>
-                <div className={`flex h-full flex-col rounded-lg border bg-white/8 p-6 backdrop-blur ${c.border}`}>
+                <div className="flex h-full flex-col bg-white/8 p-6 backdrop-blur">
                   <div className="flex items-center gap-3">
                     <div className={`inline-flex size-11 shrink-0 items-center justify-center rounded-md bg-gradient-to-br ${c.grad} text-sm font-extrabold text-white shadow-lg`}>
                       {step.step}

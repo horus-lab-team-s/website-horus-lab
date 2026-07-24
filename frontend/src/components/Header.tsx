@@ -33,20 +33,62 @@ const SERVICE_SUBMENU: Record<LangCode, { slug: string; label: string }[]> = {
   ],
 };
 
+/* ── Sous-menus formations (catégories du catalogue) ── */
+const FORMATION_SUBMENU: Record<LangCode, { slug: string; label: string }[]> = {
+  fr: [
+    { slug: "web",            label: "Développement Web" },
+    { slug: "mobile",         label: "Développement Mobile" },
+    { slug: "genie-logiciel", label: "Génie logiciel" },
+    { slug: "ia",             label: "IA & Productivité" },
+  ],
+  en: [
+    { slug: "web",            label: "Web Development" },
+    { slug: "mobile",         label: "Mobile Development" },
+    { slug: "genie-logiciel", label: "Software Engineering" },
+    { slug: "ia",             label: "AI & Productivity" },
+  ],
+};
+
+/* ── Sous-menus blog (catégories d'articles → /blog?cat=) ── */
+const BLOG_SUBMENU: Record<LangCode, { slug: string; label: string }[]> = {
+  fr: [
+    { slug: "Actualités Tech",         label: "Actualités Tech" },
+    { slug: "Développement",           label: "Développement" },
+    { slug: "Tech Afrique",            label: "Tech Afrique" },
+    { slug: "Transformation Digitale", label: "Transformation Digitale" },
+    { slug: "Formation IT",            label: "Formation IT" },
+  ],
+  en: [
+    { slug: "Tech News",               label: "Tech News" },
+    { slug: "Development",             label: "Development" },
+    { slug: "Tech Africa",            label: "Tech Africa" },
+    { slug: "Digital Transformation", label: "Digital Transformation" },
+    { slug: "IT Training",            label: "IT Training" },
+  ],
+};
+
 export function Header() {
   const { dict, lang, localePath } = useLang();
   const pathname  = usePathname();
   const router    = useRouter();
 
-  const [scrolled,            setScrolled]            = useState(false);
-  const [menuOpen,            setMenuOpen]            = useState(false);
-  const [servicesOpen,        setServicesOpen]        = useState(false);
-  const [mobileServicesOpen,  setMobileServicesOpen]  = useState(false);
-  const [langOpen,            setLangOpen]            = useState(false);
+  const [scrolled,             setScrolled]             = useState(false);
+  const [menuOpen,             setMenuOpen]             = useState(false);
+  const [servicesOpen,         setServicesOpen]         = useState(false);
+  const [mobileServicesOpen,   setMobileServicesOpen]   = useState(false);
+  const [formationsOpen,       setFormationsOpen]       = useState(false);
+  const [mobileFormationsOpen, setMobileFormationsOpen] = useState(false);
+  const [blogOpen,             setBlogOpen]             = useState(false);
+  const [mobileBlogOpen,       setMobileBlogOpen]       = useState(false);
+  const [langOpen,             setLangOpen]             = useState(false);
 
-  const servicesRef = useRef<HTMLLIElement>(null);
-  const langRef     = useRef<HTMLDivElement>(null);
-  const svcTimer    = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const servicesRef   = useRef<HTMLLIElement>(null);
+  const formationsRef = useRef<HTMLLIElement>(null);
+  const langRef       = useRef<HTMLDivElement>(null);
+  const blogRef       = useRef<HTMLLIElement>(null);
+  const svcTimer      = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const fmtTimer      = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const blogTimer     = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   /* Scroll */
   useEffect(() => {
@@ -56,11 +98,15 @@ export function Header() {
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
-  /* Fermer services dropdown au clic extérieur */
+  /* Fermer les dropdowns services / formations au clic extérieur */
   useEffect(() => {
     const fn = (e: MouseEvent) => {
       if (servicesRef.current && !servicesRef.current.contains(e.target as Node))
         setServicesOpen(false);
+      if (formationsRef.current && !formationsRef.current.contains(e.target as Node))
+        setFormationsOpen(false);
+      if (blogRef.current && !blogRef.current.contains(e.target as Node))
+        setBlogOpen(false);
     };
     document.addEventListener("mousedown", fn);
     return () => document.removeEventListener("mousedown", fn);
@@ -91,22 +137,32 @@ export function Header() {
 
   const openSvc  = () => { if (svcTimer.current) clearTimeout(svcTimer.current); setServicesOpen(true); };
   const closeSvc = () => { svcTimer.current = setTimeout(() => setServicesOpen(false), 180); };
+  const openFmt  = () => { if (fmtTimer.current) clearTimeout(fmtTimer.current); setFormationsOpen(true); };
+  const closeFmt = () => { fmtTimer.current = setTimeout(() => setFormationsOpen(false), 180); };
+  const openBlog  = () => { if (blogTimer.current) clearTimeout(blogTimer.current); setBlogOpen(true); };
+  const closeBlog = () => { blogTimer.current = setTimeout(() => setBlogOpen(false), 180); };
 
-  const submenus = SERVICE_SUBMENU[lang as LangCode] ?? SERVICE_SUBMENU.fr;
-  const currentLang = LANGS.find(l => l.code === lang) ?? LANGS[0];
+  const submenus     = SERVICE_SUBMENU[lang as LangCode] ?? SERVICE_SUBMENU.fr;
+  const fmtSubmenus  = FORMATION_SUBMENU[lang as LangCode] ?? FORMATION_SUBMENU.fr;
+  const blogSubmenus = BLOG_SUBMENU[lang as LangCode] ?? BLOG_SUBMENU.fr;
+  const currentLang  = LANGS.find(l => l.code === lang) ?? LANGS[0];
 
+  // Ordre logique « de vente » : Services & Formations (offres, en dropdowns) →
+  // Réalisations (preuve) → À propos (confiance) → Blog (contenu) → Contact (CTA).
   const links = [
     { href: localePath("/portfolio"),   label: dict.nav.portfolio },
-    { href: localePath("/blog"),        label: dict.nav.blog },
     { href: localePath("/about"),       label: dict.nav.about },
-    { href: localePath("/candidature"), label: dict.nav.careers },
     { href: localePath("/contact"),     label: dict.nav.contact },
   ];
 
   const isActive = (href: string) =>
     !!(pathname && (pathname === href || pathname.startsWith(`${href}/`)));
 
-  const isServicesActive = !!(pathname?.includes("/services"));
+  const isServicesActive   = !!(pathname?.includes("/services"));
+  const isFormationsActive = !!(pathname?.includes("/formations"));
+  const isBlogActive = !!(pathname?.includes("/blog"));
+  const fmtHref = (slug: string) => localePath(`/formations?cat=${slug}#catalogue`);
+  const blogHref = (slug: string) => localePath(`/blog?cat=${encodeURIComponent(slug)}`);
 
   /* Changement de langue */
   function switchLang(targetLang: string) {
@@ -129,9 +185,9 @@ export function Header() {
 
           {/* Logo — noir (transparent) sur fond clair, blanc sur fond sombre : toujours lisible */}
           <Link href={localePath("/")} className="flex shrink-0 items-center" aria-label="Horus-Lab">
-            <Image src="/logo-HORUS-LAB-black.png" alt="Horus-Lab" width={200} height={64} priority
+            <Image src="/logo/logo-light-bg-full.png" alt="Horus-Lab" width={200} height={64} priority
               className="h-14 w-auto object-contain dark:hidden" />
-            <Image src="/logo-HORUS-LAB-white.jpeg" alt="Horus-Lab" width={200} height={64} priority
+            <Image src="/logo/logo-dark-bg-full.png" alt="Horus-Lab" width={200} height={64} priority
               className="hidden h-14 w-auto rounded-sm object-contain dark:block" />
           </Link>
 
@@ -169,6 +225,97 @@ export function Header() {
                       <Link href={localePath(`/services/${s.slug}`)} onClick={() => setServicesOpen(false)}
                         className="group/svc flex items-center gap-2.5 rounded-md px-3.5 py-2.5 text-sm font-medium text-ink/80 transition-colors hover:bg-brand-50 hover:text-brand-700 dark:text-brand-100/80 dark:hover:bg-white/5 dark:hover:text-brand-200">
                         <span className="h-px w-3 shrink-0 bg-brand-400 transition-all group-hover/svc:w-4" />
+                        {s.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+
+            {/* Formations dropdown */}
+            <li ref={formationsRef} className="relative" onMouseEnter={openFmt} onMouseLeave={closeFmt}>
+              <Link href={localePath("/formations")} aria-haspopup="true" aria-expanded={formationsOpen}
+                onClick={() => setFormationsOpen(false)}
+                className={`flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                  isFormationsActive
+                    ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
+                    : "text-ink/75 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
+                }`}>
+                {isFormationsActive && <span aria-hidden className="size-1.5 rounded-full bg-brand-500 glow-pulse" />}
+                {dict.nav.formations}
+                <svg className={`size-3.5 transition-transform duration-200 ${formationsOpen ? "rotate-180" : ""}`}
+                  fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </Link>
+
+              {/* Dropdown formations */}
+              <div onMouseEnter={openFmt} onMouseLeave={closeFmt}
+                className={`absolute left-0 top-full mt-2 w-64 origin-top-left rounded-md border border-brand-100 bg-white/97 shadow-xl shadow-brand-900/10 backdrop-blur transition-all duration-200 dark:border-white/10 dark:bg-slate-900/97 ${
+                  formationsOpen ? "scale-100 opacity-100 pointer-events-auto" : "scale-95 opacity-0 pointer-events-none"
+                }`}>
+                <p className="px-4 pt-3 pb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
+                  {dict.nav.formations}
+                </p>
+                <ul className="px-1.5 pb-1.5">
+                  <li>
+                    <Link href={localePath("/formations")} onClick={() => setFormationsOpen(false)}
+                      className="flex items-center gap-2.5 rounded-md px-3.5 py-2.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50 dark:text-brand-200 dark:hover:bg-white/5">
+                      <span className="h-px w-3 shrink-0 bg-brand-500" />
+                      {lang === "fr" ? "Toutes les formations" : "All courses"}
+                    </Link>
+                  </li>
+                  {fmtSubmenus.map(s => (
+                    <li key={s.slug} className="border-t border-dashed border-brand-100 dark:border-white/10">
+                      <Link href={fmtHref(s.slug)} onClick={() => setFormationsOpen(false)}
+                        className="group/fmt flex items-center gap-2.5 rounded-md px-3.5 py-2.5 text-sm font-medium text-ink/80 transition-colors hover:bg-brand-50 hover:text-brand-700 dark:text-brand-100/80 dark:hover:bg-white/5 dark:hover:text-brand-200">
+                        <span className="h-px w-3 shrink-0 bg-brand-400 transition-all group-hover/fmt:w-4" />
+                        {s.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+
+            {/* Blog dropdown */}
+            <li ref={blogRef} className="relative" onMouseEnter={openBlog} onMouseLeave={closeBlog}>
+              <Link href={localePath("/blog")} aria-haspopup="true" aria-expanded={blogOpen}
+                onClick={() => setBlogOpen(false)}
+                className={`flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                  isBlogActive
+                    ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
+                    : "text-ink/75 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
+                }`}>
+                {isBlogActive && <span aria-hidden className="size-1.5 rounded-full bg-brand-500 glow-pulse" />}
+                {dict.nav.blog}
+                <svg className={`size-3.5 transition-transform duration-200 ${blogOpen ? "rotate-180" : ""}`}
+                  fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </Link>
+
+              <div onMouseEnter={openBlog} onMouseLeave={closeBlog}
+                className={`absolute left-0 top-full mt-2 w-64 origin-top-left rounded-md border border-brand-100 bg-white/97 shadow-xl shadow-brand-900/10 backdrop-blur transition-all duration-200 dark:border-white/10 dark:bg-slate-900/97 ${
+                  blogOpen ? "scale-100 opacity-100 pointer-events-auto" : "scale-95 opacity-0 pointer-events-none"
+                }`}>
+                <p className="px-4 pt-3 pb-2 text-[10px] font-bold uppercase tracking-[0.18em] text-muted">
+                  {dict.nav.blog}
+                </p>
+                <ul className="px-1.5 pb-1.5">
+                  <li>
+                    <Link href={localePath("/blog")} onClick={() => setBlogOpen(false)}
+                      className="flex items-center gap-2.5 rounded-md px-3.5 py-2.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50 dark:text-brand-200 dark:hover:bg-white/5">
+                      <span className="h-px w-3 shrink-0 bg-brand-500" />
+                      {lang === "fr" ? "Tous les articles" : "All articles"}
+                    </Link>
+                  </li>
+                  {blogSubmenus.map(s => (
+                    <li key={s.slug} className="border-t border-dashed border-brand-100 dark:border-white/10">
+                      <Link href={blogHref(s.slug)} onClick={() => setBlogOpen(false)}
+                        className="group/blog flex items-center gap-2.5 rounded-md px-3.5 py-2.5 text-sm font-medium text-ink/80 transition-colors hover:bg-brand-50 hover:text-brand-700 dark:text-brand-100/80 dark:hover:bg-white/5 dark:hover:text-brand-200">
+                        <span className="h-px w-3 shrink-0 bg-brand-400 transition-all group-hover/blog:w-4" />
                         {s.label}
                       </Link>
                     </li>
@@ -285,9 +432,9 @@ export function Header() {
       >
         {/* En-tête du panneau : logo + fermeture */}
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-brand-100 px-4 dark:border-white/10">
-          <Image src="/logo-HORUS-LAB-black.png" alt="Horus-Lab" width={140} height={44}
+          <Image src="/logo/logo-light-bg-full.png" alt="Horus-Lab" width={140} height={44}
             className="h-9 w-auto object-contain dark:hidden" />
-          <Image src="/logo-HORUS-LAB-white.jpeg" alt="Horus-Lab" width={140} height={44}
+          <Image src="/logo/logo-dark-bg-full.png" alt="Horus-Lab" width={140} height={44}
             className="hidden h-9 w-auto rounded-sm object-contain dark:block" />
           <button type="button" onClick={() => setMenuOpen(false)} aria-label="Fermer le menu"
             className="grid size-10 place-items-center rounded-md border border-brand-200 text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:text-brand-200 dark:hover:bg-white/5">
@@ -318,6 +465,80 @@ export function Header() {
                     <li key={s.slug}>
                       <Link href={localePath(`/services/${s.slug}`)}
                         onClick={() => { setMenuOpen(false); setMobileServicesOpen(false); }}
+                        className="flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium text-ink/70 hover:bg-brand-50 hover:text-brand-700">
+                        <span className="size-1.5 rounded-full bg-brand-500/60" />
+                        {s.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+
+            {/* Formations accordion */}
+            <li>
+              <button type="button" onClick={() => setMobileFormationsOpen(v => !v)}
+                className={`flex w-full items-center justify-between gap-2 rounded-md px-4 py-3 text-base font-medium transition-colors ${
+                  isFormationsActive ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
+                                     : "text-ink/80 hover:bg-brand-50 hover:text-brand-700"
+                }`}>
+                {dict.nav.formations}
+                <svg className={`size-4 transition-transform ${mobileFormationsOpen ? "rotate-180" : ""}`}
+                  fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              {mobileFormationsOpen && (
+                <ul className="mt-1 ml-4 flex flex-col gap-0.5">
+                  <li>
+                    <Link href={localePath("/formations")}
+                      onClick={() => { setMenuOpen(false); setMobileFormationsOpen(false); }}
+                      className="flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold text-brand-700 hover:bg-brand-50 dark:text-brand-200">
+                      <span className="size-1.5 rounded-full bg-brand-500" />
+                      {lang === "fr" ? "Toutes les formations" : "All courses"}
+                    </Link>
+                  </li>
+                  {fmtSubmenus.map(s => (
+                    <li key={s.slug}>
+                      <Link href={fmtHref(s.slug)}
+                        onClick={() => { setMenuOpen(false); setMobileFormationsOpen(false); }}
+                        className="flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium text-ink/70 hover:bg-brand-50 hover:text-brand-700">
+                        <span className="size-1.5 rounded-full bg-brand-500/60" />
+                        {s.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+
+            {/* Blog accordion (mobile) */}
+            <li>
+              <button type="button" onClick={() => setMobileBlogOpen(v => !v)}
+                className={`flex w-full items-center justify-between gap-2 rounded-md px-4 py-3 text-base font-medium transition-colors ${
+                  isBlogActive ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
+                               : "text-ink/80 hover:bg-brand-50 hover:text-brand-700"
+                }`}>
+                {dict.nav.blog}
+                <svg className={`size-4 transition-transform ${mobileBlogOpen ? "rotate-180" : ""}`}
+                  fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              {mobileBlogOpen && (
+                <ul className="mt-1 ml-4 flex flex-col gap-0.5">
+                  <li>
+                    <Link href={localePath("/blog")}
+                      onClick={() => { setMenuOpen(false); setMobileBlogOpen(false); }}
+                      className="flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-semibold text-brand-700 hover:bg-brand-50 dark:text-brand-200">
+                      <span className="size-1.5 rounded-full bg-brand-500" />
+                      {lang === "fr" ? "Tous les articles" : "All articles"}
+                    </Link>
+                  </li>
+                  {blogSubmenus.map(s => (
+                    <li key={s.slug}>
+                      <Link href={blogHref(s.slug)}
+                        onClick={() => { setMenuOpen(false); setMobileBlogOpen(false); }}
                         className="flex items-center gap-2 rounded-md px-4 py-2.5 text-sm font-medium text-ink/70 hover:bg-brand-50 hover:text-brand-700">
                         <span className="size-1.5 rounded-full bg-brand-500/60" />
                         {s.label}

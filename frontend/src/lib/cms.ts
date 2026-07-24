@@ -26,6 +26,13 @@ import {
   type PostMeta,
   type Post,
 } from "@/lib/blog";
+import {
+  getFormations as getStaticFormations,
+  getCourse as getStaticCourse,
+  getCourseSlugs as getStaticCourseSlugs,
+  type Course,
+  type CourseCategory,
+} from "@/lib/courses";
 
 export const CMS_REVALIDATE = 60;
 const API_BASE = (process.env.BACKEND_API_URL ?? "http://localhost:8000").replace(/\/$/, "");
@@ -98,6 +105,7 @@ function mapProject(
     gradient: p.gradient,
     url: p.url || undefined,
     logo: p.logo ?? local?.logo,
+    cover: p.cover ?? local?.cover,
     screenshots: p.screenshots?.length ? p.screenshots : local?.screenshots,
   };
 }
@@ -164,9 +172,13 @@ type ApiTeamMember = {
   role_fr: string; role_en: string;
   bio_fr: string; bio_en: string;
   photo: string | null;
+  photo_path: string;
   linkedin_url: string;
   github_url: string;
+  whatsapp_url: string;
   email: string;
+  badge_fr: string; badge_en: string;
+  gradient: string;
   is_lead: boolean;
   order: number;
 };
@@ -178,7 +190,10 @@ export type CmsTeamMember = {
   photo: string | null;
   linkedin: string;
   github: string;
+  whatsapp: string;
   email: string;
+  badge: string;
+  gradient: string;
   isLead: boolean;
 };
 
@@ -194,10 +209,13 @@ export async function getCmsTeam(lang: Lang): Promise<CmsTeamMember[]> {
         name: m.name,
         role: t(m.role_fr, m.role_en),
         bio: t(m.bio_fr, m.bio_en),
-        photo: m.photo,
+        photo: m.photo || m.photo_path || null,
         linkedin: m.linkedin_url,
         github: m.github_url,
+        whatsapp: m.whatsapp_url,
         email: m.email,
+        badge: t(m.badge_fr, m.badge_en),
+        gradient: m.gradient,
         isLead: m.is_lead,
       }));
   } catch {
@@ -256,6 +274,74 @@ export async function getCmsSiteSettings(lang: Lang): Promise<CmsSiteSettings | 
         whatsapp: s.whatsapp_url,
         telegram: s.telegram_url,
       },
+    };
+  } catch {
+    return null;
+  }
+}
+
+/* ============================================================
+   Bannière « aperçu » Edlearning (site entier)
+   ============================================================ */
+type ApiFormationsPromo = {
+  is_active: boolean;
+  badge_fr: string; badge_en: string;
+  title_fr: string; title_en: string;
+  body_fr: string; body_en: string;
+  store_label_fr: string; store_label_en: string;
+  play_url: string;
+  logo_path: string;
+  teaser_badge_fr: string; teaser_badge_en: string;
+  teaser_title_fr: string; teaser_title_en: string;
+  teaser_body_fr: string; teaser_body_en: string;
+  teaser_cta_fr: string; teaser_cta_en: string;
+  start_date: string | null;
+  end_date: string | null;
+};
+
+export type CmsPromo = {
+  active: boolean;
+  logoPath: string;
+  playUrl: string;
+  storeLabel: string;
+  /** Variante affichée sur les pages Formations (aperçu Edlearning → Play Store). */
+  preview: { badge: string; title: string; body: string };
+  /** Variante affichée sur les autres pages (date de démarrage → /formations). */
+  teaser: { badge: string; title: string; body: string; cta: string };
+  /** Début de la formation (ISO `YYYY-MM-DD`) ou `null` → compte à rebours. */
+  startDate: string | null;
+  /** Fin calculée (début + durée) ou `null` → auto-expiration de la bannière. */
+  endDate: string | null;
+};
+
+/**
+ * Bannière Edlearning pilotée depuis l'admin (`/admin/` → Bannière Formations).
+ * Renvoie `null` si l'API est indisponible → le composant retombe alors sur ses
+ * textes intégrés (le site continue d'afficher la bannière). Un `active: false`
+ * renvoyé par l'admin masque explicitement la bannière.
+ */
+export async function getCmsFormationsPromo(lang: Lang): Promise<CmsPromo | null> {
+  try {
+    const p = await fetchJson<ApiFormationsPromo>("/api/formations-promo/");
+    const t = pick(lang);
+    return {
+      active: p.is_active,
+      logoPath: p.logo_path,
+      playUrl: p.play_url,
+      storeLabel: t(p.store_label_fr, p.store_label_en),
+      preview: {
+        badge: t(p.badge_fr, p.badge_en),
+        title: t(p.title_fr, p.title_en),
+        body: t(p.body_fr, p.body_en),
+      },
+      teaser: {
+        badge: t(p.teaser_badge_fr, p.teaser_badge_en),
+        title: t(p.teaser_title_fr, p.teaser_title_en),
+        body: t(p.teaser_body_fr, p.teaser_body_en),
+        cta: t(p.teaser_cta_fr, p.teaser_cta_en),
+      },
+      startDate: p.start_date ?? null,
+      endDate: p.end_date ?? null,
     };
   } catch {
     return null;
@@ -552,20 +638,25 @@ type ApiTestimonial = {
   name: string;
   role_fr: string; role_en: string;
   avatar: string | null;
+  image_path: string;
+  is_logo: boolean;
   is_featured: boolean;
   order: number;
 };
 
-export type CmsTestimonials = Dict["testimonials"]["items"];
+export type CmsTestimonial = {
+  quote: string; name: string; role: string;
+  image: string; logo: boolean;
+};
 
-export async function getCmsTestimonials(lang: Lang): Promise<CmsTestimonials> {
-  // Piloté par l'admin (`/admin/` → Témoignages). La section home affiche le
-  // 1er élément en grand : on trie donc « mis en avant » d'abord, puis par
-  // ordre. Repli sur le dictionnaire local si l'API est vide/indisponible.
-  const fallback = getDictionary(lang).testimonials.items;
+/**
+ * Témoignages (avec photo/logo), pilotés par l'admin (`/admin/` → Témoignages).
+ * Tri : « mis en avant » d'abord, puis par ordre. Renvoie [] si vide/indisponible
+ * → le composant `Testimonials` retombe sur sa liste statique.
+ */
+export async function getCmsTestimonials(lang: Lang): Promise<CmsTestimonial[]> {
   try {
     const data = await fetchList<ApiTestimonial>("/api/testimonials/");
-    if (!data.length) return fallback;
     const t = pick(lang);
     return data
       .slice()
@@ -574,8 +665,196 @@ export async function getCmsTestimonials(lang: Lang): Promise<CmsTestimonials> {
         quote: t(it.quote_fr, it.quote_en),
         name: it.name,
         role: t(it.role_fr, it.role_en),
+        image: it.avatar || it.image_path || "",
+        logo: it.is_logo,
       }));
   } catch {
+    return [];
+  }
+}
+
+/* ============================================================
+   Partenaires (logos défilants)
+   ============================================================ */
+type ApiPartner = {
+  id: number; name: string; logo: string | null; logo_path: string; url: string; order: number;
+};
+export type CmsPartner = { name: string; src: string; href: string };
+
+/** Partenaires depuis l'admin. Vide si aucun → repli statique côté composant. */
+export async function getCmsPartners(): Promise<CmsPartner[]> {
+  try {
+    const data = await fetchList<ApiPartner>("/api/partners/");
+    return data
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .map((p) => ({ name: p.name, src: p.logo || p.logo_path || "", href: p.url }))
+      .filter((p) => p.src);
+  } catch {
+    return [];
+  }
+}
+
+/* ============================================================
+   Formations (page /formations — app Django `courses`)
+   ============================================================ */
+type ApiCourseCategory = {
+  slug: string;
+  name_fr: string; name_en: string;
+  tagline_fr: string; tagline_en: string;
+  icon_key: string;
+  order: number;
+};
+
+// Liste = version légère (catalogue) ; le programme n'y est pas.
+type ApiCourseListItem = {
+  slug: string;
+  category: string; // slug de la catégorie
+  title_fr: string; title_en: string;
+  subtitle_fr: string; subtitle_en: string;
+  level_fr: string; level_en: string;
+  duration_hours: number;
+  lessons_count: number;
+  price_fr: string; price_en: string;
+  is_free: boolean;
+  tags: string[];
+  image: string;
+  video_url_fr: string;
+  video_url_en: string;
+  instructor_name: string;
+  instructor_role_fr: string; instructor_role_en: string;
+  order: number;
+};
+
+type ApiCourseModule = {
+  title_fr: string; title_en: string;
+  lessons_fr: string[]; lessons_en: string[];
+  order: number;
+};
+
+// Détail = liste + intro/objectifs/programme.
+type ApiCourseDetail = ApiCourseListItem & {
+  intro_fr: string; intro_en: string;
+  learn_fr: string[]; learn_en: string[];
+  curriculum: ApiCourseModule[];
+};
+
+export type CmsCatalog = { categories: CourseCategory[]; courses: Course[] };
+
+const ICON_KEYS = ["code", "layers", "spark", "eye", "cog"] as const;
+function toIconKey(value: string): CourseCategory["iconKey"] {
+  return (ICON_KEYS as readonly string[]).includes(value)
+    ? (value as CourseCategory["iconKey"])
+    : "code";
+}
+
+function mapCourseCategory(c: ApiCourseCategory, lang: Lang): CourseCategory {
+  const t = pick(lang);
+  return {
+    slug: c.slug,
+    name: t(c.name_fr, c.name_en),
+    tagline: t(c.tagline_fr, c.tagline_en),
+    iconKey: toIconKey(c.icon_key),
+  };
+}
+
+// Élément de catalogue : le programme (intro/learn/curriculum) n'est pas chargé
+// en liste → valeurs neutres ; il l'est sur la page détail via getCmsCourse().
+function mapCourseListItem(c: ApiCourseListItem, lang: Lang): Course {
+  const t = pick(lang);
+  return {
+    slug: c.slug,
+    category: c.category,
+    title: t(c.title_fr, c.title_en),
+    subtitle: t(c.subtitle_fr, c.subtitle_en),
+    level: t(c.level_fr, c.level_en),
+    durationHours: c.duration_hours,
+    lessonsCount: c.lessons_count,
+    price: t(c.price_fr, c.price_en),
+    free: c.is_free,
+    tags: c.tags ?? [],
+    image: c.image,
+    videoUrl: (lang === "fr" ? c.video_url_fr : c.video_url_en) || undefined,
+    // Le catalogue ne met en avant AUCUN formateur nommé : on force l'entité
+    // « Formateurs Horus-Lab », quelles que soient les valeurs encore en base
+    // (le CMS peut contenir d'anciens noms tant qu'il n'est pas re-seedé).
+    instructor: { name: "Formateurs Horus-Lab", role: "" },
+    intro: "",
+    learn: [],
+    curriculum: [],
+  };
+}
+
+function mapCourseDetail(c: ApiCourseDetail, lang: Lang): Course {
+  const t = pick(lang);
+  const isFr = lang === "fr";
+  return {
+    ...mapCourseListItem(c, lang),
+    intro: t(c.intro_fr, c.intro_en),
+    learn: (isFr ? c.learn_fr : c.learn_en) ?? [],
+    curriculum: (c.curriculum ?? [])
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .map((m) => ({
+        title: t(m.title_fr, m.title_en),
+        lessons: (isFr ? m.lessons_fr : m.lessons_en) ?? [],
+      })),
+  };
+}
+
+/**
+ * Catalogue complet (domaines + cours légers) pour la page /formations.
+ * Piloté par l'admin Django (`/admin/` → Formations). Repli TOTAL sur le
+ * catalogue statique `lib/courses.ts` si l'API est vide ou indisponible.
+ * NB : la liste des cours suit la pagination DRF (PAGE_SIZE=20) ; au-delà,
+ * prévoir un paramètre de page — aujourd'hui 10 cours, une seule page.
+ */
+export async function getCmsFormations(lang: Lang): Promise<CmsCatalog> {
+  const fallback = getStaticFormations(lang);
+  try {
+    const [cats, courses] = await Promise.all([
+      fetchList<ApiCourseCategory>("/api/courses/categories/"),
+      fetchList<ApiCourseListItem>("/api/courses/"),
+    ]);
+    if (!cats.length || !courses.length) return fallback;
+    return {
+      categories: cats
+        .slice()
+        .sort((a, b) => a.order - b.order)
+        .map((c) => mapCourseCategory(c, lang)),
+      courses: courses
+        .slice()
+        .sort((a, b) => a.order - b.order)
+        .map((c) => mapCourseListItem(c, lang)),
+    };
+  } catch {
     return fallback;
+  }
+}
+
+/** Cours unique (avec programme) : CMS si trouvé, sinon catalogue statique. */
+export async function getCmsCourse(lang: Lang, slug: string): Promise<Course | undefined> {
+  try {
+    const c = await fetchJson<ApiCourseDetail>(`/api/courses/${slug}/`);
+    return mapCourseDetail(c, lang);
+  } catch {
+    return getStaticCourse(lang, slug);
+  }
+}
+
+/**
+ * Slugs pour generateStaticParams : union des slugs CMS et statiques pour
+ * qu'aucun lien ne tombe en 404. Repli total sur les slugs statiques si l'API
+ * est indisponible.
+ */
+export async function getCmsCourseSlugs(): Promise<string[]> {
+  const staticSlugs = getStaticCourseSlugs();
+  try {
+    const data = await fetchList<ApiCourseListItem>("/api/courses/");
+    const slugs = new Set<string>(staticSlugs);
+    for (const c of data) slugs.add(c.slug);
+    return [...slugs];
+  } catch {
+    return staticSlugs;
   }
 }

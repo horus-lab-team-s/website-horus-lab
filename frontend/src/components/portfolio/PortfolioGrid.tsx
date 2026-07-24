@@ -18,6 +18,31 @@ const ICONS: Record<string, typeof IconCode> = {
   spark: IconSpark, eye: IconEye, globe: IconGlobe, check: IconCheck,
 };
 
+/* Stacks techniques (logos plus parlants que du texte) — SVG dans /public/tech.
+   Web : Next.js, Tailwind, FastAPI, Django, PostgreSQL, Docker, nginx.
+   Mobile : Dart, Flutter, Firebase. */
+const WEB_STACK = [
+  { name: "Next.js", src: "/tech/nextjs.svg" },
+  { name: "Tailwind CSS", src: "/tech/tailwindcss.svg" },
+  { name: "FastAPI", src: "/tech/fastapi.svg" },
+  { name: "Django", src: "/tech/django.svg" },
+  { name: "PostgreSQL", src: "/tech/postgresql.svg" },
+  { name: "Docker", src: "/tech/docker.svg" },
+  { name: "nginx", src: "/tech/nginx.svg" },
+];
+const MOBILE_STACK = [
+  { name: "Dart", src: "/tech/dart.svg" },
+  { name: "Flutter", src: "/tech/flutter.svg" },
+  { name: "Firebase", src: "/tech/firebase.svg" },
+];
+const TECH_STACKS: Record<string, { name: string; src: string }[]> = {
+  "Afrikamode": WEB_STACK,
+  "Gathe Finance": WEB_STACK,
+  "Plateforme e-Learning": MOBILE_STACK,
+  "e-Learning platform": MOBILE_STACK,
+  "Elec One": MOBILE_STACK,
+};
+
 /* Catégories autorisées dans le filtre — dans l'ordre d'affichage */
 const FILTER_ORDER_FR = [
   "Mode & e-commerce",
@@ -91,11 +116,50 @@ export function PortfolioGrid({
           const gallery = galleryFor(p.title);
           return (
             <Reveal key={p.title} delay={(i % 2) * 80}>
-              <article className="group lift-xl flex h-full flex-col overflow-hidden rounded-lg border border-brand-100 bg-white dark:border-white/10 dark:bg-slate-900">
+              <article className="group lift-xl flex h-full flex-col overflow-hidden bg-white shadow-sm dark:bg-slate-900">
 
-                {/* ── Couverture : logo qui occupe tout l'espace supérieur ── */}
-                <div className={`relative h-60 overflow-hidden ${p.logo ? "bg-white dark:bg-slate-800" : `bg-gradient-to-br ${p.gradient}`}`}>
-                  {p.logo ? (
+                {/* ── Couverture : vidéo / vraie capture de la solution, logo par-dessus ── */}
+                <div className={`relative h-60 overflow-hidden ${p.video || p.cover ? "bg-brand-900" : p.logo ? "bg-white dark:bg-slate-800" : `bg-gradient-to-br ${p.gradient}`}`}>
+                  {p.video ? (
+                    <>
+                      <video
+                        className="absolute inset-0 h-full w-full object-cover"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        poster={p.cover}
+                      >
+                        <source src={p.video} type="video/mp4" />
+                      </video>
+                      <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-brand-900/85 via-brand-900/35 to-brand-900/10" />
+                      {p.logo && (
+                        <div className="absolute inset-0 flex items-center justify-center p-8">
+                          <div className="relative h-24 w-[68%] max-w-xs overflow-hidden bg-white/92 p-4 shadow-2xl backdrop-blur">
+                            <Image src={p.logo} alt={`Logo ${p.title}`} fill className="object-contain p-1" />
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  ) : p.cover ? (
+                    <>
+                      <Image
+                        src={p.cover}
+                        alt={p.title}
+                        fill
+                        sizes="(max-width:1024px) 100vw, 50vw"
+                        className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
+                      />
+                      <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-brand-900/85 via-brand-900/35 to-brand-900/10" />
+                      {p.logo && (
+                        <div className="absolute inset-0 flex items-center justify-center p-8">
+                          <div className="relative h-24 w-[68%] max-w-xs overflow-hidden bg-white/92 p-4 shadow-2xl backdrop-blur">
+                            <Image src={p.logo} alt={`Logo ${p.title}`} fill className="object-contain p-1" />
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  ) : p.logo ? (
                     <>
                       {/* Teinte de marque très douce derrière le logo */}
                       <div aria-hidden className={`absolute inset-0 bg-gradient-to-br ${p.gradient} opacity-[0.08]`} />
@@ -171,13 +235,25 @@ export function PortfolioGrid({
                   {p.role && <p className="mt-1 text-xs font-medium text-muted">{p.role}</p>}
                   <p className="mt-3 flex-1 text-[15px] leading-relaxed text-muted">{p.desc}</p>
 
-                  <ul className="mt-5 flex flex-wrap gap-2">
-                    {p.tags.map((t) => (
-                      <li key={t} className="rounded-full bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700 transition-colors group-hover:bg-brand-100 dark:bg-white/5 dark:text-brand-200">
-                        {t}
-                      </li>
-                    ))}
-                  </ul>
+                  {TECH_STACKS[p.title]?.length ? (
+                    <ul className="mt-5 flex flex-wrap items-center gap-x-3.5 gap-y-2" aria-label="Technologies">
+                      {TECH_STACKS[p.title].map((t) => (
+                        <li key={t.name} title={t.name}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={t.src} alt={t.name} width={24} height={24} loading="lazy"
+                            className="size-6 object-contain grayscale transition-all duration-300 group-hover:grayscale-0" />
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <ul className="mt-5 flex flex-wrap gap-2">
+                      {p.tags.map((t) => (
+                        <li key={t} className="rounded-full bg-brand-50 px-3 py-1 text-xs font-medium text-brand-700 transition-colors group-hover:bg-brand-100 dark:bg-white/5 dark:text-brand-200">
+                          {t}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
 
                   <div className="mt-6 flex items-end justify-between gap-4 border-t border-brand-100 pt-5 dark:border-white/10">
                     <div>

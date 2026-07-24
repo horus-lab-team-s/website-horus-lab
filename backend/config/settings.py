@@ -3,6 +3,7 @@ Configuration Django du backend Horus-Lab (API REST).
 Toutes les sections du site (hero, services, blog, portfolio, newsletter,
 contact, réglages) sont gérées ici et exposées via /api/.
 """
+from datetime import timedelta
 from pathlib import Path
 import os
 
@@ -54,7 +55,8 @@ INSTALLED_APPS = [
     "newsletter",
     "contact",
     "chat",
-    "applications",
+    "courses",
+    "accounts",
 ]
 
 MIDDLEWARE = [
@@ -134,6 +136,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     # Lecture publique par défaut ; l'écriture passe par l'admin Django.
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
+    # Auth : JWT (apprenants) + session (admin/browsable API).
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",
+    ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 20,
     # Anti-abus : limites appliquées UNIQUEMENT aux formulaires publics (POST),
@@ -144,9 +151,16 @@ REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "newsletter": "10/hour",
         "contact": "6/hour",
-        "application": "10/hour",
         "forum_post": "20/hour",
+        "auth_register": "10/hour",
+        "auth_login": "40/hour",
     },
+}
+
+# --- JWT (djangorestframework-simplejwt) : jetons des comptes apprenants ---
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=12),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
 }
 
 # --- CORS : autorise le frontend Next.js à appeler l'API ---

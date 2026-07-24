@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
-import { WaveDivider } from "@/components/WaveDivider";
 import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { IconArrowRight } from "@/components/icons";
 import { isLocale, locales, type Lang } from "@/i18n/dictionaries";
@@ -25,7 +24,7 @@ const CONTENT: Record<Lang, {
   fr: {
     eyebrow: "Réalisations",
     title: "Des projets qui créent de la valeur",
-    subtitle: "Une sélection de produits livrés en production — du concept au déploiement.",
+    subtitle: "Une sélection de produits livrés en production, du concept au déploiement.",
     allLabel: "Tous",
     resultLabel: "portée",
     ctaTitle: "Votre projet sera le prochain ?",
@@ -34,7 +33,7 @@ const CONTENT: Record<Lang, {
   en: {
     eyebrow: "Work",
     title: "Projects that create value",
-    subtitle: "A selection of products shipped to production — concept to deployment.",
+    subtitle: "A selection of products shipped to production, concept to deployment.",
     allLabel: "All",
     resultLabel: "scope",
     ctaTitle: "Will your project be next?",
@@ -65,7 +64,7 @@ export default async function PortfolioPage({ params }: { params: Promise<Params
       <main id="main" tabIndex={-1}>
 
         {/* ── Hero avec vague en bas ── */}
-        <section className="relative isolate flex min-h-[72vh] items-center overflow-hidden pt-28 pb-32">
+        <section className="relative isolate flex min-h-[52vh] items-center overflow-hidden pt-24 pb-12 sm:pb-14">
           {/* Image fond */}
           <div aria-hidden className="absolute inset-0 -z-20 bg-cover bg-center"
             style={{ backgroundImage: `url(/img/photo-1607706189992-eae578626c86-w1920.jpg)` }} />
@@ -98,12 +97,10 @@ export default async function PortfolioPage({ params }: { params: Promise<Params
             </Reveal>
           </div>
 
-          {/* ── Vague statique vers la section suivante ── */}
-          <WaveDivider className="text-white dark:text-[#070e1c]" />
         </section>
 
         {/* ── Section grille des projets — filtres + formes animées ── */}
-        <section className="relative overflow-hidden bg-surface py-16 pb-20 sm:pb-28 dark:bg-[#070e1c]">
+        <section className="relative overflow-hidden bg-surface py-12 pb-12 sm:pb-14 dark:bg-[#070e1c]">
 
           {/* Fond avec formes géométriques animées */}
           <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -149,9 +146,9 @@ export default async function PortfolioPage({ params }: { params: Promise<Params
         </section>
 
         {/* ── CTA ── */}
-        <section className="bg-surface px-5 pb-24 sm:px-8 dark:bg-[#070e1c]">
+        <section className="bg-surface px-5 pb-16 sm:px-8 dark:bg-[#070e1c]">
           <Reveal className="mx-auto max-w-5xl">
-            <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-brand-800 via-brand-700 to-brand-900 px-7 py-14 text-center shadow-2xl shadow-brand-900/30 sm:px-16">
+            <div className="relative overflow-hidden rounded-lg bg-gradient-to-br from-brand-800 via-brand-700 to-brand-900 px-7 py-10 text-center shadow-2xl shadow-brand-900/30 sm:px-14">
               <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid opacity-[0.15]" />
               <div aria-hidden className="pointer-events-none absolute -left-10 -top-10 size-60 rounded-full bg-brand-500/30 blur-3xl animate-float-slow" />
               <div aria-hidden className="pointer-events-none absolute -right-8 bottom-0 size-48 rounded-full bg-sky/20 blur-3xl animate-drift" />

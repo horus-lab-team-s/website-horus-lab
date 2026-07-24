@@ -16,6 +16,7 @@ router.register("team", views.TeamMemberViewSet, basename="team")
 
 urlpatterns = [
     path("site/", views.SiteSettingsView.as_view(), name="site-settings"),
+    path("formations-promo/", views.FormationsPromoView.as_view(), name="formations-promo"),
     path("hero/", views.HeroView.as_view(), name="hero"),
     path("", include(router.urls)),
 ]

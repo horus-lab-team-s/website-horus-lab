@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
+import { SectionHeading } from "./SectionHeading";
 import {
   IconArrowRight, IconCheck, IconCode, IconCog,
   IconEye, IconGlobe, IconLayers, IconSpark,
@@ -17,7 +18,7 @@ const ICONS: Record<string, typeof IconCode> = {
 
 const PROJECT_IMAGES: Record<string, string> = {
   "Afrikamode":
-    "/img/photo-1558618666-fcd25c85cd64-w1200.jpg",
+    "/afrikamode-realisations/01-site-accueil.png",
   "Gathe Finance":
     "/img/photo-1551288049-bebda4e38f71-w800.jpg",
   "Plateforme e-Learning":
@@ -61,34 +62,23 @@ export function Realisations({ projects }: { projects: Project[] }) {
   const featuredImg = PROJECT_IMAGES[featured.title];
 
   return (
-    <section id="realisations" className="relative overflow-hidden pb-20 pt-10 sm:pb-24 sm:pt-14">
+    <section id="realisations" className="relative overflow-hidden pb-14 pt-12 sm:pb-16">
       <RealisationsBackground />
 
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
 
-        {/* En-tête */}
-        <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
-          <Reveal className="max-w-2xl">
-            <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-500">
-              <span className="h-px w-6 bg-brand-400/60" />
-              {r.eyebrow}
-            </span>
-            <h2 className="mt-4 text-3xl font-extrabold leading-[1.1] tracking-tight text-brand-900 dark:text-white sm:text-4xl lg:text-5xl">
-              {r.title}
-            </h2>
-            <p className="mt-4 text-lg leading-relaxed text-muted">{r.subtitle}</p>
-          </Reveal>
-          <Reveal>
-            <Link href={localePath("/portfolio")}
-              className="group inline-flex items-center gap-2 rounded-md border border-brand-200 px-5 py-2.5 text-sm font-semibold text-brand-700 transition-all hover:bg-brand-50 hover:border-brand-300 dark:border-white/15 dark:text-brand-200 dark:hover:bg-white/5">
-              {r.viewAll}
-              <IconArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </Reveal>
-        </div>
+        {/* En-tête centré */}
+        <SectionHeading eyebrow={r.eyebrow} title={r.title} subtitle={r.subtitle} />
+        <Reveal className="mt-6 flex justify-center">
+          <Link href={localePath("/portfolio")}
+            className="group inline-flex items-center gap-2 border border-brand-200 px-5 py-2.5 text-sm font-semibold text-brand-700 transition-all hover:bg-brand-50 hover:border-brand-300 dark:border-white/15 dark:text-brand-200 dark:hover:bg-white/5">
+            {r.viewAll}
+            <IconArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </Reveal>
 
         {/* Layout : 1 featured grand + stack à droite */}
-        <div className="mt-10 grid gap-6 lg:grid-cols-12">
+        <div className="mt-9 grid gap-6 lg:grid-cols-12">
 
           {/* ── Projet phare ── */}
           <Reveal className="lg:col-span-7">
@@ -185,7 +175,7 @@ export function Realisations({ projects }: { projects: Project[] }) {
                     href={p.url ?? localePath("/portfolio")}
                     target={p.url ? "_blank" : "_self"}
                     rel={p.url ? "noopener noreferrer" : undefined}
-                    className="group lift-xl flex items-stretch overflow-hidden rounded-lg border border-brand-100/80 bg-white shadow-sm transition-all hover:shadow-xl dark:border-white/10 dark:bg-slate-900"
+                    className="group lift-xl flex items-stretch overflow-hidden bg-white shadow-sm transition-all hover:shadow-xl dark:bg-slate-900"
                   >
                     {/* Vignette gauche — logo du projet sur toute la zone */}
                     <div className={`relative w-32 shrink-0 overflow-hidden ${p.logo ? "bg-white dark:bg-white/95" : `bg-gradient-to-br ${p.gradient}`}`}>

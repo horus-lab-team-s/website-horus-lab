@@ -14,7 +14,8 @@ urlpatterns = [
     path("api/newsletter/", include("newsletter.urls")),
     path("api/contact/", include("contact.urls")),
     path("api/chat/", include("chat.urls")),
-    path("api/applications/", include("applications.urls")),
+    path("api/courses/", include("courses.urls")),
+    path("api/auth/", include("accounts.urls")),
 ]
 
 # Fichiers médias uploadés (couvertures, photos d'équipe, logos…).

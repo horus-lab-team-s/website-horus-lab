@@ -17,17 +17,17 @@ export function ServiceContactSection({ gradient }: { gradient: string }) {
   const f = dict.footer;
 
   return (
-    <section id="contact" className="relative overflow-hidden bg-white px-5 py-14 dark:bg-[#070e1c] sm:px-8 sm:py-20">
+    <section id="contact" className="relative overflow-hidden bg-white px-5 py-12 dark:bg-[#070e1c] sm:px-8 sm:py-14">
       <Reveal className="relative mx-auto max-w-5xl">
-        <div className={`relative overflow-hidden rounded-lg bg-gradient-to-br ${gradient} px-7 py-10 text-center shadow-2xl shadow-brand-900/30 sm:px-16 sm:py-12`}>
+        <div className={`relative overflow-hidden rounded-lg bg-gradient-to-br ${gradient} px-7 py-8 text-center shadow-2xl shadow-brand-900/30 sm:px-14 sm:py-10`}>
           <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid opacity-[0.1]" />
           <div aria-hidden className="pointer-events-none absolute -right-10 -bottom-16 size-72 rounded-full bg-white/10 blur-3xl" />
 
           <div className="relative">
-            <h2 className="mx-auto max-w-2xl text-2xl font-extrabold tracking-tight text-white sm:text-3xl lg:text-4xl">
+            <h2 className="mx-auto max-w-2xl text-xl font-extrabold tracking-tight text-white sm:text-2xl">
               {c.title}
             </h2>
-            <p className="mx-auto mt-3 max-w-xl text-white/90">{c.subtitle}</p>
+            <p className="mx-auto mt-3 max-w-3xl text-sm text-white/90 sm:text-[15px]">{c.subtitle}</p>
 
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link

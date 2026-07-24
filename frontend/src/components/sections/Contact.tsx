@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
+import { SectionHeading } from "@/components/sections/SectionHeading";
 import { IconArrowRight, IconMail, IconPhone, IconPin } from "@/components/icons";
 
 type Status = "idle" | "sending" | "success" | "error" | "invalid";
@@ -39,7 +40,7 @@ export function Contact() {
   }
 
   return (
-    <section id="contact" className="relative overflow-hidden py-20 sm:py-28">
+    <section id="contact" className="relative overflow-hidden py-14 sm:py-16">
 
       {/* ── Fond sobre : dégradé + grille + halos discrets ── */}
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -50,20 +51,14 @@ export function Contact() {
       </div>
 
       {/* ── Contenu ── */}
-      <div className="relative mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[0.9fr_1.1fr]">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
+        <SectionHeading eyebrow={c.eyebrow} title={c.title} subtitle={c.subtitle} />
+
+        <div className="mt-10 grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-stretch">
 
         {/* Coordonnées */}
-        <Reveal>
-          <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-brand-500">
-            <span className="h-px w-6 bg-brand-400/60" />
-            {c.eyebrow}
-          </span>
-          <h2 className="mt-4 text-3xl font-extrabold leading-[1.1] tracking-tight text-brand-900 dark:text-white sm:text-4xl lg:text-5xl">
-            {c.title}
-          </h2>
-          <p className="mt-4 text-lg leading-relaxed text-muted">{c.subtitle}</p>
-
-          <ul className="mt-10 space-y-3">
+        <Reveal className="flex flex-col justify-center">
+          <ul className="space-y-3">
             {[
               { href: `mailto:${f.email}`,                                icon: IconMail,  label: "Email",        val: f.email },
               { href: `tel:${f.phones[0]?.replace(/\s/g, "")}`,          icon: IconPhone, label: "Téléphone",    val: f.phones.join(" · ") },
@@ -71,7 +66,7 @@ export function Contact() {
             ].map(({ href, icon: Icon, label, val }) => (
               <li key={label}>
                 <a href={href}
-                  className="group flex items-center gap-4 rounded-md border border-brand-100 bg-white/80 p-4 backdrop-blur transition-all hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-lg dark:border-white/10 dark:bg-white/5 dark:hover:border-white/25">
+                  className="group flex items-center gap-4 bg-white/80 p-4 shadow-sm backdrop-blur transition-all hover:-translate-y-0.5 hover:shadow-lg dark:bg-white/5">
                   <span className="grid size-12 shrink-0 place-items-center rounded-md bg-brand-50 text-brand-700 transition-all group-hover:scale-110 group-hover:bg-brand-700 group-hover:text-white dark:bg-white/5 dark:text-brand-200">
                     <Icon className="size-5" />
                   </span>
@@ -96,7 +91,7 @@ export function Contact() {
         {/* Formulaire */}
         <Reveal delay={120}>
           <form onSubmit={handleSubmit} noValidate
-            className="relative overflow-hidden rounded-lg border border-brand-100 bg-white p-6 shadow-2xl shadow-brand-900/8 dark:border-white/10 dark:bg-slate-900 sm:p-8">
+            className="relative overflow-hidden bg-white p-6 shadow-2xl shadow-brand-900/8 dark:bg-slate-900 sm:p-8">
             <span aria-hidden className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-700 via-brand-500 to-sky" />
             <div aria-hidden className="pointer-events-none absolute -right-8 -top-8 size-32 rounded-full bg-brand-100/40 blur-2xl dark:bg-brand-700/15" />
             {/* Honeypot */}
@@ -154,6 +149,7 @@ export function Contact() {
           </form>
         </Reveal>
 
+        </div>
       </div>
     </section>
   );

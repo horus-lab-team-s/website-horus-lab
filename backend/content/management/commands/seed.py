@@ -12,6 +12,7 @@ from django.core.management.base import BaseCommand
 from blog.models import Category, Post
 from content.models import (
     Achievement,
+    FormationsPromo,
     HeroContent,
     HeroStat,
     Partner,
@@ -33,6 +34,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.seed_site_settings()
+        self.seed_formations_promo()
         self.seed_hero()
         self.seed_services()
         self.seed_process()
@@ -70,6 +72,49 @@ class Command(BaseCommand):
                 github_url="https://github.com/horus-lab-team-s",
                 whatsapp_url="https://wa.me/237699173771",
                 telegram_url="https://t.me/tonbacm",
+            ),
+        )
+
+    def seed_formations_promo(self):
+        # Bannière « aperçu » Edlearning (site entier). Les défauts du modèle
+        # suffisent ; on force pk=1 pour la rendre éditable dès l'admin.
+        FormationsPromo.objects.update_or_create(
+            pk=1,
+            defaults=dict(
+                is_active=True,
+                badge_fr="Aperçu",
+                badge_en="Preview",
+                title_fr="La formation continue sur l'app Edlearning",
+                title_en="The full training lives on the Edlearning app",
+                body_fr=(
+                    "Ce site n'est qu'un aperçu. La formation complète et le suivi "
+                    "des apprenants se déroulent sur notre application mobile Edlearning."
+                ),
+                body_en=(
+                    "This site is only a preview. The complete training and learner "
+                    "tracking happen on our Edlearning mobile app."
+                ),
+                store_label_fr="Disponible sur",
+                store_label_en="Get it on",
+                play_url="https://play.google.com/store/search?q=Edlearning&c=apps",
+                logo_path="/logo/logo-Edlearning.png",
+                teaser_badge_fr="Formations",
+                teaser_badge_en="Courses",
+                teaser_title_fr="Nos formations gratuites démarrent le mardi 1er septembre 2026",
+                teaser_title_en="Our free courses start on Tuesday 1 September 2026",
+                teaser_body_fr=(
+                    "Développement web & mobile, génie logiciel et IA. Rejoignez le "
+                    "bootcamp Horus-Lab et montez en compétences."
+                ),
+                teaser_body_en=(
+                    "Web & mobile development, software engineering and AI. Join the "
+                    "Horus-Lab bootcamp and level up your skills."
+                ),
+                teaser_cta_fr="Voir les formations",
+                teaser_cta_en="See the courses",
+                start_date=date(2026, 9, 1),
+                duration_value=1,
+                duration_unit="months",
             ),
         )
 
@@ -185,40 +230,52 @@ class Command(BaseCommand):
             )
 
     def seed_testimonials(self):
-        # Doit refléter le dictionnaire frontend (src/i18n/dictionaries.ts) :
-        # au 1er seed, la home reste identique, puis l'admin prend la main.
+        # Reflète la section Témoignages du frontend (5 clients réels + photos).
         items = [
-            ("Aïcha N.", "Directrice Générale, FinPay", "CEO, FinPay",
-             "Horus-Lab a conçu notre application sur mesure de bout en bout. Livraison dans les délais, qualité irréprochable et une équipe terriblement à l'écoute.",
-             "Horus-Lab built our custom application end to end. On-time delivery, flawless quality and a team that genuinely listens.",
-             True),
-            ("Kwame O.", "Fondateur, AgriConnect", "Founder, AgriConnect",
-             "Ils ont modélisé et architecturé notre système d'information avec une rigueur remarquable. Une base solide, documentée et évolutive sur laquelle nous construisons sereinement.",
-             "They modelled and architected our information system with remarkable rigour. A solid, documented and scalable foundation we build on with confidence.",
-             False),
-            ("Sandrine M.", "Responsable des opérations, MediCare", "Operations Lead, MediCare",
-             "La digitalisation de nos processus nous fait gagner un temps précieux chaque semaine. Workflows automatisés, validations dématérialisées : le papier a quasiment disparu.",
-             "Digitalising our processes saves us precious time every single week. Automated workflows, paperless approvals, the paper has all but disappeared.",
-             False),
-            ("David K.", "Directeur des SI, LogiTrans", "Head of IT, LogiTrans",
-             "Leur audit a révélé des failles que nous ignorions, et la formation a fait monter toute notre équipe en compétences. Un accompagnement concret et durable.",
-             "Their audit uncovered gaps we didn't know we had, and the training levelled up our whole team. Hands-on, lasting support.",
-             False),
+            ("Paule Diane Himsta",
+             "Présidente Directrice · Broad Range Consulting (CFP-BRC)",
+             "Managing Director · Broad Range Consulting (CFP-BRC)",
+             "Horus-Lab a digitalisé notre centre de formation avec un vrai sens du détail. Une plateforme claire, fiable et pensée pour nos apprenants, du début à la fin.",
+             "Horus-Lab digitalised our training centre with a real eye for detail. A clear, reliable platform built for our learners, from start to finish.",
+             "/Temoignages/Mme-paul-diane-himsta.png", False, True),
+            ("Paule Diane Himsta",
+             "Présidente Directrice · CGA Broad Range Consulting",
+             "Managing Director · CGA Broad Range Consulting",
+             "Nos outils de gestion sont enfin à la hauteur de nos ambitions. Une équipe sérieuse, disponible, et un accompagnement impeccable à chaque étape.",
+             "Our management tools finally match our ambitions. A serious, available team, with flawless support at every step.",
+             "/Temoignages/Mme-paul-diane-himsta.png", False, False),
+            ("Pagop Tchouansi Aurélie", "Responsable · AfrikaMode", "Manager · AfrikaMode",
+             "Notre boutique en ligne Afrikamode est fluide, rapide et fidèle à notre image. Horus-Lab a traduit notre univers mode en une vraie expérience e-commerce africaine.",
+             "Our Afrikamode online store is smooth, fast and true to our brand. Horus-Lab turned our fashion universe into a real African e-commerce experience.",
+             "/Temoignages/Mme-pagop-Tchouansi-aurelie.png", False, False),
+            ("Dr Agnès Virginie TJAHE", "Présidente Directrice · 2MeTech Sarl", "Managing Director · 2MeTech Sarl",
+             "Avec Elec One et EnMKit, Horus-Lab a transformé notre vision en une application mobile concrète : nos utilisateurs pilotent et réduisent leur consommation d'électricité à distance. Un travail remarquable.",
+             "With Elec One and EnMKit, Horus-Lab turned our vision into a real mobile app: our users control and reduce their electricity consumption remotely. Remarkable work.",
+             "/Temoignages/Dr-Agnes-Virgine-TJAHE.png", False, False),
+            ("Département Informatique", "IUT-FV de Bandjoun · Université de Dschang", "IUT-FV Bandjoun · University of Dschang",
+             "Un accompagnement technique de qualité pour notre département informatique : rigueur, pédagogie et des solutions adaptées à nos réalités académiques.",
+             "Quality technical support for our computer science department: rigour, teaching skill and solutions tailored to our academic realities.",
+             "/Temoignages/iut-fv-university-of-dschang.jpg", True, False),
         ]
-        for i, (name, rfr, ren, qfr, qen, featured) in enumerate(items):
-            Testimonial.objects.update_or_create(
-                name=name,
-                defaults=dict(role_fr=rfr, role_en=ren, quote_fr=qfr, quote_en=qen,
-                              is_featured=featured, order=i, is_active=True),
+        Testimonial.objects.all().delete()
+        for i, (name, rfr, ren, qfr, qen, img, is_logo, featured) in enumerate(items):
+            Testimonial.objects.create(
+                name=name, role_fr=rfr, role_en=ren, quote_fr=qfr, quote_en=qen,
+                image_path=img, is_logo=is_logo, is_featured=featured, order=i, is_active=True,
             )
 
     def seed_partners(self):
-        # Uniquement les partenaires/clients réels de Horus-Lab
-        names = ["Gathe Finance", "Afrikamode"]
-        for i, name in enumerate(names):
-            Partner.objects.update_or_create(
-                name=name, defaults=dict(order=i, is_active=True)
-            )
+        # Partenaires/clients réels (reflète components/sections/Partners.tsx).
+        items = [
+            ("Broad Range Consulting · CFP-BRC", "/Nos-partenaires/CFP-Broad-Range-Consulting-logo.jpg", "https://www.cfp-brcgroup.com/"),
+            ("CGA Broad Range Consulting", "/Nos-partenaires/CGA-Broad-Range-Consulting-logo.jpg", "https://www.cga-brcgroup.com/"),
+            ("2MeTech Sarl", "/Nos-partenaires/logo-2MeTech-bgWHITE.png", "https://www.2metechsarl.org/"),
+            ("Afrikamode", "/Nos-partenaires/logo-Afrikamode.jpeg", "https://www.afrikamode.store/"),
+            ("IUT-FV de Bandjoun · Université de Dschang", "/Nos-partenaires/iut-fv-university-of-dschang.jpg", "https://www.univ-dschang.org/iutfv/"),
+        ]
+        Partner.objects.all().delete()
+        for i, (name, logo_path, url) in enumerate(items):
+            Partner.objects.create(name=name, logo_path=logo_path, url=url, order=i, is_active=True)
 
     def seed_team(self):
         # Doit refléter la page « À propos » du frontend (about/page.tsx) : au 1er
@@ -227,31 +284,38 @@ class Command(BaseCommand):
         # aussi uploader une photo depuis l'admin.
         members = [
             dict(
-                name="Brailain Loïc TONBA",
-                role_fr="Ingénieur logiciel · Co-fondateur",
-                role_en="Software engineer · Co-founder",
-                bio_fr="Développeur full-stack et entrepreneur tech, je pilote la vision produit de Horus-Lab et conçois des solutions numériques de bout en bout pour des entreprises africaines et internationales. Passionné par l'impact de la technologie sur le continent.",
-                bio_en="Full-stack developer and tech entrepreneur, I drive the product vision at Horus-Lab and build end-to-end digital solutions for African and international businesses. Passionate about technology's impact across the continent.",
-                email="tonbaloic@gmail.com",
-                linkedin_url="https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
-                github_url="https://github.com/LoicTonba",
-                is_lead=True, order=0,
-            ),
-            dict(
                 name="Edwin TCHAMBA TCHAKOUNTE",
                 role_fr="Architecte logiciel · Co-fondateur",
                 role_en="Software architect · Co-founder",
-                bio_fr="Ingénieur logiciel senior & architecte. Plus de 3 ans en full-stack (web & mobile), APIs REST et déploiement cloud, avec la rigueur des méthodes RUP et UML. Lauréat du Prix du Meilleur Projet de Fin d'Études, IUT-FV Bandjoun (2024).",
-                bio_en="Senior software engineer & architect. 3+ years in full-stack (web & mobile) development, REST APIs and cloud deployment, with the rigour of RUP and UML methods. Winner of the Best Final Year Project Award, IUT-FV Bandjoun (2024).",
+                bio_fr="Architecte logiciel et ingénieur senior. J'assemble des applications web et mobiles robustes, APIs REST, cloud, méthodes RUP & UML, pensées pour durer et passer à l'échelle. Lauréat du Prix du Meilleur Projet de Fin d'Études, IUT-FV Bandjoun (2024).",
+                bio_en="Software architect and senior engineer. I build robust web and mobile applications, REST APIs, cloud, RUP & UML methods, designed to last and scale. Winner of the Best Final Year Project Award, IUT-FV Bandjoun (2024).",
+                photo_path="/A-propos/photo-Edwin-co-founder.png",
                 github_url="https://github.com/EdwinTchakounte",
+                whatsapp_url="https://wa.me/237673398046",
                 email="tchambaedwin@gmail.com",
+                badge_fr="Co-fondateur", badge_en="Co-founder",
+                gradient="from-slate-800 via-brand-700 to-amber-500",
+                is_lead=True, order=0,
+            ),
+            dict(
+                name="Loïc DJIMGOU TONBA",
+                role_fr="Ingénieur logiciel · Co-fondateur",
+                role_en="Software engineer · Co-founder",
+                bio_fr="Ingénieur full-stack et entrepreneur, je transforme des idées en produits numériques qui marchent, du web au mobile, du concept au déploiement. Je pilote la vision produit de Horus-Lab pour des clients africains et internationaux, convaincu que la tech est un vrai levier de croissance pour le continent.",
+                bio_en="Full-stack engineer and entrepreneur, I turn ideas into digital products that ship, web and mobile, from concept to deployment. I lead Horus-Lab's product vision for African and international clients, convinced that technology is a real growth engine for the continent.",
+                photo_path="/A-propos/photo-loic-tonba-cofounder.png",
+                linkedin_url="https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
+                github_url="https://github.com/LoicTonba",
+                whatsapp_url="https://wa.me/237699173771",
+                email="tonbaloic@gmail.com",
+                badge_fr="Co-fondateur", badge_en="Co-founder",
+                gradient="from-brand-700 via-brand-500 to-sky",
                 is_lead=True, order=1,
             ),
         ]
-        # Supprimer Armel SIME s'il existe
-        TeamMember.objects.filter(name="Armel SIME").delete()
+        TeamMember.objects.all().delete()
         for m in members:
-            TeamMember.objects.update_or_create(name=m["name"], defaults=m)
+            TeamMember.objects.create(**m)
 
     def seed_blog(self):
         # Catégories orientées tech/tendances — sans ERP ni IA seule
@@ -413,21 +477,6 @@ class Command(BaseCommand):
                 result_fr="Supervision en temps réel", result_en="Real-time supervision",
                 icon="cog",
                 gradient="from-yellow-500 via-orange-400 to-red-500",
-            ),
-            dict(
-                title_fr="Programme Formation IT", title_en="IT Training Programme",
-                client_fr="Professionnels & entreprises",
-                client_en="Professionals & businesses",
-                category_fr="Formation", category_en="Training",
-                description_fr="Programme de formation aux technologies modernes : développement web, mobile, cybersécurité, gestion de projet IT. Sessions pratiques adaptées au niveau des équipes et aux outils de l'entreprise.",
-                description_en="Training programme on modern technologies: web & mobile development, cybersecurity, IT project management. Hands-on sessions adapted to team levels and company tools.",
-                role_fr="Formation & accompagnement", role_en="Training & coaching",
-                scope_fr="Formation IT sur mesure",
-                scope_en="Custom IT training",
-                tags=["Formation", "Cybersécurité", "Développement", "Certification"],
-                result_fr="Équipes opérationnelles", result_en="Operational teams",
-                icon="spark",
-                gradient="from-brand-700 via-brand-500 to-sky",
             ),
         ]
         Project.objects.all().delete()

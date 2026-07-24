@@ -204,6 +204,32 @@ export function IconTelegram(props: IconProps) {
   );
 }
 
+export function IconClock(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+    </svg>
+  );
+}
+
+export function IconPlay(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+      <path d="M8 5.14v13.72a1 1 0 0 0 1.5.86l11-6.86a1 1 0 0 0 0-1.72l-11-6.86A1 1 0 0 0 8 5.14Z" />
+    </svg>
+  );
+}
+
+export function IconBook(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2V5Z" />
+      <path d="M4 19a2 2 0 0 1 2-2h13" />
+    </svg>
+  );
+}
+
 export function IconHeadset(props: IconProps) {
   return (
     <svg {...base} {...props}>
