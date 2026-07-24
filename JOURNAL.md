@@ -6,6 +6,79 @@
 
 ---
 
+## 2026-07-24 — 📣 Bannière Edlearning + anonymisation formateurs + retrait tirets (NON commité)
+
+Demande client : rendre l'annonce « ce site n'est qu'un aperçu, la vraie
+formation est sur l'app Edlearning » **accrochante mais non agressive**, masquer
+l'identité des formateurs dans le catalogue, et retirer les tirets cadratins (—)
+du site (tell d'écriture IA).
+
+**1. Bannière Edlearning (nouveau `components/EdlearningPromo.tsx`)** — carte
+flottante **bas-gauche** (le bas-droite est pris par le chat + back-to-top),
+**non bloquante** (pas un modal). Logo Edlearning, titre accrochant, message
+d'aperçu, **badge « Google Play »** (SVG inline, triangle dégradé
+bleu→vert→jaune→rouge). Fermable (× ), choix **mémorisé**
+(`localStorage: edlearning-promo-dismissed`) → ne réapparaît pas. Slide-in doux
+après 700 ms. Bilingue FR/EN. Montée **site entier** dans `app/[lang]/layout.tsx`.
+Le paragraphe « aperçu » a été **retiré du hero** de `formations/page.tsx` (il
+vit désormais dans la bannière).
+
+**1bis. Bannière pilotée par le CMS (comme le reste du contenu).** Nouveau modèle
+singleton **`content.FormationsPromo`** (badge/titre/corps FR+EN, label store,
+`play_url`, `logo_path`, **`is_active` = interrupteur d'affichage**). Chaîne
+complète alignée sur le pattern existant : serializer + **endpoint
+`/api/formations-promo/`** (APIView) + admin (`Bannière Formations (Edlearning)`)
++ **migration `content/0004_formationspromo.py`** (écrite à la main, Django tourne
+via Docker) + seed. Côté front : **`getCmsFormationsPromo(lang)`** dans `cms.ts`
+(repli `null` → textes intégrés au composant), fetch dans le layout (parallélisé
+avec `getCmsSiteSettings`) → passé en prop. L'admin peut **modifier le texte, le
+lien Play Store, et masquer la bannière** sans toucher au code.
+- ⚠️ **Lien Play Store = placeholder par défaut** (`play.google.com/store/search?q=Edlearning`),
+  désormais **modifiable dans l'admin** → Bannière Formations. À remplacer par
+  l'URL exacte `.../details?id=<package>` quand connue.
+- ⚠️ **Prod** : appliquer la **migration** (`manage.py migrate content`) puis
+  re-seed si voulu (`manage.py seed`).
+
+**2. Formateurs anonymisés (catalogue)** — dans `lib/courses.ts` **et**
+`courses/management/commands/seed_courses.py`, les 3 entrées `TEAM`
+(Loïc DJIMGOU TONBA, Edwin TCHAMBA, « Mentors Horus-Lab ») pointent maintenant
+toutes vers **« Équipe Horus-Lab »**, **sans rôle** (choix client : nom seul).
+Fiche cours (`formations/[slug]/page.tsx`) : la ligne du rôle ne s'affiche plus
+si vide. → Les apprenants découvriront leurs formateurs pendant la formation.
+- ⚠️ **Re-seed requis** côté serveur pour la prod (CMS) : `python manage.py seed_courses`.
+- Note : la page **À propos** garde Edwin & Loïc (équipe réelle de l'entreprise,
+  hors périmètre de la demande qui visait le catalogue).
+
+**3. Tirets cadratins (—) retirés du texte visible** (17 remplacements via
+sous-agent + fichiers catalogue faits à la main) : titres `A — B` → `A : B`,
+incises → virgules. Fichiers : `courses.ts`, `seed_courses.py`, `projects.ts`,
+`about/page.tsx`, `content/.../seed.py`, `portfolio/page.tsx`, `ProjectGallery.tsx`,
+`api/chat/route.ts`. **Non touchés** : commentaires de code, séparateurs
+décoratifs `── ──`, migrations Django, prompts système / e-mails sortants (non affichés).
+
+**Ajustements (suite retours client) :**
+- **La bannière réapparaît au rechargement** : retrait de la persistance
+  `localStorage` (elle ne « disparaissait » plus jamais après une fermeture).
+  Désormais fermeture = masquée pendant la navigation SPA, mais **réaffichée au
+  refresh** (état React en mémoire, pas de storage).
+- **Deux messages selon la page** (détection via `usePathname`) : pages
+  **/formations** → aperçu Edlearning + Play Store ; **autres pages** → annonce
+  « Nos formations gratuites démarrent le **mardi 1er septembre 2026** » + CTA
+  interne vers `/formations`. Les DEUX variantes sont **éditables au CMS** :
+  8 nouveaux champs `teaser_*` sur `FormationsPromo` (+ **migration
+  `0005_formationspromo_teaser`**, admin, seed) ; `CmsPromo` restructuré en
+  `{ preview, teaser }`.
+- **Libellé formateur = « Formateurs Horus-Lab »** (au lieu de « Équipe
+  Horus-Lab »), toujours **sans rôle**, dans `courses.ts` **et** `seed_courses.py`.
+  Tous les cours (Dart, Flutter, Python, etc.) pointent vers cette unique entrée →
+  aucun nom individuel. ⚠️ Rappel : re-seed (`seed_courses`) requis pour que la
+  base CMS reflète le changement (la donnée live vient de Django).
+
+**Vérifs** : `tsc --noEmit` OK, ESLint OK, `py_compile` OK sur les fichiers modifiés.
+⚠️ Prod : appliquer `migrate content` (migrations **0004 + 0005**) puis re-seed.
+
+---
+
 ## 2026-07-23 — 🔌 Alignement CMS Phase 1 + retrait Google OAuth (NON commité)
 
 Audit frontend↔backend (via sous-agent) : le backend est plus complet que ce que
