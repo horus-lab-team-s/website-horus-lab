@@ -74,8 +74,26 @@ décoratifs `── ──`, migrations Django, prompts système / e-mails sorta
   aucun nom individuel. ⚠️ Rappel : re-seed (`seed_courses`) requis pour que la
   base CMS reflète le changement (la donnée live vient de Django).
 
-**Vérifs** : `tsc --noEmit` OK, ESLint OK, `py_compile` OK sur les fichiers modifiés.
-⚠️ Prod : appliquer `migrate content` (migrations **0004 + 0005**) puis re-seed.
+**Ajustements (suite 2) :**
+- **Noms formateurs vraiment retirés du catalogue, sans dépendre du re-seed** :
+  le catalogue affichait le formateur **directement depuis la base CMS**
+  (`cms.ts mapCourseListItem` → cartes `CourseCatalog` + fiche cours), donc les
+  anciens noms restaient tant que la base n'était pas re-seedée. Désormais le
+  frontend **force** `instructor = { name: "Formateurs Horus-Lab", role: "" }`
+  quelles que soient les valeurs en base → plus aucun nom individuel, base à jour
+  ou non. Ligne du rôle masquée si vide sur les cartes (`CourseCatalog`).
+- **Bannière : réapparition aussi au changement de page** (pas seulement au
+  refresh). `EdlearningPromo` enveloppe désormais un `PromoCard` **monté avec
+  `key={pathname}`** → remontage à chaque navigation → l'animation d'entrée se
+  rejoue même si la bannière avait été fermée sur la page précédente.
+
+**Vérifs** : `tsc --noEmit` OK, ESLint OK, `py_compile` OK, `next build` OK (75 pages).
+⚠️ Prod : appliquer `migrate content` (migrations **0004 + 0005**) ; le re-seed
+`seed_courses` reste conseillé pour nettoyer la base, mais **n'est plus requis**
+pour masquer les noms (le frontend les force).
+⏳ **Pas encore fait** (demande à venir) : rendre la **durée/période de l'annonce
+paramétrable au CMS** (date de début + durée → fin, ex. 1 sept + 1 mois = 1 oct,
+avec auto-expiration de la bannière).
 
 ---
 
