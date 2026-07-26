@@ -6,6 +6,26 @@
 
 ---
 
+## 2026-07-26 — 🐛 Fix 404 sur les articles de blog (CMS-only)
+
+**Symptôme** : cliquer un article/actualité → page 404. **Diagnostic** (testé sur
+l'API + le site publics) : la liste `/fr/blog` affiche 6 articles CMS, mais seuls
+les 3 slugs présents aussi en **markdown statique** s'ouvraient ; les articles
+**présents uniquement en CMS** (nvidia-blackwell, google-io, anthropic-claude,
+orange-mtn, digitalisation-pme) renvoyaient 404. Cause : `blog/[slug]` était en
+**SSG** (`generateStaticParams`), or au build CI (24/07 14:24) l'API
+`api.horus-lab.com` n'était **pas encore servie par Nginx** (branchée à ~18:46) →
+seuls les slugs markdown étaient prérendus.
+
+**Fix** : `blog/[slug]/page.tsx` passe en **`export const dynamic = "force-dynamic"`**
+(retrait de `generateStaticParams`/`dynamicParams`) → l'article est rendu **à la
+demande depuis le CMS**, plus aucune dépendance au pré-rendu au build. Vérifié en
+local contre l'API live : articles CMS `200`, slug bidon `404`. `next build` OK.
+- ⚠️ **Déploiement** : frontend uniquement → rebuild image (CI au merge) puis
+  redéployer `frontend` (runbook §3-4, repointer `FRONTEND_IMAGE`). Le backend est inchangé.
+
+---
+
 ## 2026-07-24 — 🚀 Déploiement prod (images + Nginx) + docs
 
 Mise en prod sur le VPS Contabo des évolutions du jour, **commande par commande**

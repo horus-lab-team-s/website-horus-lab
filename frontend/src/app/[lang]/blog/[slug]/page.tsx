@@ -5,17 +5,18 @@ import { Footer } from "@/components/Footer";
 import { BlogPostHeader } from "@/components/blog/BlogPostHeader";
 import { BlogForum } from "@/components/blog/BlogForum";
 import { Newsletter } from "@/components/sections/Newsletter";
-import { getCmsPostParams, getCmsPost } from "@/lib/cms";
+import { getCmsPost } from "@/lib/cms";
 import { isLocale } from "@/i18n/dictionaries";
 import { SITE_URL } from "@/lib/site";
 
 type Params = { lang: string; slug: string };
 
-export const dynamicParams = true;
-
-export async function generateStaticParams() {
-  return getCmsPostParams();
-}
+// Article rendu à la demande depuis le CMS (source de vérité), pas de pré-rendu
+// au build : tout article publié dans l'admin est résolu immédiatement, et un
+// build lancé pendant que l'API est injoignable ne casse plus les articles.
+// (Avant : generateStaticParams ne prérendait que les slugs markdown → les
+// articles présents uniquement en CMS renvoyaient 404.)
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
