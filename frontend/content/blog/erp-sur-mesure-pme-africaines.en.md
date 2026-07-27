@@ -16,7 +16,7 @@ International ERPs are powerful, but they're built for contexts that aren't alwa
 
 - payment flows that ignore **mobile money**;
 - assumptions of permanent connectivity;
-- license costs that are prohibitive for a growing SME.
+- licence costs that are prohibitive for a growing SME.
 
 The result: you adapt your business to the tool, instead of adapting the tool to your business.
 
@@ -24,7 +24,7 @@ The result: you adapt your business to the tool, instead of adapting the tool to
 
 A system built around **your** real processes lets you:
 
-1. **Centralize** sales, inventory, finance and HR into a single source of truth.
+1. **Centralise** sales, inventory, finance and HR into a single source of truth.
 2. **Automate** repetitive tasks (invoicing, reminders, reports).
 3. **Decide faster** thanks to dashboards tailored to your metrics.
 

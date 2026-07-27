@@ -35,12 +35,12 @@ const T: Record<Lang, {
     ctaNote: "Inscription et suivi assurés par l'équipe Horus-Lab.",
   },
   en: {
-    backLabel: "All courses", enroll: "Enroll in this course", preview: "Course preview",
+    backLabel: "All courses", enroll: "Enrol in this course", preview: "Course preview",
     freeAccess: "Guided by our instructors",
     learnTitle: "What you'll learn", curriculumTitle: "Course curriculum",
     modulesLabel: "modules", lessonsLabel: "lessons", instructorTitle: "Your instructor",
     otherTitle: "Other courses", level: "Level", duration: "Duration",
-    ctaNote: "Enrollment and follow-up handled by the Horus-Lab team.",
+    ctaNote: "Enrolment and follow-up handled by the Horus-Lab team.",
   },
 };
 

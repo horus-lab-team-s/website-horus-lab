@@ -140,7 +140,7 @@ COURSES = [
     {
         "slug": "nextjs-en-production", "category": "web", "instructor": "edwin",
         "title_fr": "Next.js en production", "title_en": "Next.js in production",
-        "subtitle_fr": "Des applications rapides et référencées", "subtitle_en": "Fast, well-ranked applications",
+        "subtitle_fr": "Des applications rapides et référencées", "subtitle_en": "Fast, search-friendly applications",
         "level_fr": "Avancé", "level_en": "Advanced", "duration_hours": 18, "lessons_count": 44,
         "price_fr": "Premium", "price_en": "Premium", "is_free": False,
         "tags": ["Next.js", "SSR", "SEO", "TypeScript"], "image": IMG["next"], "video_url_fr": VIDEO_FR["next"], "video_url_en": VIDEO_EN["next"],

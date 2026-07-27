@@ -22,7 +22,7 @@ export function Partners({ partners }: { partners?: { name: string; src: string;
   /* Doublé pour un défilement en boucle continue (translateX 0 → -50%). */
   const TRACK = [...list, ...list];
   const eyebrow = lang === "fr" ? "Partenaires" : "Partners";
-  const title = lang === "fr" ? "Ils nous font confiance" : "Trusted by";
+  const title = lang === "fr" ? "Ils nous font confiance" : "They trust us";
 
   return (
     <section id="partners" className="relative overflow-hidden bg-surface py-14 sm:py-16">

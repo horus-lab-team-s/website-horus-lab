@@ -69,7 +69,7 @@ const fr = {
         desc: "Nous analysons vos besoins, votre marché et vos contraintes pour définir une vision commune.",
       },
       {
-        title: "Conception & design",
+        title: "Conception & prototypage",
         desc: "Architecture technique, maquettes et prototypes validés ensemble avant la moindre ligne de code.",
       },
       {
@@ -242,7 +242,7 @@ const fr = {
     close: "Fermer",
     error:
       "Désolé, une erreur est survenue. Réessayez ou écrivez-nous à contact@horus-lab.com.",
-    disclaimer: "Horus AI peut faire des erreurs. Vérifiez les infos importantes.",
+    disclaimer: "Horus AI peut faire des erreurs. Vérifiez les informations importantes.",
     offline: "Mode hors-ligne (réponses limitées)",
     suggestions: [
       "Quels services proposez-vous ?",
@@ -340,7 +340,7 @@ const en: Dict = {
     steps: [
       {
         title: "Listen & scope",
-        desc: "We analyze your needs, market and constraints to define a shared vision.",
+        desc: "We analyse your needs, market and constraints to define a shared vision.",
       },
       {
         title: "Design & prototype",

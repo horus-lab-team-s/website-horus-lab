@@ -4,7 +4,6 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { BlogPostHeader } from "@/components/blog/BlogPostHeader";
 import { BlogForum } from "@/components/blog/BlogForum";
-import { Newsletter } from "@/components/sections/Newsletter";
 import { getCmsPost } from "@/lib/cms";
 import { isLocale } from "@/i18n/dictionaries";
 import { SITE_URL } from "@/lib/site";
@@ -81,14 +80,18 @@ export default async function BlogPostPage({
       <Header />
       <main id="main" tabIndex={-1}>
         <BlogPostHeader post={post} />
-        <article className="bg-surface pb-20">
+        <article className="relative overflow-hidden bg-surface pb-20">
+          {/* Filigrane discret : logo Horus dans le fond des zones vides. */}
           <div
-            className="article mx-auto max-w-3xl px-5 sm:px-8"
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-[url('/logo/logo-light-bg-full.png')] bg-[length:460px] bg-[right_-1.5rem_top_5rem] bg-no-repeat opacity-[0.05] dark:bg-[url('/logo/logo-dark-bg-full.png')] dark:opacity-[0.07]"
+          />
+          <div
+            className="article relative z-10 mx-auto max-w-3xl px-5 text-justify [hyphens:auto] sm:px-8"
             dangerouslySetInnerHTML={{ __html: post.html }}
           />
         </article>
         <BlogForum slug={slug} title={post.title} />
-        <Newsletter />
       </main>
       <Footer />
     </>

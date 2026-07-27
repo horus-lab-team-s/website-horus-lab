@@ -20,13 +20,13 @@ For fintech players, AI models flag suspicious transactions in real time, far fa
 
 ## 3. Demand forecasting
 
-In commerce and agriculture, anticipating sales or harvests helps **optimize inventory** and reduce waste.
+In commerce and agriculture, anticipating sales or harvests helps **optimise inventory** and reduce waste.
 
 ## 4. Document analysis
 
-AI automatically extracts key information from invoices, contracts or forms — a huge time saver for administrations and large organizations.
+AI automatically extracts key information from invoices, contracts or forms — a huge time saver for administrations and large organisations.
 
-## 5. Personalization
+## 5. Personalisation
 
 Recommending the right product, content or service at the right moment boosts engagement and sales.
 

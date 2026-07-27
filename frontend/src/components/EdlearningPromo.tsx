@@ -39,7 +39,7 @@ const FALLBACK: Record<"fr" | "en", CmsPromo> = {
     storeLabel: "Disponible sur",
     preview: {
       badge: "Aperçu",
-      title: "La formation continue sur l'app Edlearning",
+      title: "La formation complète se poursuit sur l'appli Edlearning",
       body: "Ce site n'est qu'un aperçu. La formation complète et le suivi des apprenants se déroulent sur notre application mobile Edlearning.",
     },
     teaser: {
@@ -186,8 +186,14 @@ function PromoCard({ promo, pathname }: { promo: CmsPromo | null; pathname: stri
       setRender(true);
       raf = requestAnimationFrame(() => setShown(true));
     }, 700);
+    // Se retire tout seul après ~30 s pour ne pas encombrer la lecture. Elle
+    // réapparaît au rechargement et à chaque changement de page (key={pathname}).
+    const hideId = setTimeout(() => setShown(false), 30_700);
+    const removeId = setTimeout(() => setRender(false), 31_000);
     return () => {
       clearTimeout(id);
+      clearTimeout(hideId);
+      clearTimeout(removeId);
       if (raf) cancelAnimationFrame(raf);
     };
   }, [active, c.endDate]);

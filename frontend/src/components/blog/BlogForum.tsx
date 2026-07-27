@@ -26,7 +26,7 @@ const POLL_MS = 10000;
 const T = {
   fr: {
     heading: "Discussion",
-    intro: "Une question, un avis ? Écrivez ici, l'équipe et les autres lecteurs vous répondent, publiquement.",
+    intro: "Une question, un avis ? Écrivez ici : l'équipe et les autres lecteurs vous répondent publiquement.",
     empty: "Aucun message pour l'instant. Lancez la discussion.",
     name: "Votre nom (optionnel)",
     message: "Écrivez un message public…",
@@ -39,7 +39,7 @@ const T = {
   },
   en: {
     heading: "Discussion",
-    intro: "A question or a thought? Post here, the team and other readers reply, publicly.",
+    intro: "A question or a thought? Post here: the team and other readers will reply, publicly.",
     empty: "No messages yet. Start the discussion.",
     name: "Your name (optional)",
     message: "Write a public message…",

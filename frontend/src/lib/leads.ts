@@ -128,18 +128,57 @@ function appendLocal(kind: string, record: Record<string, unknown>): boolean {
 }
 
 /**
+ * Enregistre dans la base Django (source de vérité) :
+ *   - contact    -> POST /api/contact/    (table ContactMessage)
+ *   - newsletter -> POST /api/newsletter/ (table Subscriber)
+ * Fiable même si Brevo/e-mail échoue. Renvoie true si la base a bien enregistré.
+ */
+async function djangoStore(
+  kind: "newsletter" | "contact",
+  payload: Record<string, unknown>
+): Promise<boolean> {
+  const base = (process.env.BACKEND_API_URL ?? "").replace(/\/$/, "");
+  if (!base) return false;
+  const path = kind === "newsletter" ? "/api/newsletter/" : "/api/contact/";
+  const body =
+    kind === "newsletter"
+      ? { email: String(payload.email ?? "") }
+      : {
+          name: String(payload.name ?? ""),
+          email: String(payload.email ?? ""),
+          subject: String(payload.subject ?? ""),
+          message: String(payload.message ?? ""),
+        };
+  try {
+    const res = await fetch(`${base}${path}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    // 2xx = enregistré. Pour la newsletter, 400 = e-mail déjà inscrit (on l'accepte).
+    return res.ok || (kind === "newsletter" && res.status === 400);
+  } catch (err) {
+    console.warn(`[leads] stockage Django impossible (${kind}):`, err);
+    return false;
+  }
+}
+
+/**
  * Enregistre une soumission :
- *  1. journal local `.data/<kind>.jsonl` (audit, repli en dev) ;
- *  2. envoi à Brevo si `BREVO_API_KEY` est défini.
+ *  1. base Django (source de vérité : ContactMessage / Subscriber) ;
+ *  2. journal local `.data/<kind>.jsonl` (repli dev) ;
+ *  3. Brevo si `BREVO_API_KEY` est défini (e-mail équipe pour contact,
+ *     ajout à la liste pour la newsletter) — au mieux, non bloquant.
  *
- * Renvoie `ok: true` si la donnée a été captée quelque part (local OU Brevo).
- * En production (FS en lecture seule), Brevo doit être configuré, sinon `ok: false`.
+ * Renvoie `ok: true` dès que la donnée a été captée quelque part (base, local ou Brevo).
  */
 export async function saveLead(
   kind: "newsletter" | "contact",
   payload: Record<string, unknown>
 ): Promise<{ ok: boolean }> {
   const record = { ...payload, kind, createdAt: new Date().toISOString() };
+
+  const dbOk = await djangoStore(kind, payload);
   const localOk = appendLocal(kind, record);
 
   let providerOk = false;
@@ -153,5 +192,5 @@ export async function saveLead(
         : await brevoSendContactEmail(payload as unknown as ContactPayload);
   }
 
-  return { ok: localOk || providerOk };
+  return { ok: dbOk || localOk || providerOk };
 }

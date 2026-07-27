@@ -22,14 +22,14 @@ const SERVICE_SUBMENU: Record<LangCode, { slug: string; label: string }[]> = {
   fr: [
     { slug: "applications",        label: "Applications sur mesure" },
     { slug: "systemes-information", label: "Systèmes d'information" },
-    { slug: "digitalisation",      label: "Digitalisation entreprises" },
-    { slug: "formation-audit",     label: "Formation & Audit" },
+    { slug: "digitalisation",      label: "Digitalisation d'entreprise" },
+    { slug: "formation-audit",     label: "Formation & Audit IT" },
   ],
   en: [
     { slug: "applications",        label: "Custom Applications" },
     { slug: "systemes-information", label: "Information Systems" },
     { slug: "digitalisation",      label: "Business Digitalisation" },
-    { slug: "formation-audit",     label: "Training & Audit" },
+    { slug: "formation-audit",     label: "Training & IT Audit" },
   ],
 };
 

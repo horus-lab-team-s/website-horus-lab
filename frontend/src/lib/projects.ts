@@ -144,7 +144,7 @@ const PROJECTS: Record<Lang, Project[]> = {
       iconKey: "layers",
       gradient: GRADIENTS[1],
       role: "Design & development",
-      scope: "SME financial management",
+      scope: "SME financial management · multi-account & reporting",
       logo: "/logo/logo-GATHE_FINANCE.png",
       screenshots: [
         "/img/photo-1551288049-bebda4e38f71-w1200.jpg",

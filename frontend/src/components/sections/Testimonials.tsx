@@ -24,28 +24,28 @@ const TESTI: Record<"fr" | "en", Testi[]> = {
       quote:
         "Horus-Lab a digitalisé notre centre de formation avec un vrai sens du détail. Une plateforme claire, fiable et pensée pour nos apprenants, du début à la fin.",
       name: "Paule Diane Himsta",
-      role: "Présidente Directrice · Broad Range Consulting (CFP-BRC)",
+      role: "Présidente-Directrice Générale · Broad Range Consulting (CFP-BRC)",
       image: "/Temoignages/Mme-paul-diane-himsta.png",
     },
     {
       quote:
         "Nos outils de gestion sont enfin à la hauteur de nos ambitions. Une équipe sérieuse, disponible, et un accompagnement impeccable à chaque étape.",
       name: "Paule Diane Himsta",
-      role: "Présidente Directrice · CGA Broad Range Consulting",
+      role: "Présidente-Directrice Générale · CGA Broad Range Consulting",
       image: "/Temoignages/Mme-paul-diane-himsta.png",
     },
     {
       quote:
         "Notre boutique en ligne Afrikamode est fluide, rapide et fidèle à notre image. Horus-Lab a traduit notre univers mode en une vraie expérience e-commerce africaine.",
       name: "Pagop Tchouansi Aurélie",
-      role: "Responsable · AfrikaMode",
+      role: "Responsable · Afrikamode",
       image: "/Temoignages/Mme-pagop-Tchouansi-aurelie.png",
     },
     {
       quote:
         "Avec Elec One et EnMKit, Horus-Lab a transformé notre vision en une application mobile concrète : nos utilisateurs pilotent et réduisent leur consommation d'électricité à distance. Un travail remarquable.",
       name: "Dr Agnès Virginie TJAHE",
-      role: "Présidente Directrice · 2MeTech Sarl",
+      role: "Présidente-Directrice Générale · 2MeTech Sarl",
       image: "/Temoignages/Dr-Agnes-Virgine-TJAHE.png",
     },
     {
@@ -67,16 +67,16 @@ const TESTI: Record<"fr" | "en", Testi[]> = {
     },
     {
       quote:
-        "Our management tools finally match our ambitions. A serious, available team, with flawless support at every step.",
+        "Our management tools finally match our ambitions. A dedicated, responsive team, with flawless support at every step.",
       name: "Paule Diane Himsta",
       role: "Managing Director · CGA Broad Range Consulting",
       image: "/Temoignages/Mme-paul-diane-himsta.png",
     },
     {
       quote:
-        "Our Afrikamode online store is smooth, fast and true to our brand. Horus-Lab turned our fashion universe into a real African e-commerce experience.",
+        "Our Afrikamode online store is smooth, fast and true to our brand. Horus-Lab turned our fashion world into a real African e-commerce experience.",
       name: "Pagop Tchouansi Aurélie",
-      role: "Manager · AfrikaMode",
+      role: "Manager · Afrikamode",
       image: "/Temoignages/Mme-pagop-Tchouansi-aurelie.png",
     },
     {

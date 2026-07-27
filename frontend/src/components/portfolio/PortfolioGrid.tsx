@@ -263,7 +263,7 @@ export function PortfolioGrid({
                     {p.url ? (
                       <a href={p.url} target="_blank" rel="noopener noreferrer"
                         className="group/btn inline-flex items-center gap-2 rounded-full bg-brand-700 px-5 py-2.5 text-xs font-semibold text-white shadow-md shadow-brand-700/25 transition-all hover:bg-brand-800 hover:shadow-lg">
-                        Voir le site
+                        {isFr ? "Voir le site" : "Visit site"}
                         <IconArrowRight className="size-3.5 transition-transform group-hover/btn:translate-x-0.5" />
                       </a>
                     ) : (
@@ -303,7 +303,7 @@ export function PortfolioGrid({
       {visible.length === 0 && (
         <Reveal>
           <p className="mt-16 rounded-lg border border-brand-100 bg-white p-10 text-center text-muted dark:border-white/10 dark:bg-slate-900">
-            Aucun projet dans cette catégorie.
+            {isFr ? "Aucun projet dans cette catégorie." : "No projects in this category."}
           </p>
         </Reveal>
       )}
