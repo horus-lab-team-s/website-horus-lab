@@ -324,7 +324,6 @@ class Command(BaseCommand):
             "tech":     ("Actualités Tech",         "Tech News"),
             "digital":  ("Transformation Digitale", "Digital Transformation"),
             "africa":   ("Tech Afrique",            "Tech Africa"),
-            "training": ("Formation IT",            "IT Training"),
         }
         cat_obj = {}
         for slug, (fr, en) in cats.items():

@@ -81,10 +81,14 @@ export default async function BlogPostPage({
       <main id="main" tabIndex={-1}>
         <BlogPostHeader post={post} />
         <article className="relative overflow-hidden bg-surface pb-20">
-          {/* Filigrane discret : logo Horus dans le fond des zones vides. */}
+          {/* Filigranes discrets : logo Horus dans le fond des zones vides (haut-droite + bas-gauche). */}
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[url('/logo/logo-light-bg-full.png')] bg-[length:460px] bg-[right_-1.5rem_top_5rem] bg-no-repeat opacity-[0.05] dark:bg-[url('/logo/logo-dark-bg-full.png')] dark:opacity-[0.07]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-[url('/logo/logo-light-bg-full.png')] bg-[length:400px] bg-[left_-2rem_bottom_5rem] bg-no-repeat opacity-[0.04] dark:bg-[url('/logo/logo-dark-bg-full.png')] dark:opacity-[0.06]"
           />
           <div
             className="article relative z-10 mx-auto max-w-3xl px-5 text-justify [hyphens:auto] sm:px-8"

@@ -56,14 +56,12 @@ const BLOG_SUBMENU: Record<LangCode, { slug: string; label: string }[]> = {
     { slug: "Développement",           label: "Développement" },
     { slug: "Tech Afrique",            label: "Tech Afrique" },
     { slug: "Transformation Digitale", label: "Transformation Digitale" },
-    { slug: "Formation IT",            label: "Formation IT" },
   ],
   en: [
     { slug: "Tech News",               label: "Tech News" },
     { slug: "Development",             label: "Development" },
     { slug: "Tech Africa",            label: "Tech Africa" },
     { slug: "Digital Transformation", label: "Digital Transformation" },
-    { slug: "IT Training",            label: "IT Training" },
   ],
 };
 

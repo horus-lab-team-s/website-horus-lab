@@ -37,7 +37,13 @@ de l'IP ; testé OK (base ✓ + e-mail ✓).
 adapté au thème via `--color-ink`) → c'était un **onglet sur port mort / cache
 service-worker** d'un autre projet. Dev relancé propre.
 
-Vérifs : `tsc` OK, ESLint OK, pages `200`. 📄 Briefing : `docs/briefing-2026-07-27.pdf`.
+**Ajustements (2ᵉ passe)** : **2ᵉ logo Horus** en filigrane (bas-gauche) sur l'article ;
+**« Formation IT » retiré du menu Blog** (nav) **et** de la catégorie backend (elle
+était vide, aucun article) → cohérence front/back. *(Le « Programme Formation IT »
+dans Réalisations et le scope Edlearning sont des projets, conservés.)*
+
+Vérifs : `tsc` OK, ESLint OK, **`next build` complet OK**, `py_compile` OK, pages `200`.
+📄 Briefing : `docs/briefing-2026-07-27.pdf`.
 ⚠️ Textes CMS (seed) → re-seed pour la prod ; changements front → redéploiement frontend.
 
 ---
