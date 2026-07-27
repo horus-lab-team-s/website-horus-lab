@@ -6,6 +6,42 @@
 
 ---
 
+## 2026-07-27 — 🔤 Relecture langue FR/EN + fixes UX + contact/newsletter en base
+
+**Audit langue** (5 sous-agents : dictionnaire/entête/pied, pages, composants,
+données, seed CMS) → ~28 constats, **corrections appliquées** : chaînes FR codées
+en dur câblées bilingue (`Contact` badge/labels, `PortfolioGrid` CTA/état vide),
+anglais **britannique** harmonisé (analyse, organisations, Enrol/Enrolment, `.en.md`),
+terminologie (« Digitalisation d'entreprise », « Formation & Audit IT »,
+« Présidente-Directrice Générale »…), bannière « La formation complète se poursuit
+sur l'appli Edlearning », + tirets cadratins résiduels retirés. Fichiers : dictionaries,
+Contact, PortfolioGrid, Header, Partners, Testimonials, BlogForum, about, formations
+(page + slug), courses, projects, news, seed.py, seed_courses.py, 3 `.en.md`.
+
+**UX** :
+- Bannière Edlearning : **auto-disparition après ~30 s** (réapparaît au refresh/nav).
+- Article de blog : **texte justifié** (+ césure), **section newsletter retirée**
+  (doublon footer), **logo Horus en filigrane** dans le fond.
+- Page À propos : **ambiguïté fondateurs/équipe levée** (« Les fondateurs » +
+  « entourés d'une équipe… »).
+
+**Contact & newsletter (bug réel corrigé)** : le formulaire renvoyait `502` en prod
+(il ne passait pas par la base : fichier local impossible en conteneur + Brevo en
+échec). Idem newsletter non stockée en base. → `lib/leads.ts` fait désormais passer
+contact **et** newsletter par la **base Django** (`ContactMessage`/`Subscriber`,
+`POST /api/contact/` & `/api/newsletter/`), Brevo en secondaire. **Plus aucun message
+perdu.** Cause Brevo identifiée (log `401 unrecognised IP`) → réglée après autorisation
+de l'IP ; testé OK (base ✓ + e-mail ✓).
+
+**Navbar « invisible »** : pas un bug code (menus présents, pages `200`, texte
+adapté au thème via `--color-ink`) → c'était un **onglet sur port mort / cache
+service-worker** d'un autre projet. Dev relancé propre.
+
+Vérifs : `tsc` OK, ESLint OK, pages `200`. 📄 Briefing : `docs/briefing-2026-07-27.pdf`.
+⚠️ Textes CMS (seed) → re-seed pour la prod ; changements front → redéploiement frontend.
+
+---
+
 ## 2026-07-26 — 🐛 Fix 404 sur les articles de blog (CMS-only)
 
 **Symptôme** : cliquer un article/actualité → page 404. **Diagnostic** (testé sur
