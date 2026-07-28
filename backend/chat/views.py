@@ -28,7 +28,9 @@ class ForumThreadView(APIView):
         thread = ForumThread.objects.filter(slug=slug).first()
         if thread is None:
             return Response({"thread": {"slug": slug, "title": ""}, "posts": []})
-        posts = thread.posts.filter(is_hidden=False)
+        # select_related : le message cité est sérialisé avec chaque post →
+        # évite une requête SQL par message.
+        posts = thread.posts.filter(is_hidden=False).select_related("reply_to")
         after = request.query_params.get("after")
         if after:
             try:
@@ -56,12 +58,23 @@ class ForumThreadView(APIView):
             thread.save(update_fields=["title"])
 
         name = (serializer.validated_data.get("author_name") or "").strip()[:120] or "Visiteur"
+
+        # Message cité (« Répondre ») : uniquement un message visible du MÊME fil.
+        reply_to = None
+        reply_to_id = request.data.get("reply_to")
+        if reply_to_id:
+            try:
+                reply_to = thread.posts.filter(id=int(reply_to_id), is_hidden=False).first()
+            except (TypeError, ValueError):
+                reply_to = None
+
         post = ForumPost.objects.create(
             thread=thread,
             author_name=name,
             author_email=(serializer.validated_data.get("author_email") or "").strip(),
             text=text[:5000],
             is_staff=False,
+            reply_to=reply_to,
         )
         notify_new_forum_post(post)
         return Response(ForumPostSerializer(post).data, status=status.HTTP_201_CREATED)

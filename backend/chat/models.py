@@ -26,6 +26,12 @@ class ForumPost(models.Model):
     privé : jamais exposé par l'API publique."""
 
     thread = models.ForeignKey(ForumThread, related_name="posts", on_delete=models.CASCADE)
+    # Réponse à un autre message du fil (« qui répond à qui »). Optionnel ; si le
+    # message cité est supprimé, la réponse subsiste (SET_NULL).
+    reply_to = models.ForeignKey(
+        "self", null=True, blank=True, on_delete=models.SET_NULL,
+        related_name="replies", verbose_name="En réponse à",
+    )
     author_name = models.CharField("Auteur", max_length=120, default="Visiteur", blank=True)
     author_email = models.EmailField("E-mail (privé, jamais public)", blank=True)
     text = models.TextField()

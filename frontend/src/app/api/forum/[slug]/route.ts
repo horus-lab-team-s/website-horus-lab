@@ -57,13 +57,20 @@ export async function POST(request: Request, { params }: Ctx) {
   const author_name = typeof body.author_name === "string" ? body.author_name.trim().slice(0, 120) : "";
   const author_email = typeof body.author_email === "string" ? body.author_email.trim().slice(0, 254) : "";
   const thread_title = typeof body.thread_title === "string" ? body.thread_title.trim().slice(0, 300) : "";
+  // Id du message auquel on répond (« Répondre »), optionnel.
+  const reply_to =
+    typeof body.reply_to === "number"
+      ? body.reply_to
+      : typeof body.reply_to === "string" && /^\d+$/.test(body.reply_to)
+        ? Number(body.reply_to)
+        : null;
 
   try {
     const res = await fetch(`${API_BASE}/api/chat/forum/${encodeURIComponent(slug)}/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       cache: "no-store",
-      body: JSON.stringify({ author_name, author_email, text, thread_title }),
+      body: JSON.stringify({ author_name, author_email, text, thread_title, reply_to }),
     });
     if (!res.ok) {
       return NextResponse.json({ error: "backend_error" }, { status: res.status });
