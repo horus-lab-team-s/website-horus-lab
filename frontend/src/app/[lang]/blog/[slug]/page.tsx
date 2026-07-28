@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { BlogPostHeader } from "@/components/blog/BlogPostHeader";
+import { ArticleBody } from "@/components/blog/ArticleBody";
 import { BlogForum } from "@/components/blog/BlogForum";
 import { getCmsPost } from "@/lib/cms";
 import { isLocale } from "@/i18n/dictionaries";
@@ -90,10 +91,7 @@ export default async function BlogPostPage({
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[url('/logo/logo-light-bg-full.png')] bg-[length:400px] bg-[left_-2rem_bottom_5rem] bg-no-repeat opacity-[0.04] dark:bg-[url('/logo/logo-dark-bg-full.png')] dark:opacity-[0.06]"
           />
-          <div
-            className="article relative z-10 mx-auto max-w-3xl px-5 text-justify [hyphens:auto] sm:px-8"
-            dangerouslySetInnerHTML={{ __html: post.html }}
-          />
+          <ArticleBody html={post.html} />
         </article>
         <BlogForum slug={slug} title={post.title} />
       </main>

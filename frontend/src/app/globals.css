@@ -374,6 +374,51 @@ body {
 }
 
 /* ============================================================
+   Zone défilante du corps d'article (composant ArticleBody)
+
+   Plafond de hauteur ENTIÈREMENT responsive via clamp() :
+     - jamais moins de 26rem (416 px) → un mobile garde un bloc de lecture utile
+     - cible 74 % de la hauteur visible → s'adapte à chaque écran/orientation
+     - jamais plus de 60rem (960 px) → sur un grand écran on ne repousse pas le
+       forum hors de vue
+
+   `overflow-y: auto` ne crée une barre QUE si le contenu dépasse : un article
+   court ne déclenche donc aucun défilement interne. `overscroll-behavior`
+   empêche le « scroll chaining » (la page qui repart quand on atteint le bas
+   du cadre) — c'est ce qui rend l'expérience correcte au doigt sur mobile.
+   ============================================================ */
+.article-scroll {
+  max-height: clamp(26rem, 74vh, 60rem);      /* repli navigateurs sans `svh` */
+  max-height: clamp(26rem, 74svh, 60rem);     /* évite la barre d'URL mobile */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-brand-300) transparent;
+}
+/* Marges internes ajoutées SEULEMENT quand la zone défile réellement :
+   place pour la barre à droite, respiration en bas sous le dégradé. */
+.article-scroll[data-overflow="true"] {
+  padding-right: 0.9rem;
+  padding-bottom: 2.5rem;
+}
+.article-scroll:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 6px;
+  border-radius: 0.25rem;
+}
+.article-scroll::-webkit-scrollbar { width: 8px; }
+.article-scroll::-webkit-scrollbar-track { background: transparent; }
+.article-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-brand-200);
+  border-radius: 999px;
+}
+.article-scroll::-webkit-scrollbar-thumb:hover { background: var(--color-brand-400); }
+.dark .article-scroll { scrollbar-color: rgba(255, 255, 255, 0.28) transparent; }
+.dark .article-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.22); }
+.dark .article-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
+
+/* ============================================================
    Barre de progression du carousel Process
    ============================================================ */
 @keyframes progressBar {
