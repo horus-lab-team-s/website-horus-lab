@@ -415,7 +415,7 @@ const CATALOG: Record<Lang, Catalog> = {
       },
       {
         slug: "nextjs-en-production", category: "web",
-        title: "Next.js in production", subtitle: "Fast, well-ranked applications",
+        title: "Next.js in production", subtitle: "Fast, search-friendly applications",
         level: "Advanced", durationHours: 18, lessonsCount: 44, price: "Premium", free: false,
         tags: ["Next.js", "SSR", "SEO", "TypeScript"], image: IMG.next, videoUrl: VIDEO_EN.next,
         instructor: { name: TEAM.edwin.name, role: TEAM.edwin.roleEn },

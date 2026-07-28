@@ -37,7 +37,7 @@ import {
 export const CMS_REVALIDATE = 60;
 const API_BASE = (process.env.BACKEND_API_URL ?? "http://localhost:8000").replace(/\/$/, "");
 
-type Paginated<T> = { results: T[] } | T[];
+type Paginated<T> = { results: T[]; count?: number } | T[];
 
 async function fetchJson<T>(path: string): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
@@ -47,9 +47,63 @@ async function fetchJson<T>(path: string): Promise<T> {
   return (await res.json()) as T;
 }
 
+/** Nombre de pages maximum parcourues — garde-fou anti-boucle (500 éléments). */
+const MAX_PAGES = 25;
+
+/**
+ * Liste COMPLÈTE d'un endpoint, pages suivantes incluses.
+ *
+ * L'API DRF pagine à 20 éléments. En ne lisant que la 1re page, tout contenu
+ * au-delà du 20e disparaissait silencieusement du site (21e article, 21e
+ * formation…). On suit donc les pages jusqu'à atteindre `count`.
+ *
+ * Les pages suivantes sont demandées en `?page=N` construit ici, et NON via le
+ * lien `next` renvoyé par DRF : ce lien est absolu et reconstruit à partir de
+ * l'hôte vu par Django, qui derrière un proxy ne correspond pas forcément à
+ * l'URL joignable depuis le conteneur Next.
+ */
 async function fetchList<T>(path: string): Promise<T[]> {
-  const data = await fetchJson<Paginated<T>>(path);
-  return Array.isArray(data) ? data : data.results;
+  const first = await fetchJson<Paginated<T>>(path);
+  if (Array.isArray(first)) return first;
+
+  const items = [...first.results];
+  const total = typeof first.count === "number" ? first.count : items.length;
+  const sep = path.includes("?") ? "&" : "?";
+
+  for (let page = 2; items.length < total && page <= MAX_PAGES; page++) {
+    try {
+      const next = await fetchJson<Paginated<T>>(`${path}${sep}page=${page}`);
+      if (Array.isArray(next) || !next.results.length) break;
+      items.push(...next.results);
+    } catch {
+      // Page suivante indisponible : on renvoie ce qu'on a plutôt que de faire
+      // échouer toute la liste (le repli statique serait déclenché à tort).
+      break;
+    }
+  }
+  return items;
+}
+
+/* ------------------------------------------------------------------
+   Existence d'une ressource « détail » (article, formation)
+
+   POURQUOI : le cache de données de Next garde une entrée périmée quand la
+   revalidation ÉCHOUE. Or supprimer/dépublier un contenu fait justement
+   répondre 404 au détail → l'entrée en cache survit et la page continue d'être
+   servie, alors qu'elle a disparu de l'index. C'est la liste qui fait donc
+   autorité : elle répond toujours 200, donc elle se revalide normalement.
+
+   En cas d'API injoignable on renvoie `null` = « je ne sais pas » : l'appelant
+   ne bloque rien et laisse jouer le repli habituel. La résilience du site est
+   conservée, on ne fait qu'écarter le cas « le CMS dit que ça n'existe plus ».
+   ------------------------------------------------------------------ */
+async function cmsSlugExists(path: string, slug: string): Promise<boolean | null> {
+  try {
+    const items = await fetchList<{ slug: string }>(path);
+    return items.some((item) => item.slug === slug);
+  } catch {
+    return null;
+  }
 }
 
 const pick = (lang: Lang) => (fr: string, en: string) => (lang === "fr" ? fr : en);
@@ -160,6 +214,51 @@ export async function getCmsNews(lang: Lang): Promise<NewsItem[]> {
       .map((n) => mapNews(n, lang));
   } catch {
     return getStaticNews(lang);
+  }
+}
+
+/* ============================================================
+   Actualités tech (récupérées automatiquement via RSS, traduites)
+   ============================================================ */
+export type TechNewsItem = {
+  id: number;
+  title: string;
+  summary: string;
+  url: string;
+  source: string;
+  image: string;
+  date: string;
+};
+
+type ApiTechArticle = {
+  id: number;
+  title_fr: string; title_en: string;
+  summary_fr: string; summary_en: string;
+  url: string;
+  source: string;
+  image_url: string;
+  published_at: string;
+};
+
+/**
+ * Actualités tech dans la langue du site (FR/EN). `[]` si l'API est vide ou
+ * indisponible → la section ne s'affiche simplement pas.
+ */
+export async function getCmsTechNews(lang: Lang): Promise<TechNewsItem[]> {
+  try {
+    const data = await fetchList<ApiTechArticle>("/api/news/tech/");
+    const t = pick(lang);
+    return data.map((a) => ({
+      id: a.id,
+      title: t(a.title_fr, a.title_en),
+      summary: t(a.summary_fr, a.summary_en),
+      url: a.url,
+      source: a.source,
+      image: a.image_url,
+      date: a.published_at,
+    }));
+  } catch {
+    return [];
   }
 }
 
@@ -398,6 +497,11 @@ export async function getCmsPosts(lang: Lang): Promise<PostMeta[]> {
 
 /** Article unique : CMS si trouvé, sinon fichier Markdown local. */
 export async function getCmsPost(slug: string, lang: Lang): Promise<Post | null> {
+  // Un article dépublié/supprimé dans l'admin ne doit plus être servi, même si
+  // le cache de données en garde une copie (voir `cmsSlugExists`).
+  if ((await cmsSlugExists("/api/blog/posts/", slug)) === false) {
+    return getStaticPost(slug, lang);
+  }
   try {
     const p = await fetchJson<ApiPostDetail>(`/api/blog/posts/${slug}/`);
     const t = pick(lang);
@@ -834,6 +938,11 @@ export async function getCmsFormations(lang: Lang): Promise<CmsCatalog> {
 
 /** Cours unique (avec programme) : CMS si trouvé, sinon catalogue statique. */
 export async function getCmsCourse(lang: Lang, slug: string): Promise<Course | undefined> {
+  // Même garde-fou que pour les articles : une formation retirée du CMS ne doit
+  // pas continuer à être servie depuis une entrée de cache périmée.
+  if ((await cmsSlugExists("/api/courses/", slug)) === false) {
+    return getStaticCourse(lang, slug);
+  }
   try {
     const c = await fetchJson<ApiCourseDetail>(`/api/courses/${slug}/`);
     return mapCourseDetail(c, lang);

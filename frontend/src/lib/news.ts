@@ -39,7 +39,7 @@ const NEWS: Record<Lang, NewsItem[]> = {
       date: "2026-05-25",
       title: "Gathe Finance enters private beta",
       body:
-        "Our financial management platform for SMEs and freelancers opens its private beta: multi-account tracking, budgets, cash-flow reporting. First users joining the waitlist.",
+        "Our financial management platform for SMEs and freelancers opens its private beta: multi-account tracking, budgets, cash-flow reporting. The first users are joining the waitlist.",
       tag: "Product",
     },
     {

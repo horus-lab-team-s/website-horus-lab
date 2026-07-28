@@ -33,7 +33,7 @@ const TEAM_MEMBERS = {
     {
       name: "Edwin TCHAMBA TCHAKOUNTE",
       role: "Architecte logiciel · Co-fondateur",
-      bio: "Architecte logiciel et ingénieur senior. J'assemble des applications web et mobiles robustes, APIs REST, cloud, méthodes RUP & UML, pensées pour durer et passer à l'échelle. Lauréat du Prix du Meilleur Projet de Fin d'Études, IUT-FV Bandjoun (2024).",
+      bio: "Architecte logiciel et ingénieur senior. J'assemble des applications web et mobiles robustes (APIs REST, cloud, méthodes RUP & UML), pensées pour durer et passer à l'échelle. Lauréat du Prix du Meilleur Projet de Fin d'Études, IUT-FV Bandjoun (2024).",
       initials: "ET",
       photo: "/A-propos/photo-Edwin-co-founder.png",
       linkedin: "",
@@ -63,7 +63,7 @@ const TEAM_MEMBERS = {
     {
       name: "Edwin TCHAMBA TCHAKOUNTE",
       role: "Software architect · Co-founder",
-      bio: "Software architect and senior engineer. I build robust web and mobile applications, REST APIs, cloud, RUP & UML methods, designed to last and scale. Winner of the Best Final Year Project Award, IUT-FV Bandjoun (2024).",
+      bio: "Software architect and senior engineer. I build robust web and mobile applications (REST APIs, cloud, RUP & UML methods), designed to last and scale. Winner of the Best Final Year Project Award, IUT-FV Bandjoun (2024).",
       initials: "ET",
       photo: "/A-propos/photo-Edwin-co-founder.png",
       linkedin: "",
@@ -104,7 +104,7 @@ const CONTENT: Record<Lang, {
   fr: {
     eyebrow: "À propos",
     title: "Au-delà des frontières, au service de votre impact",
-    intro: "Horus-Lab est une entreprise technologique africaine. Nous concevons des produits numériques : applications web & mobile, logiciels sur-mesure, systèmes d'information et solutions de digitalisation, pensés pour les réalités du continent et construits pour durer.",
+    intro: "Horus-Lab est une entreprise technologique africaine. Nous concevons des produits numériques : applications web & mobile, logiciels sur mesure, systèmes d'information et solutions de digitalisation, pensés pour les réalités du continent et construits pour durer.",
     pillars: [
       { h: "Notre mission", body: "Rendre la technologie de pointe accessible et utile aux organisations africaines, en les accompagnant de l'idée jusqu'à l'impact." },
       { h: "Notre vision",  body: "Une Afrique qui construit ses propres solutions numériques, à la hauteur des standards mondiaux, et au-delà des frontières." },
@@ -122,8 +122,8 @@ const CONTENT: Record<Lang, {
       "Née de la conviction que l'Afrique a tout pour devenir un acteur majeur du numérique mondial, Horus-Lab réunit des ingénieurs pluridisciplinaires autour d'une exigence commune : livrer des produits qui comptent.",
       "Nous avançons par incréments, en livrant de la valeur tôt et souvent, et en gardant nos clients aux commandes à chaque étape du projet.",
     ],
-    teamTitle: "L'équipe fondatrice",
-    teamSubtitle: "Les ingénieurs qui conçoivent et livrent vos produits.",
+    teamTitle: "Les fondateurs",
+    teamSubtitle: "Ils portent la vision, entourés d'une équipe qui conçoit et livre vos produits.",
     ctaTitle: "Construisons quelque chose de durable ensemble.",
     ctaButton: "Démarrer un projet",
     stats: [
@@ -137,14 +137,14 @@ const CONTENT: Record<Lang, {
     title: "Beyond borders, in service of your impact",
     intro: "Horus-Lab is an African technology company. We build digital products: web & mobile apps, custom software, information systems and digitalisation solutions, designed for the realities of the continent and built to last.",
     pillars: [
-      { h: "Our mission", body: "Make leading-edge technology accessible and useful to African organizations, guiding them from idea to impact." },
+      { h: "Our mission", body: "Make leading-edge technology accessible and useful to African organisations, guiding them from idea to impact." },
       { h: "Our vision",  body: "An Africa that builds its own digital solutions, matching world-class standards, and reaching beyond borders." },
     ],
     valuesTitle: "Our values",
     valuesSubtitle: "What guides every decision and every line of code.",
     values: [
       { title: "Technical excellence", desc: "Robust, performant and maintainable solutions, with no compromise on quality." },
-      { title: "Closeness & listening", desc: "We work with you, not just for you: transparency and availability at every step." },
+      { title: "Closeness & active listening", desc: "We work with you, not just for you: transparency and availability at every step." },
       { title: "Useful innovation",    desc: "The right technology for a real problem, never the other way around." },
       { title: "Lasting impact",       desc: "We build to last: durable code, complete documentation and skills transfer." },
     ],
@@ -153,8 +153,8 @@ const CONTENT: Record<Lang, {
       "Born from the belief that Africa has everything it takes to become a major global digital player, Horus-Lab brings together cross-functional engineers around one shared standard: shipping products that matter.",
       "We move in increments, delivering value early and often, and keeping our clients in control at every step.",
     ],
-    teamTitle: "The founding team",
-    teamSubtitle: "The engineers who design and ship your products.",
+    teamTitle: "The founders",
+    teamSubtitle: "They drive the vision, backed by a team that designs and ships your products.",
     ctaTitle: "Let's build something lasting together.",
     ctaButton: "Start a project",
     stats: [

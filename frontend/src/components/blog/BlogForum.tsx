@@ -10,6 +10,13 @@ import { useLang } from "@/i18n/LanguageProvider";
    nouveaux messages arrivent en direct (polling). Aucune inscription.
    ============================================================ */
 
+type ReplyPreview = {
+  id: number;
+  author_name: string;
+  text: string;
+  is_staff: boolean;
+};
+
 type Post = {
   key: string;
   id: number | null;
@@ -17,6 +24,7 @@ type Post = {
   text: string;
   is_staff: boolean;
   created_at: string;
+  reply_to?: ReplyPreview | null;
   pending?: boolean;
   failed?: boolean;
 };
@@ -26,7 +34,7 @@ const POLL_MS = 10000;
 const T = {
   fr: {
     heading: "Discussion",
-    intro: "Une question, un avis ? Écrivez ici, l'équipe et les autres lecteurs vous répondent, publiquement.",
+    intro: "Une question, un avis ? Écrivez ici : l'équipe et les autres lecteurs vous répondent publiquement.",
     empty: "Aucun message pour l'instant. Lancez la discussion.",
     name: "Votre nom (optionnel)",
     message: "Écrivez un message public…",
@@ -36,10 +44,13 @@ const T = {
     anon: "Visiteur",
     retry: "Non publié, réessayer",
     note: "Les messages sont publics, visibles par tous les lecteurs.",
+    reply: "Répondre",
+    replyingTo: "En réponse à",
+    cancelReply: "Annuler la réponse",
   },
   en: {
     heading: "Discussion",
-    intro: "A question or a thought? Post here, the team and other readers reply, publicly.",
+    intro: "A question or a thought? Post here: the team and other readers will reply, publicly.",
     empty: "No messages yet. Start the discussion.",
     name: "Your name (optional)",
     message: "Write a public message…",
@@ -49,6 +60,9 @@ const T = {
     anon: "Visitor",
     retry: "Not posted, retry",
     note: "Messages are public, visible to all readers.",
+    reply: "Reply",
+    replyingTo: "Replying to",
+    cancelReply: "Cancel reply",
   },
 };
 
@@ -63,10 +77,12 @@ export function BlogForum({ slug, title }: { slug: string; title?: string }) {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(false);
+  const [replyTo, setReplyTo] = useState<ReplyPreview | null>(null);
 
   const lastId = useRef(0);
   const website = useRef(""); // honeypot
   const listRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const merge = useCallback((incoming: Omit<Post, "key">[]) => {
     if (!incoming.length) return;
@@ -113,11 +129,13 @@ export function BlogForum({ slug, title }: { slug: string; title?: string }) {
     setSending(true);
     const key = `tmp-${tmp++}`;
     const authorName = name.trim() || t.anon;
+    const currentReply = replyTo; // message cité, capturé avant reset
     setPosts((prev) => [
       ...prev,
-      { key, id: null, author_name: authorName, text: content, is_staff: false, created_at: new Date().toISOString(), pending: true },
+      { key, id: null, author_name: authorName, text: content, is_staff: false, created_at: new Date().toISOString(), reply_to: currentReply, pending: true },
     ]);
     setInput("");
+    setReplyTo(null);
 
     try {
       const res = await fetch(`/api/forum/${slug}`, {
@@ -127,6 +145,7 @@ export function BlogForum({ slug, title }: { slug: string; title?: string }) {
           author_name: name.trim(),
           text: content,
           thread_title: title ?? "",
+          reply_to: currentReply?.id ?? null,
           website: website.current,
         }),
       });
@@ -136,7 +155,7 @@ export function BlogForum({ slug, title }: { slug: string; title?: string }) {
       setPosts((prev) =>
         prev.map((p) =>
           p.key === key
-            ? { ...p, id: saved.id, key: saved.id != null ? `srv-${saved.id}` : p.key, pending: false }
+            ? { ...p, id: saved.id, key: saved.id != null ? `srv-${saved.id}` : p.key, reply_to: saved.reply_to ?? currentReply, pending: false }
             : p,
         ),
       );
@@ -200,8 +219,28 @@ export function BlogForum({ slug, title }: { slug: string; title?: string }) {
                     )}
                     <span className="text-muted">· {fmt(p.created_at)}</span>
                   </div>
+                  {p.reply_to && (
+                    <div className="mb-1.5 rounded-md border-l-2 border-brand-400 bg-brand-50/70 px-2 py-1 dark:border-brand-400/50 dark:bg-white/5">
+                      <span className="text-[11px] font-semibold text-brand-700 dark:text-brand-300">
+                        {p.reply_to.is_staff ? t.team : p.reply_to.author_name || t.anon}
+                      </span>
+                      <p className="line-clamp-2 text-[11px] leading-snug text-muted">{p.reply_to.text}</p>
+                    </div>
+                  )}
                   <p className="whitespace-pre-wrap text-sm leading-relaxed text-ink dark:text-brand-50">{p.text}</p>
                   {p.failed && <p className="mt-1 text-[11px] font-medium text-red-500">{t.retry}</p>}
+                  {p.id != null && !p.pending && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setReplyTo({ id: p.id as number, author_name: p.author_name, text: p.text, is_staff: p.is_staff });
+                        textareaRef.current?.focus();
+                      }}
+                      className="mt-1.5 inline-flex items-center gap-1 text-[11px] font-semibold text-brand-600 transition-colors hover:text-brand-800 dark:text-brand-300 dark:hover:text-brand-200"
+                    >
+                      ↩ {t.reply}
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
@@ -209,6 +248,25 @@ export function BlogForum({ slug, title }: { slug: string; title?: string }) {
 
           {/* Formulaire */}
           <form onSubmit={submit} className="mt-6 space-y-3">
+            {/* Barre « En réponse à … » (citation du message auquel on répond) */}
+            {replyTo && (
+              <div className="flex items-start justify-between gap-2 rounded-md border-l-2 border-brand-500 bg-brand-50 px-3 py-2 dark:border-brand-400/60 dark:bg-white/5">
+                <div className="min-w-0">
+                  <span className="text-[11px] font-semibold text-brand-700 dark:text-brand-300">
+                    {t.replyingTo} {replyTo.is_staff ? t.team : replyTo.author_name || t.anon}
+                  </span>
+                  <p className="truncate text-[11px] text-muted">{replyTo.text}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setReplyTo(null)}
+                  aria-label={t.cancelReply}
+                  className="shrink-0 rounded p-0.5 text-muted transition-colors hover:text-brand-700 dark:hover:text-brand-200"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -227,6 +285,7 @@ export function BlogForum({ slug, title }: { slug: string; title?: string }) {
             />
             <div className="flex items-end gap-2">
               <textarea
+                ref={textareaRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder={t.message}

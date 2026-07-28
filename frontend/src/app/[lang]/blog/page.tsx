@@ -4,7 +4,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { BlogHero } from "@/components/blog/BlogHero";
 import { BlogIndex } from "@/components/blog/BlogIndex";
-import { getCmsPosts } from "@/lib/cms";
+import { TechNews } from "@/components/sections/TechNews";
+import { getCmsPosts, getCmsTechNews } from "@/lib/cms";
 import { getDictionary, isLocale, locales, type Lang } from "@/i18n/dictionaries";
 
 type Params = { lang: string };
@@ -44,13 +45,17 @@ export default async function BlogPage({
   if (!isLocale(lang)) notFound();
 
   const { cat } = await searchParams;
-  const posts = await getCmsPosts(lang);
+  const [posts, techNews] = await Promise.all([
+    getCmsPosts(lang),
+    getCmsTechNews(lang),
+  ]);
   const initialCategory = cat && posts.some((p) => p.category === cat) ? cat : undefined;
   return (
     <>
       <Header />
       <main id="main" tabIndex={-1}>
         <BlogHero />
+        <TechNews items={techNews} lang={lang} />
         <BlogIndex posts={posts} initialCategory={initialCategory} />
       </main>
       <Footer />

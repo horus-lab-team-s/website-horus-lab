@@ -179,26 +179,9 @@ adduser --disabled-password --gecos "" horus
 usermod -aG docker horus
 mkdir -p /opt/horus-lab && chown -R horus:horus /opt/horus-lab
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ssh-keygen -t ed25519 -C "ci-horus" -f /tmp/horus_ci -N ""
 mkdir -p /home/horus/.ssh && chmod 700 /home/horus/.ssh
+
 cat /tmp/horus_ci.pub >> /home/horus/.ssh/authorized_keys
 chmod 600 /home/horus/.ssh/authorized_keys && chown -R horus:horus /home/horus/.ssh
 echo "===== CLE PRIVEE CI (copie TOUT le bloc, BEGIN…END inclus) ====="
@@ -362,13 +345,26 @@ Checklist site :
 - [ ] **Candidature** → ZIP enregistré + notif
 - [ ] Admin `https://api.horus-lab.com/admin/` : login superuser OK
 
+**Actualités tech (section « En direct » du blog)** : elle n'affiche rien tant que
+la base est vide. Alimente-la une 1re fois, puis planifie le rafraîchissement
+(cron du VPS, toutes les 4 h) :
+```bash
+cd /opt/horus-lab
+docker compose -f docker-compose.prod.yml exec -T web python manage.py fetch_tech_news
+crontab -e     # ajoute la ligne ci-dessous
+# 0 */4 * * * cd /opt/horus-lab && docker compose -f docker-compose.prod.yml exec -T web python manage.py fetch_tech_news >> /var/log/horus-technews.log 2>&1
+```
+> Sources : flux RSS 100 % tech (TechCrunch, The Verge, Ars Technica, Wired,
+> Hacker News, TechCabal, Disrupt Africa). Traduction FR via MyMemory (gratuit,
+> repli sur l'anglais si quota atteint). Seuls titre + résumé + lien sont stockés.
+
 **Sécuriser le seed** : il réécrit les contenus de démo à chaque démarrage. **Une
 fois tes vrais contenus saisis dans l'admin**, désactive-le :
 ```bash
 nano .env        # RUN_SEED=0
 docker compose -f docker-compose.prod.yml up -d web
 ```
-**📝** superuser ☐ · site OK ☐ · admin OK ☐ · e-mails OK ☐ · `RUN_SEED=0` ☐
+**📝** superuser ☐ · site OK ☐ · admin OK ☐ · e-mails OK ☐ · `fetch_tech_news` + cron ☐ · `RUN_SEED=0` ☐
 
 ---
 

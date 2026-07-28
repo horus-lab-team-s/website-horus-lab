@@ -6,6 +6,85 @@
 
 ---
 
+## 2026-07-27 — 🔤 Relecture langue FR/EN + fixes UX + contact/newsletter en base
+
+**Audit langue** (5 sous-agents : dictionnaire/entête/pied, pages, composants,
+données, seed CMS) → ~28 constats, **corrections appliquées** : chaînes FR codées
+en dur câblées bilingue (`Contact` badge/labels, `PortfolioGrid` CTA/état vide),
+anglais **britannique** harmonisé (analyse, organisations, Enrol/Enrolment, `.en.md`),
+terminologie (« Digitalisation d'entreprise », « Formation & Audit IT »,
+« Présidente-Directrice Générale »…), bannière « La formation complète se poursuit
+sur l'appli Edlearning », + tirets cadratins résiduels retirés. Fichiers : dictionaries,
+Contact, PortfolioGrid, Header, Partners, Testimonials, BlogForum, about, formations
+(page + slug), courses, projects, news, seed.py, seed_courses.py, 3 `.en.md`.
+
+**UX** :
+- Bannière Edlearning : **auto-disparition après ~30 s** (réapparaît au refresh/nav).
+- Article de blog : **texte justifié** (+ césure), **section newsletter retirée**
+  (doublon footer), **logo Horus en filigrane** dans le fond.
+- Page À propos : **ambiguïté fondateurs/équipe levée** (« Les fondateurs » +
+  « entourés d'une équipe… »).
+
+**Contact & newsletter (bug réel corrigé)** : le formulaire renvoyait `502` en prod
+(il ne passait pas par la base : fichier local impossible en conteneur + Brevo en
+échec). Idem newsletter non stockée en base. → `lib/leads.ts` fait désormais passer
+contact **et** newsletter par la **base Django** (`ContactMessage`/`Subscriber`,
+`POST /api/contact/` & `/api/newsletter/`), Brevo en secondaire. **Plus aucun message
+perdu.** Cause Brevo identifiée (log `401 unrecognised IP`) → réglée après autorisation
+de l'IP ; testé OK (base ✓ + e-mail ✓).
+
+**Navbar « invisible »** : pas un bug code (menus présents, pages `200`, texte
+adapté au thème via `--color-ink`) → c'était un **onglet sur port mort / cache
+service-worker** d'un autre projet. Dev relancé propre.
+
+**Ajustements (2ᵉ passe)** : **2ᵉ logo Horus** en filigrane (bas-gauche) sur l'article ;
+**« Formation IT » retiré du menu Blog** (nav) **et** de la catégorie backend (elle
+était vide, aucun article) → cohérence front/back. *(Le « Programme Formation IT »
+dans Réalisations et le scope Edlearning sont des projets, conservés.)*
+
+Vérifs : `tsc` OK, ESLint OK, **`next build` complet OK**, `py_compile` OK, pages `200`.
+📄 Briefing : `docs/briefing-2026-07-27.pdf`.
+⚠️ Textes CMS (seed) → re-seed pour la prod ; changements front → redéploiement frontend.
+
+---
+
+## 2026-07-26 — 🐛 Fix 404 sur les articles de blog (CMS-only)
+
+**Symptôme** : cliquer un article/actualité → page 404. **Diagnostic** (testé sur
+l'API + le site publics) : la liste `/fr/blog` affiche 6 articles CMS, mais seuls
+les 3 slugs présents aussi en **markdown statique** s'ouvraient ; les articles
+**présents uniquement en CMS** (nvidia-blackwell, google-io, anthropic-claude,
+orange-mtn, digitalisation-pme) renvoyaient 404. Cause : `blog/[slug]` était en
+**SSG** (`generateStaticParams`), or au build CI (24/07 14:24) l'API
+`api.horus-lab.com` n'était **pas encore servie par Nginx** (branchée à ~18:46) →
+seuls les slugs markdown étaient prérendus.
+
+**Fix** : `blog/[slug]/page.tsx` passe en **`export const dynamic = "force-dynamic"`**
+(retrait de `generateStaticParams`/`dynamicParams`) → l'article est rendu **à la
+demande depuis le CMS**, plus aucune dépendance au pré-rendu au build. Vérifié en
+local contre l'API live : articles CMS `200`, slug bidon `404`. `next build` OK.
+- ⚠️ **Déploiement** : frontend uniquement → rebuild image (CI au merge) puis
+  redéployer `frontend` (runbook §3-4, repointer `FRONTEND_IMAGE`). Le backend est inchangé.
+
+---
+
+## 2026-07-24 — 🚀 Déploiement prod (images + Nginx) + docs
+
+Mise en prod sur le VPS Contabo des évolutions du jour, **commande par commande**
+(exécutées par l'admin) : update des 2 conteneurs `horus_web`/`horus_frontend`
+(repointage `.env` sur les nouveaux digests GHCR, migrations bannière `0004→0006`,
+seed), puis **branchement du site dans le proxy Nginx partagé** (`horus.conf` copié
+dans `backend-nginx-1` → `nginx -t` → reload gracieux) — le site n'était pas
+découvert (cert présent mais bloc jamais chargé). Aucun impact sur `backend-db-1`
+ni les autres projets. Résultat : `horus-lab.com`/`www`/`api` servis en HTTPS,
+bannière + compte à rebours live.
+- 📄 **Rapport** : [docs/deploiement-2026-07-24-rapport.md](docs/deploiement-2026-07-24-rapport.md)
+- 📘 **Runbook réutilisable** : [docs/deploiement-horus-vps-runbook.md](docs/deploiement-horus-vps-runbook.md)
+- ⚠️ Dette : `horus.conf` est éphémère dans le proxy (copié, non monté) → à recopier
+  si `backend-nginx-1` est un jour recréé. `RUN_SEED` à laisser à `0` hors 1er déploiement.
+
+---
+
 ## 2026-07-24 — 📣 Bannière Edlearning + anonymisation formateurs + retrait tirets (NON commité)
 
 Demande client : rendre l'annonce « ce site n'est qu'un aperçu, la vraie

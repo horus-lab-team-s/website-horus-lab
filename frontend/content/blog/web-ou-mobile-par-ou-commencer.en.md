@@ -28,6 +28,6 @@ A *Progressive Web App* is a website that installs and behaves like an app: home
 
 ## Our recommendation
 
-First validate your idea with a simple version that's quick to bring to market, then invest in native once traction is proven. That's the **agile** approach we favor: deliver value early, then iterate.
+First validate your idea with a simple version that's quick to bring to market, then invest in native once traction is proven. That's the **agile** approach we favour: deliver value early, then iterate.
 
 Unsure about the platform? Describe your project and we'll point you in the right direction.

@@ -33,8 +33,8 @@ const CONTENT: Record<Lang, {
 }> = {
   fr: {
     eyebrow: "Formations",
-    title: "Montez en compétences en technologies",
-    subtitle: "Des cours, des concepts et des vidéos pour apprendre le développement, la data, la cybersécurité et le cloud — à votre rythme, encadrés par nos ingénieurs.",
+    title: "Montez en compétences en technologie",
+    subtitle: "Des cours, des concepts et des vidéos pour apprendre le développement, la data, la cybersécurité et le cloud, à votre rythme, encadrés par nos ingénieurs.",
     catsTitle: "Explorez par domaine",
     catsSubtitle: "Choisissez un parcours et progressez pas à pas, du débutant à l'avancé.",
     catalogTitle: "Notre catalogue de cours",
@@ -49,7 +49,7 @@ const CONTENT: Record<Lang, {
   en: {
     eyebrow: "Courses",
     title: "Level up your tech skills",
-    subtitle: "Courses, concepts and videos to learn development, data, cybersecurity and cloud — at your own pace, guided by our engineers.",
+    subtitle: "Courses, concepts and videos to learn development, data, cybersecurity and cloud, at your own pace, guided by our engineers.",
     catsTitle: "Explore by field",
     catsSubtitle: "Pick a track and progress step by step, from beginner to advanced.",
     catalogTitle: "Our course catalogue",

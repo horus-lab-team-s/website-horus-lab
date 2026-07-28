@@ -11,8 +11,9 @@ class ForumPostInline(admin.TabularInline):
     « Masqué » sur un message indésirable (il disparaît du site) ou le supprimer."""
 
     model = ForumPost
+    fk_name = "thread"
     extra = 1
-    fields = ["author_name", "text", "is_staff", "is_hidden", "created_at"]
+    fields = ["author_name", "text", "reply_to", "is_staff", "is_hidden", "created_at"]
     readonly_fields = ["created_at"]
     verbose_name = "message du forum"
     verbose_name_plural = "➕ Répondre / modérer"
@@ -22,6 +23,13 @@ class ForumPostInline(admin.TabularInline):
         # Une nouvelle ligne = réponse de l'équipe par défaut.
         formset.form.base_fields["is_staff"].initial = True
         formset.form.base_fields["author_name"].initial = "Horus-Lab"
+        # « En réponse à » : uniquement les messages DE CE FIL (sinon la liste
+        # déroulante contiendrait tous les messages du site).
+        reply_to = formset.form.base_fields.get("reply_to")
+        if reply_to is not None:
+            reply_to.queryset = (
+                ForumPost.objects.filter(thread=obj) if obj is not None else ForumPost.objects.none()
+            )
         return formset
 
 
@@ -54,7 +62,7 @@ class ForumThreadAdmin(admin.ModelAdmin):
     def thread_view(self, obj):
         if obj.pk is None:
             return "—"
-        posts = list(obj.posts.all())
+        posts = list(obj.posts.select_related("reply_to"))
         if not posts:
             return "Aucun message pour l'instant."
         bubbles = []
@@ -62,6 +70,16 @@ class ForumThreadAdmin(admin.ModelAdmin):
             is_team = p.is_staff
             who = "Équipe Horus-Lab" if is_team else (p.author_name or "Visiteur")
             flag = " · MASQUÉ" if p.is_hidden else ""
+            # Citation du message auquel celui-ci répond (« qui répond à qui »).
+            quote = ""
+            if p.reply_to_id and p.reply_to:
+                q = p.reply_to
+                quote = format_html(
+                    '<div style="border-left:3px solid #60a5fa;padding-left:8px;margin-bottom:4px;'
+                    'font-size:11px;color:#475569">↩ {} : {}</div>',
+                    "Équipe Horus-Lab" if q.is_staff else (q.author_name or "Visiteur"),
+                    q.text[:80],
+                )
             bubbles.append(
                 format_html(
                     '<div style="text-align:{};margin:6px 0">'
@@ -69,6 +87,7 @@ class ForumThreadAdmin(admin.ModelAdmin):
                     "background:{};color:#0f172a;padding:8px 12px;border-radius:14px;"
                     'opacity:{};box-shadow:0 1px 2px rgba(0,0,0,.08)">'
                     '<div style="font-size:11px;color:#475569;margin-bottom:2px">{} · {}{}</div>'
+                    "{}"
                     '<div style="white-space:pre-wrap">{}</div></div></div>',
                     "right" if is_team else "left",
                     "#dbeafe" if is_team else "#eef2f7",
@@ -76,6 +95,7 @@ class ForumThreadAdmin(admin.ModelAdmin):
                     who,
                     p.created_at.strftime("%d/%m/%Y %H:%M"),
                     flag,
+                    quote,
                     p.text,
                 )
             )

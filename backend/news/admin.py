@@ -1,6 +1,16 @@
 from django.contrib import admin
 
-from .models import News
+from .models import News, TechArticle
+
+
+@admin.register(TechArticle)
+class TechArticleAdmin(admin.ModelAdmin):
+    list_display = ["title_en", "source", "published_at", "is_active"]
+    list_filter = ["is_active", "source"]
+    search_fields = ["title_en", "title_fr", "summary_en", "summary_fr", "url"]
+    list_editable = ["is_active"]
+    date_hierarchy = "published_at"
+    readonly_fields = ["fetched_at"]
 
 
 @admin.register(News)

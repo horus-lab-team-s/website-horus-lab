@@ -10,7 +10,7 @@ type Status = "idle" | "sending" | "success" | "error" | "invalid";
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function Contact() {
-  const { dict } = useLang();
+  const { dict, lang } = useLang();
   const c = dict.contactForm;
   const f = dict.footer;
   const [status, setStatus] = useState<Status>("idle");
@@ -60,9 +60,9 @@ export function Contact() {
         <Reveal className="flex flex-col justify-center">
           <ul className="space-y-3">
             {[
-              { href: `mailto:${f.email}`,                                icon: IconMail,  label: "Email",        val: f.email },
-              { href: `tel:${f.phones[0]?.replace(/\s/g, "")}`,          icon: IconPhone, label: "Téléphone",    val: f.phones.join(" · ") },
-              { href: "#",                                                  icon: IconPin,   label: "Localisation", val: f.location },
+              { href: `mailto:${f.email}`,                                icon: IconMail,  label: "Email",                                       val: f.email },
+              { href: `tel:${f.phones[0]?.replace(/\s/g, "")}`,          icon: IconPhone, label: lang === "fr" ? "Téléphone" : "Phone",          val: f.phones.join(" · ") },
+              { href: "#",                                                  icon: IconPin,   label: lang === "fr" ? "Localisation" : "Location",   val: f.location },
             ].map(({ href, icon: Icon, label, val }) => (
               <li key={label}>
                 <a href={href}
@@ -84,7 +84,9 @@ export function Contact() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-60" />
               <span className="relative inline-flex size-2 rounded-full bg-green-500" />
             </span>
-            Réponse sous 24h • Disponible pour nouveaux projets
+            {lang === "fr"
+              ? "Réponse sous 24 h • Disponible pour de nouveaux projets"
+              : "Reply within 24h • Available for new projects"}
           </div>
         </Reveal>
 
