@@ -16,3 +16,6 @@ whitenoise>=6.7
 
 # Serveur d'application pour la production
 gunicorn>=22.0
+
+# Récupération des actualités tech (flux RSS) — commande fetch_tech_news
+feedparser>=6.0
