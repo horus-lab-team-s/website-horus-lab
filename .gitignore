@@ -18,3 +18,9 @@ venv/
 
 # Etat local de l'agent Claude Code (ne pas versionner)
 .claude/
+
+# Captures d'ecran de consoles d'administration (Brevo, VPS, DNS...) : elles
+# exposent des IP de serveur, des identifiants ou des cles. Le depot est PUBLIC.
+docs/*.png
+docs/*.jpg
+docs/*.jpeg
