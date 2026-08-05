@@ -7,14 +7,11 @@ import { useLang } from "@/i18n/LanguageProvider";
 import {
   IconArrowRight,
   IconFacebook,
-  IconGitHub,
   IconLinkedIn,
   IconMail,
   IconPhone,
   IconPin,
-  IconTelegram,
   IconWhatsApp,
-  IconX,
 } from "./icons";
 
 const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -84,13 +81,12 @@ function FooterNewsletter() {
   );
 }
 
+/* Réseaux affichés dans le footer : LinkedIn, Facebook, WhatsApp uniquement.
+   X, Telegram et GitHub ont été retirés du site (décision du 2026-08-05). */
 const DEFAULT_SOCIAL = {
   linkedin: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
-  x: "https://x.com/horuslabafrik",
   facebook: "https://www.facebook.com/HorusLab",
-  whatsapp: "https://wa.me/237699173771",
-  github: "https://github.com/horus-lab-team-s",
-  telegram: "https://t.me/tonbacm",
+  whatsapp: "https://wa.me/237659902191",
 };
 
 /* Slugs des pages services — doit correspondre au sous-menu navbar */
@@ -122,11 +118,8 @@ export function Footer() {
 
   const social = [
     { Icon: IconLinkedIn, label: "LinkedIn", href: settings?.socials.linkedin || DEFAULT_SOCIAL.linkedin },
-    { Icon: IconX,        label: "X",         href: settings?.socials.x        || DEFAULT_SOCIAL.x },
-    { Icon: IconFacebook, label: "Facebook",  href: settings?.socials.facebook  || DEFAULT_SOCIAL.facebook },
-    { Icon: IconWhatsApp, label: "WhatsApp",  href: settings?.socials.whatsapp  || DEFAULT_SOCIAL.whatsapp },
-    { Icon: IconGitHub,   label: "GitHub",    href: settings?.socials.github    || DEFAULT_SOCIAL.github },
-    { Icon: IconTelegram, label: "Telegram",  href: settings?.socials.telegram  || DEFAULT_SOCIAL.telegram },
+    { Icon: IconFacebook, label: "Facebook", href: settings?.socials.facebook || DEFAULT_SOCIAL.facebook },
+    { Icon: IconWhatsApp, label: "WhatsApp", href: settings?.socials.whatsapp || DEFAULT_SOCIAL.whatsapp },
   ].filter((s) => s.href);
 
   const serviceMap = SERVICE_SLUGS[lang] ?? SERVICE_SLUGS.fr;

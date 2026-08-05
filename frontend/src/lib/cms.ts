@@ -273,7 +273,6 @@ type ApiTeamMember = {
   photo: string | null;
   photo_path: string;
   linkedin_url: string;
-  github_url: string;
   whatsapp_url: string;
   email: string;
   badge_fr: string; badge_en: string;
@@ -288,7 +287,6 @@ export type CmsTeamMember = {
   bio: string;
   photo: string | null;
   linkedin: string;
-  github: string;
   whatsapp: string;
   email: string;
   badge: string;
@@ -310,7 +308,6 @@ export async function getCmsTeam(lang: Lang): Promise<CmsTeamMember[]> {
         bio: t(m.bio_fr, m.bio_en),
         photo: m.photo || m.photo_path || null,
         linkedin: m.linkedin_url,
-        github: m.github_url,
         whatsapp: m.whatsapp_url,
         email: m.email,
         badge: t(m.badge_fr, m.badge_en),
@@ -331,8 +328,10 @@ type ApiSiteSettings = {
   email: string;
   phone_primary: string; phone_secondary: string;
   location_fr: string; location_en: string;
-  linkedin_url: string; x_url: string; facebook_url: string;
-  github_url: string; whatsapp_url: string; telegram_url: string;
+  // Réseaux conservés sur le site : LinkedIn, Facebook, WhatsApp.
+  // X, GitHub et Telegram ont été retirés (décision du 2026-08-05) — l'API ne
+  // les expose plus et le Footer ne les affiche plus.
+  linkedin_url: string; facebook_url: string; whatsapp_url: string;
 };
 
 export type CmsSiteSettings = {
@@ -343,11 +342,8 @@ export type CmsSiteSettings = {
   tagline: string;
   socials: {
     linkedin: string;
-    x: string;
     facebook: string;
-    github: string;
     whatsapp: string;
-    telegram: string;
   };
 };
 
@@ -367,11 +363,8 @@ export async function getCmsSiteSettings(lang: Lang): Promise<CmsSiteSettings | 
       tagline: t(s.tagline_fr, s.tagline_en),
       socials: {
         linkedin: s.linkedin_url,
-        x: s.x_url,
         facebook: s.facebook_url,
-        github: s.github_url,
         whatsapp: s.whatsapp_url,
-        telegram: s.telegram_url,
       },
     };
   } catch {

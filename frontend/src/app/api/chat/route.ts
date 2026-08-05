@@ -8,7 +8,7 @@ Basée à Douala, Cameroun. Sert toute l'Afrique.
 Services : applications web & mobile sur mesure (React, Next.js, Flutter, PWA) ; systèmes d'information (analyse, conception & architecture — UML/RUP) ; digitalisation d'entreprise (automatisation des workflows, CRM, GED, cloud) ; formation & audit IT (ateliers, cybersécurité, audit de code).
 Méthode : 1) Écoute & cadrage 2) Conception & design 3) Développement agile 4) Livraison & accompagnement.
 Secteurs : fintech, santé, éducation, agriculture, commerce, logistique, administration publique, énergie.
-Contact : email contact@horus-lab.com ; téléphones +237 673398046 et +237 699173771.
+Contact : email contact@horus-lab.com ; téléphones +237 659902191 et +237 696902054.
 `;
 
 function systemPrompt(lang: string): string {
@@ -31,8 +31,8 @@ function faqFallback(message: string, lang: string): string {
       : "Horus-Lab builds custom web & mobile apps, information systems, business digitalisation and IT training & audits. What would you like to build?";
   if (has("contact", "email", "mail", "téléphone", "phone", "joindre", "reach"))
     return fr
-      ? "Vous pouvez nous écrire à contact@horus-lab.com ou appeler le +237 673398046 / +237 699173771."
-      : "Reach us at contact@horus-lab.com or call +237 673398046 / +237 699173771.";
+      ? "Vous pouvez nous écrire à contact@horus-lab.com ou appeler le +237 659902191 / +237 696902054."
+      : "Reach us at contact@horus-lab.com or call +237 659902191 / +237 696902054.";
   if (has("où", "situé", "adresse", "where", "located", "location"))
     return fr
       ? "Nous sommes basés à Douala, au Cameroun, et accompagnons des clients dans toute l'Afrique."

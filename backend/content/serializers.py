@@ -21,7 +21,10 @@ from .models import (
 class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteSettings
-        exclude = ["id"]
+        # x_url / github_url / telegram_url : reseaux retires du site le
+        # 2026-08-05. Les colonnes restent en base (pas de migration
+        # destructive) mais ne sont plus exposees au frontend.
+        exclude = ["id", "x_url", "github_url", "telegram_url"]
 
 
 class FormationsPromoSerializer(serializers.ModelSerializer):
@@ -109,8 +112,9 @@ class TechStackItemSerializer(serializers.ModelSerializer):
 class TeamMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = TeamMember
+        # github_url retire de l'API le 2026-08-05 (la colonne reste en base).
         fields = [
             "id", "name", "role_fr", "role_en", "bio_fr", "bio_en",
-            "photo", "photo_path", "linkedin_url", "github_url", "whatsapp_url",
+            "photo", "photo_path", "linkedin_url", "whatsapp_url",
             "email", "badge_fr", "badge_en", "gradient", "is_lead", "order",
         ]
