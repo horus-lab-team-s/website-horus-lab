@@ -25,16 +25,17 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         ("Marque", {"fields": ("brand_name", "tagline_fr", "tagline_en", "about_fr", "about_en")}),
         ("Coordonnées", {"fields": ("email", "phone_primary", "phone_secondary", "location_fr", "location_en")}),
         (
+            # X, GitHub et Telegram ont ete retires du site le 2026-08-05 : les
+            # colonnes restent en base (aucune migration destructive) mais elles
+            # ne sont plus editables ici, ni exposees par l'API, ni affichees.
             "Réseaux sociaux",
             {
                 "fields": (
                     "linkedin_url",
-                    "x_url",
                     "facebook_url",
-                    "github_url",
                     "whatsapp_url",
-                    "telegram_url",
-                )
+                ),
+                "description": "Seuls LinkedIn, Facebook et WhatsApp sont affichés dans le pied de page.",
             },
         ),
     )
@@ -161,6 +162,7 @@ class TeamMemberAdmin(admin.ModelAdmin):
         ("Identité", {"fields": ("name", "photo", "is_lead")}),
         ("Rôle", {"fields": ("role_fr", "role_en")}),
         ("Bio", {"fields": ("bio_fr", "bio_en")}),
-        ("Liens", {"fields": ("linkedin_url", "github_url", "email")}),
+        # GitHub retire le 2026-08-05 ; WhatsApp devient editable ici.
+        ("Liens", {"fields": ("linkedin_url", "whatsapp_url", "email")}),
         ("Tri / publication", {"fields": ("order", "is_active")}),
     )

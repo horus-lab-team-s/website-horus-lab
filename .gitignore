@@ -24,3 +24,6 @@ venv/
 docs/*.png
 docs/*.jpg
 docs/*.jpeg
+# Exception : schemas/diagrammes produits pour la documentation. Aucun secret,
+# aucune IP, aucun identifiant -> versionnables sur un depot public.
+!docs/carte-mentale-horus-lab.png

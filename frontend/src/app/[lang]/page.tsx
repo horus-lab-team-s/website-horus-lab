@@ -37,10 +37,11 @@ const organizationLd = {
     "Entreprise technologique africaine : applications web & mobile sur mesure, systèmes d'information, digitalisation d'entreprise et formation & audit IT.",
   email: "contact@horus-lab.com",
   areaServed: "Africa",
+  // Profils officiels déclarés aux moteurs de recherche. X et GitHub retirés
+  // le 2026-08-05 (ils ne sont plus référencés nulle part sur le site).
   sameAs: [
-    "https://x.com/horuslabafrik",
     "https://www.facebook.com/HorusLab",
-    "https://github.com/horus-lab-team-s",
+    "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
   ],
 };
 

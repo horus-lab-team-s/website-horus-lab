@@ -6,6 +6,47 @@
 
 ---
 
+## 2026-08-05 — ☎️ Nouveaux numéros de contact + retrait de X / Telegram / GitHub
+
+**Coordonnées publiques** — les numéros à contacter deviennent **+237 659902191**
+et **+237 696902054** (remplacent 673398046 / 699173771) : pied de page (dictionnaire
+FR+EN), mentions légales, contexte de l'assistant Horus AI (prompt + repli FAQ), seed.
+
+**Réseaux retirés du site** : **X**, **Telegram** et **GitHub**.
+- Pied de page : ne restent que **LinkedIn, Facebook, WhatsApp**.
+- Widget Horus AI (canaux au survol) : **Telegram supprimé** → e-mail + WhatsApp.
+- Page À propos : **liens GitHub des fondateurs supprimés**.
+- Données structurées JSON-LD de l'accueil (`sameAs`) : X et GitHub retirés.
+- Admin Django : champs X / Telegram / GitHub **retirés des formulaires** ; l'API
+  ne les expose plus (`/api/site/`, `/api/team/`). **WhatsApp devient éditable**
+  sur les membres d'équipe (il ne l'était pas).
+
+**WhatsApp** : site + widget IA → **659902191**. Fondateurs : Edwin TCHAMBA
+TCHAKOUNTE → **659902191**, Loïc DJIMGOU TONBA → **696902054**.
+
+**⚠️ Le point clé : une migration de données, pas le seed.** Le Footer et la page
+À propos lisent le **CMS en priorité** ; or en prod `RUN_SEED=0` (pour ne pas
+écraser le contenu saisi), donc le seed ne rejoue jamais et les anciennes valeurs
+seraient restées en base. → **`content/0007_maj_contacts_retrait_reseaux`** met à
+jour `SiteSettings` (téléphones, WhatsApp, X/GitHub/Telegram vidés) et `TeamMember`
+(GitHub vidé, WhatsApp par fondateur). Elle s'applique **automatiquement au
+démarrage du conteneur**. Les colonnes `x_url`/`github_url`/`telegram_url` sont
+**conservées en base** (aucune migration destructive → rollback d'image sûr).
+
+**Vérifications réelles** : `tsc --noEmit` **0 erreur** · `next build` OK ·
+`manage.py check` OK · `makemigrations --check` = *No changes detected* (aucune
+dérive de schéma) · migration **rejouée sur un PostgreSQL jetable** après avoir
+reconstitué l'état exact de la prod → **12/12 conformes** (LinkedIn et Facebook
+préservés) · site relancé sur un **build propre** branché sur cette base : `/fr`,
+`/en`, `/fr/about`, `/en/about`, `/fr/legal` → **0 ancien numéro, 0 github, 0 t.me,
+0 x.com**, pied de page à 3 réseaux, cartes fondateurs OK.
+
+*(Piège rencontré en local : un rebuild sans purge de `.next` sert les pages FR
+depuis le cache ISR persistant → faux négatif. En CI l'image est construite de zéro,
+le cas ne se pose pas.)*
+
+---
+
 ## 2026-07-27 — 🔤 Relecture langue FR/EN + fixes UX + contact/newsletter en base
 
 **Audit langue** (5 sous-agents : dictionnaire/entête/pied, pages, composants,

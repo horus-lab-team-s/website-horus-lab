@@ -6,14 +6,14 @@ import {
   IconClose,
   IconHeadset,
   IconSend,
-  IconTelegram,
   IconWhatsApp,
 } from "./icons";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const WHATSAPP = "https://wa.me/237699173771";
-const TELEGRAM = "https://t.me/tonbacm";
+/* Canaux proposés au survol du widget : e-mail + WhatsApp.
+   Telegram a été retiré du site (décision du 2026-08-05). */
+const WHATSAPP = "https://wa.me/237659902191";
 const SUPPORT = "mailto:contact@horus-lab.com";
 
 /** Icône chatbot IA sophistiquée — cerveau connecté / robot */
@@ -151,11 +151,6 @@ export function HorusAI() {
           {/* Support email */}
           <ChannelLink href={SUPPORT} label={supportLabel} className="bg-brand-600">
             <IconHeadset className="size-6" />
-          </ChannelLink>
-
-          {/* Telegram */}
-          <ChannelLink href={TELEGRAM} label="Telegram" className="bg-[#229ED9]">
-            <IconTelegram className="size-6" />
           </ChannelLink>
 
           {/* WhatsApp */}

@@ -11,7 +11,6 @@ import {
   IconCheck,
   IconCog,
   IconEye,
-  IconGitHub,
   IconLinkedIn,
   IconMail,
   IconSpark,
@@ -37,9 +36,8 @@ const TEAM_MEMBERS = {
       initials: "ET",
       photo: "/A-propos/photo-Edwin-co-founder.png",
       linkedin: "",
-      github: "https://github.com/EdwinTchakounte",
       email: "tchambaedwin@gmail.com",
-      whatsapp: "https://wa.me/237673398046",
+      whatsapp: "https://wa.me/237659902191",
       isLead: true,
       gradient: "from-slate-800 via-brand-700 to-amber-500",
       badge: "Co-fondateur",
@@ -51,9 +49,8 @@ const TEAM_MEMBERS = {
       initials: "LT",
       photo: "/A-propos/photo-loic-tonba-cofounder.png",
       linkedin: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
-      github: "https://github.com/LoicTonba",
       email: "tonbaloic@gmail.com",
-      whatsapp: "https://wa.me/237699173771",
+      whatsapp: "https://wa.me/237696902054",
       isLead: true,
       gradient: "from-brand-700 via-brand-500 to-sky",
       badge: "Co-fondateur",
@@ -67,9 +64,8 @@ const TEAM_MEMBERS = {
       initials: "ET",
       photo: "/A-propos/photo-Edwin-co-founder.png",
       linkedin: "",
-      github: "https://github.com/EdwinTchakounte",
       email: "tchambaedwin@gmail.com",
-      whatsapp: "https://wa.me/237673398046",
+      whatsapp: "https://wa.me/237659902191",
       isLead: true,
       gradient: "from-slate-800 via-brand-700 to-amber-500",
       badge: "Co-founder",
@@ -81,9 +77,8 @@ const TEAM_MEMBERS = {
       initials: "LT",
       photo: "/A-propos/photo-loic-tonba-cofounder.png",
       linkedin: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
-      github: "https://github.com/LoicTonba",
       email: "tonbaloic@gmail.com",
-      whatsapp: "https://wa.me/237699173771",
+      whatsapp: "https://wa.me/237696902054",
       isLead: true,
       gradient: "from-brand-700 via-brand-500 to-sky",
       badge: "Co-founder",
@@ -181,7 +176,7 @@ function initialsOf(name: string): string {
 
 type TeamCard = {
   name: string; role: string; bio: string; initials: string;
-  photo: string | null; linkedin: string; github: string; email: string; whatsapp: string;
+  photo: string | null; linkedin: string; email: string; whatsapp: string;
   isLead: boolean; gradient: string; badge: string;
 };
 
@@ -204,7 +199,6 @@ async function resolveTeam(lang: Lang): Promise<TeamCard[]> {
     initials: initialsOf(m.name),
     photo: m.photo,
     linkedin: m.linkedin,
-    github: m.github,
     email: m.email,
     whatsapp: m.whatsapp,
     isLead: m.isLead,
@@ -448,18 +442,12 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
                       <p className="mt-1 text-sm font-semibold text-sky">{m.role}</p>
                       <p className="mt-3 text-sm leading-relaxed text-white/75">{m.bio}</p>
 
-                      {(m.linkedin || m.github || m.email || m.whatsapp) && (
+                      {(m.linkedin || m.email || m.whatsapp) && (
                         <div className="mt-5 flex gap-2.5">
                           {m.linkedin && (
                             <a href={m.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`LinkedIn ${m.name}`}
                               className="grid size-9 place-items-center rounded-full bg-white/10 text-white transition-all hover:bg-brand-600 hover:shadow-md hover:shadow-brand-700/25">
                               <IconLinkedIn className="size-4" />
-                            </a>
-                          )}
-                          {m.github && (
-                            <a href={m.github} target="_blank" rel="noopener noreferrer" aria-label={`GitHub ${m.name}`}
-                              className="grid size-9 place-items-center rounded-full bg-white/10 text-white transition-all hover:bg-brand-600 hover:shadow-md">
-                              <IconGitHub className="size-4" />
                             </a>
                           )}
                           {m.whatsapp && (
