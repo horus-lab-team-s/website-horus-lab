@@ -7,7 +7,7 @@ import {
   IconArrowRight, IconCheck, IconCode, IconCog,
   IconEye, IconGlobe, IconLayers, IconSpark,
 } from "@/components/icons";
-import type { Project } from "@/lib/projects";
+import { ZAYRA_TITLES, type Project } from "@/lib/projects";
 import { galleryFor } from "@/lib/projectGalleries";
 import { ProjectGallery } from "./ProjectGallery";
 
@@ -48,6 +48,7 @@ const FILTER_ORDER_FR = [
   "Mode & e-commerce",
   "Fintech & Gestion",
   "Éducation & EdTech",
+  "Agriculture & AgriTech",
   "Énergie & Industrie",
   "Formation",
 ];
@@ -55,6 +56,7 @@ const FILTER_ORDER_EN = [
   "Fashion & e-commerce",
   "Fintech & Management",
   "Education & EdTech",
+  "Agriculture & AgriTech",
   "Energy & Industry",
   "Training",
 ];
@@ -280,7 +282,9 @@ export function PortfolioGrid({
                       className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full border border-brand-200 bg-white px-4 py-2.5 text-xs font-bold text-brand-700 transition-all hover:-translate-y-0.5 hover:border-brand-300 hover:bg-brand-50 hover:shadow-md dark:border-white/15 dark:bg-white/5 dark:text-brand-200 dark:hover:bg-white/10"
                     >
                       <IconEye className="size-4" />
-                      {isFr ? "Le projet en images : site & back-office" : "Project in pictures: site & back-office"}
+                      {ZAYRA_TITLES.includes(p.title)
+                        ? (isFr ? "Le projet en images : plateforme & mobile" : "Project in pictures: platform & mobile")
+                        : (isFr ? "Le projet en images : site & back-office" : "Project in pictures: site & back-office")}
                     </button>
                   )}
                 </div>

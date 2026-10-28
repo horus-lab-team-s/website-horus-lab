@@ -8,6 +8,7 @@ import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { IconArrowRight } from "@/components/icons";
 import { isLocale, locales, type Lang } from "@/i18n/dictionaries";
 import { getCmsProjects } from "@/lib/cms";
+import { ZAYRA_TITLES } from "@/lib/projects";
 
 type Params = { lang: string };
 
@@ -56,7 +57,12 @@ export default async function PortfolioPage({ params }: { params: Promise<Params
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const c = CONTENT[lang];
-  const projects = await getCmsProjects(lang);
+  // Sur la page Réalisations, les solutions Zayra (nos propres produits) ouvrent la liste.
+  const all = await getCmsProjects(lang);
+  const projects = [
+    ...all.filter((p) => ZAYRA_TITLES.includes(p.title)),
+    ...all.filter((p) => !ZAYRA_TITLES.includes(p.title)),
+  ];
 
   return (
     <>
