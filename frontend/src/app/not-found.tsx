@@ -1,5 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
+import { BrandLogo } from "@/components/BrandLogo";
 
 // Rendu hors du provider de langue (route non localisée) -> texte bilingue figé.
 export default function NotFound() {
@@ -8,22 +8,7 @@ export default function NotFound() {
       <div className="relative w-full max-w-lg text-center">
         <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 bg-grid opacity-50" />
 
-        <Image
-          src="/logo/logo-light-bg-full.png"
-          alt="Horus-Lab"
-          width={160}
-          height={116}
-          priority
-          className="mx-auto h-auto w-32 object-contain dark:hidden"
-        />
-        <Image
-          src="/logo/logo-dark-bg-full.png"
-          alt="Horus-Lab"
-          width={160}
-          height={116}
-          priority
-          className="mx-auto hidden h-auto w-32 object-contain dark:block"
-        />
+        <BrandLogo priority horusClassName="mx-auto h-auto w-32 object-contain" zayraClassName="mx-auto h-auto w-44 object-contain" />
 
         <p className="mt-8 text-7xl font-extrabold tracking-tight text-gradient">404</p>
         <h1 className="mt-4 text-2xl font-bold text-brand-900 dark:text-white">

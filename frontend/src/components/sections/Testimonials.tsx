@@ -131,13 +131,15 @@ export function Testimonials({ items }: { items?: Testi[] }) {
       <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden select-none">
         <div className="absolute -left-20 top-1/4 h-80 w-80 rounded-full bg-brand-500/12 blur-3xl" />
         <div className="absolute right-0 bottom-1/4 h-72 w-72 rounded-full bg-sky/8 blur-3xl" />
-        <Image
-          src="/logo/logo-dark-bg-full.png"
-          alt=""
-          width={520}
-          height={520}
-          className="absolute -right-10 top-1/2 hidden w-[460px] -translate-y-1/2 opacity-[0.10] lg:block"
-        />
+        <span className="brand-horus">
+          <Image
+            src="/logo/logo-dark-bg-full.png"
+            alt=""
+            width={520}
+            height={520}
+            className="absolute -right-10 top-1/2 hidden w-[460px] -translate-y-1/2 opacity-[0.10] lg:block"
+          />
+        </span>
       </div>
 
       <div className="relative mx-auto max-w-6xl px-5 sm:px-8">

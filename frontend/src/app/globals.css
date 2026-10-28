@@ -94,6 +94,20 @@ body {
   border-radius: 0 !important;
 }
 
+/* Seule exception : les portraits ronds (page À propos). */
+.round-portrait {
+  border-radius: 9999px !important;
+}
+
+/* ============================================================
+   Marque selon le domaine (voir BrandLogo + script de app/layout.tsx) :
+   horus-lab.com → logo Horus-Lab ; zayra.technologies.horus-lab.com → Zayra.
+   ============================================================ */
+.brand-horus { display: contents; }
+.brand-zayra-only { display: none; }
+.brand-zayra .brand-horus { display: none; }
+.brand-zayra .brand-zayra-only { display: contents; }
+
 /* ============================================================
    Reveal on scroll (piloté par <Reveal/>)
    ============================================================ */

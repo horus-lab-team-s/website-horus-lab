@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
+import { caseSlugForTitle } from "@/lib/caseStudies";
 import { SectionHeading } from "./SectionHeading";
 import {
   IconArrowRight, IconCheck, IconCode, IconCog,
@@ -48,6 +49,11 @@ function RealisationsBackground() {
 export function Realisations({ projects }: { projects: Project[] }) {
   const { dict, localePath } = useLang();
   const r = dict.realisations;
+  // Chaque carte mène à l'étude de cas du projet (ou à la page Réalisations).
+  const caseHref = (p: Project) => {
+    const slug = caseSlugForTitle(p.title);
+    return localePath(slug ? `/portfolio/${slug}` : "/portfolio");
+  };
   // Afrikamode & Elec One sont nos deux projets phares (déjà en production) :
   // on les fait passer en tête (vedette + haut de la pile).
   const PHARES = ["Afrikamode", "Elec One"];
@@ -83,9 +89,7 @@ export function Realisations({ projects }: { projects: Project[] }) {
           {/* ── Projet phare ── */}
           <Reveal className="lg:col-span-7">
             <Link
-              href={featured.url ?? localePath("/portfolio")}
-              target={featured.url ? "_blank" : "_self"}
-              rel={featured.url ? "noopener noreferrer" : undefined}
+              href={caseHref(featured)}
               className="group lift-xl relative flex h-full flex-col overflow-hidden rounded-lg shadow-2xl shadow-brand-900/12"
             >
               {/* Image de couverture */}
@@ -172,9 +176,7 @@ export function Realisations({ projects }: { projects: Project[] }) {
               return (
                 <Reveal key={p.title} delay={(i + 1) * 100}>
                   <Link
-                    href={p.url ?? localePath("/portfolio")}
-                    target={p.url ? "_blank" : "_self"}
-                    rel={p.url ? "noopener noreferrer" : undefined}
+                    href={caseHref(p)}
                     className="group lift-xl flex items-stretch overflow-hidden bg-white shadow-sm transition-all hover:shadow-xl dark:bg-slate-900"
                   >
                     {/* Vignette gauche — logo du projet sur toute la zone */}

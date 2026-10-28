@@ -178,13 +178,24 @@ export function Footer() {
           <div>
             <Link href={localePath("/")} className="inline-flex items-center group" aria-label="Horus-Lab">
               {/* Fond navy → on utilise la variante blanche du logo pour qu'il reste visible */}
-              <Image
-                src="/logo/logo-dark-bg-horizontal.png"
-                alt="Horus-Lab"
-                width={757}
-                height={147}
-                className="h-auto w-full max-w-[230px] object-contain transition-transform duration-300 group-hover:scale-[1.03]"
-              />
+              <span className="brand-horus">
+                <Image
+                  src="/logo/logo-dark-bg-horizontal.png"
+                  alt="Horus-Lab"
+                  width={757}
+                  height={147}
+                  className="h-auto w-full max-w-[230px] object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+                />
+              </span>
+              <span className="brand-zayra-only">
+                <Image
+                  src="/zayra/brand/zayra-logo-white.png"
+                  alt="Zayra Technologies"
+                  width={700}
+                  height={243}
+                  className="h-auto w-full max-w-[170px] object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+                />
+              </span>
             </Link>
 
             <p className="mt-5 max-w-xs text-sm leading-relaxed text-brand-300">

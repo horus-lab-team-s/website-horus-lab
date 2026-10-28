@@ -7,7 +7,9 @@ import {
   IconArrowRight, IconCheck, IconCode, IconCog,
   IconEye, IconGlobe, IconLayers, IconSpark,
 } from "@/components/icons";
+import Link from "next/link";
 import { ZAYRA_TITLES, type Project } from "@/lib/projects";
+import { caseSlugForTitle } from "@/lib/caseStudies";
 import { galleryFor } from "@/lib/projectGalleries";
 import { ProjectGallery } from "./ProjectGallery";
 
@@ -116,6 +118,7 @@ export function PortfolioGrid({
         {visible.map((p, i) => {
           const Icon = ICONS[p.iconKey] ?? IconCode;
           const gallery = galleryFor(p.title);
+          const caseSlug = caseSlugForTitle(p.title);
           return (
             <Reveal key={p.title} delay={(i % 2) * 80}>
               <article className="group lift-xl flex h-full flex-col overflow-hidden bg-white shadow-sm dark:bg-slate-900">
@@ -274,6 +277,16 @@ export function PortfolioGrid({
                       </span>
                     )}
                   </div>
+
+                  {caseSlug && (
+                    <Link
+                      href={`/${lang}/portfolio/${caseSlug}`}
+                      className="mt-5 inline-flex w-full items-center justify-center gap-2 bg-brand-900 px-4 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white transition-colors hover:bg-brand-700"
+                    >
+                      {isFr ? "Voir l'étude de cas complète" : "See the full case study"}
+                      <IconArrowRight className="size-4" />
+                    </Link>
+                  )}
 
                   {gallery && (
                     <button
