@@ -114,7 +114,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<Params
         {/* ═══ HERO : capture réelle en fond, logo, accroche ═══ */}
         <section className="relative isolate flex min-h-[60vh] items-center overflow-hidden pt-28 pb-14">
           {cs.cover ? (
-            <Image src={cs.cover} alt="" fill priority sizes="100vw" className="-z-20 object-cover object-top" />
+            <Image src={cs.cover} alt="" fill priority sizes="100vw" className="-z-20 scale-110 object-cover object-top opacity-40 blur-xl" />
           ) : (
             <div aria-hidden className={`absolute inset-0 -z-20 bg-gradient-to-br ${cs.gradient}`} />
           )}
