@@ -20,8 +20,10 @@ export function CTA() {
             <div className="absolute inset-0 bg-grid opacity-[0.1]" />
             <div className="absolute -left-16 -top-16 size-72 rounded-full bg-brand-500/20 blur-3xl" />
             <div className="absolute -right-10 -bottom-20 size-80 rounded-full bg-sky/15 blur-3xl" />
-            <Image src="/logo/logo-dark-bg-full.png" alt="" width={460} height={460}
-              className="absolute -right-8 -bottom-8 w-80 opacity-[0.12]" />
+            <span className="brand-horus">
+              <Image src="/logo/logo-dark-bg-full.png" alt="" width={460} height={460}
+                className="absolute -right-8 -bottom-8 w-80 opacity-[0.12]" />
+            </span>
           </div>
 
           {/* ── Contenu ── */}

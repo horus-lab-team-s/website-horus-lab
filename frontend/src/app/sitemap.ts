@@ -3,6 +3,7 @@ import { locales } from "@/i18n/dictionaries";
 import { getPostSlugs } from "@/lib/blog";
 import { getCourseSlugs } from "@/lib/courses";
 import { SITE_URL as BASE } from "@/lib/site";
+import { CASE_SLUGS } from "@/lib/caseStudies";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const slugs = getPostSlugs();
@@ -27,6 +28,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
       alternates: { languages: { fr: `${BASE}/fr/portfolio`, en: `${BASE}/en/portfolio` } },
     });
+    for (const slug of CASE_SLUGS) {
+      entries.push({
+        url: `${BASE}/${lang}/portfolio/${slug}`,
+        changeFrequency: "monthly",
+        priority: 0.7,
+        alternates: { languages: { fr: `${BASE}/fr/portfolio/${slug}`, en: `${BASE}/en/portfolio/${slug}` } },
+      });
+    }
     entries.push({
       url: `${BASE}/${lang}/about`,
       changeFrequency: "monthly",

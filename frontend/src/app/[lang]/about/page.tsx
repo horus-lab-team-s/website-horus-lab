@@ -373,77 +373,28 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
               <h2 className="mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl [text-shadow:0_2px_24px_rgba(0,0,0,0.5)]">{c.teamSubtitle}</h2>
             </Reveal>
 
-            {/* ── Les deux fondateurs, ensemble ── */}
-            <Reveal className="mx-auto mt-10 max-w-4xl">
-              <div className="group relative overflow-hidden shadow-2xl shadow-black/40">
-                <div className="relative h-72 w-full sm:h-96">
-                  <Image
-                    src="/A-propos/photo-the-co-founders-together.png"
-                    alt={lang === "fr" ? "Les co-fondateurs de Horus-Lab" : "Horus-Lab co-founders"}
-                    fill
-                    priority
-                    sizes="(max-width:1024px) 100vw, 900px"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#040814] via-[#040814]/30 to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
-                    <span className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-white backdrop-blur">
-                      <span className="size-1.5 rounded-full bg-sky glow-pulse" />
-                      {lang === "fr" ? "Co-fondateurs" : "Co-founders"}
-                    </span>
-                    <h3 className="mt-3 text-2xl font-extrabold text-white sm:text-3xl">
-                      Edwin TCHAMBA TCHAKOUNTE <span className="text-sky">&amp;</span> Loïc DJIMGOU TONBA
-                    </h3>
-                    <p className="mt-1 text-sm text-white/80">
-                      {lang === "fr"
-                        ? "Deux ingénieurs, une même ambition : faire grandir Horus-Lab."
-                        : "Two engineers, one shared ambition: growing Horus-Lab."}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-
-            {/* ── Puis chacun séparément ── */}
+            {/* ── Les co-fondateurs : portraits ronds, sobres ── */}
             <div className="mx-auto mt-10 grid max-w-4xl gap-8 sm:grid-cols-2">
               {team.map((m, i) => (
                 <Reveal key={m.name} delay={i * 120}>
-                  <article className="group relative h-full overflow-hidden rounded-lg border border-white/12 bg-white/[0.04] backdrop-blur transition-all duration-500 hover:-translate-y-2 hover:border-white/25 hover:shadow-2xl hover:shadow-black/50">
-                    {/* En-tête : photo réelle si disponible, sinon dégradé + initiales */}
-                    <div className={`relative h-72 overflow-hidden ${m.photo ? "" : `bg-gradient-to-br ${m.gradient}`}`}>
+                  <article className="h-full border border-white/12 bg-white/[0.04] px-7 pb-8 pt-9 text-center">
+                    {/* Portrait réel dans un cercle ; à défaut, initiales */}
+                    <div className="round-portrait relative mx-auto size-36 overflow-hidden ring-4 ring-white/15">
                       {m.photo ? (
-                        <>
-                          <Image
-                            src={m.photo}
-                            alt={m.name}
-                            fill
-                            sizes="(max-width:640px) 100vw, 400px"
-                            className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                          />
-                          <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-[#0a1430] via-transparent to-transparent" />
-                        </>
+                        <Image src={m.photo} alt={m.name} fill sizes="144px" className="object-cover" />
                       ) : (
-                        <>
-                          <div aria-hidden className="absolute inset-0 bg-grid opacity-20" />
-                          <div className="absolute inset-0 grid place-items-center">
-                            <span className="grid size-20 place-items-center rounded-full bg-white/90 text-2xl font-extrabold shadow-xl ring-4 ring-white/30">
-                              <span className={`bg-gradient-to-br ${m.gradient} bg-clip-text text-transparent`}>{m.initials}</span>
-                            </span>
-                          </div>
-                        </>
+                        <span className="grid h-full w-full place-items-center bg-white/10 text-3xl font-extrabold text-white">
+                          {m.initials}
+                        </span>
                       )}
-                      <span className="absolute bottom-3 left-4 rounded-full bg-white/20 px-3 py-1 text-xs font-bold text-white backdrop-blur">
-                        {m.badge}
-                      </span>
                     </div>
-
-                    <div className="px-7 pb-7 pt-6">
+                    <div className="mt-6">
                       <h3 className="text-xl font-extrabold tracking-tight text-white">{m.name}</h3>
                       <p className="mt-1 text-sm font-semibold text-sky">{m.role}</p>
                       <p className="mt-3 text-sm leading-relaxed text-white/75">{m.bio}</p>
 
                       {(m.linkedin || m.email || m.whatsapp) && (
-                        <div className="mt-5 flex gap-2.5">
+                        <div className="mt-5 flex justify-center gap-2.5">
                           {m.linkedin && (
                             <a href={m.linkedin} target="_blank" rel="noopener noreferrer" aria-label={`LinkedIn ${m.name}`}
                               className="grid size-9 place-items-center rounded-full bg-white/10 text-white transition-all hover:bg-brand-600 hover:shadow-md hover:shadow-brand-700/25">

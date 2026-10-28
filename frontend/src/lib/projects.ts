@@ -195,8 +195,135 @@ const PROJECTS: Record<Lang, Project[]> = {
   ],
 };
 
+/* ── Solutions Zayra : les produits de l'écosystème, conçus et exploités en
+   interne. Captures réelles dans /public/zayra/solutions/<slug>/. Elles sont
+   ajoutées à la rubrique Réalisations même quand la liste vient du CMS
+   (voir getCmsProjects), tant que l'admin ne les a pas créées lui-même. ── */
+const zayraAssets = (slug: string) => ({
+  url: `https://zayra.${slug}.horus-lab.com`,
+  logo: `/zayra/solutions/${slug}/logo.png`,
+  cover: `/zayra/solutions/${slug}/desktop.webp`,
+});
+
+const ZAYRA_PROJECTS: Record<Lang, Project[]> = {
+  fr: [
+    {
+      title: "Zayra Drive",
+      client: "Zayra Technologies · Candidats & auto-écoles",
+      category: "Éducation & EdTech",
+      desc: "Plateforme de préparation au code de la route : cours illustrés, QCM d'images, examens blancs chronométrés, tuteur IA par module et révision hors ligne, en français et en anglais. Les auto-écoles suivent la préparation de chaque élève depuis leur tableau de bord.",
+      tags: ["IA", "Hors ligne", "Mobile Money", "Android", "FR / EN"],
+      result: "En ligne · 686 questions corrigées",
+      iconKey: "eye",
+      gradient: GRADIENTS[3],
+      role: "Conception, développement & exploitation",
+      scope: "Préparation au code de la route + espace auto-écoles",
+      ...zayraAssets("drive"),
+    },
+    {
+      title: "Zayra School",
+      client: "Zayra Technologies · Établissements scolaires",
+      category: "Éducation & EdTech",
+      desc: "Gestion complète d'un établissement, de la maternelle à l'université : inscriptions, scolarité par tranches, notes et bulletins vérifiables par QR code, paiements Mobile Money, emploi du temps partagé sur WhatsApp et émargement par QR. Chaque établissement est isolé des autres.",
+      tags: ["Mobile Money", "Bulletins QR", "WhatsApp", "Multi-établissements", "FR / EN"],
+      result: "En ligne · de la maternelle à l'université",
+      iconKey: "layers",
+      gradient: GRADIENTS[0],
+      role: "Conception, développement & exploitation",
+      scope: "Gestion scolaire SaaS (inscriptions, notes, caisse)",
+      ...zayraAssets("school"),
+    },
+    {
+      title: "Zayra Agro",
+      client: "Zayra Technologies · Agriculteurs & coopératives",
+      category: "Agriculture & AgriTech",
+      desc: "Un conseiller agricole dans la poche, de la semence au marché : conseiller IA qui cite ses sources, formations validées par des agronomes, intrants homologués près de chez soi, experts sur le terrain et prix repères pour vendre en confiance.",
+      tags: ["IA sourcée", "Android", "Hors ligne", "Experts terrain", "10 régions"],
+      result: "En ligne · 1 500+ fiches agronomiques",
+      iconKey: "spark",
+      gradient: GRADIENTS[2],
+      role: "Conception, développement & exploitation",
+      scope: "Conseil agricole, formation et mise en relation",
+      ...zayraAssets("agro"),
+    },
+    {
+      title: "Zayra Nkap",
+      client: "Zayra Technologies · Tontines & associations",
+      category: "Fintech & Gestion",
+      desc: "Les cahiers de la réunion, sans papier : cotisations, tontines, noms et demi-noms, enchères, prêts, secours et pénalités tenus en temps réel, même hors ligne sur le téléphone du trésorier. Double approbation des sorties d'argent et états financiers en PDF.",
+      tags: ["Tontines", "Hors ligne", "Mobile Money", "États PDF", "Double contrôle"],
+      result: "En ligne · essai gratuit 30 jours",
+      iconKey: "check",
+      gradient: GRADIENTS[1],
+      role: "Conception, développement & exploitation",
+      scope: "Gestion de tontines et d'associations",
+      ...zayraAssets("nkap"),
+    },
+  ],
+  en: [
+    {
+      title: "Zayra Drive",
+      client: "Zayra Technologies · Learners & driving schools",
+      category: "Education & EdTech",
+      desc: "Highway-code preparation platform: illustrated lessons, picture quizzes, timed mock exams, an AI tutor per module and offline revision, in French and English. Driving schools follow each learner's readiness from their dashboard.",
+      tags: ["AI", "Offline", "Mobile Money", "Android", "FR / EN"],
+      result: "Live · 686 corrected questions",
+      iconKey: "eye",
+      gradient: GRADIENTS[3],
+      role: "Design, development & operation",
+      scope: "Highway-code preparation + driving-school space",
+      ...zayraAssets("drive"),
+    },
+    {
+      title: "Zayra School",
+      client: "Zayra Technologies · Schools",
+      category: "Education & EdTech",
+      desc: "End-to-end school management, from nursery to university: enrolment, instalment fees, grades and QR-verifiable report cards, Mobile Money payments, timetable shared on WhatsApp and QR-code attendance. Each school is isolated from the others.",
+      tags: ["Mobile Money", "QR report cards", "WhatsApp", "Multi-school", "FR / EN"],
+      result: "Live · from nursery to university",
+      iconKey: "layers",
+      gradient: GRADIENTS[0],
+      role: "Design, development & operation",
+      scope: "School management SaaS (enrolment, grades, fees)",
+      ...zayraAssets("school"),
+    },
+    {
+      title: "Zayra Agro",
+      client: "Zayra Technologies · Farmers & cooperatives",
+      category: "Agriculture & AgriTech",
+      desc: "A farm adviser in your pocket, from seed to market: an AI adviser that cites its sources, training validated by agronomists, approved inputs close to home, experts in the field and reference prices to sell with confidence.",
+      tags: ["Sourced AI", "Android", "Offline", "Field experts", "10 regions"],
+      result: "Live · 1,500+ agronomy sheets",
+      iconKey: "spark",
+      gradient: GRADIENTS[2],
+      role: "Design, development & operation",
+      scope: "Farm advice, training and market linkage",
+      ...zayraAssets("agro"),
+    },
+    {
+      title: "Zayra Nkap",
+      client: "Zayra Technologies · Tontines & associations",
+      category: "Fintech & Management",
+      desc: "Your meeting's ledgers, paper-free: contributions, tontines, shares and half-shares, auctions, loans, relief and penalties kept in real time, even offline on the treasurer's phone. Two-person approval of withdrawals and PDF financial statements.",
+      tags: ["Tontines", "Offline", "Mobile Money", "PDF statements", "Two-person approval"],
+      result: "Live · 30-day free trial",
+      iconKey: "check",
+      gradient: GRADIENTS[1],
+      role: "Design, development & operation",
+      scope: "Tontine and association management",
+      ...zayraAssets("nkap"),
+    },
+  ],
+};
+
+export const ZAYRA_TITLES = ZAYRA_PROJECTS.fr.map((p) => p.title);
+
+export function getZayraProjects(lang: Lang): Project[] {
+  return ZAYRA_PROJECTS[lang];
+}
+
 export function getProjects(lang: Lang): Project[] {
-  return PROJECTS[lang];
+  return [...PROJECTS[lang], ...ZAYRA_PROJECTS[lang]];
 }
 
 export const PARTNERS = ["Gathe Finance", "Afrikamode", "Elec One"];

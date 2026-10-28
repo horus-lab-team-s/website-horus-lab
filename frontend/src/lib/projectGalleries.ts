@@ -68,8 +68,100 @@ const AFRIKAMODE: GalleryGroup[] = [
   },
 ];
 
+/* ── Solutions Zayra : captures réelles des plateformes (bureau + mobile) ── */
+const zs = (slug: string, file: string, fr: string, en: string): GalleryShot => ({
+  src: `/zayra/solutions/${slug}/${file}.webp`,
+  fr,
+  en,
+});
+
+const zayraMobile = (slug: string, name: string): GalleryGroup => ({
+  id: "mobile",
+  labelFr: "Sur mobile",
+  labelEn: "On mobile",
+  noteFr: `${name} sur téléphone : la même expérience, pensée pour les petits écrans et les petits forfaits.`,
+  noteEn: `${name} on a phone: the same experience, built for small screens and small data plans.`,
+  portrait: true,
+  shots: [zs(slug, "mobile", "Page d'accueil sur mobile", "Homepage on mobile")],
+});
+
+const ZAYRA_DRIVE: GalleryGroup[] = [
+  {
+    id: "plateforme",
+    labelFr: "La plateforme",
+    labelEn: "The platform",
+    noteFr: "Apprendre, s'entraîner et se présenter au bon moment, avec l'auto-école à ses côtés.",
+    noteEn: "Learn, practise and sit the exam at the right time, with the driving school alongside.",
+    shots: [
+      zs("drive", "desktop", "Page d'accueil", "Homepage"),
+      zs("drive", "application", "L'application, écran par écran : cours, tuteur IA, révision hors ligne", "The app, screen by screen: lessons, AI tutor, offline revision"),
+      zs("drive", "auto-ecoles", "Zayra Drive Schools : le tableau de bord des auto-écoles", "Zayra Drive Schools: the driving-school dashboard"),
+      zs("drive", "hors-ligne", "Réviser sans connexion, synchroniser au retour du réseau", "Revise offline, sync when the network is back"),
+    ],
+  },
+  zayraMobile("drive", "Zayra Drive"),
+];
+
+const ZAYRA_SCHOOL: GalleryGroup[] = [
+  {
+    id: "plateforme",
+    labelFr: "La plateforme",
+    labelEn: "The platform",
+    noteFr: "De l'inscription au bulletin : toute la gestion de l'établissement dans un navigateur.",
+    noteEn: "From enrolment to report card: the whole school run from a browser.",
+    shots: [
+      zs("school", "desktop", "Page d'accueil", "Homepage"),
+      zs("school", "modules", "Les modules du quotidien : inscriptions, caisse, notes, documents", "Everyday modules: enrolment, cash desk, grades, documents"),
+      zs("school", "bulletins", "De l'enseignant au bulletin, un circuit de validation clair", "From teacher to report card, a clear approval flow"),
+      zs("school", "vie-de-classe", "Emploi du temps sur WhatsApp et émargement par QR code", "Timetable on WhatsApp and QR-code attendance"),
+      zs("school", "pilotage", "Le tableau de bord de la direction", "The management dashboard"),
+    ],
+  },
+  zayraMobile("school", "Zayra School"),
+];
+
+const ZAYRA_AGRO: GalleryGroup[] = [
+  {
+    id: "plateforme",
+    labelFr: "La plateforme",
+    labelEn: "The platform",
+    noteFr: "L'agriculteur apprend, produit mieux, protège sa récolte et trouve les bons interlocuteurs.",
+    noteEn: "Farmers learn, produce better, protect their harvest and find the right people to deal with.",
+    shots: [
+      zs("agro", "desktop", "Page d'accueil", "Homepage"),
+      zs("agro", "promesses", "Quatre promesses, de la houe au marché", "Four promises, from hoe to market"),
+      zs("agro", "conseiller", "Le conseiller agricole : il comprend, il cite ses sources", "The farm adviser: it understands, and cites its sources"),
+      zs("agro", "pour-qui", "Agriculteurs, coopératives, revendeurs, experts et acheteurs réunis", "Farmers, cooperatives, dealers, experts and buyers together"),
+      zs("agro", "application", "L'application Android, pensée pour les petits forfaits", "The Android app, built for small data plans"),
+    ],
+  },
+  zayraMobile("agro", "Zayra Agro"),
+];
+
+const ZAYRA_NKAP: GalleryGroup[] = [
+  {
+    id: "plateforme",
+    labelFr: "La plateforme",
+    labelEn: "The platform",
+    noteFr: "Avant, pendant et après la séance : les comptes de la réunion, justes et transparents.",
+    noteEn: "Before, during and after the session: the meeting's accounts, accurate and transparent.",
+    shots: [
+      zs("nkap", "desktop", "Page d'accueil", "Homepage"),
+      zs("nkap", "fonctionnement", "Avant, pendant et après la séance", "Before, during and after the session"),
+      zs("nkap", "fonctionnalites", "Tout ce que le cahier faisait, en mieux", "Everything the ledger did, done better"),
+      zs("nkap", "etats-financiers", "Des comptes clairs, sur une feuille propre", "Clear accounts, on a clean sheet"),
+      zs("nkap", "application", "Le cahier du trésorier, dans la poche", "The treasurer's ledger, in your pocket"),
+    ],
+  },
+  zayraMobile("nkap", "Zayra Nkap"),
+];
+
 export const PROJECT_GALLERIES: Record<string, GalleryGroup[]> = {
   Afrikamode: AFRIKAMODE,
+  "Zayra Drive": ZAYRA_DRIVE,
+  "Zayra School": ZAYRA_SCHOOL,
+  "Zayra Agro": ZAYRA_AGRO,
+  "Zayra Nkap": ZAYRA_NKAP,
 };
 
 export function galleryFor(title: string): GalleryGroup[] | null {

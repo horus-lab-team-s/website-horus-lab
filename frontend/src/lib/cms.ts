@@ -16,6 +16,7 @@ import type { Dict, Lang } from "@/i18n/dictionaries";
 import { getDictionary, locales } from "@/i18n/dictionaries";
 import {
   getProjects as getStaticProjects,
+  getZayraProjects,
   type Project,
 } from "@/lib/projects";
 import { getNews as getStaticNews, type NewsItem } from "@/lib/news";
@@ -172,10 +173,14 @@ export async function getCmsProjects(lang: Lang): Promise<Project[]> {
     const data = await fetchList<ApiProject>("/api/portfolio/");
     if (!data.length) return local;
     const byTitle = new Map(local.map((p) => [p.title, p]));
-    return data
+    const projects = data
       .slice()
       .sort((a, b) => a.order - b.order)
       .map((p) => mapProject(p, lang, byTitle));
+    // Les solutions Zayra s'ajoutent en fin de liste tant que l'admin ne les a
+    // pas créées lui-même (auquel cas la version CMS fait foi).
+    const zayra = getZayraProjects(lang).filter((z) => !projects.some((p) => p.title === z.title));
+    return [...projects, ...zayra];
   } catch {
     return local;
   }

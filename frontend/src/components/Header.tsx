@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
 import { IconClose, IconMenu } from "./icons";
 import { FlagIcon } from "./Flags";
+import { BrandLogo } from "./BrandLogo";
 import { ThemeToggle } from "./ThemeToggle";
 
 /* ── Données de langues ── */
@@ -183,10 +183,7 @@ export function Header() {
 
           {/* Logo — noir (transparent) sur fond clair, blanc sur fond sombre : toujours lisible */}
           <Link href={localePath("/")} className="flex shrink-0 items-center" aria-label="Horus-Lab">
-            <Image src="/logo/logo-light-bg-full.png" alt="Horus-Lab" width={200} height={64} priority
-              className="h-14 w-auto object-contain dark:hidden" />
-            <Image src="/logo/logo-dark-bg-full.png" alt="Horus-Lab" width={200} height={64} priority
-              className="hidden h-14 w-auto rounded-sm object-contain dark:block" />
+            <BrandLogo priority horusClassName="h-14 w-auto object-contain" zayraClassName="h-9 w-auto object-contain" />
           </Link>
 
           {/* Liens desktop */}
@@ -430,10 +427,9 @@ export function Header() {
       >
         {/* En-tête du panneau : logo + fermeture */}
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-brand-100 px-4 dark:border-white/10">
-          <Image src="/logo/logo-light-bg-full.png" alt="Horus-Lab" width={140} height={44}
-            className="h-9 w-auto object-contain dark:hidden" />
-          <Image src="/logo/logo-dark-bg-full.png" alt="Horus-Lab" width={140} height={44}
-            className="hidden h-9 w-auto rounded-sm object-contain dark:block" />
+          <span className="flex items-center">
+            <BrandLogo horusClassName="h-9 w-auto object-contain" zayraClassName="h-7 w-auto object-contain" />
+          </span>
           <button type="button" onClick={() => setMenuOpen(false)} aria-label="Fermer le menu"
             className="grid size-10 place-items-center rounded-md border border-brand-200 text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:text-brand-200 dark:hover:bg-white/5">
             <IconClose className="size-5" />

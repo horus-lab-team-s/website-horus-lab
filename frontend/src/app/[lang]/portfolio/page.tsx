@@ -8,6 +8,7 @@ import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
 import { IconArrowRight } from "@/components/icons";
 import { isLocale, locales, type Lang } from "@/i18n/dictionaries";
 import { getCmsProjects } from "@/lib/cms";
+import { ZAYRA_TITLES } from "@/lib/projects";
 
 type Params = { lang: string };
 
@@ -19,7 +20,7 @@ export function generateStaticParams(): { lang: Lang }[] {
 const CONTENT: Record<Lang, {
   eyebrow: string; title: string; subtitle: string;
   allLabel: string; resultLabel: string;
-  ctaTitle: string; ctaButton: string;
+  ctaTitle: string; ctaButton: string; dossier: string;
 }> = {
   fr: {
     eyebrow: "Réalisations",
@@ -29,6 +30,7 @@ const CONTENT: Record<Lang, {
     resultLabel: "portée",
     ctaTitle: "Votre projet sera le prochain ?",
     ctaButton: "Discutons-en",
+    dossier: "Télécharger le dossier des réalisations (PDF)",
   },
   en: {
     eyebrow: "Work",
@@ -38,6 +40,7 @@ const CONTENT: Record<Lang, {
     resultLabel: "scope",
     ctaTitle: "Will your project be next?",
     ctaButton: "Let's talk",
+    dossier: "Download the portfolio dossier (PDF)",
   },
 };
 
@@ -56,7 +59,12 @@ export default async function PortfolioPage({ params }: { params: Promise<Params
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const c = CONTENT[lang];
-  const projects = await getCmsProjects(lang);
+  // Sur la page Réalisations, les solutions Zayra (nos propres produits) ouvrent la liste.
+  const all = await getCmsProjects(lang);
+  const projects = [
+    ...all.filter((p) => ZAYRA_TITLES.includes(p.title)),
+    ...all.filter((p) => !ZAYRA_TITLES.includes(p.title)),
+  ];
 
   return (
     <>
@@ -94,6 +102,13 @@ export default async function PortfolioPage({ params }: { params: Promise<Params
             </Reveal>
             <Reveal delay={160}>
               <p className="mx-auto mt-5 max-w-2xl text-lg text-white/88">{c.subtitle}</p>
+            </Reveal>
+            <Reveal delay={220}>
+              <a href={`/docs/dossier-realisations-${lang}.pdf`} target="_blank" rel="noopener noreferrer"
+                className="group mt-8 inline-flex items-center gap-2 bg-white px-7 py-3.5 text-base font-bold text-brand-700 shadow-xl shadow-black/20 transition-transform hover:scale-[1.03]">
+                {c.dossier}
+                <IconArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
+              </a>
             </Reveal>
           </div>
 

@@ -36,6 +36,13 @@ export default function RootLayout({
             __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',d);}catch(e){}})();`,
           }}
         />
+        {/* Marque selon le domaine : sur zayra.technologies.horus-lab.com, logo et
+            favicon Zayra (voir BrandLogo). Avant le 1er paint → pas de flash. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){if(!/^zayra\\./.test(location.hostname))return;document.documentElement.classList.add('brand-zayra');function f(){document.querySelectorAll('link[rel~="icon"],link[rel="apple-touch-icon"]').forEach(function(l){l.href='/zayra/brand/zayra-icon.png';});}f();document.addEventListener('DOMContentLoaded',f);})();`,
+          }}
+        />
       </head>
       <body className="min-h-full">
         <a href="#main" className="skip-link">
