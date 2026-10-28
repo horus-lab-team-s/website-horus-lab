@@ -8,6 +8,7 @@ import { IconClose, IconMenu } from "./icons";
 import { FlagIcon } from "./Flags";
 import { BrandLogo } from "./BrandLogo";
 import { ThemeToggle } from "./ThemeToggle";
+import { SiteSwitch } from "./SiteSwitch";
 
 /* ── Données de langues ── */
 const LANGS = [
@@ -389,6 +390,10 @@ export function Header() {
               </div>
             </div>
 
+            {/* Lien vers l'autre site (Horus Lab ↔ Zayra Technologies) */}
+            <SiteSwitch short
+              className="hidden items-center gap-1 whitespace-nowrap px-2 py-2 text-sm font-semibold text-brand-700 transition-colors hover:text-brand-500 dark:text-brand-200 2xl:inline-flex" />
+
             {/* CTA */}
             <Link href={localePath("/contact")}
               className="hidden rounded-md bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-700/25 transition-all hover:bg-brand-800 sm:inline-flex">
@@ -586,6 +591,8 @@ export function Header() {
 
         {/* Pied du panneau : appel à l'action */}
         <div className="shrink-0 border-t border-brand-100 p-3 dark:border-white/10">
+          <SiteSwitch
+            className="mb-2 flex items-center justify-center gap-1.5 rounded-md border border-brand-200 px-4 py-2.5 text-sm font-semibold text-brand-700 transition-colors hover:bg-brand-50 dark:border-white/15 dark:text-brand-200 dark:hover:bg-white/5" />
           <Link href={localePath("/contact")} onClick={() => setMenuOpen(false)}
             className="block rounded-md bg-brand-700 px-4 py-3 text-center text-base font-semibold text-white transition-colors hover:bg-brand-800">
             {dict.nav.cta}

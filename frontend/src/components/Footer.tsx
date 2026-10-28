@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { SiteSwitch } from "./SiteSwitch";
 import Link from "next/link";
 import { useState } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
@@ -319,6 +320,7 @@ export function Footer() {
         <div className="flex flex-col items-center justify-between gap-3 py-7 text-xs text-brand-400 sm:flex-row">
           <p>© {year} Horus-Lab. {f.rights}</p>
           <div className="flex items-center gap-5">
+            <SiteSwitch className="inline-flex items-center gap-1 font-semibold text-brand-200 transition-colors hover:text-white" />
             <span>Made in Africa</span>
           </div>
         </div>
