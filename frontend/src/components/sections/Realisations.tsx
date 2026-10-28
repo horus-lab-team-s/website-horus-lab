@@ -2,35 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
 import { Reveal } from "@/components/Reveal";
-import { caseSlugForTitle } from "@/lib/caseStudies";
+import { caseSlugForTitle, getCaseStudy } from "@/lib/caseStudies";
 import { SectionHeading } from "./SectionHeading";
-import {
-  IconArrowRight, IconCheck, IconCode, IconCog,
-  IconEye, IconGlobe, IconLayers, IconSpark,
-} from "@/components/icons";
-import type { Project } from "@/lib/projects";
+import { IconArrowRight } from "@/components/icons";
+import { ZAYRA_TITLES, type Project } from "@/lib/projects";
 
-const ICONS: Record<string, typeof IconCode> = {
-  code: IconCode, layers: IconLayers, cog: IconCog,
-  spark: IconSpark, eye: IconEye, globe: IconGlobe, check: IconCheck,
-};
 
-const PROJECT_IMAGES: Record<string, string> = {
-  "Afrikamode":
-    "/afrikamode-realisations/01-site-accueil.png",
-  "Gathe Finance":
-    "/img/photo-1551288049-bebda4e38f71-w800.jpg",
-  "Plateforme e-Learning":
-    "/img/photo-1501504905252-473c47e087f8-w800.jpg",
-  "e-Learning platform":
-    "/img/photo-1501504905252-473c47e087f8-w800.jpg",
-  "Programme Formation IT":
-    "/img/photo-1573164713988-8665fc963095-w800.jpg",
-  "IT Training Programme":
-    "/img/photo-1573164713988-8665fc963095-w800.jpg",
-};
 
 function RealisationsBackground() {
   return (
@@ -46,26 +26,32 @@ function RealisationsBackground() {
   );
 }
 
+type Filter = "all" | "solutions" | "clients";
+
+/* Ordre de la vue « Tout » : solutions Zayra et projets clients alternés. */
+const MIXED_ORDER = ["Zayra Drive", "Afrikamode", "Zayra School", "Zayra Agro", "Elec One", "Zayra Nkap"];
+
 export function Realisations({ projects }: { projects: Project[] }) {
-  const { dict, localePath } = useLang();
+  const { dict, lang, localePath } = useLang();
   const r = dict.realisations;
-  // Chaque carte mène à l'étude de cas du projet (ou à la page Réalisations).
-  const caseHref = (p: Project) => {
-    const slug = caseSlugForTitle(p.title);
-    return localePath(slug ? `/portfolio/${slug}` : "/portfolio");
-  };
-  // Afrikamode & Elec One sont nos deux projets phares (déjà en production) :
-  // on les fait passer en tête (vedette + haut de la pile).
-  const PHARES = ["Afrikamode", "Elec One"];
-  const ordered: Project[] = [
-    ...(PHARES.map((t) => projects.find((p) => p.title === t)).filter(Boolean) as Project[]),
-    ...projects.filter((p) => !PHARES.includes(p.title)),
+  const isFr = lang === "fr";
+  const [filter, setFilter] = useState<Filter>("all");
+
+  const isSolution = (p: Project) => ZAYRA_TITLES.includes(p.title);
+  const solutions = projects.filter(isSolution);
+  const clients = projects.filter((p) => !isSolution(p));
+  const mixed = [
+    ...MIXED_ORDER.map((t) => projects.find((p) => p.title === t)).filter(Boolean),
+    ...projects.filter((p) => !MIXED_ORDER.includes(p.title)),
+  ].slice(0, 6) as Project[];
+  const visible = filter === "solutions" ? solutions : filter === "clients" ? clients : mixed;
+  if (projects.length === 0) return null;
+
+  const tabs: { id: Filter; label: string; count: number }[] = [
+    { id: "all", label: isFr ? "Tout" : "All", count: mixed.length },
+    { id: "solutions", label: isFr ? "Nos solutions" : "Our solutions", count: solutions.length },
+    { id: "clients", label: isFr ? "Projets clients" : "Client projects", count: clients.length },
   ];
-  const top = ordered.slice(0, 4);
-  if (top.length === 0) return null;
-  const [featured, ...rest] = top;
-  const Featured = ICONS[featured.iconKey] ?? IconCode;
-  const featuredImg = PROJECT_IMAGES[featured.title];
 
   return (
     <section id="realisations" className="relative overflow-hidden pb-14 pt-12 sm:pb-16">
@@ -75,161 +61,111 @@ export function Realisations({ projects }: { projects: Project[] }) {
 
         {/* En-tête centré */}
         <SectionHeading eyebrow={r.eyebrow} title={r.title} subtitle={r.subtitle} />
-        <Reveal className="mt-6 flex justify-center">
+
+        {/* Sélecteur : défile horizontalement sur mobile si besoin */}
+        <Reveal className="mt-7 flex justify-center">
+          <div role="tablist" aria-label={r.eyebrow}
+            className="flex max-w-full gap-1 overflow-x-auto bg-white p-1 shadow-sm ring-1 ring-brand-100 dark:bg-white/5 dark:ring-white/10">
+            {tabs.map((t) => (
+              <button key={t.id} type="button" role="tab" aria-selected={filter === t.id} onClick={() => setFilter(t.id)}
+                className={`inline-flex shrink-0 items-center gap-2 px-3 py-2 text-[13px] font-semibold transition-colors sm:px-4 sm:text-sm ${
+                  filter === t.id
+                    ? "bg-brand-700 text-white"
+                    : "text-brand-700 hover:bg-brand-50 dark:text-brand-200 dark:hover:bg-white/10"
+                }`}>
+                {t.label}
+                <span className={`hidden text-xs sm:inline ${filter === t.id ? "text-white/70" : "text-muted"}`}>{t.count}</span>
+              </button>
+            ))}
+          </div>
+        </Reveal>
+
+        {/* Grille régulière : 1 colonne (mobile), 2 (tablette), 3 (bureau) */}
+        <div className="mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {visible.map((p, i) => {
+            const slug = caseSlugForTitle(p.title);
+            const cs = slug ? getCaseStudy(slug) : undefined;
+            const tagline = cs?.content[lang].tagline ?? p.result;
+            const sector = cs?.content[lang].sector ?? p.category;
+            // Uniquement de vraies captures ; sinon le logo du projet.
+            const cover = p.cover;
+            const solution = isSolution(p);
+            return (
+              <Reveal key={`${filter}-${p.title}`} delay={(i % 3) * 80}>
+                <article className="group lift-xl flex h-full flex-col overflow-hidden bg-white shadow-sm dark:bg-slate-900">
+                  {/* Capture réelle (ou logo sur fond clair si le projet n'en a pas) */}
+                  <Link href={localePath(slug ? `/portfolio/${slug}` : "/portfolio")}
+                    className="relative block aspect-[16/10] overflow-hidden bg-surface dark:bg-white/5">
+                    {cover ? (
+                      <Image src={cover} alt={p.title} fill sizes="(max-width:640px) 100vw, (max-width:1024px) 50vw, 33vw"
+                        className="object-cover object-top transition-transform duration-700 group-hover:scale-105" />
+                    ) : p.logo ? (
+                      <>
+                        <div aria-hidden className={`absolute inset-0 bg-gradient-to-br ${p.gradient} opacity-[0.08]`} />
+                        <Image src={p.logo} alt={`Logo ${p.title}`} fill sizes="(max-width:640px) 100vw, 33vw"
+                          className="object-contain p-12 transition-transform duration-500 group-hover:scale-[1.04]" />
+                      </>
+                    ) : (
+                      <div aria-hidden className={`absolute inset-0 bg-gradient-to-br ${p.gradient}`} />
+                    )}
+
+                    {/* Type de projet + statut */}
+                    <span className={`absolute left-3 top-3 px-2.5 py-1 text-[11px] font-bold shadow-sm ${
+                      solution ? "bg-brand-700 text-white" : "bg-white/95 text-brand-700"
+                    }`}>
+                      {solution ? (isFr ? "Solution Zayra" : "Zayra solution") : (isFr ? "Projet client" : "Client project")}
+                    </span>
+                    {p.url && (
+                      <span className="absolute right-3 top-3 inline-flex items-center gap-1.5 bg-green-600/90 px-2.5 py-1 text-[11px] font-bold text-white shadow-sm">
+                        <span className="size-1.5 bg-white" />
+                        {isFr ? "En ligne" : "Live"}
+                      </span>
+                    )}
+
+                    {/* Logo en pastille, si la couverture est une capture */}
+                    {cover && p.logo && (
+                      <span className="absolute bottom-3 left-3 flex size-12 items-center justify-center bg-white p-1.5 shadow-md">
+                        <span className="relative h-full w-full">
+                          <Image src={p.logo} alt="" fill sizes="48px" className="object-contain" />
+                        </span>
+                      </span>
+                    )}
+                  </Link>
+
+                  {/* Corps : court et lisible */}
+                  <div className="flex flex-1 flex-col p-6">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.16em] text-brand-500">{sector}</p>
+                    <h3 className="mt-1.5 text-xl font-extrabold tracking-tight text-brand-900 dark:text-white">{p.title}</h3>
+                    <p className="mt-2 flex-1 text-sm leading-relaxed text-muted line-clamp-2">{tagline}</p>
+
+                    <div className="mt-5 flex items-center justify-between gap-3 border-t border-brand-100 pt-4 dark:border-white/10">
+                      <Link href={localePath(slug ? `/portfolio/${slug}` : "/portfolio")}
+                        className="inline-flex items-center gap-1.5 text-sm font-bold text-brand-700 dark:text-brand-200">
+                        {isFr ? "Étude de cas" : "Case study"}
+                        <IconArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+                      </Link>
+                      {p.url && (
+                        <a href={p.url} target="_blank" rel="noopener noreferrer"
+                          className="text-sm font-semibold text-muted transition-colors hover:text-brand-700 dark:hover:text-brand-200">
+                          {isFr ? "Voir le site ↗" : "Visit site ↗"}
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              </Reveal>
+            );
+          })}
+        </div>
+
+        {/* Lien vers toutes les réalisations */}
+        <Reveal className="mt-10 flex justify-center">
           <Link href={localePath("/portfolio")}
-            className="group inline-flex items-center gap-2 border border-brand-200 px-5 py-2.5 text-sm font-semibold text-brand-700 transition-all hover:bg-brand-50 hover:border-brand-300 dark:border-white/15 dark:text-brand-200 dark:hover:bg-white/5">
+            className="group inline-flex items-center gap-2 border border-brand-200 bg-white px-6 py-3 text-sm font-semibold text-brand-700 transition-all hover:bg-brand-50 hover:border-brand-300 dark:border-white/15 dark:bg-white/5 dark:text-brand-200 dark:hover:bg-white/10">
             {r.viewAll}
             <IconArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
           </Link>
         </Reveal>
-
-        {/* Layout : 1 featured grand + stack à droite */}
-        <div className="mt-9 grid gap-6 lg:grid-cols-12">
-
-          {/* ── Projet phare ── */}
-          <Reveal className="lg:col-span-7">
-            <Link
-              href={caseHref(featured)}
-              className="group lift-xl relative flex h-full flex-col overflow-hidden rounded-lg shadow-2xl shadow-brand-900/12"
-            >
-              {/* Image de couverture */}
-              <div className="relative h-72 overflow-hidden sm:h-80">
-                <div className={`absolute inset-0 bg-gradient-to-br ${featured.gradient}`} />
-                {featuredImg && (
-                  <Image
-                    src={featuredImg}
-                    alt={featured.title}
-                    fill
-                    priority
-                    sizes="(max-width:1024px) 100vw, 58vw"
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                    style={{ zIndex: 1 }}
-                  />
-                )}
-                <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/65 via-black/15 to-transparent" style={{ zIndex: 2 }} />
-
-                {/* Logo du projet phare — occupe tout l'espace de la couverture */}
-                {featured.logo ? (
-                  <div className="absolute inset-0 flex items-center justify-center p-8" style={{ zIndex: 2 }}>
-                    <div className="relative h-36 w-[78%] max-w-sm overflow-hidden rounded-lg bg-white/92 p-5 shadow-2xl ring-1 ring-white/50 backdrop-blur sm:h-40">
-                      <Image
-                        src={featured.logo}
-                        alt={`Logo ${featured.title}`}
-                        fill
-                        sizes="(max-width:1024px) 70vw, 400px"
-                        className="object-contain p-3"
-                      />
-                    </div>
-                  </div>
-                ) : null}
-
-                <div className="absolute inset-0 flex items-start justify-between p-6" style={{ zIndex: 3 }}>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-white/95 px-3.5 py-1.5 text-xs font-bold text-brand-700 shadow-lg">
-                    <span className="size-2 rounded-full bg-brand-500 glow-pulse" />
-                    {r.featuredLabel}
-                  </span>
-                  <span className="inline-flex size-12 items-center justify-center rounded-lg bg-white/15 backdrop-blur ring-1 ring-white/30">
-                    <Featured className="size-7 text-white drop-shadow" />
-                  </span>
-                </div>
-                {featured.url && (
-                  <div className="absolute bottom-4 right-5 z-[3] flex items-center gap-1.5 rounded-full bg-green-500/90 px-3 py-1 text-xs font-bold text-white shadow backdrop-blur">
-                    <span className="size-1.5 rounded-full bg-white animate-pulse" />
-                    Live
-                  </div>
-                )}
-              </div>
-
-              {/* Corps texte */}
-              <div className={`relative flex flex-1 flex-col bg-gradient-to-br ${featured.gradient} p-7 sm:p-8`}>
-                <div aria-hidden className="absolute inset-0 bg-grid opacity-10" />
-                <div className="relative">
-                  {featured.client && (
-                    <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/70">{featured.client}</p>
-                  )}
-                  <h3 className="mt-2 text-2xl font-extrabold leading-tight text-white sm:text-3xl">{featured.title}</h3>
-                  <p className="mt-3 text-[15px] leading-relaxed text-white/88 line-clamp-3">{featured.desc}</p>
-                  <ul className="mt-4 flex flex-wrap gap-2">
-                    {featured.tags.map(t => (
-                      <li key={t} className="rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-medium text-white backdrop-blur">{t}</li>
-                    ))}
-                  </ul>
-                  <div className="mt-6 flex items-center justify-between border-t border-white/20 pt-5">
-                    <div>
-                      <p className="text-base font-extrabold text-white">{featured.result}</p>
-                      <p className="text-[11px] uppercase tracking-[0.16em] text-white/60">{featured.category}</p>
-                    </div>
-                    <span className="inline-flex size-11 items-center justify-center rounded-full bg-white text-brand-700 shadow-lg transition-transform group-hover:translate-x-1 group-hover:shadow-xl">
-                      <IconArrowRight className="size-5" />
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          </Reveal>
-
-          {/* ── Stack secondaire ── */}
-          <div className="flex flex-col gap-5 lg:col-span-5">
-            {rest.map((p, i) => {
-              const Icon = ICONS[p.iconKey] ?? IconCode;
-              const img = PROJECT_IMAGES[p.title];
-              return (
-                <Reveal key={p.title} delay={(i + 1) * 100}>
-                  <Link
-                    href={caseHref(p)}
-                    className="group lift-xl flex items-stretch overflow-hidden bg-white shadow-sm transition-all hover:shadow-xl dark:bg-slate-900"
-                  >
-                    {/* Vignette gauche — logo du projet sur toute la zone */}
-                    <div className={`relative w-32 shrink-0 overflow-hidden ${p.logo ? "bg-white dark:bg-white/95" : `bg-gradient-to-br ${p.gradient}`}`}>
-                      {p.logo ? (
-                        <Image src={p.logo} alt={`Logo ${p.title}`} fill sizes="128px"
-                          className="object-contain p-3 transition-transform duration-500 group-hover:scale-105"
-                          style={{ zIndex: 1 }} />
-                      ) : (
-                        <>
-                          {img && (
-                            <Image src={img} alt={p.title} fill sizes="128px"
-                              className="object-cover opacity-55 transition-transform duration-500 group-hover:scale-105"
-                              style={{ zIndex: 1 }} />
-                          )}
-                          <div aria-hidden className="absolute inset-0 bg-black/25" style={{ zIndex: 2 }} />
-                          <div className="absolute inset-0 flex items-center justify-center" style={{ zIndex: 3 }}>
-                            <div className="flex size-13 items-center justify-center rounded-md bg-white/20 backdrop-blur ring-1 ring-white/30 shadow-md">
-                              <Icon className="size-7 text-white drop-shadow-md" />
-                            </div>
-                          </div>
-                        </>
-                      )}
-                      {/* Badge numéro */}
-                      <div className="absolute left-2 top-2 z-[4] flex size-7 items-center justify-center rounded-full bg-white/95 text-[11px] font-extrabold text-brand-700 shadow ring-1 ring-brand-100">
-                        {String(i + 2).padStart(2, "0")}
-                      </div>
-                    </div>
-
-                    {/* Corps */}
-                    <div className="flex flex-1 flex-col justify-center gap-1 p-5">
-                      {p.client && (
-                        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-brand-500">{p.client}</p>
-                      )}
-                      <h3 className="text-base font-extrabold leading-tight text-brand-900 dark:text-white sm:text-lg">{p.title}</h3>
-                      <p className="text-xs text-muted">{p.category}</p>
-                      <div className="mt-1.5 inline-flex items-center gap-1.5 text-xs font-bold text-brand-600 dark:text-brand-300">
-                        {p.result}
-                        <IconArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
-                      </div>
-                      <ul className="mt-2 flex flex-wrap gap-1">
-                        {p.tags.slice(0, 3).map(t => (
-                          <li key={t} className="rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-medium text-brand-600 dark:bg-white/5 dark:text-brand-300">{t}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <span aria-hidden className={`pointer-events-none absolute inset-y-0 left-0 w-0.5 bg-gradient-to-b ${p.gradient} opacity-60`} />
-                  </Link>
-                </Reveal>
-              );
-            })}
-          </div>
-        </div>
       </div>
     </section>
   );
