@@ -6,6 +6,7 @@ import { ScrollProgress } from "@/components/ScrollProgress";
 import { BackToTop } from "@/components/BackToTop";
 import { HorusAI } from "@/components/HorusAI";
 import { EdlearningPromo } from "@/components/EdlearningPromo";
+import { BRAND_NAME, IS_ZAYRA, ZAYRA_HERO, brandHomeTitle } from "@/lib/brand";
 import {
   getDictionary,
   isLocale,
@@ -31,14 +32,11 @@ export async function generateMetadata({
   if (!isLocale(lang)) return {};
   const dict = getDictionary(lang);
 
-  const title =
-    lang === "fr"
-      ? "Horus-Lab · Solutions technologiques intelligentes"
-      : "Horus-Lab · Intelligent technology solutions";
-  const description = dict.hero.subtitle;
+  const title = brandHomeTitle(lang);
+  const description = IS_ZAYRA ? ZAYRA_HERO[lang].subtitle : dict.hero.subtitle;
 
   return {
-    title: { absolute: title, template: "%s | Horus-Lab" },
+    title: { absolute: title, template: `%s | ${BRAND_NAME}` },
     description,
     alternates: {
       canonical: `/${lang}`,
@@ -48,8 +46,9 @@ export async function generateMetadata({
       title,
       description,
       type: "website",
+      siteName: BRAND_NAME,
       locale: lang === "fr" ? "fr_FR" : "en_US",
-      images: ["/logo/logo-light-bg-full.png"],
+      images: [IS_ZAYRA ? "/zayra/brand/og-zayra.png" : "/logo/logo-light-bg-full.png"],
     },
   };
 }

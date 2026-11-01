@@ -8,6 +8,7 @@ import { BlogForum } from "@/components/blog/BlogForum";
 import { getCmsPost } from "@/lib/cms";
 import { isLocale } from "@/i18n/dictionaries";
 import { SITE_URL } from "@/lib/site";
+import { BRAND_NAME, IS_ZAYRA } from "@/lib/brand";
 
 type Params = { lang: string; slug: string };
 
@@ -63,10 +64,10 @@ export default async function BlogPostPage({
     author: { "@type": "Organization", name: post.author },
     publisher: {
       "@type": "Organization",
-      name: "Horus-Lab",
+      name: BRAND_NAME,
       logo: {
         "@type": "ImageObject",
-        url: `${SITE_URL}/logo/logo-light-bg-full.png`,
+        url: `${SITE_URL}${IS_ZAYRA ? "/zayra/brand/zayra-logo.png" : "/logo/logo-light-bg-full.png"}`,
       },
     },
     inLanguage: lang,

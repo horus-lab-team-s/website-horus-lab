@@ -9,6 +9,7 @@ import { caseSlugForTitle, getCaseStudy } from "@/lib/caseStudies";
 import { SectionHeading } from "./SectionHeading";
 import { IconArrowRight } from "@/components/icons";
 import { ZAYRA_TITLES, type Project } from "@/lib/projects";
+import { IS_ZAYRA } from "@/lib/brand";
 
 
 
@@ -35,7 +36,8 @@ export function Realisations({ projects }: { projects: Project[] }) {
   const { dict, lang, localePath } = useLang();
   const r = dict.realisations;
   const isFr = lang === "fr";
-  const [filter, setFilter] = useState<Filter>("all");
+  // Site Zayra : les solutions d'abord.
+  const [filter, setFilter] = useState<Filter>(IS_ZAYRA ? "solutions" : "all");
 
   const isSolution = (p: Project) => ZAYRA_TITLES.includes(p.title);
   const solutions = projects.filter(isSolution);

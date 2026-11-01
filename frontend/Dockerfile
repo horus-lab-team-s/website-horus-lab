@@ -18,6 +18,12 @@ ENV NEXT_TELEMETRY_DISABLED=1
 # next/image à charger les médias uploadés (logos, couvertures) depuis Django.
 ARG BACKEND_API_URL=http://localhost:8000
 ENV BACKEND_API_URL=$BACKEND_API_URL
+# Marque et URL publique du site, figées dans les pages statiques au build :
+# horus (horus-lab.com) ou zayra (zayra.technologies.horus-lab.com).
+ARG NEXT_PUBLIC_BRAND=horus
+ARG NEXT_PUBLIC_SITE_URL=https://horus-lab.com
+ENV NEXT_PUBLIC_BRAND=$NEXT_PUBLIC_BRAND \
+    NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN pnpm build

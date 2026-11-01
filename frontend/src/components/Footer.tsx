@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { SiteSwitch } from "./SiteSwitch";
+import { BRAND_NAME, IS_ZAYRA, ZAYRA_ABOUT } from "@/lib/brand";
 import Link from "next/link";
 import { useState } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
@@ -114,7 +115,7 @@ export function Footer() {
   const email = settings?.email || f.email;
   const phones = settings?.phones?.length ? settings.phones : f.phones;
   const location = settings?.location || f.location;
-  const about = settings?.about || f.about;
+  const about = IS_ZAYRA ? ZAYRA_ABOUT[lang] : settings?.about || f.about;
   const tagline = settings?.tagline || f.tagline;
 
   const social = [
@@ -177,7 +178,7 @@ export function Footer() {
 
           {/* Colonne marque */}
           <div>
-            <Link href={localePath("/")} className="inline-flex items-center group" aria-label="Horus-Lab">
+            <Link href={localePath("/")} className="inline-flex items-center group" aria-label={BRAND_NAME}>
               {/* Fond navy → on utilise la variante blanche du logo pour qu'il reste visible */}
               <span className="brand-horus">
                 <Image
@@ -318,7 +319,7 @@ export function Footer() {
 
         {/* ── Bas de page ── */}
         <div className="flex flex-col items-center justify-between gap-3 py-7 text-xs text-brand-400 sm:flex-row">
-          <p>© {year} Horus-Lab. {f.rights}</p>
+          <p>© {year} {BRAND_NAME}. {f.rights}</p>
           <div className="flex items-center gap-5">
             <SiteSwitch className="inline-flex items-center gap-1 font-semibold text-brand-200 transition-colors hover:text-white" />
             <span>Made in Africa</span>

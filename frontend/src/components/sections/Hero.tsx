@@ -29,7 +29,7 @@ export function Hero({ content }: { content?: CmsHero }) {
         <Reveal delay={80}>
           <h1 className="mt-5 text-3xl font-extrabold leading-[1.08] tracking-tight text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.45)] sm:text-4xl lg:text-5xl">
             {h.titleLead}{" "}
-            <span className="bg-gradient-to-r from-sky via-brand-200 to-white bg-clip-text text-transparent">
+            <span className="hero-highlight bg-gradient-to-r from-sky via-brand-200 to-white bg-clip-text text-transparent">
               {h.titleHighlight}
             </span>
           </h1>

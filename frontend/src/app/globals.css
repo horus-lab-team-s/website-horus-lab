@@ -108,6 +108,23 @@ body {
 .brand-zayra .brand-horus { display: none; }
 .brand-zayra .brand-zayra-only { display: contents; }
 
+/* Site Zayra : l'orange du logo en accents. Le bleu reste la base ; seuls les
+   tons d'accent (brand-400/500, sky) passent à l'orange, plus les boutons
+   d'appel à l'action et le mot mis en valeur de l'accroche. */
+.brand-zayra {
+  --color-brand-400: #ff9b11;
+  --color-brand-500: #ef6c00;
+  --color-sky: #ffa53a;
+}
+.brand-zayra .btn-cta {
+  background-color: #ef6c00;
+  box-shadow: 0 10px 15px -3px rgb(239 108 0 / 0.25);
+}
+.brand-zayra .btn-cta:hover { background-color: #d85f00; }
+.brand-zayra .hero-highlight {
+  background-image: linear-gradient(90deg, #ffb347, #ff9b11 45%, #fe7201);
+}
+
 /* ============================================================
    Reveal on scroll (piloté par <Reveal/>)
    ============================================================ */

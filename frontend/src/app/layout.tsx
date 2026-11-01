@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
 import { SITE_URL } from "@/lib/site";
+import { BRAND_NAME, IS_ZAYRA } from "@/lib/brand";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -11,16 +12,19 @@ const geistSans = Geist({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Horus-Lab",
-    template: "%s | Horus-Lab",
+    default: BRAND_NAME,
+    template: `%s | ${BRAND_NAME}`,
   },
-  // Pas de `icons` explicite : Next génère le favicon depuis `src/app/icon.jpeg`
-  // (logo Horus-Lab carré 1254x1254). Une valeur explicite écraserait cette
-  // détection automatique — c'est ce qui cassait le favicon (fichier inexistant).
+  // Horus : pas de `icons` explicite, Next génère le favicon depuis
+  // `src/app/icon.jpeg` (une valeur explicite écraserait cette détection).
+  // Zayra : icône Zayra déclarée explicitement.
+  ...(IS_ZAYRA && {
+    icons: { icon: "/zayra/brand/zayra-icon.png", apple: "/zayra/brand/zayra-icon.png" },
+  }),
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1b4f9c",
+  themeColor: IS_ZAYRA ? "#002a72" : "#1b4f9c",
 };
 
 export default function RootLayout({
@@ -28,7 +32,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   // L'attribut lang est ajusté par langue côté client (LanguageProvider).
   return (
-    <html lang="fr" data-scroll-behavior="smooth" className={`${geistSans.variable} h-full`} suppressHydrationWarning>
+    <html lang="fr" data-scroll-behavior="smooth" className={`${geistSans.variable} h-full${IS_ZAYRA ? " brand-zayra" : ""}`} suppressHydrationWarning>
       <head>
         {/* Applique le thème avant le 1er paint → pas de flash. */}
         <script
