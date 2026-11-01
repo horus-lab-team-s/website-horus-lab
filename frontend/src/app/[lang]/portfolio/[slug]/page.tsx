@@ -8,10 +8,11 @@ import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/sections/SectionHeading";
 import { CTA } from "@/components/sections/CTA";
 import { CaseGallery } from "@/components/portfolio/CaseGallery";
-import { IconArrowRight, IconCheck } from "@/components/icons";
+import { IconArrowRight, IconCheck, IconWhatsApp } from "@/components/icons";
 import { isLocale, type Lang } from "@/i18n/dictionaries";
 import { CASE_SLUGS, CASE_STUDIES, getCaseStudy } from "@/lib/caseStudies";
 import { galleryFor } from "@/lib/projectGalleries";
+import { getCmsSiteSettings } from "@/lib/cms";
 
 type Params = { lang: string; slug: string };
 
@@ -62,6 +63,8 @@ const L = {
     links: "Liens",
     visit: "Voir le site",
     dossier: "Télécharger le dossier des réalisations (PDF)",
+    demo: "Demander une démo sur WhatsApp",
+    demoMsg: "Bonjour, je souhaite une démonstration de {title}.",
     back: "Toutes les réalisations",
     others: "Autres réalisations",
   },
@@ -88,6 +91,8 @@ const L = {
     links: "Links",
     visit: "Visit site",
     dossier: "Download the portfolio dossier (PDF)",
+    demo: "Request a demo on WhatsApp",
+    demoMsg: "Hello, I would like a demo of {title}.",
     back: "All projects",
     others: "Other projects",
   },
@@ -105,6 +110,10 @@ export default async function CaseStudyPage({ params }: { params: Promise<Params
   const links = cs.links[lang];
   const dossier = `/docs/dossier-realisations-${lang}.pdf`;
   const others = CASE_STUDIES.filter((o) => o.slug !== slug).slice(0, 3);
+  // Solutions Zayra : demande de démo en un clic, message WhatsApp pré-rempli.
+  const settings = await getCmsSiteSettings(lang);
+  const waBase = (settings?.socials.whatsapp || "https://wa.me/237659902191").split("?")[0];
+  const demoHref = `${waBase}?text=${encodeURIComponent(t.demoMsg.replace("{title}", title))}`;
 
   return (
     <>
@@ -114,7 +123,7 @@ export default async function CaseStudyPage({ params }: { params: Promise<Params
         {/* ═══ HERO : capture réelle en fond, logo, accroche ═══ */}
         <section className="relative isolate flex min-h-[60vh] items-center overflow-hidden pt-28 pb-14">
           {cs.cover ? (
-            <Image src={cs.cover} alt="" fill priority sizes="100vw" className="-z-20 scale-110 object-cover object-top opacity-40 blur-xl" />
+            <Image src={cs.cover} alt="" fill priority sizes="480px" className="-z-20 scale-110 object-cover object-top opacity-40 blur-xl" />
           ) : (
             <div aria-hidden className={`absolute inset-0 -z-20 bg-gradient-to-br ${cs.gradient}`} />
           )}
@@ -147,15 +156,23 @@ export default async function CaseStudyPage({ params }: { params: Promise<Params
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
                 {links[0] && (
                   <a href={links[0].href} target="_blank" rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-2 bg-white px-7 py-3.5 text-base font-bold text-brand-700 shadow-xl shadow-black/20 transition-transform hover:scale-[1.03]">
+                    className="group inline-flex w-full items-center justify-center gap-2 bg-white px-7 py-3.5 text-base font-bold text-brand-700 shadow-xl sm:w-auto shadow-black/20 transition-transform hover:scale-[1.03]">
                     {t.visit}
                     <IconArrowRight className="size-5 transition-transform group-hover:translate-x-1" />
                   </a>
                 )}
-                <a href={dossier} target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 border border-white/30 bg-white/10 px-7 py-3.5 text-base font-semibold text-white backdrop-blur transition-colors hover:bg-white/20">
-                  {t.dossier}
-                </a>
+                {cs.kind === "solution" ? (
+                  <a href={demoHref} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex w-full items-center justify-center gap-2 bg-[#1f9d55] px-7 py-3.5 sm:w-auto text-base font-bold text-white shadow-xl shadow-black/20 transition-colors hover:bg-[#188a49]">
+                    <IconWhatsApp className="size-5" />
+                    {t.demo}
+                  </a>
+                ) : (
+                  <a href={dossier} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 border border-white/30 bg-white/10 px-7 py-3.5 text-base font-semibold text-white backdrop-blur transition-colors hover:bg-white/20">
+                    {t.dossier}
+                  </a>
+                )}
               </div>
             </Reveal>
           </div>

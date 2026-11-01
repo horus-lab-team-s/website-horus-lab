@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { Services } from "@/components/sections/Services";
 import { Realisations } from "@/components/sections/Realisations";
+import { Vision } from "@/components/sections/Vision";
 import { Process } from "@/components/sections/Process";
 import { WhyUs } from "@/components/sections/WhyUs";
 import { Sectors } from "@/components/sections/Sectors";
@@ -29,6 +30,12 @@ import {
 
 type Params = { lang: string };
 
+const FOUNDERS = [
+  { "@type": "Person", name: "Edwin TCHAMBA TCHAKOUNTE", jobTitle: "Cofondateur · Stratégie et opérations" },
+  { "@type": "Person", name: "Loïc DJIMGOU TONBA", jobTitle: "Cofondateur · Architecture et produit" },
+  { "@type": "Person", name: "Cardin KIEPOUO", jobTitle: "Cofondateur · Ingénieur IA" },
+];
+
 const organizationLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -46,6 +53,7 @@ const organizationLd = {
     "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
   ],
   parentOrganization: { "@type": "Organization", name: "Zayra Technologies", url: "https://zayra.technologies.horus-lab.com" },
+  founder: FOUNDERS,
 };
 
 /* Version Zayra : l'entreprise, son laboratoire et ses 4 solutions, déclarés
@@ -65,6 +73,10 @@ const zayraLd = [
     address: { "@type": "PostalAddress", addressLocality: "Douala", addressCountry: "CM" },
     areaServed: "Africa",
     subOrganization: { "@type": "Organization", name: "Horus Lab", url: "https://horus-lab.com" },
+    founder: FOUNDERS,
+    foundingDate: "2025-05",
+    foundingLocation: "Douala, Cameroun",
+    slogan: "L'Afrique, intelligente par nature.",
   },
   {
     "@context": "https://schema.org",
@@ -125,6 +137,7 @@ export default async function Home({ params }: { params: Promise<Params> }) {
         <Hero content={hero} />
         <Services items={services} />
         <Realisations projects={projects} />
+        <Vision />
         <Process steps={process} />
         <WhyUs items={values} />
         <Sectors items={sectors} />
