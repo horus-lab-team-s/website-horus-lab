@@ -1,8 +1,16 @@
 # Servir le site sur `zayra.technologies.horus-lab.com`
 
-Le même conteneur `horus_frontend` sert `horus-lab.com`, `www.horus-lab.com` et
-`zayra.technologies.horus-lab.com`. Aucun nouveau conteneur, aucune nouvelle image :
-on ajoute un nom au DNS, au proxy Nginx et au certificat.
+Le même code sert deux sites, construits chacun avec sa marque :
+
+| Site | Conteneur | Image (GHCR `horus-frontend`) | `.env` |
+|---|---|---|---|
+| `horus-lab.com` + `www` | `horus_frontend` | `sha-xxxxxxx` | `FRONTEND_IMAGE` |
+| `zayra.technologies.horus-lab.com` | `zayra_frontend` | `zayra-sha-xxxxxxx` | `FRONTEND_ZAYRA_IMAGE` |
+
+La version Zayra (`NEXT_PUBLIC_BRAND=zayra`) a ses propres titres, balises
+canoniques, sitemap, JSON-LD, icône, image de partage et accents orange : c'est ce
+qui permet à Google de référencer Zayra Technologies. La CI construit les deux
+images à chaque push sur `main` (`.github/workflows/frontend.yml`).
 
 > 🔒 Comme pour `RESTE-A-FAIRE.md` : chaque commande est lancée **par toi**, sur ton PC
 > ou ton VPS. Les `<...>` sont remplis par toi seul.
@@ -81,8 +89,8 @@ Puis :
 ```bash
 docker compose -f docker-compose.prod.yml up -d web
 ```
-`NEXT_PUBLIC_SITE_URL` **reste** `https://horus-lab.com` : c'est l'URL canonique
-déclarée aux moteurs de recherche, pour que Google ne voie pas deux sites identiques.
+`NEXT_PUBLIC_SITE_URL` de `horus_frontend` reste `https://horus-lab.com` ; celle de
+`zayra_frontend` est fixée dans `docker-compose.prod.yml` et dans l'image.
 
 **📝** `.env` mis à jour ☐ · `web` redémarré ☐
 
@@ -93,8 +101,36 @@ déclarée aux moteurs de recherche, pour que Google ne voie pas deux sites iden
 ```bash
 curl -I  http://zayra.technologies.horus-lab.com/     # 301 → https
 curl -I https://zayra.technologies.horus-lab.com/     # 200 / 307 → /fr
-curl -sI https://zayra.technologies.horus-lab.com/fr/solutions/drive | head -1   # 200
+curl -sI https://zayra.technologies.horus-lab.com/fr/portfolio/zayra-drive | head -1   # 200
+curl -s https://zayra.technologies.horus-lab.com/fr | grep -o '<link rel="canonical"[^>]*>'
+#   doit pointer vers https://zayra.technologies.horus-lab.com/fr
 ```
-Dans le navigateur : cadenas valide, page d'accueil Zayra, pages `/fr/solutions/…`.
+Dans le navigateur : cadenas valide, logo et accents orange Zayra.
 
-**📝** HTTPS OK ☐ · pages solutions OK ☐
+**📝** HTTPS OK ☐ · balise canonique Zayra OK ☐
+
+---
+
+## 6. Mettre à jour la version Zayra *(VPS, root)*
+
+Ordre impératif : **conteneur d'abord, proxy ensuite** (sinon 502 sur le sous-domaine).
+
+```bash
+cd /opt/horus-lab
+cp .env backups/env.$(date +%F_%H%M)
+# digest de l'image zayra-sha-xxxxxxx (sur le PC) :
+#   docker buildx imagetools inspect ghcr.io/horus-lab-team-s/horus-frontend:zayra-sha-xxxxxxx
+grep -q ^FRONTEND_ZAYRA_IMAGE= .env || echo "FRONTEND_ZAYRA_IMAGE=" >> .env
+sed -i 's#^FRONTEND_ZAYRA_IMAGE=.*#FRONTEND_ZAYRA_IMAGE=ghcr.io/horus-lab-team-s/horus-frontend@sha256:<digest>#' .env
+docker compose -f docker-compose.prod.yml pull frontend_zayra
+docker compose -f docker-compose.prod.yml up -d frontend_zayra
+```
+
+## 7. Google Search Console *(navigateur, compte Google de l'entreprise)*
+
+1. Sur https://search.google.com/search-console, ajouter la propriété
+   **préfixe d'URL** `https://zayra.technologies.horus-lab.com/`.
+2. Valider avec la méthode « Enregistrement DNS » : ajouter chez LWS le TXT
+   `google-site-verification=…` fourni, sur le nom `zayra.technologies`.
+3. Menu **Sitemaps** : soumettre `sitemap.xml`.
+4. Menu **Inspection de l'URL** : `/fr`, puis « Demander l'indexation ».

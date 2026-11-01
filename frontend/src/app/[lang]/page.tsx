@@ -13,6 +13,8 @@ import { BlogPreview } from "@/components/sections/BlogPreview";
 import { CTA } from "@/components/sections/CTA";
 import { isLocale } from "@/i18n/dictionaries";
 import { SITE_URL } from "@/lib/site";
+import { IS_ZAYRA } from "@/lib/brand";
+import { CASE_STUDIES } from "@/lib/caseStudies";
 import {
   getCmsHero,
   getCmsPartners,
@@ -43,7 +45,46 @@ const organizationLd = {
     "https://www.facebook.com/HorusLab",
     "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
   ],
+  parentOrganization: { "@type": "Organization", name: "Zayra Technologies", url: "https://zayra.technologies.horus-lab.com" },
 };
+
+/* Version Zayra : l'entreprise, son laboratoire et ses 4 solutions, déclarés
+   à Google (fiche entreprise + liste des applications). */
+const zayraSolutions = CASE_STUDIES.filter((c) => c.kind === "solution");
+const zayraLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "Zayra Technologies",
+    url: SITE_URL,
+    logo: `${SITE_URL}/zayra/brand/zayra-logo.png`,
+    description:
+      "Entreprise technologique africaine basée à Douala : Zayra Drive, Zayra School, Zayra Agro et Zayra Nkap, des applications web et mobiles conçues et exploitées par son laboratoire Horus Lab.",
+    email: "contact@horus-lab.com",
+    telephone: "+237659902191",
+    address: { "@type": "PostalAddress", addressLocality: "Douala", addressCountry: "CM" },
+    areaServed: "Africa",
+    subOrganization: { "@type": "Organization", name: "Horus Lab", url: "https://horus-lab.com" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "Solutions Zayra Technologies",
+    itemListElement: zayraSolutions.map((c, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: c.titles.fr,
+        description: c.content.fr.tagline,
+        applicationCategory: "BusinessApplication",
+        operatingSystem: "Web, Android",
+        url: `${SITE_URL}/fr/portfolio/${c.slug}`,
+        publisher: { "@type": "Organization", name: "Zayra Technologies" },
+      },
+    })),
+  },
+];
 
 export default async function Home({ params }: { params: Promise<Params> }) {
   const { lang } = await params;
@@ -77,7 +118,7 @@ export default async function Home({ params }: { params: Promise<Params> }) {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(IS_ZAYRA ? zayraLd : organizationLd) }}
       />
       <Header />
       <main id="main" tabIndex={-1}>

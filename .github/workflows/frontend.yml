@@ -1,5 +1,8 @@
 # CI/CD — Frontend Next.js.
 # Push sur main touchant frontend/** -> build image -> push GHCR -> (si activé) deploy VPS.
+# Deux variantes du même code (même dépôt d'images) :
+#   - horus : tags latest / sha-xxxxxxx        -> horus-lab.com
+#   - zayra : tags zayra-latest / zayra-sha-xxxxxxx -> zayra.technologies.horus-lab.com
 name: frontend
 
 on:
@@ -23,6 +26,15 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - brand: horus
+            prefix: ""
+            site_url: https://horus-lab.com
+          - brand: zayra
+            prefix: "zayra-"
+            site_url: https://zayra.technologies.horus-lab.com
     permissions:
       contents: read
       packages: write
@@ -47,9 +59,10 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.IMAGE }}
+          flavor: latest=false
           tags: |
-            type=raw,value=latest
-            type=sha,prefix=sha-,format=short
+            type=raw,value=${{ matrix.prefix }}latest
+            type=sha,prefix=${{ matrix.prefix }}sha-,format=short
 
       - name: Build & push
         uses: docker/build-push-action@v6
@@ -58,17 +71,19 @@ jobs:
           push: true
           build-args: |
             BACKEND_API_URL=${{ env.BACKEND_API_URL }}
+            NEXT_PUBLIC_BRAND=${{ matrix.brand }}
+            NEXT_PUBLIC_SITE_URL=${{ matrix.site_url }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=gha,scope=${{ matrix.brand }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.brand }}
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
     if: ${{ vars.DEPLOY_ENABLED == 'true' }}
     steps:
-      - name: SSH -> pull & up (service frontend)
+      - name: SSH -> pull & up (services frontend + frontend_zayra)
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -76,6 +91,6 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             cd ${{ vars.DEPLOY_PATH }}
-            docker compose -f docker-compose.prod.yml pull frontend
-            docker compose -f docker-compose.prod.yml up -d frontend
+            docker compose -f docker-compose.prod.yml pull frontend frontend_zayra
+            docker compose -f docker-compose.prod.yml up -d frontend frontend_zayra
             docker image prune -f

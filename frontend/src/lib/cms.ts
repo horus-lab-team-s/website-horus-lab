@@ -20,6 +20,7 @@ import {
   type Project,
 } from "@/lib/projects";
 import { getNews as getStaticNews, type NewsItem } from "@/lib/news";
+import { IS_ZAYRA, ZAYRA_HERO } from "@/lib/brand";
 import {
   getAllPosts as getStaticPosts,
   getPost as getStaticPost,
@@ -551,6 +552,16 @@ type ApiHero = {
 export type CmsHero = Dict["hero"];
 
 export async function getCmsHero(lang: Lang): Promise<CmsHero> {
+  // Site Zayra : accroche propre (textes du CMS = site Horus) ; boutons et
+  // chiffres restent ceux du CMS.
+  if (IS_ZAYRA) {
+    const base = await getCmsHeroFromApi(lang);
+    return { ...base, ...ZAYRA_HERO[lang] };
+  }
+  return getCmsHeroFromApi(lang);
+}
+
+async function getCmsHeroFromApi(lang: Lang): Promise<CmsHero> {
   const fallback = getDictionary(lang).hero;
   try {
     const data = await fetchJson<ApiHero>("/api/hero/");

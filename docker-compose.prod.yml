@@ -60,6 +60,22 @@ services:
     ports:
       - "127.0.0.1:${FRONTEND_PORT:-8081}:3000"
 
+  # Même site, construit avec la marque Zayra (logo, orange, titres, balises
+  # Google, sitemap) : sert zayra.technologies.horus-lab.com. Image = tag
+  # zayra-sha-xxxxxxx du même dépôt GHCR (voir .github/workflows/frontend.yml).
+  frontend_zayra:
+    container_name: zayra_frontend
+    image: ${FRONTEND_ZAYRA_IMAGE:-ghcr.io/horus-lab-team-s/horus-frontend:zayra-latest}
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      BACKEND_API_URL: ${BACKEND_API_URL:-https://api.horus-lab.com}
+      NEXT_PUBLIC_SITE_URL: https://zayra.technologies.horus-lab.com
+      NEXT_PUBLIC_BRAND: zayra
+    depends_on:
+      - web
+    networks: [proxy]
+
 networks:
   # Réseau EXISTANT de ton reverse proxy conteneur, où tourne AUSSI `backend-db-1`.
   # Mets son nom dans .env :  PROXY_NETWORK=<nom>  (souvent `backend_default`,
