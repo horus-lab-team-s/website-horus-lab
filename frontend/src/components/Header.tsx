@@ -178,14 +178,14 @@ export function Header() {
       <div className="mx-auto max-w-6xl">
 
         {/* ── Barre principale (coins carrés / rayon léger, look pro) ── */}
-        <nav className={`flex h-16 items-center justify-between gap-3 rounded-md border border-brand-100 px-3 backdrop-blur-md transition-all duration-300 dark:border-white/10 sm:px-5 ${
+        <nav className={`flex h-16 items-center justify-between gap-3 rounded-md lg:gap-2 xl:gap-3 border border-brand-100 px-3 backdrop-blur-md transition-all duration-300 dark:border-white/10 sm:px-5 ${
           scrolled ? "bg-white/90 shadow-xl shadow-brand-900/10 dark:bg-slate-900/90"
                    : "bg-white/80 shadow-lg shadow-brand-900/5  dark:bg-slate-900/70"
         }`}>
 
           {/* Logo — noir (transparent) sur fond clair, blanc sur fond sombre : toujours lisible */}
           <Link href={localePath("/")} className="flex shrink-0 items-center" aria-label={BRAND_NAME}>
-            <BrandLogo priority horusClassName="h-14 w-auto object-contain" zayraClassName="h-9 w-auto object-contain" />
+            <BrandLogo priority horusClassName="h-14 w-auto object-contain" zayraClassName="h-9 w-auto object-contain lg:h-8 xl:h-9" />
           </Link>
 
           {/* Liens desktop */}
@@ -195,7 +195,7 @@ export function Header() {
             <li ref={servicesRef} className="relative" onMouseEnter={openSvc} onMouseLeave={closeSvc}>
               <button type="button" aria-haspopup="true" aria-expanded={servicesOpen}
                 onClick={() => setServicesOpen(v => !v)}
-                className={`flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                className={`flex items-center gap-1.5 whitespace-nowrap rounded-md px-2 py-2 text-sm font-medium transition-colors xl:px-4 ${
                   isServicesActive
                     ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
                     : "text-ink/75 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
@@ -234,7 +234,7 @@ export function Header() {
             <li ref={formationsRef} className="relative" onMouseEnter={openFmt} onMouseLeave={closeFmt}>
               <Link href={localePath("/formations")} aria-haspopup="true" aria-expanded={formationsOpen}
                 onClick={() => setFormationsOpen(false)}
-                className={`flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                className={`flex items-center gap-1.5 whitespace-nowrap rounded-md px-2 py-2 text-sm font-medium transition-colors xl:px-4 ${
                   isFormationsActive
                     ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
                     : "text-ink/75 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
@@ -280,7 +280,7 @@ export function Header() {
             <li ref={blogRef} className="relative" onMouseEnter={openBlog} onMouseLeave={closeBlog}>
               <Link href={localePath("/blog")} aria-haspopup="true" aria-expanded={blogOpen}
                 onClick={() => setBlogOpen(false)}
-                className={`flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                className={`flex items-center gap-1.5 whitespace-nowrap rounded-md px-2 py-2 text-sm font-medium transition-colors xl:px-4 ${
                   isBlogActive
                     ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
                     : "text-ink/75 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
@@ -327,7 +327,7 @@ export function Header() {
               return (
                 <li key={link.href}>
                   <Link href={link.href} aria-current={active ? "page" : undefined}
-                    className={`flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-1.5 whitespace-nowrap rounded-md px-2 py-2 text-sm font-medium transition-colors xl:px-4 ${
                       active ? "bg-brand-50 text-brand-700 dark:bg-white/10 dark:text-brand-200"
                              : "text-ink/75 hover:bg-brand-50 hover:text-brand-700 dark:hover:bg-white/5 dark:hover:text-brand-200"
                     }`}>
@@ -391,13 +391,9 @@ export function Header() {
               </div>
             </div>
 
-            {/* Lien vers l'autre site (Horus Lab ↔ Zayra Technologies) */}
-            <SiteSwitch short
-              className="hidden items-center gap-1 whitespace-nowrap px-2 py-2 text-sm font-semibold text-brand-700 transition-colors hover:text-brand-500 dark:text-brand-200 2xl:inline-flex" />
-
             {/* CTA */}
             <Link href={localePath("/contact")}
-              className="btn-cta hidden rounded-md bg-brand-700 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-brand-700/25 transition-all hover:bg-brand-800 sm:inline-flex">
+              className="btn-cta hidden whitespace-nowrap rounded-md bg-brand-700 px-4 py-2.5 text-sm font-semibold xl:px-5 text-white shadow-lg shadow-brand-700/25 transition-all hover:bg-brand-800 sm:inline-flex">
               {dict.nav.cta}
             </Link>
 
