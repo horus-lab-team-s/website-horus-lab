@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -74,8 +75,8 @@ export default async function PortfolioPage({ params }: { params: Promise<Params
         {/* ── Hero avec vague en bas ── */}
         <section className="relative isolate flex min-h-[52vh] items-center overflow-hidden pt-24 pb-12 sm:pb-14">
           {/* Image fond */}
-          <div aria-hidden className="absolute inset-0 -z-20 bg-cover bg-center"
-            style={{ backgroundImage: `url(/img/photo-1607706189992-eae578626c86-w1920.jpg)` }} />
+          <Image src="/img/photo-1607706189992-eae578626c86-w1920.jpg" alt="" fill priority sizes="100vw"
+            className="-z-20 object-cover object-center" />
           <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-br from-brand-900/72 via-brand-900/55 to-slate-900/65" />
           <div aria-hidden className="absolute inset-0 -z-10 bg-grid opacity-[0.14]" />
           {/* Particules */}

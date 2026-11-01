@@ -26,136 +26,172 @@ export function generateStaticParams(): { lang: Lang }[] {
   return locales.map((lang) => ({ lang }));
 }
 
-/* ── Équipe statique (les co-fondateurs) ── */
+/* ── Les trois cofondateurs (repli si l'admin n'a pas d'équipe) ──
+   Rôles alignés sur la présentation de l'entreprise (octobre 2026). */
 const TEAM_MEMBERS = {
   fr: [
     {
       name: "Edwin TCHAMBA TCHAKOUNTE",
-      role: "Architecte logiciel · Co-fondateur",
+      role: "Stratégie et opérations · Cofondateur",
       bio: "Architecte logiciel et ingénieur senior. J'assemble des applications web et mobiles robustes (APIs REST, cloud, méthodes RUP & UML), pensées pour durer et passer à l'échelle. Lauréat du Prix du Meilleur Projet de Fin d'Études, IUT-FV Bandjoun (2024).",
       initials: "ET",
       photo: "/A-propos/photo-Edwin-co-founder.png",
       linkedin: "",
       email: "tchambaedwin@gmail.com",
-      whatsapp: "https://wa.me/237659902191",
+      whatsapp: "https://wa.me/237673398046",
       isLead: true,
       gradient: "from-slate-800 via-brand-700 to-amber-500",
-      badge: "Co-fondateur",
+      badge: "Cofondateur",
     },
     {
       name: "Loïc DJIMGOU TONBA",
-      role: "Ingénieur logiciel · Co-fondateur",
-      bio: "Ingénieur full-stack et entrepreneur, je transforme des idées en produits numériques qui marchent, du web au mobile, du concept au déploiement. Je pilote la vision produit de Horus-Lab pour des clients africains et internationaux, convaincu que la tech est un vrai levier de croissance pour le continent.",
+      role: "Architecture et produit · Cofondateur",
+      bio: "Ingénieur full-stack et entrepreneur, je transforme des idées en produits numériques qui marchent, du web au mobile, du concept au déploiement. Je pilote la vision produit de Zayra Technologies, convaincu que la tech est un vrai levier de croissance pour le continent.",
       initials: "LT",
       photo: "/A-propos/photo-loic-tonba-cofounder.png",
       linkedin: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
       email: "tonbaloic@gmail.com",
-      whatsapp: "https://wa.me/237696902054",
+      whatsapp: "https://wa.me/237699173771",
       isLead: true,
       gradient: "from-brand-700 via-brand-500 to-sky",
-      badge: "Co-fondateur",
+      badge: "Cofondateur",
+    },
+    {
+      name: "Cardin KIEPOUO",
+      role: "Ingénieur IA · Cofondateur",
+      bio: "Ingénieur en intelligence artificielle, il conçoit et intègre l'IA au cœur des solutions Zayra, pour qu'elle reste utile, sobre et vérifiable.",
+      initials: "CK",
+      photo: null,
+      linkedin: "",
+      email: "",
+      whatsapp: "",
+      isLead: true,
+      gradient: "from-brand-600 via-sky to-amber-400",
+      badge: "Cofondateur",
     },
   ],
   en: [
     {
       name: "Edwin TCHAMBA TCHAKOUNTE",
-      role: "Software architect · Co-founder",
+      role: "Strategy & operations · Co-founder",
       bio: "Software architect and senior engineer. I build robust web and mobile applications (REST APIs, cloud, RUP & UML methods), designed to last and scale. Winner of the Best Final Year Project Award, IUT-FV Bandjoun (2024).",
       initials: "ET",
       photo: "/A-propos/photo-Edwin-co-founder.png",
       linkedin: "",
       email: "tchambaedwin@gmail.com",
-      whatsapp: "https://wa.me/237659902191",
+      whatsapp: "https://wa.me/237673398046",
       isLead: true,
       gradient: "from-slate-800 via-brand-700 to-amber-500",
       badge: "Co-founder",
     },
     {
       name: "Loïc DJIMGOU TONBA",
-      role: "Software engineer · Co-founder",
-      bio: "Full-stack engineer and entrepreneur, I turn ideas into digital products that ship, web and mobile, from concept to deployment. I lead Horus-Lab's product vision for African and international clients, convinced that technology is a real growth engine for the continent.",
+      role: "Architecture & product · Co-founder",
+      bio: "Full-stack engineer and entrepreneur, I turn ideas into digital products that ship, web and mobile, from concept to deployment. I lead Zayra Technologies' product vision, convinced that technology is a real growth engine for the continent.",
       initials: "LT",
       photo: "/A-propos/photo-loic-tonba-cofounder.png",
       linkedin: "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
       email: "tonbaloic@gmail.com",
-      whatsapp: "https://wa.me/237696902054",
+      whatsapp: "https://wa.me/237699173771",
       isLead: true,
       gradient: "from-brand-700 via-brand-500 to-sky",
+      badge: "Co-founder",
+    },
+    {
+      name: "Cardin KIEPOUO",
+      role: "AI engineer · Co-founder",
+      bio: "An artificial intelligence engineer, he designs and integrates AI at the heart of Zayra's solutions, keeping it useful, lean and verifiable.",
+      initials: "CK",
+      photo: null,
+      linkedin: "",
+      email: "",
+      whatsapp: "",
+      isLead: true,
+      gradient: "from-brand-600 via-sky to-amber-400",
       badge: "Co-founder",
     },
   ],
 };
 
+/* Contenu tiré de la présentation de l'entreprise : vision, mission, ce qui
+   nous distingue, histoire et chiffres. Identique sur les deux sites : Horus Lab
+   est le laboratoire de Zayra Technologies. */
 const CONTENT: Record<Lang, {
   eyebrow: string; title: string; intro: string;
   pillars: { h: string; body: string }[];
   valuesTitle: string; valuesSubtitle: string;
   values: { title: string; desc: string }[];
-  storyTitle: string; story: string[];
+  storyTitle: string; story: { date: string; title: string; text: string }[];
   teamTitle: string; teamSubtitle: string;
   ctaTitle: string; ctaButton: string;
   stats: { value: string; label: string }[];
 }> = {
   fr: {
     eyebrow: "À propos",
-    title: "Au-delà des frontières, au service de votre impact",
-    intro: "Horus-Lab est une entreprise technologique africaine. Nous concevons des produits numériques : applications web & mobile, logiciels sur mesure, systèmes d'information et solutions de digitalisation, pensés pour les réalités du continent et construits pour durer.",
+    title: "L'Afrique, intelligente par nature.",
+    intro: "Zayra Technologies conçoit, développe, héberge et maintient des applications, des systèmes d'information et des solutions SaaS pensés pour les réalités africaines. Quatre solutions en ligne et un laboratoire interne, Horus Lab, forment un écosystème cohérent.",
     pillars: [
-      { h: "Notre mission", body: "Rendre la technologie de pointe accessible et utile aux organisations africaines, en les accompagnant de l'idée jusqu'à l'impact." },
-      { h: "Notre vision",  body: "Une Afrique qui construit ses propres solutions numériques, à la hauteur des standards mondiaux, et au-delà des frontières." },
+      { h: "Notre vision",  body: "« Voir le continent africain se hisser dans le monde comme le géant qu'il est. »" },
+      { h: "Notre mission", body: "Faire grandir l'Afrique à partir de ses propres forces, en mettant l'IA au service de chacun : l'élève, l'agriculteur, l'entrepreneur et la communauté, avec des outils accessibles, bilingues et payables par Mobile Money." },
     ],
-    valuesTitle: "Nos valeurs",
-    valuesSubtitle: "Ce qui guide chacune de nos décisions et de nos lignes de code.",
+    valuesTitle: "Ce qui nous distingue",
+    valuesSubtitle: "Des outils pensés ici, pour celles et ceux qui font l'Afrique.",
     values: [
-      { title: "Excellence technique",    desc: "Des solutions robustes, performantes et maintenables, sans compromis sur la qualité." },
-      { title: "Proximité & écoute",      desc: "Nous travaillons avec vous, pas seulement pour vous : transparence et disponibilité à chaque étape." },
-      { title: "Innovation utile",        desc: "La bonne technologie au service d'un problème réel, jamais l'inverse." },
-      { title: "Impact durable",          desc: "Nous construisons pour durer : code pérenne, documentation complète et transfert de compétences." },
+      { title: "Pensé pour l'Afrique",  desc: "Mobile Money, hors ligne, français et anglais, même avec peu de réseau." },
+      { title: "Une IA sourcée",        desc: "Tuteur et conseiller s'appuient sur des contenus vérifiés." },
+      { title: "La confiance intégrée", desc: "Données cloisonnées, journal des actions, double approbation." },
+      { title: "Maîtrise totale",       desc: "Équipe 100 % interne, de la conception à l'hébergement." },
     ],
-    storyTitle: "Notre approche",
+    storyTitle: "Notre histoire : le laboratoire est devenu un écosystème",
     story: [
-      "Née de la conviction que l'Afrique a tout pour devenir un acteur majeur du numérique mondial, Horus-Lab réunit des ingénieurs pluridisciplinaires autour d'une exigence commune : livrer des produits qui comptent.",
-      "Nous avançons par incréments, en livrant de la valeur tôt et souvent, et en gardant nos clients aux commandes à chaque étape du projet.",
+      { date: "Mai 2025",      title: "Naissance d'Horus Lab",       text: "Lancement à Douala et premiers projets sur mesure." },
+      { date: "2025 – 2026",   title: "Premières réalisations",      text: "Six projets livrés au Cameroun et en Europe." },
+      { date: "Janvier 2026",  title: "Horus Lab devient Zayra",     text: "L'entreprise prend le nom de son écosystème ; Horus Lab devient son laboratoire." },
+      { date: "Octobre 2026",  title: "Lancement commercial",        text: "Drive, School, Agro et Nkap partent à la conquête du marché." },
     ],
-    teamTitle: "Les fondateurs",
-    teamSubtitle: "Ils portent la vision, entourés d'une équipe qui conçoit et livre vos produits.",
+    teamTitle: "L'équipe fondatrice",
+    teamSubtitle: "Trois cofondateurs, une équipe 100 % interne.",
     ctaTitle: "Construisons quelque chose de durable ensemble.",
     ctaButton: "Démarrer un projet",
     stats: [
-      { value: "5",   label: "projets livrés" },
-      { value: "4",   label: "pôles d'expertise" },
-      { value: "8+",  label: "secteurs servis" },
+      { value: "2025",  label: "création à Douala" },
+      { value: "4",     label: "solutions Zayra en ligne" },
+      { value: "6+",    label: "projets clients livrés" },
+      { value: "100 %", label: "équipe interne" },
     ],
   },
   en: {
     eyebrow: "About",
-    title: "Beyond borders, in service of your impact",
-    intro: "Horus-Lab is an African technology company. We build digital products: web & mobile apps, custom software, information systems and digitalisation solutions, designed for the realities of the continent and built to last.",
+    title: "Africa, intelligent by nature.",
+    intro: "Zayra Technologies designs, builds, hosts and maintains applications, information systems and SaaS solutions built for African realities. Four live solutions and an in-house lab, Horus Lab, form one coherent ecosystem.",
     pillars: [
-      { h: "Our mission", body: "Make leading-edge technology accessible and useful to African organisations, guiding them from idea to impact." },
-      { h: "Our vision",  body: "An Africa that builds its own digital solutions, matching world-class standards, and reaching beyond borders." },
+      { h: "Our vision",  body: "“To see the African continent rise in the world as the giant it is.”" },
+      { h: "Our mission", body: "Grow Africa from its own strengths by putting AI at everyone's service: the student, the farmer, the entrepreneur and the community, with tools that are accessible, bilingual and payable by Mobile Money." },
     ],
-    valuesTitle: "Our values",
-    valuesSubtitle: "What guides every decision and every line of code.",
+    valuesTitle: "What sets us apart",
+    valuesSubtitle: "Tools designed here, for the people who make Africa.",
     values: [
-      { title: "Technical excellence", desc: "Robust, performant and maintainable solutions, with no compromise on quality." },
-      { title: "Closeness & active listening", desc: "We work with you, not just for you: transparency and availability at every step." },
-      { title: "Useful innovation",    desc: "The right technology for a real problem, never the other way around." },
-      { title: "Lasting impact",       desc: "We build to last: durable code, complete documentation and skills transfer." },
+      { title: "Built for Africa",   desc: "Mobile Money, offline mode, French and English, even with a weak network." },
+      { title: "Sourced AI",         desc: "Our tutor and advisor rely on verified content." },
+      { title: "Trust built in",     desc: "Isolated data, action logs, dual approval." },
+      { title: "Full control",       desc: "A 100% in-house team, from design to hosting." },
     ],
-    storyTitle: "Our approach",
+    storyTitle: "Our story: the lab became an ecosystem",
     story: [
-      "Born from the belief that Africa has everything it takes to become a major global digital player, Horus-Lab brings together cross-functional engineers around one shared standard: shipping products that matter.",
-      "We move in increments, delivering value early and often, and keeping our clients in control at every step.",
+      { date: "May 2025",      title: "Horus Lab is born",          text: "Launched in Douala with our first custom projects." },
+      { date: "2025 – 2026",   title: "First deliveries",           text: "Six projects delivered in Cameroon and Europe." },
+      { date: "January 2026",  title: "Horus Lab becomes Zayra",    text: "The company takes the name of its ecosystem; Horus Lab becomes its lab." },
+      { date: "October 2026",  title: "Commercial launch",          text: "Drive, School, Agro and Nkap set out to win the market." },
     ],
-    teamTitle: "The founders",
-    teamSubtitle: "They drive the vision, backed by a team that designs and ships your products.",
+    teamTitle: "The founding team",
+    teamSubtitle: "Three co-founders, a 100% in-house team.",
     ctaTitle: "Let's build something lasting together.",
     ctaButton: "Start a project",
     stats: [
-      { value: "5",  label: "projects delivered" },
-      { value: "4",  label: "areas of expertise" },
-      { value: "8+", label: "industries served" },
+      { value: "2025",  label: "founded in Douala" },
+      { value: "4",     label: "Zayra solutions live" },
+      { value: "6+",    label: "client projects delivered" },
+      { value: "100%",  label: "in-house team" },
     ],
   },
 };
@@ -192,7 +228,7 @@ async function resolveTeam(lang: Lang): Promise<TeamCard[]> {
   const staticTeam = TEAM_MEMBERS[lang];
   const cms = await getCmsTeam(lang);
   if (!cms.length) return staticTeam;
-  return cms.map((m, i) => ({
+  const fromCms: TeamCard[] = cms.map((m, i) => ({
     name: m.name,
     role: m.role,
     bio: m.bio,
@@ -203,8 +239,12 @@ async function resolveTeam(lang: Lang): Promise<TeamCard[]> {
     whatsapp: m.whatsapp,
     isLead: m.isLead,
     gradient: m.gradient || TEAM_GRADIENTS[i % TEAM_GRADIENTS.length],
-    badge: m.badge || (m.isLead ? (lang === "fr" ? "Co-fondateur" : "Co-founder") : m.role),
+    badge: m.badge || (m.isLead ? (lang === "fr" ? "Cofondateur" : "Co-founder") : m.role),
   }));
+  // Les trois cofondateurs apparaissent toujours, même si l'un d'eux manque
+  // encore dans l'admin.
+  const known = new Set(fromCms.map((m) => m.name.toLowerCase()));
+  return [...fromCms, ...staticTeam.filter((m) => !known.has(m.name.toLowerCase()))];
 }
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
@@ -290,7 +330,7 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <h2 className="text-xl font-bold text-brand-900 dark:text-white">{pl.h}</h2>
-                  <p className="mt-3 leading-relaxed text-muted">{pl.body}</p>
+                  <p className={`mt-3 leading-relaxed ${i === 0 ? "text-lg font-semibold text-brand-900 dark:text-white" : "text-muted"}`}>{pl.body}</p>
                 </article>
               </Reveal>
             ))}
@@ -330,7 +370,7 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
           </div>
         </section>
 
-        {/* ── Notre approche (histoire) — titre centré ── */}
+        {/* ── Notre histoire : frise datée + chiffres ── */}
         <section className="bg-white py-14 dark:bg-[#070e1c] sm:py-16">
           <div className="mx-auto max-w-7xl px-5 sm:px-8">
             <Reveal className="mx-auto max-w-3xl text-center">
@@ -338,14 +378,21 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
             </Reveal>
             <div className="mt-10 grid gap-12 lg:grid-cols-2 lg:items-center">
               <Reveal>
-                <div className="space-y-4 text-base leading-relaxed text-muted sm:text-lg">
-                  {c.story.map((para, i) => <p key={i}>{para}</p>)}
-                </div>
+                <ol className="relative space-y-6 border-l-2 border-brand-100 pl-6 dark:border-white/10">
+                  {c.story.map((step) => (
+                    <li key={step.date} className="relative">
+                      <span aria-hidden className="round-portrait absolute -left-[31px] top-1.5 size-3 bg-brand-500 ring-4 ring-white dark:ring-[#070e1c]" />
+                      <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-500">{step.date}</p>
+                      <p className="mt-1 text-lg font-bold text-brand-900 dark:text-white">{step.title}</p>
+                      <p className="mt-0.5 text-sm leading-relaxed text-muted sm:text-base">{step.text}</p>
+                    </li>
+                  ))}
+                </ol>
               </Reveal>
               <Reveal delay={120}>
                 <div className="relative bg-gradient-to-br from-brand-50 to-white p-8 dark:from-slate-900 dark:to-slate-900">
                   <div aria-hidden className="absolute -right-4 -top-4 size-24 rounded-full bg-sky/15 blur-2xl" />
-                  <dl className="grid gap-6 sm:grid-cols-3">
+                  <dl className="grid grid-cols-2 gap-6">
                     {c.stats.map((s) => (
                       <div key={s.label} className="text-center">
                         <dt className="text-4xl font-extrabold text-brand-700 dark:text-brand-300">{s.value}</dt>
@@ -374,9 +421,10 @@ export default async function AboutPage({ params }: { params: Promise<Params> })
             </Reveal>
 
             {/* ── Les co-fondateurs : portraits ronds, sobres ── */}
-            <div className="mx-auto mt-10 grid max-w-4xl gap-8 sm:grid-cols-2">
+            <div className="mx-auto mt-10 grid max-w-6xl gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {team.map((m, i) => (
-                <Reveal key={m.name} delay={i * 120}>
+                <Reveal key={m.name} delay={i * 120}
+                  className={team.length % 2 === 1 && i === team.length - 1 ? "sm:col-span-2 sm:mx-auto sm:w-1/2 lg:col-span-1 lg:w-auto" : undefined}>
                   <article className="h-full border border-white/12 bg-white/[0.04] px-7 pb-8 pt-9 text-center">
                     {/* Portrait réel dans un cercle ; à défaut, initiales */}
                     <div className="round-portrait relative mx-auto size-36 overflow-hidden ring-4 ring-white/15">
