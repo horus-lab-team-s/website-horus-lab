@@ -61,7 +61,7 @@ services:
       - "127.0.0.1:${FRONTEND_PORT:-8081}:3000"
 
   # Même site, construit avec la marque Zayra (logo, orange, titres, balises
-  # Google, sitemap) : sert zayra.technologies.horus-lab.com. Image = tag
+  # Google, sitemap) : sert zayra-technologies.com. Image = tag
   # zayra-sha-xxxxxxx du même dépôt GHCR (voir .github/workflows/frontend.yml).
   frontend_zayra:
     container_name: zayra_frontend
@@ -70,7 +70,7 @@ services:
     env_file: .env
     environment:
       BACKEND_API_URL: ${BACKEND_API_URL:-https://api.horus-lab.com}
-      NEXT_PUBLIC_SITE_URL: https://zayra.technologies.horus-lab.com
+      NEXT_PUBLIC_SITE_URL: https://zayra-technologies.com
       NEXT_PUBLIC_BRAND: zayra
     depends_on:
       - web

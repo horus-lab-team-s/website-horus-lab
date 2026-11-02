@@ -2,15 +2,16 @@
 
 import { usePathname } from "next/navigation";
 import { useLang } from "@/i18n/LanguageProvider";
+import { HORUS_SITE_URL, ZAYRA_SITE_URL } from "@/lib/brand";
 
 /**
  * Lien d'un site à l'autre. Sur horus-lab.com il mène vers Zayra Technologies,
- * sur zayra.technologies.horus-lab.com il ramène vers Horus Lab, en gardant la
+ * sur zayra-technologies.com il ramène vers Horus Lab, en gardant la
  * page en cours. Les deux liens sont rendus ; le CSS de marque (globals.css)
  * n'affiche que le bon, comme pour BrandLogo.
  */
-const HORUS_URL = "https://horus-lab.com";
-const ZAYRA_URL = "https://zayra.technologies.horus-lab.com";
+const HORUS_URL = HORUS_SITE_URL;
+const ZAYRA_URL = ZAYRA_SITE_URL;
 
 export function SiteSwitch({ className, short }: { className: string; short?: boolean }) {
   const pathname = usePathname() || "/";

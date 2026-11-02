@@ -94,7 +94,7 @@ export default async function DossierPage({ params }: { params: Promise<Params> 
           </div>
         </div>
         <div className="flex items-end justify-between text-sm text-white/70">
-          <span>Douala, Cameroun · contact@horus-lab.com</span>
+          <span>Douala, Cameroun · contact@zayra-technologies.com</span>
           <span className="capitalize">{date}</span>
         </div>
       </section>
@@ -202,9 +202,9 @@ export default async function DossierPage({ params }: { params: Promise<Params> 
         <h2 className="text-4xl font-extrabold tracking-tight">{t.contactTitle}</h2>
         <p className="mx-auto mt-5 max-w-lg text-lg text-white/85">{t.contactText}</p>
         <div className="mt-10 space-y-1.5 text-lg font-semibold">
-          <p>contact@horus-lab.com</p>
+          <p>contact@zayra-technologies.com</p>
           <p>+237 659 90 21 91 · +237 696 90 20 54</p>
-          <p>horus-lab.com · Douala, Cameroun</p>
+          <p>zayra-technologies.com · horus-lab.com · Douala, Cameroun</p>
         </div>
       </section>
     </main>

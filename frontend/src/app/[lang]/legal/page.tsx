@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { isLocale, locales, type Lang } from "@/i18n/dictionaries";
+import { IS_ZAYRA } from "@/lib/brand";
 
 type Params = { lang: string };
 
@@ -24,23 +25,25 @@ const CONTENT: Record<Lang, Content> = {
       {
         h: "Éditeur du site",
         body: [
-          "Le site horus-lab.com est édité par Horus-Lab, entreprise technologique africaine.",
+          IS_ZAYRA
+            ? "Le site zayra-technologies.com est édité par Zayra Technologies (anciennement Horus-Lab), entreprise technologique africaine."
+            : "Le site horus-lab.com est édité par Horus-Lab, laboratoire de Zayra Technologies, entreprise technologique africaine.",
           "Forme juridique : [à compléter]. Immatriculation (RCCM / NIU) : [à compléter].",
           "Siège : Douala, Cameroun.",
-          "E-mail : contact@horus-lab.com · Téléphone : +237 659902191 / +237 696902054.",
+          "E-mail : contact@zayra-technologies.com · Téléphone : +237 659902191 / +237 696902054.",
           "Directeur de la publication : [à compléter].",
         ],
       },
       {
         h: "Hébergement",
         body: [
-          "Le site est hébergé par Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, États-Unis (vercel.com).",
+          "Le site est hébergé sur un serveur privé virtuel loué à Contabo GmbH, Aschauer Straße 32a, 81549 Munich, Allemagne (contabo.com).",
         ],
       },
       {
         h: "Propriété intellectuelle",
         body: [
-          "L'ensemble des contenus du site (textes, logo, illustrations, code) est la propriété de Horus-Lab, sauf mention contraire. Toute reproduction sans autorisation est interdite.",
+          "L'ensemble des contenus du site (textes, logo, illustrations, code) est la propriété de Zayra Technologies (anciennement Horus-Lab), sauf mention contraire. Toute reproduction sans autorisation est interdite.",
         ],
       },
       {
@@ -62,7 +65,7 @@ const CONTENT: Record<Lang, Content> = {
         h: "Sous-traitants",
         body: [
           "Brevo (Sendinblue), envoi d'e-mails et gestion des contacts : brevo.com.",
-          "Vercel : hébergement du site.",
+          "Contabo : hébergement du site.",
         ],
       },
       {
@@ -75,7 +78,7 @@ const CONTENT: Record<Lang, Content> = {
         h: "Vos droits",
         body: [
           "Vous disposez d'un droit d'accès, de rectification, d'effacement, d'opposition et de portabilité de vos données.",
-          "Pour exercer ces droits, écrivez à contact@horus-lab.com.",
+          "Pour exercer ces droits, écrivez à contact@zayra-technologies.com.",
         ],
       },
       {
@@ -87,7 +90,7 @@ const CONTENT: Record<Lang, Content> = {
       },
       {
         h: "Contact",
-        body: ["Pour toute question relative à ces mentions : contact@horus-lab.com."],
+        body: ["Pour toute question relative à ces mentions : contact@zayra-technologies.com."],
       },
     ],
   },
@@ -99,23 +102,25 @@ const CONTENT: Record<Lang, Content> = {
       {
         h: "Site publisher",
         body: [
-          "The website horus-lab.com is published by Horus-Lab, an African technology company.",
+          IS_ZAYRA
+            ? "The website zayra-technologies.com is published by Zayra Technologies (formerly Horus-Lab), an African technology company."
+            : "The website horus-lab.com is published by Horus-Lab, the lab of Zayra Technologies, an African technology company.",
           "Legal form: [to be completed]. Registration (RCCM / NIU): [to be completed].",
           "Head office: Douala, Cameroon.",
-          "Email: contact@horus-lab.com · Phone: +237 659902191 / +237 696902054.",
+          "Email: contact@zayra-technologies.com · Phone: +237 659902191 / +237 696902054.",
           "Publication director: [to be completed].",
         ],
       },
       {
         h: "Hosting",
         body: [
-          "The website is hosted by Vercel Inc., 340 S Lemon Ave #4133, Walnut, CA 91789, USA (vercel.com).",
+          "The website is hosted on a virtual private server rented from Contabo GmbH, Aschauer Straße 32a, 81549 Munich, Germany (contabo.com).",
         ],
       },
       {
         h: "Intellectual property",
         body: [
-          "All site content (text, logo, illustrations, code) is the property of Horus-Lab unless otherwise stated. Reproduction without permission is prohibited.",
+          "All site content (text, logo, illustrations, code) is the property of Zayra Technologies (formerly Horus-Lab) unless otherwise stated. Reproduction without permission is prohibited.",
         ],
       },
       {
@@ -137,7 +142,7 @@ const CONTENT: Record<Lang, Content> = {
         h: "Processors",
         body: [
           "Brevo (Sendinblue), email delivery and contact management: brevo.com.",
-          "Vercel: website hosting.",
+          "Contabo: website hosting.",
         ],
       },
       {
@@ -150,7 +155,7 @@ const CONTENT: Record<Lang, Content> = {
         h: "Your rights",
         body: [
           "You have the right to access, rectify, erase, object to and port your data.",
-          "To exercise these rights, email contact@horus-lab.com.",
+          "To exercise these rights, email contact@zayra-technologies.com.",
         ],
       },
       {
@@ -162,7 +167,7 @@ const CONTENT: Record<Lang, Content> = {
       },
       {
         h: "Contact",
-        body: ["For any question about this notice: contact@horus-lab.com."],
+        body: ["For any question about this notice: contact@zayra-technologies.com."],
       },
     ],
   },

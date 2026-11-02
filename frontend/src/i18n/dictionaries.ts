@@ -241,7 +241,7 @@ const fr = {
     open: "Discuter avec Horus AI",
     close: "Fermer",
     error:
-      "Désolé, une erreur est survenue. Réessayez ou écrivez-nous à contact@horus-lab.com.",
+      "Désolé, une erreur est survenue. Réessayez ou écrivez-nous à contact@zayra-technologies.com.",
     disclaimer: "Horus AI peut faire des erreurs. Vérifiez les informations importantes.",
     offline: "Mode hors-ligne (réponses limitées)",
     suggestions: [
@@ -265,7 +265,7 @@ const fr = {
       },
     ],
     contactTitle: "Contact",
-    email: "contact@horus-lab.com",
+    email: "contact@zayra-technologies.com",
     phones: ["+237 659 90 21 91", "+237 696 90 20 54"],
     location: "Douala, Cameroun · Afrique",
     rights: "Tous droits réservés.",
@@ -515,7 +515,7 @@ const en: Dict = {
     open: "Chat with Horus AI",
     close: "Close",
     error:
-      "Sorry, something went wrong. Try again or email us at contact@horus-lab.com.",
+      "Sorry, something went wrong. Try again or email us at contact@zayra-technologies.com.",
     disclaimer: "Horus AI can make mistakes. Verify important information.",
     offline: "Offline mode (limited answers)",
     suggestions: [
@@ -539,7 +539,7 @@ const en: Dict = {
       },
     ],
     contactTitle: "Contact",
-    email: "contact@horus-lab.com",
+    email: "contact@zayra-technologies.com",
     phones: ["+237 659 90 21 91", "+237 696 90 20 54"],
     location: "Douala, Cameroon · Africa",
     rights: "All rights reserved.",

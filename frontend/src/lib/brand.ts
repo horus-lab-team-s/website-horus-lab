@@ -3,7 +3,7 @@ import type { Lang } from "@/i18n/dictionaries";
 /**
  * Marque du build. Le même code produit deux sites :
  *  - "horus" (défaut) : horus-lab.com ;
- *  - "zayra" : zayra.technologies.horus-lab.com (NEXT_PUBLIC_BRAND=zayra au build).
+ *  - "zayra" : zayra-technologies.com (NEXT_PUBLIC_BRAND=zayra au build).
  * Fixée au build pour que titres, balises canoniques, sitemap et JSON-LD soient
  * propres à chaque site : c'est ce qui permet à Google de référencer Zayra.
  */
@@ -13,6 +13,13 @@ export const BRAND: Brand = process.env.NEXT_PUBLIC_BRAND === "zayra" ? "zayra" 
 export const IS_ZAYRA = BRAND === "zayra";
 
 export const BRAND_NAME = IS_ZAYRA ? "Zayra Technologies" : "Horus-Lab";
+
+/** Adresses publiques des deux sites (liens croisés, JSON-LD). */
+export const HORUS_SITE_URL = "https://horus-lab.com";
+export const ZAYRA_SITE_URL = "https://zayra-technologies.com";
+
+/** E-mail pro affiché sur les deux sites. */
+export const CONTACT_EMAIL = "contact@zayra-technologies.com";
 
 /** Titre de la page d'accueil (balise <title> et partage). */
 export function brandHomeTitle(lang: Lang): string {

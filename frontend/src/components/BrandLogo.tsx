@@ -2,7 +2,7 @@ import Image from "next/image";
 
 /**
  * Logo de marque. Le site est servi sous deux noms : horus-lab.com (logo
- * Horus-Lab) et zayra.technologies.horus-lab.com (logo Zayra Technologies).
+ * Horus-Lab) et zayra-technologies.com (logo Zayra Technologies).
  * Les deux logos sont rendus ; le script de app/layout.tsx pose la classe
  * `brand-zayra` sur <html> avant le premier affichage selon le domaine, et le
  * CSS (globals.css) n'affiche que le bon. Les pages restent ainsi statiques.
