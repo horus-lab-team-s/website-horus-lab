@@ -11,7 +11,7 @@ const SLUG_MAP: Record<string, string> = {
   "Applications sur mesure": "applications",
   "Custom Applications": "applications",
   "Systèmes d'information": "systemes-information",
-  "Information Systems": "information-systems",
+  "Information Systems": "systemes-information",
   "Digitalisation d'entreprise": "digitalisation",
   "Business Digitalisation": "digitalisation",
   "Formation & Audit IT": "formation-audit",
