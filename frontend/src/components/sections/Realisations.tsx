@@ -8,7 +8,7 @@ import { Reveal } from "@/components/Reveal";
 import { caseSlugForTitle, getCaseStudy } from "@/lib/caseStudies";
 import { SectionHeading } from "./SectionHeading";
 import { IconArrowRight } from "@/components/icons";
-import { ZAYRA_TITLES, type Project } from "@/lib/projects";
+import { sortFeatured, ZAYRA_TITLES, type Project } from "@/lib/projects";
 import { IS_ZAYRA } from "@/lib/brand";
 
 
@@ -29,8 +29,9 @@ function RealisationsBackground() {
 
 type Filter = "all" | "solutions" | "clients";
 
-/* Ordre de la vue « Tout » : solutions Zayra et projets clients alternés. */
-const MIXED_ORDER = ["Zayra Drive", "Afrikamode", "Zayra School", "Zayra Agro", "Elec One", "Zayra Nkap"];
+/* Vue « Tout » : les 9 premières réalisations dans l'ordre de mise en avant
+   (FEATURED_ORDER), soit une grille complète de 3 × 3 sur ordinateur. */
+const HOME_LIMIT = 9;
 
 export function Realisations({ projects }: { projects: Project[] }) {
   const { dict, lang, localePath } = useLang();
@@ -42,10 +43,7 @@ export function Realisations({ projects }: { projects: Project[] }) {
   const isSolution = (p: Project) => ZAYRA_TITLES.includes(p.title);
   const solutions = projects.filter(isSolution);
   const clients = projects.filter((p) => !isSolution(p));
-  const mixed = [
-    ...MIXED_ORDER.map((t) => projects.find((p) => p.title === t)).filter(Boolean),
-    ...projects.filter((p) => !MIXED_ORDER.includes(p.title)),
-  ].slice(0, 6) as Project[];
+  const mixed = sortFeatured(projects).slice(0, HOME_LIMIT);
   const visible = filter === "solutions" ? solutions : filter === "clients" ? clients : mixed;
   if (projects.length === 0) return null;
 

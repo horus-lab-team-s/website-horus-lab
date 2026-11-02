@@ -6,9 +6,8 @@ import { ScrollProgress } from "@/components/ScrollProgress";
 import { BackToTop } from "@/components/BackToTop";
 import { HorusAI } from "@/components/HorusAI";
 import { EdlearningPromo } from "@/components/EdlearningPromo";
-import { BRAND_NAME, IS_ZAYRA, ZAYRA_HERO, brandHomeTitle } from "@/lib/brand";
+import { BRAND_NAME, brandHomeTitle, brandShareDescription, brandShareImage } from "@/lib/brand";
 import {
-  getDictionary,
   isLocale,
   locales,
   type Lang,
@@ -30,10 +29,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { lang } = await params;
   if (!isLocale(lang)) return {};
-  const dict = getDictionary(lang);
-
   const title = brandHomeTitle(lang);
-  const description = IS_ZAYRA ? ZAYRA_HERO[lang].subtitle : dict.hero.subtitle;
+  const description = brandShareDescription(lang);
+  const image = brandShareImage(lang);
 
   return {
     title: { absolute: title, template: `%s | ${BRAND_NAME}` },
@@ -48,8 +46,9 @@ export async function generateMetadata({
       type: "website",
       siteName: BRAND_NAME,
       locale: lang === "fr" ? "fr_FR" : "en_US",
-      images: [IS_ZAYRA ? "/zayra/brand/og-zayra.png" : "/logo/logo-light-bg-full.png"],
+      images: [image],
     },
+    twitter: { card: "summary_large_image", title, description, images: [image.url] },
   };
 }
 

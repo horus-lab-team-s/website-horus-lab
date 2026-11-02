@@ -30,8 +30,41 @@ const GRADIENTS = [
   "from-brand-600 via-sky to-brand-400",        // Elec One — bleu ciel (charte)
 ];
 
+/* Projets clients, dans l'ordre de mise en avant (voir FEATURED_ORDER). Textes
+   tirés des dépôts et des sites en ligne de chaque projet ; captures réelles
+   dans /public/realisations/<projet>/. */
 const PROJECTS: Record<Lang, Project[]> = {
   fr: [
+    {
+      title: "Case Formations",
+      client: "Centre d'accompagnement pédagogique · Cameroun",
+      category: "Éducation & EdTech",
+      desc: "Plateforme complète d'un centre de formation : préparation au TCF et à l'examen civique, allemand (Goethe A1 à C2), cours de répétition. Site bilingue avec catalogue et inscription en ligne payable par Mobile Money, back-office de gestion (agenda, devoirs, échéances, messagerie) et application Android de pilotage pour la direction.",
+      tags: ["Next.js", "Django", "Flutter", "Mobile Money", "FR / EN"],
+      result: "En ligne · inscription et paiement en ligne",
+      iconKey: "eye",
+      gradient: "from-brand-700 via-brand-500 to-amber-400",
+      role: "Conception, développement & hébergement",
+      scope: "Site, back-office et application de pilotage",
+      url: "https://caseformations.com",
+      logo: "/logo/logo-caseformations.png",
+      cover: "/realisations/caseformation/desktop.webp",
+    },
+    {
+      title: "EnMKit",
+      client: "2ME Technologies SARL · Énergie",
+      category: "Énergie & Industrie",
+      desc: "Pilotage et suivi de la consommation électrique : des kits équipés d'un module GSM se commandent par SMS depuis l'application mobile, même sans Internet. Un tableau de bord web centralise les relevés et un banc d'essais pédagogique accompagne la formation (7 TP).",
+      tags: ["Flutter", "SMS / GSM", "FastAPI", "Next.js", "IoT"],
+      result: "En production · pilotage sans Internet",
+      iconKey: "cog",
+      gradient: "from-brand-600 via-sky to-brand-400",
+      role: "Conception & développement",
+      scope: "Applications mobiles, passerelle SMS, API et tableau de bord",
+      url: "https://www.2metechsarl.org",
+      logo: "/logo/logo-enmkit.png",
+      cover: "/realisations/enmkit/desktop.webp",
+    },
     {
       title: "Afrikamode",
       client: "Italie · Cameroun",
@@ -55,26 +88,37 @@ const PROJECTS: Record<Lang, Project[]> = {
     },
     {
       title: "Gathe Finance",
-      client: "PME & freelances africains",
+      client: "Coopérative GATHE Finance · Broad Range Consulting Group",
       category: "Fintech & Gestion",
-      desc: "Plateforme de gestion financière pensée pour les indépendants et les PME africaines : suivi multi-comptes (espèces, mobile money, banque), catégorisation automatique des opérations, budgets et objectifs, tableaux de bord et reporting (trésorerie, P&L).",
-      tags: ["Next.js", "TypeScript", "Prisma", "Postgres", "PWA"],
-      result: "Trésorerie sous contrôle",
+      desc: "Plateforme de la coopérative d'épargne et de crédit GATHE Finance : site public bilingue, portail des membres, back-office et application mobile. Les membres suivent leur épargne et leurs collectes journalières, demandent un crédit et le remboursent depuis leur téléphone.",
+      tags: ["Next.js", "Django", "Wagtail", "Flutter", "PWA"],
+      result: "En production chez la coopérative",
       iconKey: "layers",
       gradient: GRADIENTS[1],
-      role: "Conception & développement",
-      scope: "Gestion financière PME · multi-comptes & reporting",
+      role: "Conception, développement & mise en production",
+      scope: "Site, portail membre, back-office et app mobile",
+      url: "https://gathe-finance.com",
       logo: "/logo/logo-GATHE_FINANCE.png",
-      screenshots: [
-        "/img/photo-1551288049-bebda4e38f71-w1200.jpg",
-        "/img/photo-1460925895917-afdab827c52f-w1200.jpg",
-        "/img/photo-1611974789855-9c2a0a7236a3-w1200.jpg",
-        "/img/photo-1579621970563-ebec7560ff3e-w1200.jpg",
-      ],
+      cover: "/realisations/gathe/desktop.webp",
+    },
+    {
+      title: "CGA BRCG",
+      client: "Centre de Gestion Agréé Broad Range Consulting Group",
+      category: "Comptabilité & Fiscalité",
+      desc: "Plateforme de suivi fiscal et comptable d'un centre de gestion agréé : chaque pièce est contrôlée dès sa réception, et l'impact d'une anomalie est chiffré avant qu'il ne devienne une perte. Comptabilité SYSCOHADA, échéancier fiscal et TVA, espace adhérent, application mobile hors ligne pour transmettre les justificatifs, et site public avec estimation et souscription en ligne.",
+      tags: ["FastAPI", "Next.js", "Flutter", "SYSCOHADA", "Mobile Money"],
+      result: "En cours de déploiement",
+      iconKey: "check",
+      gradient: "from-[#3b1f5c] via-[#6b2d8f] to-brand-500",
+      role: "Conception & développement",
+      scope: "Console du cabinet, espace adhérent, app mobile et site public",
+      url: "https://cga-brcg.horus-lab.com",
+      logo: "/logo/logo-cga-brcg.png",
+      cover: "/realisations/cga/desktop.webp",
     },
     {
       title: "Plateforme e-Learning",
-      client: "Apprenants & professionnels IT",
+      client: "CFP Broad Range Consulting · Apprenants IT",
       category: "Éducation & EdTech",
       desc: "Plateforme de formation aux métiers de l'informatique : développement web, Python, cybersécurité et plus. Parcours structurés, ressources progressives et suivi des apprenants, pour rendre la tech accessible à tous, partout en Afrique.",
       tags: ["Next.js", "TypeScript", "Tailwind", "Vidéo", "PWA"],
@@ -91,28 +135,38 @@ const PROJECTS: Record<Lang, Project[]> = {
         "/img/photo-1522202176988-66273c2fd55f-w1200.jpg",
       ],
     },
-    {
-      title: "Elec One",
-      client: "2MeTech Sarl · Énergie",
-      category: "Énergie & IoT",
-      desc: "Application mobile de pilotage d'EnMKit, le dispositif intelligent de maîtrise de l'énergie de 2MeTech. Depuis votre téléphone, coupez à distance les équipements restés allumés, fer à repasser, climatiseur, téléviseur, pour supprimer les gaspillages et réduire durablement votre facture d'électricité.",
-      tags: ["Flutter", "Mobile", "IoT", "Temps réel", "Énergie"],
-      result: "En production · consommation maîtrisée à distance",
-      iconKey: "cog",
-      gradient: GRADIENTS[4],
-      role: "Conception & développement",
-      scope: "Application mobile de pilotage énergétique (EnMKit)",
-      url: "https://www.2metechsarl.org",
-      logo: "/logo/logo-Elec_One.png",
-      screenshots: [
-        "/img/photo-1473341304170-971dccb5ac1e-w1200.jpg",
-        "/img/photo-1518770660439-4636190af475-w1200.jpg",
-        "/img/photo-1518770660439-4636190af475-w1200.jpg",
-        "/img/photo-1451187580459-43490279c0fa-w1200.jpg",
-      ],
-    },
   ],
   en: [
+    {
+      title: "Case Formations",
+      client: "Tutoring and exam-prep centre · Cameroon",
+      category: "Education & EdTech",
+      desc: "A complete platform for a training centre: TCF and civic-exam preparation, German (Goethe A1 to C2) and tutoring. A bilingual website with an online catalogue and sign-up payable by Mobile Money, a management back-office (schedule, homework, instalments, messaging) and an Android management app for the directors.",
+      tags: ["Next.js", "Django", "Flutter", "Mobile Money", "FR / EN"],
+      result: "Live · online sign-up and payment",
+      iconKey: "eye",
+      gradient: "from-brand-700 via-brand-500 to-amber-400",
+      role: "Design, development & hosting",
+      scope: "Website, back-office and management app",
+      url: "https://caseformations.com",
+      logo: "/logo/logo-caseformations.png",
+      cover: "/realisations/caseformation/desktop.webp",
+    },
+    {
+      title: "EnMKit",
+      client: "2ME Technologies SARL · Energy",
+      category: "Energy & Industry",
+      desc: "Control and monitoring of electricity use: kits fitted with a GSM module are switched by SMS from the mobile app, even without Internet. A web dashboard centralises the readings, and an educational test bench supports training (7 lab sessions).",
+      tags: ["Flutter", "SMS / GSM", "FastAPI", "Next.js", "IoT"],
+      result: "In production · control without Internet",
+      iconKey: "cog",
+      gradient: "from-brand-600 via-sky to-brand-400",
+      role: "Design & development",
+      scope: "Mobile apps, SMS gateway, API and dashboard",
+      url: "https://www.2metechsarl.org",
+      logo: "/logo/logo-enmkit.png",
+      cover: "/realisations/enmkit/desktop.webp",
+    },
     {
       title: "Afrikamode",
       client: "Italy · Cameroon",
@@ -136,26 +190,37 @@ const PROJECTS: Record<Lang, Project[]> = {
     },
     {
       title: "Gathe Finance",
-      client: "African SMEs & freelancers",
+      client: "GATHE Finance cooperative · Broad Range Consulting Group",
       category: "Fintech & Management",
-      desc: "Financial management platform for African freelancers and SMEs: multi-account tracking (cash, mobile money, bank), auto-categorisation, budgets and goals, dashboards and reporting (cash flow, P&L).",
-      tags: ["Next.js", "TypeScript", "Prisma", "Postgres", "PWA"],
-      result: "Cash flow under control",
+      desc: "The platform of the GATHE Finance savings and credit cooperative: a bilingual public website, a member portal, a back-office and a mobile app. Members follow their savings and daily collections, apply for credit and repay it from their phone.",
+      tags: ["Next.js", "Django", "Wagtail", "Flutter", "PWA"],
+      result: "In production at the cooperative",
       iconKey: "layers",
       gradient: GRADIENTS[1],
-      role: "Design & development",
-      scope: "SME financial management · multi-account & reporting",
+      role: "Design, development & go-live",
+      scope: "Website, member portal, back-office and mobile app",
+      url: "https://gathe-finance.com",
       logo: "/logo/logo-GATHE_FINANCE.png",
-      screenshots: [
-        "/img/photo-1551288049-bebda4e38f71-w1200.jpg",
-        "/img/photo-1460925895917-afdab827c52f-w1200.jpg",
-        "/img/photo-1611974789855-9c2a0a7236a3-w1200.jpg",
-        "/img/photo-1579621970563-ebec7560ff3e-w1200.jpg",
-      ],
+      cover: "/realisations/gathe/desktop.webp",
+    },
+    {
+      title: "CGA BRCG",
+      client: "Broad Range Consulting Group approved management centre",
+      category: "Accounting & Tax",
+      desc: "A tax and accounting platform for an approved management centre (CGA): every document is checked on arrival, and the cost of an anomaly is quantified before it becomes a loss. SYSCOHADA accounting, tax calendar and VAT, member area, an offline mobile app to send receipts, and a public website with online estimates and sign-up.",
+      tags: ["FastAPI", "Next.js", "Flutter", "SYSCOHADA", "Mobile Money"],
+      result: "Being rolled out",
+      iconKey: "check",
+      gradient: "from-[#3b1f5c] via-[#6b2d8f] to-brand-500",
+      role: "Design & development",
+      scope: "Firm console, member area, mobile app and public website",
+      url: "https://cga-brcg.horus-lab.com",
+      logo: "/logo/logo-cga-brcg.png",
+      cover: "/realisations/cga/desktop.webp",
     },
     {
       title: "e-Learning platform",
-      client: "IT learners & professionals",
+      client: "CFP Broad Range Consulting · IT learners",
       category: "Education & EdTech",
       desc: "Training platform covering IT careers: web development, Python, cybersecurity and more. Structured tracks, progressive resources and learner tracking, built to make tech accessible everywhere across Africa.",
       tags: ["Next.js", "TypeScript", "Tailwind", "Video", "PWA"],
@@ -170,26 +235,6 @@ const PROJECTS: Record<Lang, Project[]> = {
         "/img/photo-1588196749597-9ff075ee6b5b-w1200.jpg",
         "/img/photo-1516321318423-f06f85e504b3-w1200.jpg",
         "/img/photo-1522202176988-66273c2fd55f-w1200.jpg",
-      ],
-    },
-    {
-      title: "Elec One",
-      client: "2MeTech Sarl · Energy",
-      category: "Energy & IoT",
-      desc: "Mobile app that drives EnMKit, 2MeTech's smart energy-control device. From your phone, remotely switch off equipment left running, iron, air-conditioner, TV, cutting waste and durably lowering your electricity bill.",
-      tags: ["Flutter", "Mobile", "IoT", "Real-time", "Energy"],
-      result: "Live · consumption controlled remotely",
-      iconKey: "cog",
-      gradient: GRADIENTS[4],
-      role: "Design & development",
-      scope: "Mobile energy-control app (EnMKit)",
-      url: "https://www.2metechsarl.org",
-      logo: "/logo/logo-Elec_One.png",
-      screenshots: [
-        "/img/photo-1473341304170-971dccb5ac1e-w1200.jpg",
-        "/img/photo-1518770660439-4636190af475-w1200.jpg",
-        "/img/photo-1518770660439-4636190af475-w1200.jpg",
-        "/img/photo-1451187580459-43490279c0fa-w1200.jpg",
       ],
     },
   ],
@@ -322,8 +367,27 @@ export function getZayraProjects(lang: Lang): Project[] {
   return ZAYRA_PROJECTS[lang];
 }
 
-export function getProjects(lang: Lang): Project[] {
-  return [...PROJECTS[lang], ...ZAYRA_PROJECTS[lang]];
+/** Ordre de mise en avant des réalisations (titres FR et EN). */
+export const FEATURED_ORDER = [
+  "Case Formations", "EnMKit",
+  "Zayra Drive", "Zayra School", "Zayra Agro", "Zayra Nkap",
+  "Afrikamode", "Gathe Finance", "CGA BRCG",
+  "Plateforme e-Learning", "e-Learning platform",
+];
+
+/** Anciens titres encore présents dans l'admin, remplacés dans le code. */
+export const RENAMED_TITLES: Record<string, string> = { "Elec One": "EnMKit" };
+
+export function sortFeatured(projects: Project[]): Project[] {
+  const rank = (t: string) => {
+    const i = FEATURED_ORDER.indexOf(t);
+    return i === -1 ? FEATURED_ORDER.length : i;
+  };
+  return projects.slice().sort((a, b) => rank(a.title) - rank(b.title));
 }
 
-export const PARTNERS = ["Gathe Finance", "Afrikamode", "Elec One"];
+export function getProjects(lang: Lang): Project[] {
+  return sortFeatured([...PROJECTS[lang], ...ZAYRA_PROJECTS[lang]]);
+}
+
+export const PARTNERS = ["Gathe Finance", "Afrikamode", "EnMKit"];

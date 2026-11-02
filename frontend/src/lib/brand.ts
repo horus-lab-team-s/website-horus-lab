@@ -21,16 +21,36 @@ export const ZAYRA_SITE_URL = "https://zayra-technologies.com";
 /** E-mail pro affiché sur les deux sites. */
 export const CONTACT_EMAIL = "contact@zayra-technologies.com";
 
-/** Titre de la page d'accueil (balise <title> et partage). */
+/** Titre de la page d'accueil (balise <title> et carte de partage). */
 export function brandHomeTitle(lang: Lang): string {
   if (IS_ZAYRA) {
     return lang === "fr"
-      ? "Zayra Technologies · Solutions numériques pour l'Afrique"
-      : "Zayra Technologies · Digital solutions for Africa";
+      ? "Zayra Technologies · Transition numérique, digitalisation et IA"
+      : "Zayra Technologies · Digital transformation, digitalisation & AI";
   }
   return lang === "fr"
-    ? "Horus-Lab · Solutions technologiques intelligentes"
-    : "Horus-Lab · Intelligent technology solutions";
+    ? "Horus-Lab · Digitalisation et IA sur mesure"
+    : "Horus-Lab · Custom digitalisation & AI";
+}
+
+/** Description de la carte de partage et des moteurs de recherche. */
+export function brandShareDescription(lang: Lang): string {
+  if (IS_ZAYRA) {
+    return lang === "fr"
+      ? "Transition numérique des entreprises et institutions africaines : digitalisation des métiers, applications web et mobiles, et intelligence artificielle utile, de la conception à l'hébergement."
+      : "Digital transformation for African businesses and institutions: process digitalisation, web and mobile apps, and useful artificial intelligence, from design to hosting.";
+  }
+  return lang === "fr"
+    ? "Le laboratoire de Zayra Technologies accompagne la transition numérique des organisations africaines : digitalisation des métiers, applications web et mobiles sur mesure et intégration de l'IA."
+    : "The lab of Zayra Technologies drives the digital transformation of African organisations: process digitalisation, custom web and mobile apps, and AI integration.";
+}
+
+/** Image de la carte de partage (1200 × 630), par site et par langue. */
+export function brandShareImage(lang: Lang): { url: string; width: number; height: number; alt: string } {
+  const alt = lang === "fr"
+    ? "Transition numérique, digitalisation et intelligence artificielle"
+    : "Digital transformation, digitalisation and artificial intelligence";
+  return { url: `/og/og-${IS_ZAYRA ? "zayra" : "horus"}-${lang}.png`, width: 1200, height: 630, alt };
 }
 
 /** Accroche de l'accueil propre à Zayra (le site Horus garde celle du CMS). */

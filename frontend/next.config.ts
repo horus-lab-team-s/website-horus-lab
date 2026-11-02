@@ -40,6 +40,12 @@ const nextConfig: NextConfig = {
         : []),
     ],
   },
+  // Elec One a été renommé EnMKit : l'ancienne étude de cas redirige.
+  async redirects() {
+    return [
+      { source: "/:lang(fr|en)/portfolio/elec-one", destination: "/:lang/portfolio/enmkit", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

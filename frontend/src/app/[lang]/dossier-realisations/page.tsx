@@ -100,15 +100,15 @@ export default async function DossierPage({ params }: { params: Promise<Params> 
       </section>
 
       {/* ═══ Sommaire ═══ */}
-      <section className="sheet">
+      <section className="sheet" style={{ height: "297mm", overflow: "hidden" }}>
         <h2 className="text-3xl font-extrabold tracking-tight text-brand-900">{t.summary}</h2>
         {groups.map((g) => (
-          <div key={g.label} className="mt-10">
+          <div key={g.label} className="mt-7">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand-500">{g.label}</p>
             <ul className="mt-4 divide-y divide-brand-100 border-y border-brand-100">
               {g.items.map((c) => (
-                <li key={c.slug} className="flex items-center gap-5 py-4">
-                  <div className="relative size-14 shrink-0 border border-brand-100 bg-white p-1.5">
+                <li key={c.slug} className="flex items-center gap-5 py-2.5">
+                  <div className="relative size-12 shrink-0 border border-brand-100 bg-white p-1.5">
                     <Image src={c.logo} alt="" fill sizes="56px" className="object-contain p-1" loading="eager" />
                   </div>
                   <div>
