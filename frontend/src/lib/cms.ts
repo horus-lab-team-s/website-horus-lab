@@ -16,7 +16,7 @@ import type { Dict, Lang } from "@/i18n/dictionaries";
 import { getDictionary, locales } from "@/i18n/dictionaries";
 import {
   getProjects as getStaticProjects,
-  getZayraProjects,
+  RENAMED_TITLES,
   type Project,
 } from "@/lib/projects";
 import { getNews as getStaticNews, type NewsItem } from "@/lib/news";
@@ -174,14 +174,16 @@ export async function getCmsProjects(lang: Lang): Promise<Project[]> {
     const data = await fetchList<ApiProject>("/api/portfolio/");
     if (!data.length) return local;
     const byTitle = new Map(local.map((p) => [p.title, p]));
-    const projects = data
+    // Les réalisations décrites dans le code (textes vérifiés, captures réelles,
+    // études de cas) font foi, dans l'ordre de mise en avant. Les projets créés
+    // dans l'admin et absents du code s'ajoutent à la suite. Un titre renommé
+    // (ex. « Elec One » → EnMKit) n'est pas dupliqué.
+    const extras = data
       .slice()
       .sort((a, b) => a.order - b.order)
-      .map((p) => mapProject(p, lang, byTitle));
-    // Les solutions Zayra s'ajoutent en fin de liste tant que l'admin ne les a
-    // pas créées lui-même (auquel cas la version CMS fait foi).
-    const zayra = getZayraProjects(lang).filter((z) => !projects.some((p) => p.title === z.title));
-    return [...projects, ...zayra];
+      .map((p) => mapProject(p, lang, byTitle))
+      .filter((p) => !byTitle.has(RENAMED_TITLES[p.title] ?? p.title));
+    return [...local, ...extras];
   } catch {
     return local;
   }

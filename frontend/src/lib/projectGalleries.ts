@@ -156,8 +156,136 @@ const ZAYRA_NKAP: GalleryGroup[] = [
   zayraMobile("nkap", "Zayra Nkap"),
 ];
 
+
+/* ── Références clients : captures réelles dans /public/realisations/<projet>/ ── */
+const rs = (dir: string, file: string, fr: string, en: string): GalleryShot => ({
+  src: `/realisations/${dir}/${file}.webp`,
+  fr,
+  en,
+});
+
+const CASE_FORMATIONS: GalleryGroup[] = [
+  {
+    id: "site",
+    labelFr: "Le site et l'inscription en ligne",
+    labelEn: "The website and online sign-up",
+    noteFr: "L'offre du centre, le catalogue et l'inscription payable par Mobile Money.",
+    noteEn: "The centre's offer, the catalogue and sign-up payable by Mobile Money.",
+    shots: [
+      rs("caseformation", "desktop", "Page d'accueil", "Homepage"),
+      rs("caseformation", "formations", "Catalogue des formations, avec filtres et prix", "Course catalogue, with filters and prices"),
+      rs("caseformation", "tcf", "Ressources : tout comprendre du TCF", "Resources: understanding the TCF"),
+      rs("caseformation", "a-propos", "Le centre et son engagement", "The centre and its commitment"),
+    ],
+  },
+  {
+    id: "mobile",
+    labelFr: "Sur mobile",
+    labelEn: "On mobile",
+    noteFr: "La même expérience sur téléphone, où se font la plupart des inscriptions.",
+    noteEn: "The same experience on a phone, where most sign-ups happen.",
+    portrait: true,
+    shots: [
+      rs("caseformation", "mobile", "Page d'accueil sur mobile", "Homepage on mobile"),
+      rs("caseformation", "mobile-formations", "Catalogue sur mobile", "Catalogue on mobile"),
+    ],
+  },
+];
+
+const ENMKIT: GalleryGroup[] = [
+  {
+    id: "plateforme",
+    labelFr: "Le banc et la plateforme",
+    labelEn: "The bench and the platform",
+    noteFr: "Le banc d'essais pédagogique et le tableau de bord qui centralise les relevés.",
+    noteEn: "The educational test bench and the dashboard that centralises readings.",
+    shots: [
+      rs("enmkit", "desktop", "Le banc d'essais EnMKit", "The EnMKit test bench"),
+      rs("enmkit", "dashboard-connexion", "Le tableau de bord de supervision", "The supervision dashboard"),
+    ],
+  },
+  {
+    id: "app",
+    labelFr: "L'application mobile",
+    labelEn: "The mobile app",
+    noteFr: "Piloter ses kits par SMS, suivre sa consommation et partager une configuration.",
+    noteEn: "Drive kits by SMS, track consumption and share a configuration.",
+    portrait: true,
+    shots: [
+      rs("enmkit", "parc", "Un parc de logements, un seul téléphone", "A housing stock, one phone"),
+      rs("enmkit", "lignes", "Allumer et couper chaque ligne", "Switch each line on and off"),
+      rs("enmkit", "relais", "Le détail d'un relais", "Relay details"),
+      rs("enmkit", "conso", "La consommation en kWh", "Consumption in kWh"),
+      rs("enmkit", "accuses", "L'historique des accusés de réception", "Acknowledgement history"),
+      rs("enmkit", "qr", "Partager un kit par QR Code", "Share a kit by QR Code"),
+    ],
+  },
+];
+
+const GATHE: GalleryGroup[] = [
+  {
+    id: "site",
+    labelFr: "Le site et le portail des membres",
+    labelEn: "The website and member portal",
+    noteFr: "Captures de la plateforme en production.",
+    noteEn: "Screenshots of the platform in production.",
+    shots: [
+      rs("gathe", "desktop", "Page d'accueil", "Homepage"),
+      rs("gathe", "services", "Les services financiers", "Financial services"),
+      rs("gathe", "campagnes", "Les campagnes de la coopérative", "Cooperative campaigns"),
+      rs("gathe", "portail", "Le portail des membres", "The member portal"),
+    ],
+  },
+  {
+    id: "mobile",
+    labelFr: "Sur mobile",
+    labelEn: "On mobile",
+    noteFr: "Le site sur téléphone, pour rejoindre la coopérative en quelques étapes.",
+    noteEn: "The website on a phone, to join the cooperative in a few steps.",
+    portrait: true,
+    shots: [
+      rs("gathe", "mobile", "Page d'accueil sur mobile", "Homepage on mobile"),
+      rs("gathe", "mobile-membre", "Devenir membre", "Becoming a member"),
+    ],
+  },
+];
+
+const CGA: GalleryGroup[] = [
+  {
+    id: "site",
+    labelFr: "Le site public et la console",
+    labelEn: "The public website and the console",
+    noteFr: "Estimation, souscription et création d'entreprise en ligne, puis la console du cabinet.",
+    noteEn: "Online estimates, sign-up and company creation, then the firm's console.",
+    shots: [
+      rs("cga", "desktop", "Page d'accueil du cabinet", "The firm's homepage"),
+      rs("cga", "estimation", "Estimer le coût de sa création d'entreprise", "Estimate the cost of creating a company"),
+      rs("cga", "adhesion", "Devenir adhérent", "Becoming a member"),
+      rs("cga", "creation", "Créer son entreprise : les pièces du dossier", "Creating a company: the required documents"),
+      rs("cga", "application", "L'application mobile des adhérents", "The members' mobile app"),
+      rs("cga", "console-connexion", "La console du cabinet et l'espace adhérent", "The firm console and member area"),
+    ],
+  },
+  {
+    id: "mobile",
+    labelFr: "Sur mobile",
+    labelEn: "On mobile",
+    noteFr: "Le site du cabinet sur téléphone.",
+    noteEn: "The firm's website on a phone.",
+    portrait: true,
+    shots: [
+      rs("cga", "mobile", "Page d'accueil sur mobile", "Homepage on mobile"),
+      rs("cga", "mobile-estimation", "L'estimateur sur mobile", "The estimator on mobile"),
+    ],
+  },
+];
+
 export const PROJECT_GALLERIES: Record<string, GalleryGroup[]> = {
+  "Case Formations": CASE_FORMATIONS,
+  EnMKit: ENMKIT,
   Afrikamode: AFRIKAMODE,
+  "Gathe Finance": GATHE,
+  "CGA BRCG": CGA,
   "Zayra Drive": ZAYRA_DRIVE,
   "Zayra School": ZAYRA_SCHOOL,
   "Zayra Agro": ZAYRA_AGRO,

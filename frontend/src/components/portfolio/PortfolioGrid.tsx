@@ -42,7 +42,7 @@ const TECH_STACKS: Record<string, { name: string; src: string }[]> = {
   "Gathe Finance": WEB_STACK,
   "Plateforme e-Learning": MOBILE_STACK,
   "e-Learning platform": MOBILE_STACK,
-  "Elec One": MOBILE_STACK,
+  "EnMKit": MOBILE_STACK,
 };
 
 /* Catégories autorisées dans le filtre — dans l'ordre d'affichage */
@@ -52,6 +52,7 @@ const FILTER_ORDER_FR = [
   "Éducation & EdTech",
   "Agriculture & AgriTech",
   "Énergie & Industrie",
+  "Comptabilité & Fiscalité",
   "Formation",
 ];
 const FILTER_ORDER_EN = [
@@ -60,6 +61,7 @@ const FILTER_ORDER_EN = [
   "Education & EdTech",
   "Agriculture & AgriTech",
   "Energy & Industry",
+  "Accounting & Tax",
   "Training",
 ];
 

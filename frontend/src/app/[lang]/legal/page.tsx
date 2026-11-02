@@ -19,8 +19,8 @@ type Content = { title: string; updated: string; note: string; sections: Section
 const CONTENT: Record<Lang, Content> = {
   fr: {
     title: "Mentions légales & Politique de confidentialité",
-    updated: "Dernière mise à jour : 23 mai 2026",
-    note: "Modèle à faire valider par un conseil juridique avant publication. Les champs entre crochets [ ] sont à compléter.",
+    updated: "Dernière mise à jour : 2 novembre 2026",
+    note: "",
     sections: [
       {
         h: "Éditeur du site",
@@ -28,10 +28,8 @@ const CONTENT: Record<Lang, Content> = {
           IS_ZAYRA
             ? "Le site zayra-technologies.com est édité par Zayra Technologies (anciennement Horus-Lab), entreprise technologique africaine."
             : "Le site horus-lab.com est édité par Horus-Lab, laboratoire de Zayra Technologies, entreprise technologique africaine.",
-          "Forme juridique : [à compléter]. Immatriculation (RCCM / NIU) : [à compléter].",
           "Siège : Douala, Cameroun.",
           "E-mail : contact@zayra-technologies.com · Téléphone : +237 659902191 / +237 696902054.",
-          "Directeur de la publication : [à compléter].",
         ],
       },
       {
@@ -96,8 +94,8 @@ const CONTENT: Record<Lang, Content> = {
   },
   en: {
     title: "Legal notice & Privacy policy",
-    updated: "Last updated: 23 May 2026",
-    note: "Template to be reviewed by legal counsel before publishing. Fields in brackets [ ] must be completed.",
+    updated: "Last updated: 2 November 2026",
+    note: "",
     sections: [
       {
         h: "Site publisher",
@@ -105,10 +103,8 @@ const CONTENT: Record<Lang, Content> = {
           IS_ZAYRA
             ? "The website zayra-technologies.com is published by Zayra Technologies (formerly Horus-Lab), an African technology company."
             : "The website horus-lab.com is published by Horus-Lab, the lab of Zayra Technologies, an African technology company.",
-          "Legal form: [to be completed]. Registration (RCCM / NIU): [to be completed].",
           "Head office: Douala, Cameroon.",
           "Email: contact@zayra-technologies.com · Phone: +237 659902191 / +237 696902054.",
-          "Publication director: [to be completed].",
         ],
       },
       {
@@ -214,9 +210,11 @@ export default async function LegalPage({
           </h1>
           <p className="mt-3 text-sm text-muted">{c.updated}</p>
 
-          <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
-            {c.note}
-          </p>
+          {c.note && (
+            <p className="mt-6 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-300">
+              {c.note}
+            </p>
+          )}
 
           <div className="mt-10 space-y-10">
             {c.sections.map((section) => (

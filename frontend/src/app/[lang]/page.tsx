@@ -5,6 +5,7 @@ import { Hero } from "@/components/sections/Hero";
 import { Services } from "@/components/sections/Services";
 import { Realisations } from "@/components/sections/Realisations";
 import { Vision } from "@/components/sections/Vision";
+import { BrcgShowcase } from "@/components/sections/BrcgShowcase";
 import { Process } from "@/components/sections/Process";
 import { WhyUs } from "@/components/sections/WhyUs";
 import { Sectors } from "@/components/sections/Sectors";
@@ -137,6 +138,7 @@ export default async function Home({ params }: { params: Promise<Params> }) {
         <Hero content={hero} />
         <Services items={services} />
         <Realisations projects={projects} />
+        <BrcgShowcase />
         <Vision />
         <Process steps={process} />
         <WhyUs items={values} />

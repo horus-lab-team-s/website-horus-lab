@@ -6,10 +6,11 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
 import { PortfolioGrid } from "@/components/portfolio/PortfolioGrid";
+import { BrcgShowcase } from "@/components/sections/BrcgShowcase";
 import { IconArrowRight } from "@/components/icons";
 import { isLocale, locales, type Lang } from "@/i18n/dictionaries";
 import { getCmsProjects } from "@/lib/cms";
-import { ZAYRA_TITLES } from "@/lib/projects";
+import { sortFeatured } from "@/lib/projects";
 
 type Params = { lang: string };
 
@@ -60,12 +61,8 @@ export default async function PortfolioPage({ params }: { params: Promise<Params
   const { lang } = await params;
   if (!isLocale(lang)) notFound();
   const c = CONTENT[lang];
-  // Sur la page Réalisations, les solutions Zayra (nos propres produits) ouvrent la liste.
-  const all = await getCmsProjects(lang);
-  const projects = [
-    ...all.filter((p) => ZAYRA_TITLES.includes(p.title)),
-    ...all.filter((p) => !ZAYRA_TITLES.includes(p.title)),
-  ];
+  // Ordre de mise en avant (FEATURED_ORDER), projets ajoutés dans l'admin à la suite.
+  const projects = sortFeatured(await getCmsProjects(lang));
 
   return (
     <>
@@ -160,6 +157,9 @@ export default async function PortfolioPage({ params }: { params: Promise<Params
             <PortfolioGrid projects={projects} allLabel={c.allLabel} resultLabel={c.resultLabel} lang={lang} />
           </div>
         </section>
+
+        {/* ── Référence phare : transition numérique d'un groupe ── */}
+        <BrcgShowcase />
 
         {/* ── CTA ── */}
         <section className="bg-surface px-5 pb-16 sm:px-8 dark:bg-[#070e1c]">
