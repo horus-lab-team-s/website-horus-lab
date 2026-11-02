@@ -14,7 +14,7 @@ type Msg = { role: "user" | "assistant"; content: string };
 /* Canaux proposés au survol du widget : e-mail + WhatsApp.
    Telegram a été retiré du site (décision du 2026-08-05). */
 const WHATSAPP = "https://wa.me/237659902191";
-const SUPPORT = "mailto:contact@horus-lab.com";
+const SUPPORT = "mailto:contact@zayra-technologies.com";
 
 /** Icône chatbot IA sophistiquée — cerveau connecté / robot */
 function IconAIBot({ className }: { className?: string }) {

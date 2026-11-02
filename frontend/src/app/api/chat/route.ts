@@ -8,13 +8,13 @@ Basée à Douala, Cameroun. Sert toute l'Afrique.
 Services : applications web & mobile sur mesure (React, Next.js, Flutter, PWA) ; systèmes d'information (analyse, conception & architecture — UML/RUP) ; digitalisation d'entreprise (automatisation des workflows, CRM, GED, cloud) ; formation & audit IT (ateliers, cybersécurité, audit de code).
 Méthode : 1) Écoute & cadrage 2) Conception & design 3) Développement agile 4) Livraison & accompagnement.
 Secteurs : fintech, santé, éducation, agriculture, commerce, logistique, administration publique, énergie.
-Contact : email contact@horus-lab.com ; téléphones +237 659902191 et +237 696902054.
+Contact : email contact@zayra-technologies.com ; téléphones +237 659902191 et +237 696902054.
 `;
 
 function systemPrompt(lang: string): string {
   return `Tu es "Horus AI", l'assistant virtuel de l'entreprise Horus-Lab.
 Réponds de façon concise, professionnelle et chaleureuse, dans la langue de l'utilisateur (${lang === "en" ? "anglais" : "français"} par défaut).
-Utilise uniquement les informations ci-dessous pour ce qui concerne Horus-Lab. N'invente pas de tarifs ni d'engagements : pour un devis ou un projet précis, invite à écrire à contact@horus-lab.com.
+Utilise uniquement les informations ci-dessous pour ce qui concerne Horus-Lab. N'invente pas de tarifs ni d'engagements : pour un devis ou un projet précis, invite à écrire à contact@zayra-technologies.com.
 Garde des réponses courtes (2-5 phrases).
 --- Informations Horus-Lab ---${KNOWLEDGE}`;
 }
@@ -31,23 +31,23 @@ function faqFallback(message: string, lang: string): string {
       : "Horus-Lab builds custom web & mobile apps, information systems, business digitalisation and IT training & audits. What would you like to build?";
   if (has("contact", "email", "mail", "téléphone", "phone", "joindre", "reach"))
     return fr
-      ? "Vous pouvez nous écrire à contact@horus-lab.com ou appeler le +237 659902191 / +237 696902054."
-      : "Reach us at contact@horus-lab.com or call +237 659902191 / +237 696902054.";
+      ? "Vous pouvez nous écrire à contact@zayra-technologies.com ou appeler le +237 659902191 / +237 696902054."
+      : "Reach us at contact@zayra-technologies.com or call +237 659902191 / +237 696902054.";
   if (has("où", "situé", "adresse", "where", "located", "location"))
     return fr
       ? "Nous sommes basés à Douala, au Cameroun, et accompagnons des clients dans toute l'Afrique."
       : "We're based in Douala, Cameroon, and serve clients across Africa.";
   if (has("démarrer", "commencer", "projet", "start", "begin", "project", "devis", "quote"))
     return fr
-      ? "Avec plaisir ! Décrivez votre besoin via le formulaire de contact ou écrivez à contact@horus-lab.com : nous répondons sous 24h."
-      : "Glad to help! Describe your need via the contact form or email contact@horus-lab.com: we reply within 24h.";
+      ? "Avec plaisir ! Décrivez votre besoin via le formulaire de contact ou écrivez à contact@zayra-technologies.com : nous répondons sous 24h."
+      : "Glad to help! Describe your need via the contact form or email contact@zayra-technologies.com: we reply within 24h.";
   if (has("bonjour", "salut", "hello", "hi", "hey", "coucou"))
     return fr
       ? "Bonjour 👋 Comment puis-je vous aider à propos de Horus-Lab ?"
       : "Hello 👋 How can I help you with Horus-Lab?";
   return fr
-    ? "Je peux vous renseigner sur les services, la méthode et le contact de Horus-Lab. Pour une demande précise : contact@horus-lab.com."
-    : "I can tell you about Horus-Lab's services, method and contact. For a specific request: contact@horus-lab.com.";
+    ? "Je peux vous renseigner sur les services, la méthode et le contact de Horus-Lab. Pour une demande précise : contact@zayra-technologies.com."
+    : "I can tell you about Horus-Lab's services, method and contact. For a specific request: contact@zayra-technologies.com.";
 }
 
 export async function POST(request: Request) {

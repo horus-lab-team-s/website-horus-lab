@@ -2,7 +2,7 @@
 # Push sur main touchant frontend/** -> build image -> push GHCR -> (si activé) deploy VPS.
 # Deux variantes du même code (même dépôt d'images) :
 #   - horus : tags latest / sha-xxxxxxx        -> horus-lab.com
-#   - zayra : tags zayra-latest / zayra-sha-xxxxxxx -> zayra.technologies.horus-lab.com
+#   - zayra : tags zayra-latest / zayra-sha-xxxxxxx -> zayra-technologies.com
 name: frontend
 
 on:
@@ -34,7 +34,7 @@ jobs:
             site_url: https://horus-lab.com
           - brand: zayra
             prefix: "zayra-"
-            site_url: https://zayra.technologies.horus-lab.com
+            site_url: https://zayra-technologies.com
     permissions:
       contents: read
       packages: write

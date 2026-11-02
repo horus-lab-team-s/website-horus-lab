@@ -1,11 +1,17 @@
-# Servir le site sur `zayra.technologies.horus-lab.com`
+# Site Zayra Technologies : `zayra-technologies.com`
+
+> **Depuis le 02/11/2026**, le site Zayra est servi sur `zayra-technologies.com`
+> (certificat dédié, apex + www). `www.zayra-technologies.com` et l'ancien
+> `zayra.technologies.horus-lab.com` redirigent en 301 vers lui (voir
+> `deploy/nginx-horus.conf`). Les étapes 1 à 3 ci-dessous décrivent la mise en
+> place historique du sous-domaine ; l'e-mail pro est `contact@zayra-technologies.com`.
 
 Le même code sert deux sites, construits chacun avec sa marque :
 
 | Site | Conteneur | Image (GHCR `horus-frontend`) | `.env` |
 |---|---|---|---|
 | `horus-lab.com` + `www` | `horus_frontend` | `sha-xxxxxxx` | `FRONTEND_IMAGE` |
-| `zayra.technologies.horus-lab.com` | `zayra_frontend` | `zayra-sha-xxxxxxx` | `FRONTEND_ZAYRA_IMAGE` |
+| `zayra-technologies.com` | `zayra_frontend` | `zayra-sha-xxxxxxx` | `FRONTEND_ZAYRA_IMAGE` |
 
 La version Zayra (`NEXT_PUBLIC_BRAND=zayra`) a ses propres titres, balises
 canoniques, sitemap, JSON-LD, icône, image de partage et accents orange : c'est ce
@@ -101,9 +107,10 @@ docker compose -f docker-compose.prod.yml up -d web
 ```bash
 curl -I  http://zayra.technologies.horus-lab.com/     # 301 → https
 curl -I https://zayra.technologies.horus-lab.com/     # 200 / 307 → /fr
-curl -sI https://zayra.technologies.horus-lab.com/fr/portfolio/zayra-drive | head -1   # 200
-curl -s https://zayra.technologies.horus-lab.com/fr | grep -o '<link rel="canonical"[^>]*>'
-#   doit pointer vers https://zayra.technologies.horus-lab.com/fr
+curl -sI https://zayra-technologies.com/fr/portfolio/zayra-drive | head -1   # 200
+curl -sI https://zayra.technologies.horus-lab.com/fr | grep -i location   # 301 -> zayra-technologies.com
+curl -s https://zayra-technologies.com/fr | grep -o '<link rel="canonical"[^>]*>'
+#   doit pointer vers https://zayra-technologies.com/fr
 ```
 Dans le navigateur : cadenas valide, logo et accents orange Zayra.
 

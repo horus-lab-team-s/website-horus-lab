@@ -14,7 +14,7 @@ import { BlogPreview } from "@/components/sections/BlogPreview";
 import { CTA } from "@/components/sections/CTA";
 import { isLocale } from "@/i18n/dictionaries";
 import { SITE_URL } from "@/lib/site";
-import { IS_ZAYRA } from "@/lib/brand";
+import { CONTACT_EMAIL, HORUS_SITE_URL, IS_ZAYRA, ZAYRA_SITE_URL } from "@/lib/brand";
 import { CASE_STUDIES } from "@/lib/caseStudies";
 import {
   getCmsHero,
@@ -44,7 +44,7 @@ const organizationLd = {
   logo: `${SITE_URL}/logo/logo-light-bg-full.png`,
   description:
     "Entreprise technologique africaine : applications web & mobile sur mesure, systèmes d'information, digitalisation d'entreprise et formation & audit IT.",
-  email: "contact@horus-lab.com",
+  email: CONTACT_EMAIL,
   areaServed: "Africa",
   // Profils officiels déclarés aux moteurs de recherche. X et GitHub retirés
   // le 2026-08-05 (ils ne sont plus référencés nulle part sur le site).
@@ -52,7 +52,7 @@ const organizationLd = {
     "https://www.facebook.com/HorusLab",
     "https://www.linkedin.com/in/brailain-loic-tonba-djimgou-483215259",
   ],
-  parentOrganization: { "@type": "Organization", name: "Zayra Technologies", url: "https://zayra.technologies.horus-lab.com" },
+  parentOrganization: { "@type": "Organization", name: "Zayra Technologies", url: ZAYRA_SITE_URL },
   founder: FOUNDERS,
 };
 
@@ -68,11 +68,11 @@ const zayraLd = [
     logo: `${SITE_URL}/zayra/brand/zayra-logo.png`,
     description:
       "Entreprise technologique africaine basée à Douala : Zayra Drive, Zayra School, Zayra Agro et Zayra Nkap, des applications web et mobiles conçues et exploitées par son laboratoire Horus Lab.",
-    email: "contact@horus-lab.com",
+    email: CONTACT_EMAIL,
     telephone: "+237659902191",
     address: { "@type": "PostalAddress", addressLocality: "Douala", addressCountry: "CM" },
     areaServed: "Africa",
-    subOrganization: { "@type": "Organization", name: "Horus Lab", url: "https://horus-lab.com" },
+    subOrganization: { "@type": "Organization", name: "Horus Lab", url: HORUS_SITE_URL },
     founder: FOUNDERS,
     foundingDate: "2025-05",
     foundingLocation: "Douala, Cameroun",

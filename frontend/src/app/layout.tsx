@@ -40,11 +40,11 @@ export default function RootLayout({
             __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',d);}catch(e){}})();`,
           }}
         />
-        {/* Marque selon le domaine : sur zayra.technologies.horus-lab.com, logo et
+        {/* Marque selon le domaine : sur zayra-technologies.com (et l'ancien sous-domaine), logo et
             favicon Zayra (voir BrandLogo). Avant le 1er paint → pas de flash. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){if(!/^zayra\\./.test(location.hostname))return;document.documentElement.classList.add('brand-zayra');function f(){document.querySelectorAll('link[rel~="icon"],link[rel="apple-touch-icon"]').forEach(function(l){l.href='/zayra/brand/zayra-icon.png';});}f();document.addEventListener('DOMContentLoaded',f);})();`,
+            __html: `(function(){if(!/^zayra\\.|zayra-technologies\\.com$/.test(location.hostname))return;document.documentElement.classList.add('brand-zayra');function f(){document.querySelectorAll('link[rel~="icon"],link[rel="apple-touch-icon"]').forEach(function(l){l.href='/zayra/brand/zayra-icon.png';});}f();document.addEventListener('DOMContentLoaded',f);})();`,
           }}
         />
       </head>

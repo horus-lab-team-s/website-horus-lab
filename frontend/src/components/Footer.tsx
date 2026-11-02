@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { SiteSwitch } from "./SiteSwitch";
-import { BRAND_NAME, IS_ZAYRA, ZAYRA_ABOUT } from "@/lib/brand";
+import { BRAND_NAME, CONTACT_EMAIL, IS_ZAYRA, ZAYRA_ABOUT } from "@/lib/brand";
 import Link from "next/link";
 import { useState } from "react";
 import { useLang } from "@/i18n/LanguageProvider";
@@ -112,7 +112,8 @@ export function Footer() {
   const f = dict.footer;
   const year = new Date().getFullYear();
 
-  const email = settings?.email || f.email;
+  // E-mail pro unique pour les deux sites (l'admin peut encore porter l'ancienne adresse).
+  const email = CONTACT_EMAIL;
   const phones = settings?.phones?.length ? settings.phones : f.phones;
   const location = settings?.location || f.location;
   const about = IS_ZAYRA ? ZAYRA_ABOUT[lang] : settings?.about || f.about;
